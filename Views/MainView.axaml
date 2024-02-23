@@ -1,0 +1,73 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:view="clr-namespace:MercuryMapper.Views"
+             xmlns:converters="clr-namespace:Avalonia.Markup.Xaml.Converters;assembly=Avalonia.Markup.Xaml"
+             xmlns:lang="clr-namespace:MercuryMapper.Assets.Lang"
+             mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="800"
+             x:Class="MercuryMapper.Views.MainView">
+    
+    <UserControl.Resources>
+        <converters:ColorToBrushConverter x:Key="ColorToBrush" />
+    </UserControl.Resources>
+    
+    <Grid ColumnDefinitions="Auto,*, Auto" RowDefinitions="Auto,*,Auto">
+        
+        <!-- Title Bar -->
+        <Grid ColumnDefinitions="Auto,*" RowDefinitions="*" Grid.Row="0" Grid.ColumnSpan="3" Grid.Column="0">
+            <Menu Grid.Column="0" Background="{DynamicResource TitleBar}" Height="40">
+                <MenuItem Width="40">
+                    <MenuItem.Header>
+                        <Image Source="/Assets/AppIcon.png" Width="20"/>
+                    </MenuItem.Header>
+                    <TextBlock Name="VersionText" Text="WIP"/>
+                </MenuItem>
+                
+                <MenuItem Header="{x:Static lang:Resources.MenuHeader_File}" >
+                    <MenuItem Header="{x:Static lang:Resources.Menu_New}" Click="MenuItemNew_OnClick"
+                              InputGesture="Ctrl+N" />
+                    <MenuItem Header="{x:Static lang:Resources.Menu_Open}" Click="MenuItemOpen_OnClick"
+                              InputGesture="Ctrl+O" />
+                    <MenuItem Header="{x:Static lang:Resources.Menu_Save}" Click="MenuItemSave_OnClick"
+                              InputGesture="Ctrl+S" />
+                    <MenuItem Header="{x:Static lang:Resources.Menu_SaveAs}" Click="MenuItemSaveAs_OnClick"
+                              InputGesture="Ctrl+Shift+S" />
+                    <Separator/>
+                    <MenuItem Header="{x:Static lang:Resources.Menu_Settings}" Click="MenuItemSettings_OnClick" />
+                    <Separator/>
+                    <MenuItem Header="{x:Static lang:Resources.Menu_Exit}" Click="MenuItemExit_OnClick" />
+                </MenuItem>
+                
+                <MenuItem Header="{x:Static lang:Resources.MenuHeader_Edit}">
+                    <MenuItem Header="{x:Static lang:Resources.Menu_Undo}" Name="UndoMenuItem"
+                              Click="MenuItemUndo_OnClick" InputGesture="Ctrl+Z" />
+                    <MenuItem Header="{x:Static lang:Resources.Menu_Redo}" Name="RedoMenuItem"
+                              Click="MenuItemRedo_OnClick" InputGesture="Ctrl+Y" />
+                    <Separator/>
+                    <MenuItem Header="{x:Static lang:Resources.Menu_Cut}" Name="CutMenuItem" 
+                              Click="MenuItemCut_OnClick" InputGesture="Ctrl+X" />
+                    <MenuItem Header="{x:Static lang:Resources.Menu_Copy}" Name="CopyMenuItem" 
+                              Click="MenuItemCopy_OnClick" InputGesture="Ctrl+C" />
+                    <MenuItem Header="{x:Static lang:Resources.Menu_Paste}" Name="PasteMenuItem" 
+                              Click="MenuItemPaste_OnClick" InputGesture="Ctrl+V" />
+                </MenuItem>
+                
+                <!-- <MenuItem Header="{x:Static lang:Resources.MenuHeader_Select}">
+                    <MenuItem Header="{DynamicResource L.SelectHighlightedNote}"
+                              InputGesture="Shift+S" />
+                    <MenuItem Header="{DynamicResource L.DeselectNotes}"
+                              InputGesture="Shift+D" />
+                </MenuItem> -->
+                
+                <!--<MenuItem Header="{DynamicResource L.ViewMenuItem}">
+                </MenuItem>
+                
+                <MenuItem Header="{DynamicResource L.ChartMenuItem}">
+                    <MenuItem Header="{DynamicResource L.InitialChartSettingsMenuOption}"/>
+                </MenuItem> -->
+            </Menu>
+            <Panel Grid.Column="1" Background="{DynamicResource TitleBar}" IsHitTestVisible="False"/>
+        </Grid>
+    </Grid>
+</UserControl>

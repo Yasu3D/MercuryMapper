@@ -3,7 +3,16 @@
   <component name="AvaloniaProject">
     <option name="projectPerEditor">
       <map>
+        <entry key="App.axaml" value="MercuryMapper.csproj" />
+        <entry key="Assets/Locales/en-US.axaml" value="MercuryMapper.csproj" />
         <entry key="MainWindow.axaml" value="MercuryMapper.csproj" />
+        <entry key="Styles/CustomMenuItem.axaml" value="MercuryMapper.csproj" />
+        <entry key="Styles/ThemeColors.axaml" value="MercuryMapper.csproj" />
+        <entry key="Views/Main/Main_ActionDrawer.axaml" value="MercuryMapper.csproj" />
+        <entry key="Views/MainView.axaml" value="MercuryMapper.csproj" />
+        <entry key="Views/MainView/MainView_ButtonPanel.axaml" value="MercuryMapper.csproj" />
+        <entry key="Views/MainView/MainView_OperationDrawer.axaml" value="MercuryMapper.csproj" />
+        <entry key="Views/MainView/MainView_SongControls.axaml" value="MercuryMapper.csproj" />
       </map>
     </option>
   </component>
