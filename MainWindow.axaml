@@ -9,8 +9,9 @@
         Background="{DynamicResource DarkBrush}"
         WindowStartupLocation="CenterScreen"
         ExtendClientAreaToDecorationsHint="True"
-        x:Class="MercuryMapper.MainWindow"
-        Title="MercuryMapper">
+        DragDrop.AllowDrop="True"
+        Title="MercuryMapper"
+        x:Class="MercuryMapper.MainWindow">
     
     <view:MainView Name="MainView"/>
     

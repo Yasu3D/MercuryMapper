@@ -60,6 +60,114 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Bonus.
+        /// </summary>
+        public static string BonusType_Bonus {
+            get {
+                return ResourceManager.GetString("BonusType_Bonus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to None.
+        /// </summary>
+        public static string BonusType_None {
+            get {
+                return ResourceManager.GetString("BonusType_None", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to R Note.
+        /// </summary>
+        public static string BonusType_RNote {
+            get {
+                return ResourceManager.GetString("BonusType_RNote", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Insert Note.
+        /// </summary>
+        public static string Button_InsertNote {
+            get {
+                return ResourceManager.GetString("Button_InsertNote", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to BPM.
+        /// </summary>
+        public static string Gimmick_BpmChange {
+            get {
+                return ResourceManager.GetString("Gimmick_BpmChange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to HiSpeed.
+        /// </summary>
+        public static string Gimmick_HiSpeedChange {
+            get {
+                return ResourceManager.GetString("Gimmick_HiSpeedChange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reverse.
+        /// </summary>
+        public static string Gimmick_Reverse {
+            get {
+                return ResourceManager.GetString("Gimmick_Reverse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stop.
+        /// </summary>
+        public static string Gimmick_Stop {
+            get {
+                return ResourceManager.GetString("Gimmick_Stop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Time Signature.
+        /// </summary>
+        public static string Gimmick_TimeSigChange {
+            get {
+                return ResourceManager.GetString("Gimmick_TimeSigChange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to From Center.
+        /// </summary>
+        public static string MaskDirection_Center {
+            get {
+                return ResourceManager.GetString("MaskDirection_Center", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Clockwise.
+        /// </summary>
+        public static string MaskDirection_Clockwise {
+            get {
+                return ResourceManager.GetString("MaskDirection_Clockwise", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Counterclockwise.
+        /// </summary>
+        public static string MaskDirection_Counterclockwise {
+            get {
+                return ResourceManager.GetString("MaskDirection_Counterclockwise", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Copy.
         /// </summary>
         public static string Menu_Copy {
@@ -182,6 +290,96 @@ namespace MercuryMapper.Assets.Lang {
         public static string MenuHeader_Select {
             get {
                 return ResourceManager.GetString("MenuHeader_Select", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Chain.
+        /// </summary>
+        public static string Note_Chain {
+            get {
+                return ResourceManager.GetString("Note_Chain", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to End of Chart.
+        /// </summary>
+        public static string Note_EndOfChart {
+            get {
+                return ResourceManager.GetString("Note_EndOfChart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hold.
+        /// </summary>
+        public static string Note_Hold {
+            get {
+                return ResourceManager.GetString("Note_Hold", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mask Add.
+        /// </summary>
+        public static string Note_MaskAdd {
+            get {
+                return ResourceManager.GetString("Note_MaskAdd", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mask Remove.
+        /// </summary>
+        public static string Note_MaskRemove {
+            get {
+                return ResourceManager.GetString("Note_MaskRemove", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ↩ Slide CW.
+        /// </summary>
+        public static string Note_SlideClockwise {
+            get {
+                return ResourceManager.GetString("Note_SlideClockwise", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ↪ Slide CCW.
+        /// </summary>
+        public static string Note_SlideCounterclockwise {
+            get {
+                return ResourceManager.GetString("Note_SlideCounterclockwise", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ↓ Snap BW.
+        /// </summary>
+        public static string Note_SnapBackward {
+            get {
+                return ResourceManager.GetString("Note_SnapBackward", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ↑ Snap FW.
+        /// </summary>
+        public static string Note_SnapForward {
+            get {
+                return ResourceManager.GetString("Note_SnapForward", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Touch.
+        /// </summary>
+        public static string Note_Touch {
+            get {
+                return ResourceManager.GetString("Note_Touch", resourceCulture);
             }
         }
     }

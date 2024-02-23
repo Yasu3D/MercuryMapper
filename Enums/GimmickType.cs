@@ -4,7 +4,7 @@ public enum GimmickType
 {
     None = 1,
     BpmChange = 2,
-    TimeSignatureChange = 3,
+    TimeSigChange = 3,
     HiSpeedChange = 5,
     ReverseEffectStart = 6,
     ReverseEffectEnd = 7,

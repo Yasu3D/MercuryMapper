@@ -6,29 +6,30 @@ namespace MercuryMapper.Data;
 public class BeatData
 {
     public readonly int Measure;
-    public readonly int Beat;
+    public readonly int Tick;
+    public int FullTick => Measure * 1920 + Tick;
     
     public readonly float MeasureDecimal;
-    public readonly float ScaledMeasureDecimal;
+    
 
-    public BeatData(int measure, int beat)
+    public BeatData(int measure, int tick)
     {
         Measure = measure;
         
-        while (beat >= 1920)
+        while (tick >= 1920)
         {
             Measure++;
-            beat -= 1920;
+            tick -= 1920;
         }
         
-        Beat = beat;
-        MeasureDecimal = GetMeasureDecimal(measure, beat);
+        Tick = tick;
+        MeasureDecimal = GetMeasureDecimal(measure, tick);
     }
 
     public BeatData(float measureDecimal)
     {
         Measure = (int)measureDecimal;
-        Beat = (int)MathF.Round((measureDecimal - Measure) * 1920);
+        Tick = (int)MathF.Round((measureDecimal - Measure) * 1920);
         MeasureDecimal = measureDecimal;
     }
 
@@ -36,21 +37,33 @@ public class BeatData
     {
         Measure = data.Measure;
 
-        int beat = data.Beat;
+        int beat = data.Tick;
         while (beat >= 1920)
         {
             Measure++;
             beat -= 1920;
         }
         
-        Beat = beat;
-        MeasureDecimal = GetMeasureDecimal(Measure, Beat);
+        Tick = beat;
+        MeasureDecimal = GetMeasureDecimal(Measure, Tick);
     }
 
     public static float GetMeasureDecimal(int measure, int beat)
     {
         return measure + beat / 1920f;
     }
+}
+
+public class TimeScaleData
+{
+    // TODO: RENAME!!!!!!!
+    public float UnscaledMeasureDecimal { get; set; }
+    public float PartialScaledPosition { get; set; }
+    public float LastMeasurePosition { get; set; }
+
+    public float CurrentHiSpeed { get; set; }
+    public float CurrentTimeSigRatio { get; set; }
+    public float CurrentBpmRatio { get; set; }
 }
 
 public class TimeSig(int upper, int lower)
@@ -73,7 +86,7 @@ public class Gimmick : ChartElement
     public float Bpm { get; set; }
     public TimeSig TimeSig { get; set; } = new(4, 4);
     public float HiSpeed { get; set; }
-    public float StartTime { get; set; }
+    public float TimeStamp { get; set; }
 
     public Gimmick() { }
     
@@ -88,8 +101,27 @@ public class Gimmick : ChartElement
         switch (GimmickType)
         {
             case GimmickType.BpmChange: Bpm = gimmick.Bpm; break;
-            case GimmickType.TimeSignatureChange: TimeSig = new TimeSig(gimmick.TimeSig); break;
+            case GimmickType.TimeSigChange: TimeSig = new TimeSig(gimmick.TimeSig); break;
             case GimmickType.HiSpeedChange: HiSpeed = gimmick.HiSpeed; break;
+        }
+    }
+
+    public Gimmick(int measure, int tick, int objectId, string value1, string value2)
+    {
+        BeatData = new(measure, tick);
+        GimmickType = (GimmickType)objectId;
+
+        switch (GimmickType)
+        {
+            case GimmickType.BpmChange:
+                Bpm = Convert.ToSingle(value1);
+                break;
+            case GimmickType.TimeSigChange:
+                TimeSig = new(Convert.ToInt32(value1), Convert.ToInt32(value2));
+                break;
+            case GimmickType.HiSpeedChange:
+                HiSpeed = Convert.ToSingle(value1);
+                break;
         }
     }
 
@@ -127,6 +159,16 @@ public class Note : ChartElement
         PrevReferencedNote = note.PrevReferencedNote;
     }
 
+    public Note(int measure, int tick, int noteTypeId, int position, int size, bool renderSegment)
+    {
+        BeatData = new(measure, tick);
+        GimmickType = GimmickType.None;
+        NoteType = (NoteType)noteTypeId;
+        Position = position;
+        Size = size;
+        RenderSegment = renderSegment;
+    }
+    
     public bool IsHold => NoteType
         is NoteType.HoldStart 
         or NoteType.HoldStartRNote 

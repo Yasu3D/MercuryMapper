@@ -60,4 +60,70 @@
     <data name="MenuHeader_Select" xml:space="preserve">
         <value>Auswählen</value>
     </data>
+    <data name="Note_Chain" xml:space="preserve">
+        <value>Kette</value>
+    </data>
+    <data name="Note_Hold" xml:space="preserve">
+        <value>Halten</value>
+    </data>
+    <data name="Note_SlideClockwise" xml:space="preserve">
+        <value>↩ Wischen (mit Uhr)</value>
+    </data>
+    <data name="Note_SlideCounterclockwise" xml:space="preserve">
+        <value>↪ Wischen (gegen Uhr)</value>
+    </data>
+    <data name="Note_SnapBackward" xml:space="preserve">
+        <value>↓ Schieben (rückwärts)</value>
+    </data>
+    <data name="Note_SnapForward" xml:space="preserve">
+        <value>↑ Schieben (vorwärts)</value>
+    </data>
+    <data name="Note_Touch" xml:space="preserve">
+        <value>Tippen</value>
+    </data>
+    <data name="Note_EndOfChart" xml:space="preserve">
+        <value>Chart Ende</value>
+    </data>
+    <data name="Note_MaskAdd" xml:space="preserve">
+        <value>Maske Hinzufügen</value>
+    </data>
+    <data name="Note_MaskRemove" xml:space="preserve">
+        <value>Maske Entfernen</value>
+    </data>
+    <data name="Button_InsertNote" xml:space="preserve">
+        <value>Note Einfügen</value>
+    </data>
+    <data name="BonusType_None" xml:space="preserve">
+        <value>Kein Bonus</value>
+    </data>
+    <data name="BonusType_Bonus" xml:space="preserve">
+        <value>Bonus</value>
+    </data>
+    <data name="BonusType_RNote" xml:space="preserve">
+        <value>R-Note</value>
+    </data>
+    <data name="MaskDirection_Center" xml:space="preserve">
+        <value>Von Mitte</value>
+    </data>
+    <data name="MaskDirection_Clockwise" xml:space="preserve">
+        <value>Im Uhrzeigersinn</value>
+    </data>
+    <data name="MaskDirection_Counterclockwise" xml:space="preserve">
+        <value>Gegen Uhrzeigersinn</value>
+    </data>
+    <data name="Gimmick_BpmChange" xml:space="preserve">
+        <value>BPM</value>
+    </data>
+    <data name="Gimmick_TimeSigChange" xml:space="preserve">
+        <value>Takt</value>
+    </data>
+    <data name="Gimmick_HiSpeedChange" xml:space="preserve">
+        <value>HiSpeed</value>
+    </data>
+    <data name="Gimmick_Stop" xml:space="preserve">
+        <value>Stopp</value>
+    </data>
+    <data name="Gimmick_Reverse" xml:space="preserve">
+        <value>Reverse</value>
+    </data>
 </root>
