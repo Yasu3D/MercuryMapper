@@ -1,9 +1,7 @@
-using System;
-using System.IO;
-using System.Linq;
 using Avalonia.Controls;
-using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Threading;
+using FluentAvalonia.UI.Controls;
 using MercuryMapper.Data;
 
 namespace MercuryMapper.Views;
@@ -14,8 +12,6 @@ public partial class MainView : UserControl
     {
         InitializeComponent();
     }
-
-    private Chart chart = new();
     
     private void MenuItemNew_OnClick(object? sender, RoutedEventArgs e) { }
 
@@ -24,8 +20,24 @@ public partial class MainView : UserControl
     private void MenuItemSave_OnClick(object? sender, RoutedEventArgs e) { }
 
     private void MenuItemSaveAs_OnClick(object? sender, RoutedEventArgs e) { }
+    
+    private void MenuItemExportMercury_OnClick(object? sender, RoutedEventArgs e) { }
+    
+    private void MenuItemExportSaturn_OnClick(object? sender, RoutedEventArgs e) { }
 
-    private void MenuItemSettings_OnClick(object? sender, RoutedEventArgs e) { }
+    private void MenuItemSettings_OnClick(object? sender, RoutedEventArgs e)
+    {
+        SettingsView window = new();
+        ContentDialog dialog = new()
+        {
+            Title = Assets.Lang.Resources.Menu_Settings,
+            Content = window,
+            IsPrimaryButtonEnabled = false,
+            CloseButtonText = Assets.Lang.Resources.Generic_Close,
+        };
+        
+        Dispatcher.UIThread.Post(async () => await dialog.ShowAsync());
+    }
 
     private void MenuItemExit_OnClick(object? sender, RoutedEventArgs e) { }
 

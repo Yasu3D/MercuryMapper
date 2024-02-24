@@ -1,0 +1,92 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:lang="clr-namespace:MercuryMapper.Assets.Lang"
+             mc:Ignorable="d" d:DesignWidth="350" d:DesignHeight="400"
+             x:Class="MercuryMapper.Views.Settings.SettingsView_Colors">
+    <ScrollViewer>
+        <StackPanel Margin="20">
+            <UniformGrid Columns="2">
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Note_Touch}"/>
+                <ColorPicker HorizontalAlignment="Right" Margin="5" Name="ColorPickerNoteTouch"/>
+            
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Note_Chain}"/>
+                <ColorPicker HorizontalAlignment="Right" Margin="5" Name="ColorPickerNoteChain"/>
+            </UniformGrid>
+            
+            <Separator/>
+            
+            <UniformGrid Columns="2">
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Note_SnapForward}"/>
+                <ColorPicker HorizontalAlignment="Right" Margin="5" Name="ColorPickerNoteSnapForward"/>
+            
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Note_SnapBackward}"/>
+                <ColorPicker HorizontalAlignment="Right" Margin="5" Name="ColorPickerNoteSnapBackward"/>
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Note_SlideClockwise}"/>
+                <ColorPicker HorizontalAlignment="Right" Margin="5" Name="ColorPickerNoteSlideClockwise"/>
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Note_SlideCounterclockwise}"/>
+                <ColorPicker HorizontalAlignment="Right" Margin="5" Name="ColorPickerNoteSlideCounterclockwise"/>
+            </UniformGrid>
+            
+            <Separator/>
+            
+            <UniformGrid Columns="2">
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Note_HoldStart}"/>
+                <ColorPicker HorizontalAlignment="Right" Margin="5" Name="ColorPickerNoteHoldStart"/>
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Note_HoldSegment}"/>
+                <ColorPicker  HorizontalAlignment="Right" Margin="5" Name="ColorPickerNoteHoldSegment"/>
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Note_HoldEnd}"/>
+                <ColorPicker  HorizontalAlignment="Right" Margin="5" Name="ColorPickerNoteHoldEnd"/>
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Note_HoldSurfaceNear}"/>
+                <ColorPicker  HorizontalAlignment="Right" Margin="5" Name="ColorPickerNoteHoldSurfaceNear"/>
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Note_HoldSurfaceFar}"/>
+                <ColorPicker  HorizontalAlignment="Right" Margin="5" Name="ColorPickerNoteHoldSurfaceFar"/>
+            </UniformGrid>
+                
+            <Separator/>
+            
+            <UniformGrid Columns="2">
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Note_MaskAdd}"/>
+                <ColorPicker  HorizontalAlignment="Right" Margin="5" Name="ColorPickerNoteMaskAdd"/>
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Note_MaskRemove}"/>
+                <ColorPicker  HorizontalAlignment="Right" Margin="5" Name="ColorPickerNoteMaskRemove"/>
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Note_EndOfChart}"/>
+                <ColorPicker  HorizontalAlignment="Right" Margin="5" Name="ColorPickerNoteEndOfChart"/>
+            </UniformGrid>
+                
+            <Separator/>
+            
+            <UniformGrid Columns="2">
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Note_Chain}"/>
+                <ColorPicker  HorizontalAlignment="Right" Margin="5" Name="ColorPickerHighlight"/>
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Note_Chain}"/>
+                <ColorPicker  HorizontalAlignment="Right" Margin="5" Name="ColorPickerSelection"/>
+            </UniformGrid>
+                
+            <Separator/>
+            
+            <UniformGrid Columns="2">
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Note_Chain}"/>
+                <ColorPicker  HorizontalAlignment="Right" Margin="5" Name="ColorPickerBonus"/>
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Note_Chain}"/>
+                <ColorPicker  HorizontalAlignment="Right" Margin="5" Name="ColorPickerRNote"/>
+            </UniformGrid>
+                
+            <Separator/>
+            
+            <UniformGrid Columns="2">
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Gimmick_BpmChange}"/>
+                <ColorPicker  HorizontalAlignment="Right" Margin="5" Name="ColorPickerGimmickBpmChange"/>
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Gimmick_TimeSigChange}"/>
+                <ColorPicker  HorizontalAlignment="Right" Margin="5" Name="ColorPickerGimmickTimeSigChange"/>
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Gimmick_HiSpeedChange}"/>
+                <ColorPicker  HorizontalAlignment="Right" Margin="5" Name="ColorPickerGimmickHiSpeedChange"/>
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Gimmick_Stop}"/>
+                <ColorPicker  HorizontalAlignment="Right" Margin="5" Name="ColorPickerGimmickStop"/>
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Gimmick_Reverse}"/>
+                <ColorPicker  HorizontalAlignment="Right" Margin="5" Name="ColorPickerGimmickReverse"/>
+            </UniformGrid>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

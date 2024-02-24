@@ -6,6 +6,7 @@
         <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+        <ApplicationIcon>Assets\AppIcon.ico</ApplicationIcon>
     </PropertyGroup>
 
 
@@ -68,5 +69,12 @@
       <AvaloniaResource Include="Assets\AppIcon.png" />
       <None Remove="Assets\Inter.ttf" />
       <AvaloniaResource Include="Assets\Inter.ttf" />
+      <None Remove="Assets\AppIcon.ico" />
+      <AvaloniaResource Include="Assets\AppIcon.ico" />
+    </ItemGroup>
+
+
+    <ItemGroup>
+      <Folder Include="Editor\" />
     </ItemGroup>
 </Project>

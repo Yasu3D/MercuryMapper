@@ -297,11 +297,15 @@
             <Setter Property="BorderBrush" Value="Transparent" />
             <Setter Property="CornerRadius" Value="0" />
         </Style>
-
+        
         <Style Selector="MenuItem">
             <Setter Property="CornerRadius" Value="0" />
             <Setter Property="Margin" Value="0" />
             <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
+            
+            <Style Selector="^ TextBlock#PART_InputGestureText">
+                <Setter Property="Foreground" Value="{DynamicResource InputGestureBrush}"/>
+            </Style>
             
             <Style Selector="^ > Separator">
                 <Setter Property="Background" Value="{DynamicResource MenuBorderBrush}" />
@@ -315,10 +319,44 @@
             <Style Selector="^ > MenuItem">
                 <Setter Property="CornerRadius" Value="5" />
                 <Setter Property="Margin" Value="0" />
+                <Setter Property="Padding" Value="5,3,5,3"/>
             </Style>
         </Style>
         
-        
+        <Style Selector="TreeViewItem">
+            <Setter Property="CornerRadius" Value="5"></Setter>
+
+            <!--  PointerOver state  -->
+            <Style Selector="^ /template/ Border#PART_LayoutRoot:pointerover">
+                <Setter Property="Background" Value="{TemplateBinding Background}" />
+                <Setter Property="BorderBrush" Value="{TemplateBinding BorderBrush}" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_LayoutRoot:pointerover > ContentPresenter#PART_HeaderPresenter">
+                <Setter Property="Foreground" Value="{TemplateBinding Foreground}" />
+            </Style>
+            
+            <!--  Pressed state  -->
+            <Style Selector="^:pressed /template/ Border#PART_LayoutRoot:pointerover">
+                <Setter Property="Background" Value="{TemplateBinding Background}" />
+                <Setter Property="BorderBrush" Value="{TemplateBinding BorderBrush}" />
+            </Style>
+            <Style Selector="^:pressed /template/ Border#PART_LayoutRoot:pointerover > ContentPresenter#PART_HeaderPresenter">
+                <Setter Property="Foreground" Value="{TemplateBinding Foreground}" />
+            </Style>
+            
+            <!--  Selected state  -->
+            <Style Selector="^:selected /template/ Border#PART_LayoutRoot">
+                <Setter Property="Background" Value="#80315BB2" />
+                <Setter Property="BorderBrush" Value="{DynamicResource TreeViewItemBorderBrushSelected}" />
+            </Style>
+            <Style Selector="^:selected /template/ Border#PART_LayoutRoot > ContentPresenter#PART_HeaderPresenter">
+                <Setter Property="Foreground" Value="{DynamicResource TreeViewItemForegroundSelected}" />
+            </Style>
+
+            <!--  Selected PointerOver state  -->
+            <Style Selector="^:selected /template/ Border#PART_LayoutRoot:pointerover"/>
+            <Style Selector="^:selected /template/ Border#PART_LayoutRoot:pointerover > ContentPresenter#PART_HeaderPresenter"/>
+        </Style>
 
     </Application.Styles>
 </Application>

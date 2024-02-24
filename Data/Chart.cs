@@ -176,7 +176,7 @@ public class Chart
                 if (!notesByIndex.ContainsKey(nextReferencedIndex[i])) continue;
 
                 Notes[i].NextReferencedNote = notesByIndex[nextReferencedIndex[i]];
-                Notes[i].NextReferencedNote.PrevReferencedNote = Notes[i];
+                Notes[i].NextReferencedNote!.PrevReferencedNote = Notes[i];
             }
         }
 
@@ -190,7 +190,7 @@ public class Chart
         }
     }
 
-    public bool WriteFile(string filepath, bool cleanWrite, bool setSaved = true)
+    public bool WriteFile(string filepath, ChartWriteType writeType, bool setSaved = true)
     {
         if (filepath == "") return false;
         
@@ -201,14 +201,40 @@ public class Chart
         {
             streamWriter.NewLine = "\n";
 
-            if (!cleanWrite) streamWriter.WriteLine($"#EDITOR_MUSIC_FILE_PATH {EditorSongFileName}");
-            streamWriter.WriteLine();
-            streamWriter.WriteLine("#MUSIC_SCORE_ID 0");
-            streamWriter.WriteLine("#MUSIC_SCORE_VERSION 0");
-            streamWriter.WriteLine("#GAME_VERSION ");
-            streamWriter.WriteLine($"#MUSIC_FILE_PATH {SongFileName}");
-            streamWriter.WriteLine($"#OFFSET {Offset.ToString("F6", CultureInfo.InvariantCulture)}");
-            streamWriter.WriteLine($"#MOVIEOFFSET {MovieOffset:F6}");
+            if (writeType is ChartWriteType.Editor)
+            {
+                streamWriter.WriteLine($"#EDITOR_MUSIC_FILE_PATH {EditorSongFileName}");
+                streamWriter.WriteLine($"#EDITOR_LEVEL");
+                streamWriter.WriteLine($"#EDITOR_CLEAR_THRESHOLD");
+                streamWriter.WriteLine($"#EDITOR_AUTHOR");
+                streamWriter.WriteLine($"#EDITOR_PREVIEW_TIME");
+                streamWriter.WriteLine($"#EDITOR_PREVIEW_LENGTH");
+                streamWriter.WriteLine($"#EDITOR_OFFSET");
+                streamWriter.WriteLine($"#EDITOR_MOVIEOFFSET");
+            }
+            
+            if (writeType is ChartWriteType.Saturn)
+            {
+                streamWriter.WriteLine($"#LEVEL");
+                streamWriter.WriteLine($"#AUDIO {EditorSongFileName}");
+                streamWriter.WriteLine($"#CLEAR_THRESHOLD");
+                streamWriter.WriteLine($"#AUTHOR");
+                streamWriter.WriteLine($"#PREVIEW_TIME");
+                streamWriter.WriteLine($"#PREVIEW_LENGTH");
+                streamWriter.WriteLine($"#OFFSET");
+                streamWriter.WriteLine($"#MOVIEOFFSET");
+            }
+            
+            if (writeType is ChartWriteType.Mercury)
+            {
+                streamWriter.WriteLine("#MUSIC_SCORE_ID 0");
+                streamWriter.WriteLine("#MUSIC_SCORE_VERSION 0");
+                streamWriter.WriteLine("#GAME_VERSION ");
+                streamWriter.WriteLine($"#MUSIC_FILE_PATH {SongFileName}");
+                streamWriter.WriteLine($"#OFFSET {Offset.ToString("F6", CultureInfo.InvariantCulture)}");
+                streamWriter.WriteLine($"#MOVIEOFFSET {MovieOffset:F6}");
+            }
+            
             streamWriter.WriteLine("#BODY");
 
             foreach (Gimmick gimmick in Gimmicks)
@@ -223,7 +249,7 @@ public class Chart
                     case GimmickType.TimeSigChange: streamWriter.WriteLine($"{gimmick.TimeSig.Upper,5:F0}{gimmick.TimeSig.Lower,5:F0}");
                         break;
                     default:
-                        streamWriter.WriteLine("");
+                        streamWriter.WriteLine();
                         break;
                 }
             }
@@ -236,7 +262,7 @@ public class Chart
                 if (note.IsMask) streamWriter.Write($"{(int)note.MaskDirection,5:F0}");
                 if (note.NextReferencedNote != null) streamWriter.Write($"{Notes.IndexOf(note.NextReferencedNote),5:F0}");
                 
-                streamWriter.WriteLine("");
+                streamWriter.WriteLine();
             }
         }
         

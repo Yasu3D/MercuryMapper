@@ -1,0 +1,29 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:lang="clr-namespace:MercuryMapper.Assets.Lang"
+             xmlns:views="clr-namespace:MercuryMapper.Views.Settings"
+             Width="500" Height="400"
+             mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="400"
+             x:Class="MercuryMapper.Views.SettingsView">
+    <Grid ColumnDefinitions="150,Auto,*">
+        <TreeView Grid.Column="0" SelectionChanged="Tabs_OnSelectionChanged" Name="TabsTreeView">
+            <TreeViewItem Header="{x:Static lang:Resources.Settings_Header_Appearance}" Name="TreeViewAppearance" IsExpanded="True">
+                <TreeViewItem Header="{x:Static lang:Resources.Settings_Header_Colors}" Name="TreeViewColors" IsSelected="True"/>
+                <TreeViewItem Header="{x:Static lang:Resources.Settings_Header_Gimmicks}" Name="TreeViewGimmicks"/>
+                <TreeViewItem Header="{x:Static lang:Resources.Settings_Header_Rendering}" Name="TreeViewRendering"/>
+            </TreeViewItem>
+            <TreeViewItem Header="{x:Static lang:Resources.Settings_Header_Editor}" Name="TreeViewEditor">
+                <TreeViewItem Header="{x:Static lang:Resources.Settings_Header_Keymap}" Name="TreeViewKeymap"/>
+            </TreeViewItem>
+        </TreeView>
+        <Rectangle Grid.Column="1" VerticalAlignment="Stretch" Width="1" Margin="0,0,10,0" Fill="{DynamicResource MenuBorderBrush}"/>
+        
+        <views:SettingsView_Colors Grid.Column="2" IsVisible="False" Name="SettingsViewColors"/>
+        <views:SettingsView_Gimmicks Grid.Column="2" IsVisible="False" Name="SettingsViewGimmicks"/>
+        <views:SettingsView_Rendering Grid.Column="2" IsVisible="False" Name="SettingsViewRendering"/>
+        
+        <views:SettingsView_Keymap Grid.Column="2" IsVisible="False" Name="SettingsViewKeymap"/>
+    </Grid>
+</UserControl>

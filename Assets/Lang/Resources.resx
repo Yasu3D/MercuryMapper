@@ -126,4 +126,49 @@
     <data name="Gimmick_Reverse" xml:space="preserve">
         <value>Reverse</value>
     </data>
+    <data name="Generic_Close" xml:space="preserve">
+        <value>Close</value>
+    </data>
+    <data name="Menu_Export" xml:space="preserve">
+        <value>Export</value>
+    </data>
+    <data name="Menu_ExportMercury" xml:space="preserve">
+        <value>Export for Mercury</value>
+    </data>
+    <data name="Menu_ExportSaturn" xml:space="preserve">
+        <value>Export for Saturn</value>
+    </data>
+    <data name="Settings_Header_Appearance" xml:space="preserve">
+        <value>Appearance</value>
+    </data>
+    <data name="Settings_Header_Colors" xml:space="preserve">
+        <value>Colors</value>
+    </data>
+    <data name="Settings_Header_Gimmicks" xml:space="preserve">
+        <value>Gimmicks</value>
+    </data>
+    <data name="Settings_Header_Editor" xml:space="preserve">
+        <value>Editor</value>
+    </data>
+    <data name="Settings_Header_Keymap" xml:space="preserve">
+        <value>Keymap</value>
+    </data>
+    <data name="Note_HoldStart" xml:space="preserve">
+        <value>Hold Start</value>
+    </data>
+    <data name="Note_HoldSegment" xml:space="preserve">
+        <value>Hold Segment</value>
+    </data>
+    <data name="Note_HoldEnd" xml:space="preserve">
+        <value>Hold End</value>
+    </data>
+    <data name="Note_HoldSurfaceNear" xml:space="preserve">
+        <value>Hold Surface Near</value>
+    </data>
+    <data name="Note_HoldSurfaceFar" xml:space="preserve">
+        <value>Hold Surface Far</value>
+    </data>
+    <data name="Settings_Header_Rendering" xml:space="preserve">
+        <value>Rendering</value>
+    </data>
 </root>

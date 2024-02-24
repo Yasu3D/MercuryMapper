@@ -18,25 +18,26 @@
             <Menu Grid.Column="0" Background="{DynamicResource TitleBar}" Height="40">
                 <MenuItem Width="40">
                     <MenuItem.Header>
-                        <Image Source="/Assets/AppIcon.png" Width="20"/>
+                        <Image Source="/Assets/AppIcon.ico" Width="20"/>
                     </MenuItem.Header>
                     <TextBlock Name="VersionText" Text="WIP"/>
                 </MenuItem>
                 
                 <MenuItem Header="{x:Static lang:Resources.MenuHeader_File}" >
-                    <MenuItem Header="{x:Static lang:Resources.Menu_New}" Click="MenuItemNew_OnClick"
+                    <MenuItem Header="{x:Static lang:Resources.Menu_New}" Click="MenuItemNew_OnClick" Name="MenuItemNew" 
                               InputGesture="Ctrl+N" />
                     
-                    <MenuItem Header="{x:Static lang:Resources.Menu_Open}" Click="MenuItemOpen_OnClick"
+                    <MenuItem Header="{x:Static lang:Resources.Menu_Open}" Click="MenuItemOpen_OnClick" Name="MenuItemOpen" 
                               InputGesture="Ctrl+O" />
                     
-                    <MenuItem Header="{x:Static lang:Resources.Menu_Save}" Click="MenuItemSave_OnClick" InputGesture="Ctrl+S">
+                    <MenuItem Header="{x:Static lang:Resources.Menu_Save}" Click="MenuItemSave_OnClick" InputGesture="Ctrl+S" Name="MenuItemSave" >
                         <MenuItem.Icon>
-                            <PathIcon Data="{DynamicResource IconSave}"/>
+                            <PathIcon Data="{DynamicResource IconSave}" Width="15"/>
                         </MenuItem.Icon>
                     </MenuItem>
                     
-                    <MenuItem Header="{x:Static lang:Resources.Menu_SaveAs}" Click="MenuItemSaveAs_OnClick" InputGesture="Ctrl+Shift+S">
+                    
+                    <MenuItem Header="{x:Static lang:Resources.Menu_SaveAs}" Click="MenuItemSaveAs_OnClick" InputGesture="Ctrl+Shift+S" Name="MenuItemSaveAs" >
                         <MenuItem.Icon>
                             <PathIcon Data="{DynamicResource IconSaveAs}"/>
                         </MenuItem.Icon>
@@ -44,7 +45,14 @@
                     
                     <Separator/>
                     
-                    <MenuItem Header="{x:Static lang:Resources.Menu_Settings}" Click="MenuItemSettings_OnClick">
+                    <MenuItem Header="{x:Static lang:Resources.Menu_Export}" >
+                        <MenuItem Header="{x:Static lang:Resources.Menu_ExportMercury}" Click="MenuItemExportMercury_OnClick" />
+                        <MenuItem Header="{x:Static lang:Resources.Menu_ExportSaturn}" Click="MenuItemExportSaturn_OnClick" />
+                    </MenuItem>
+                    
+                    <Separator/>
+                    
+                    <MenuItem Header="{x:Static lang:Resources.Menu_Settings}" Click="MenuItemSettings_OnClick" Name="MenuItemSettings" > 
                         <MenuItem.Icon>
                             <PathIcon Data="{DynamicResource IconSettings}"/>
                         </MenuItem.Icon>
@@ -56,16 +64,16 @@
                 </MenuItem>
                 
                 <MenuItem Header="{x:Static lang:Resources.MenuHeader_Edit}">
-                    <MenuItem Header="{x:Static lang:Resources.Menu_Undo}" Name="UndoMenuItem"
+                    <MenuItem Header="{x:Static lang:Resources.Menu_Undo}" Name="MenuItemUndo"
                               Click="MenuItemUndo_OnClick" InputGesture="Ctrl+Z" />
-                    <MenuItem Header="{x:Static lang:Resources.Menu_Redo}" Name="RedoMenuItem"
+                    <MenuItem Header="{x:Static lang:Resources.Menu_Redo}" Name="MenuItemRedo"
                               Click="MenuItemRedo_OnClick" InputGesture="Ctrl+Y" />
                     <Separator/>
-                    <MenuItem Header="{x:Static lang:Resources.Menu_Cut}" Name="CutMenuItem" 
+                    <MenuItem Header="{x:Static lang:Resources.Menu_Cut}" Name="MenuItemCut" 
                               Click="MenuItemCut_OnClick" InputGesture="Ctrl+X" />
-                    <MenuItem Header="{x:Static lang:Resources.Menu_Copy}" Name="CopyMenuItem" 
+                    <MenuItem Header="{x:Static lang:Resources.Menu_Copy}" Name="MenuItemCopy" 
                               Click="MenuItemCopy_OnClick" InputGesture="Ctrl+C" />
-                    <MenuItem Header="{x:Static lang:Resources.Menu_Paste}" Name="PasteMenuItem" 
+                    <MenuItem Header="{x:Static lang:Resources.Menu_Paste}" Name="MenuItemPaste" 
                               Click="MenuItemPaste_OnClick" InputGesture="Ctrl+V" />
                 </MenuItem>
                 

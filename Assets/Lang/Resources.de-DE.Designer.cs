@@ -96,6 +96,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Schließen.
+        /// </summary>
+        public static string Generic_Close {
+            get {
+                return ResourceManager.GetString("Generic_Close", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to BPM.
         /// </summary>
         public static string Gimmick_BpmChange {
@@ -191,6 +200,33 @@ namespace MercuryMapper.Assets.Lang {
         public static string Menu_Exit {
             get {
                 return ResourceManager.GetString("Menu_Exit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Exportieren.
+        /// </summary>
+        public static string Menu_Export {
+            get {
+                return ResourceManager.GetString("Menu_Export", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Exportieren für Mercury.
+        /// </summary>
+        public static string Menu_ExportMercury {
+            get {
+                return ResourceManager.GetString("Menu_ExportMercury", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Exportieren für Saturn.
+        /// </summary>
+        public static string Menu_ExportSaturn {
+            get {
+                return ResourceManager.GetString("Menu_ExportSaturn", resourceCulture);
             }
         }
         
@@ -321,6 +357,51 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Halten Ende.
+        /// </summary>
+        public static string Note_HoldEnd {
+            get {
+                return ResourceManager.GetString("Note_HoldEnd", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Halten Segment.
+        /// </summary>
+        public static string Note_HoldSegment {
+            get {
+                return ResourceManager.GetString("Note_HoldSegment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Halten Start.
+        /// </summary>
+        public static string Note_HoldStart {
+            get {
+                return ResourceManager.GetString("Note_HoldStart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Haltefläche Fern.
+        /// </summary>
+        public static string Note_HoldSurfaceFar {
+            get {
+                return ResourceManager.GetString("Note_HoldSurfaceFar", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Haltefläche Nah.
+        /// </summary>
+        public static string Note_HoldSurfaceNear {
+            get {
+                return ResourceManager.GetString("Note_HoldSurfaceNear", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Maske Hinzufügen.
         /// </summary>
         public static string Note_MaskAdd {
@@ -380,6 +461,60 @@ namespace MercuryMapper.Assets.Lang {
         public static string Note_Touch {
             get {
                 return ResourceManager.GetString("Note_Touch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Erscheinungsbild.
+        /// </summary>
+        public static string Settings_Header_Appearance {
+            get {
+                return ResourceManager.GetString("Settings_Header_Appearance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Farben.
+        /// </summary>
+        public static string Settings_Header_Colors {
+            get {
+                return ResourceManager.GetString("Settings_Header_Colors", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Editor.
+        /// </summary>
+        public static string Settings_Header_Editor {
+            get {
+                return ResourceManager.GetString("Settings_Header_Editor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Gimmicks.
+        /// </summary>
+        public static string Settings_Header_Gimmicks {
+            get {
+                return ResourceManager.GetString("Settings_Header_Gimmicks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tastaturbelegung.
+        /// </summary>
+        public static string Settings_Header_Keymap {
+            get {
+                return ResourceManager.GetString("Settings_Header_Keymap", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rendering.
+        /// </summary>
+        public static string Settings_Header_Rendering {
+            get {
+                return ResourceManager.GetString("Settings_Header_Rendering", resourceCulture);
             }
         }
     }

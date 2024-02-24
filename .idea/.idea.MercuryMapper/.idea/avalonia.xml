@@ -13,6 +13,10 @@
         <entry key="Views/MainView/MainView_ButtonPanel.axaml" value="MercuryMapper.csproj" />
         <entry key="Views/MainView/MainView_OperationDrawer.axaml" value="MercuryMapper.csproj" />
         <entry key="Views/MainView/MainView_SongControls.axaml" value="MercuryMapper.csproj" />
+        <entry key="Views/Settings/SettingsView_Colors.axaml" value="MercuryMapper.csproj" />
+        <entry key="Views/Settings/SettingsView_Keymap.axaml" value="MercuryMapper.csproj" />
+        <entry key="Views/Settings/SettingsView_Rendering.axaml" value="MercuryMapper.csproj" />
+        <entry key="Views/SettingsView.axaml" value="MercuryMapper.csproj" />
       </map>
     </option>
   </component>

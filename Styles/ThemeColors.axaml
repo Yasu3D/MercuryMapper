@@ -6,6 +6,7 @@
             <Color x:Key='MediumBrush'>#F4F4F4</Color>
             <Color x:Key='LightBrush'>#FFFFFF</Color>
             <Color x:Key='MenuBorderBrush'>#CCCCCC</Color>
+            <Color x:Key='InputGestureBrush'>#808080</Color>
             <Color x:Key='ButtonBorderBrush'>#CCCCCC</Color>
             <Color x:Key='TitleBar'>#F4F4F4</Color>
             <Color x:Key='TextBrush'>#222222</Color>
@@ -15,6 +16,7 @@
             <Color x:Key='MediumBrush'>#202020</Color>
             <Color x:Key='LightBrush'>#2B2B2B</Color>
             <Color x:Key='MenuBorderBrush'>#454545</Color>
+            <Color x:Key='InputGestureBrush'>#808080</Color>
             <Color x:Key='ButtonBorderBrush'>#000000</Color>
             <Color x:Key='TitleBar'>#3C3F41</Color>
             <Color x:Key='TextBrush'>#DFDFDF</Color>
