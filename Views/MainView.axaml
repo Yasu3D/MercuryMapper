@@ -95,7 +95,7 @@
         </Grid>
         
         <!-- Left Panel -->
-            <Grid RowDefinitions="*,Auto" Grid.Row="1" Grid.Column="0" Background="{DynamicResource DarkBrush}">  
+            <Grid RowDefinitions="*,Auto, Auto" Grid.Row="1" Grid.Column="0" Background="{DynamicResource DarkBrush}">  
                 <ScrollViewer Grid.Row="0" Grid.Column="0" Width="290" Name="LeftPanel">
                     <Grid ColumnDefinitions="130,130">
                         <StackPanel Grid.Column="0" Width="130" Margin="10,10,10,0">
@@ -150,24 +150,24 @@
                                     
                                     <Separator Margin="0"/>
                                     
-                                    <RadioButton Name="RadioNoteEndChart" Classes="ToggleRadioStripe"
-                                            BorderBrush="#000000" 
-                                            IsCheckedChanged="RadioNoteType_IsCheckedChanged" GroupName="NoteType"
-                                            Content="{x:Static lang:Resources.Note_EndOfChart}" />
-                                    
-                                    <Separator Margin="0"/>
-                                    
                                     <RadioButton Name="RadioNoteMaskAdd" Classes="ToggleRadioStripe"
-                                            BorderBrush="#181818" 
-                                            IsCheckedChanged="RadioNoteType_IsCheckedChanged" GroupName="NoteType"
-                                            Content="{x:Static lang:Resources.Note_MaskAdd}" />
+                                                 BorderBrush="#181818" 
+                                                 IsCheckedChanged="RadioNoteType_IsCheckedChanged" GroupName="NoteType"
+                                                 Content="{x:Static lang:Resources.Note_MaskAdd}" />
                                     
                                     <Separator Margin="0"/>
                                     
                                     <RadioButton Name="RadioNoteMaskRemove" Classes="ToggleRadioStripe"
-                                            BorderBrush="#888888"
-                                            IsCheckedChanged="RadioNoteType_IsCheckedChanged" GroupName="NoteType"
-                                            Content="{x:Static lang:Resources.Note_MaskRemove}" />
+                                                 BorderBrush="#888888"
+                                                 IsCheckedChanged="RadioNoteType_IsCheckedChanged" GroupName="NoteType"
+                                                 Content="{x:Static lang:Resources.Note_MaskRemove}" />
+                                    
+                                    <Separator Margin="0"/>
+                                    
+                                    <RadioButton Name="RadioNoteEndChart" Classes="ToggleRadioStripe"
+                                                 BorderBrush="#000000" 
+                                                 IsCheckedChanged="RadioNoteType_IsCheckedChanged" GroupName="NoteType"
+                                                 Content="{x:Static lang:Resources.Note_EndOfChart}" />
                                     
                                 </StackPanel>
                             </Border>
@@ -255,8 +255,10 @@
                 <Border Grid.Row="1"   ClipToBounds="True" Classes="Outline" Margin="10,10,10,0">
                     <Button Name="ButtonInsert" Click="ButtonInsert_OnClick" HorizontalAlignment="Stretch"
                             HorizontalContentAlignment="Center" Classes="CompactButton"
-                            Content="{x:Static lang:Resources.Button_InsertNote}"/>
+                            Content="{x:Static lang:Resources.Editor_InsertNote}"/>
                 </Border>
+                
+                <TextBox Grid.Row="2"/>
             </Grid>
         
     </Grid>

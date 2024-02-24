@@ -5,5 +5,24 @@
              xmlns:lang="clr-namespace:MercuryMapper.Assets.Lang"
              mc:Ignorable="d" d:DesignWidth="350" d:DesignHeight="400"
              x:Class="MercuryMapper.Views.Settings.SettingsView_Keymap">
-    Keymap Here
+    <Grid RowDefinitions="*, Auto, 50">
+        <ScrollViewer Grid.Row="0">
+            <TreeView Name="KeybindsTreeView" DoubleTapped="KeybindsTreeView_OnDoubleTapped">
+                <TreeViewItem Header="File" Name="TreeViewAppearance" IsExpanded="True">
+                    <TreeViewItem Header="{x:Static lang:Resources.Menu_New}"/>
+                    <TreeViewItem Header="{x:Static lang:Resources.Menu_Open}"/>
+                    <TreeViewItem Header="{x:Static lang:Resources.Menu_Save}"/>
+                    <TreeViewItem Header="{x:Static lang:Resources.Menu_SaveAs}"/>
+                </TreeViewItem>
+                <TreeViewItem Header="Editor">
+                    <TreeViewItem Header="{x:Static lang:Resources.Editor_InsertNote}"/>
+                </TreeViewItem>
+            </TreeView>
+        </ScrollViewer>
+        <Separator Grid.Row="1"/>
+        <StackPanel Grid.Row="2" Margin="10">
+            <TextBlock Text="{x:Static lang:Resources.Settings_Keymap_CurrentKeybind}"/>
+            <TextBlock Text="Ctrl + Shift + Alt + Escape + Z" FontWeight="Bold"/>
+        </StackPanel>
+    </Grid>
 </UserControl>

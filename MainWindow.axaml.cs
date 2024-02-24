@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Input;
+using MercuryMapper.Keybinding;
 
 namespace MercuryMapper;
 
@@ -12,10 +13,10 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
         
-        AddHandler(DragDrop.DropEvent, MainView_Drop);
+        AddHandler(DragDrop.DropEvent, MainWindow_Drop);
     }
     
-    private static void MainView_Drop(object? sender, DragEventArgs e)
+    private static void MainWindow_Drop(object? sender, DragEventArgs e)
     {
         var path = e.Data.GetFiles()?.First().Path;
         if (path == null) return;

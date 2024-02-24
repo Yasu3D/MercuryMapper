@@ -89,9 +89,9 @@ namespace MercuryMapper.Assets.Lang {
         /// <summary>
         ///   Looks up a localized string similar to Note Einfügen.
         /// </summary>
-        public static string Button_InsertNote {
+        public static string Editor_InsertNote {
             get {
-                return ResourceManager.GetString("Button_InsertNote", resourceCulture);
+                return ResourceManager.GetString("Editor_InsertNote", resourceCulture);
             }
         }
         
@@ -515,6 +515,15 @@ namespace MercuryMapper.Assets.Lang {
         public static string Settings_Header_Rendering {
             get {
                 return ResourceManager.GetString("Settings_Header_Rendering", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Aktuelle Tastenkombination:.
+        /// </summary>
+        public static string Settings_Keymap_CurrentKeybind {
+            get {
+                return ResourceManager.GetString("Settings_Keymap_CurrentKeybind", resourceCulture);
             }
         }
     }

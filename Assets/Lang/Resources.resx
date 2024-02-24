@@ -90,9 +90,6 @@
     <data name="Note_MaskRemove" xml:space="preserve">
         <value>Mask Remove</value>
     </data>
-    <data name="Button_InsertNote" xml:space="preserve">
-        <value>Insert Note</value>
-    </data>
     <data name="BonusType_None" xml:space="preserve">
         <value>None</value>
     </data>
@@ -170,5 +167,11 @@
     </data>
     <data name="Settings_Header_Rendering" xml:space="preserve">
         <value>Rendering</value>
+    </data>
+    <data name="Editor_InsertNote" xml:space="preserve">
+        <value>Insert Note</value>
+    </data>
+    <data name="Settings_Keymap_CurrentKeybind" xml:space="preserve">
+        <value>Current Keybind:</value>
     </data>
 </root>

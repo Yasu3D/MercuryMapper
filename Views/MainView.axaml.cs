@@ -1,8 +1,9 @@
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
 using FluentAvalonia.UI.Controls;
-using MercuryMapper.Data;
+using MercuryMapper.Keybinding;
 
 namespace MercuryMapper.Views;
 
@@ -11,8 +12,31 @@ public partial class MainView : UserControl
     public MainView()
     {
         InitializeComponent();
+
+        KeybindManager = new();
+        KeyDownEvent.AddClassHandler<TopLevel>(OnKeyDown, RoutingStrategies.Tunnel, handledEventsToo: true);
+        KeyUpEvent.AddClassHandler<TopLevel>(OnKeyUp, RoutingStrategies.Tunnel, handledEventsToo: true);
     }
+
+    private readonly SettingsView settingsView = new();
+
+    public readonly KeybindManager KeybindManager;
     
+    private void OnKeyDown(object sender, KeyEventArgs e)
+    {
+        if (TopLevel.GetTopLevel(this)?.FocusManager?.GetFocusedElement() is TextBox) return;
+        
+        if (e.Key is Key.LeftAlt or Key.RightAlt or Key.LeftShift or Key.RightShift or Key.LeftCtrl or Key.RightCtrl)
+        {
+            e.Handled = true;
+            return;
+        }
+        
+        KeybindManager.OnKeyDown(e);
+    }
+
+    private static void OnKeyUp(object sender, KeyEventArgs e) => e.Handled = true;
+
     private void MenuItemNew_OnClick(object? sender, RoutedEventArgs e) { }
 
     private void MenuItemOpen_OnClick(object? sender, RoutedEventArgs e) { }
@@ -27,11 +51,10 @@ public partial class MainView : UserControl
 
     private void MenuItemSettings_OnClick(object? sender, RoutedEventArgs e)
     {
-        SettingsView window = new();
         ContentDialog dialog = new()
         {
             Title = Assets.Lang.Resources.Menu_Settings,
-            Content = window,
+            Content = settingsView,
             IsPrimaryButtonEnabled = false,
             CloseButtonText = Assets.Lang.Resources.Generic_Close,
         };
