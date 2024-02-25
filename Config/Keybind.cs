@@ -1,6 +1,6 @@
 using Avalonia.Input;
 
-namespace MercuryMapper.Keybinding;
+namespace MercuryMapper.Config;
 
 public class Keybind()
 {
@@ -12,7 +12,7 @@ public class Keybind()
         Alt = e.KeyModifiers.HasFlag(KeyModifiers.Alt);
     }
 
-    public Keybind(Key key, bool shift = false, bool control = false, bool alt = false) : this()
+    public Keybind(Key key, bool control = false, bool shift = false, bool alt = false) : this()
     {
         Key = key;
         Shift = shift;
@@ -28,8 +28,8 @@ public class Keybind()
     public static bool Compare(Keybind a, Keybind b)
     {
         return a.Key == b.Key 
-               && a.Shift == b.Shift 
                && a.Control == b.Control 
+               && a.Shift == b.Shift 
                && a.Alt == b.Alt;
     }
 

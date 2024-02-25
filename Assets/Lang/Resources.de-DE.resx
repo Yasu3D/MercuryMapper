@@ -168,10 +168,25 @@
     <data name="Settings_Header_Rendering" xml:space="preserve">
         <value>Rendering</value>
     </data>
-    <data name="Editor_InsertNote" xml:space="preserve">
-        <value>Note Einfügen</value>
+    <data name="Editor_Insert" xml:space="preserve">
+        <value>Einfügen</value>
     </data>
     <data name="Settings_Keymap_CurrentKeybind" xml:space="preserve">
         <value>Aktuelle Tastenkombination:</value>
+    </data>
+    <data name="Editor_Play" xml:space="preserve">
+        <value>Play</value>
+    </data>
+    <data name="Editor_Pause" xml:space="preserve">
+        <value>Pause</value>
+    </data>
+    <data name="Note_Highlight" xml:space="preserve">
+        <value>Markieren</value>
+    </data>
+    <data name="Note_Selection" xml:space="preserve">
+        <value>Auswahl</value>
+    </data>
+    <data name="Generic_SaveAndClose" xml:space="preserve">
+        <value>Speichern und Schließen</value>
     </data>
 </root>

@@ -10,6 +10,7 @@
             <Color x:Key='ButtonBorderBrush'>#CCCCCC</Color>
             <Color x:Key='TitleBar'>#F4F4F4</Color>
             <Color x:Key='TextBrush'>#222222</Color>
+            <Color x:Key='TreeViewSelectedBrush'>#80315BB2</Color>
         </ResourceDictionary>
         <ResourceDictionary x:Key='Dark'>
             <Color x:Key='DarkBrush'>#1A1A1A</Color>
@@ -20,6 +21,7 @@
             <Color x:Key='ButtonBorderBrush'>#000000</Color>
             <Color x:Key='TitleBar'>#3C3F41</Color>
             <Color x:Key='TextBrush'>#DFDFDF</Color>
+            <Color x:Key='TreeViewSelectedBrush'>#80315BB2</Color>
         </ResourceDictionary>
     </ResourceDictionary.ThemeDictionaries>
 </ResourceDictionary>

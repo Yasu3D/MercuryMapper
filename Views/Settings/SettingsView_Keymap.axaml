@@ -4,25 +4,41 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:lang="clr-namespace:MercuryMapper.Assets.Lang"
              mc:Ignorable="d" d:DesignWidth="350" d:DesignHeight="400"
+             KeyDown="OnKeyDown"
+             
              x:Class="MercuryMapper.Views.Settings.SettingsView_Keymap">
-    <Grid RowDefinitions="*, Auto, 50">
-        <ScrollViewer Grid.Row="0">
-            <TreeView Name="KeybindsTreeView" DoubleTapped="KeybindsTreeView_OnDoubleTapped">
-                <TreeViewItem Header="File" Name="TreeViewAppearance" IsExpanded="True">
-                    <TreeViewItem Header="{x:Static lang:Resources.Menu_New}"/>
-                    <TreeViewItem Header="{x:Static lang:Resources.Menu_Open}"/>
-                    <TreeViewItem Header="{x:Static lang:Resources.Menu_Save}"/>
-                    <TreeViewItem Header="{x:Static lang:Resources.Menu_SaveAs}"/>
-                </TreeViewItem>
-                <TreeViewItem Header="Editor">
-                    <TreeViewItem Header="{x:Static lang:Resources.Editor_InsertNote}"/>
-                </TreeViewItem>
-            </TreeView>
-        </ScrollViewer>
-        <Separator Grid.Row="1"/>
-        <StackPanel Grid.Row="2" Margin="10">
-            <TextBlock Text="{x:Static lang:Resources.Settings_Keymap_CurrentKeybind}"/>
-            <TextBlock Text="Ctrl + Shift + Alt + Escape + Z" FontWeight="Bold"/>
-        </StackPanel>
-    </Grid>
+    <ScrollViewer>
+        <TreeView Margin="0,0,10,0" Name="KeybindsTreeView" Classes="KeybindList" DoubleTapped="KeybindsTreeView_OnDoubleTapped">
+            <TreeViewItem Header="File" Classes="HideKeybind" IsExpanded="True">
+                <TreeViewItem Name="FileNew" Header="{x:Static lang:Resources.Menu_New}"/>
+                <TreeViewItem Name="FileOpen" Header="{x:Static lang:Resources.Menu_Open}"/>
+                <TreeViewItem Name="FileSave" Header="{x:Static lang:Resources.Menu_Save}"/>
+                <TreeViewItem Name="FileSaveAs" Header="{x:Static lang:Resources.Menu_SaveAs}"/>
+                <TreeViewItem Name="FileSettings" Header="{x:Static lang:Resources.Menu_Settings}"/>
+            </TreeViewItem>
+            
+            <TreeViewItem Header="Edit" Classes="HideKeybind">
+                <TreeViewItem Name="EditUndo" Header="{x:Static lang:Resources.Menu_Undo}"/>
+                <TreeViewItem Name="EditRedo" Header="{x:Static lang:Resources.Menu_Redo}"/>
+                <TreeViewItem Name="EditCut" Header="{x:Static lang:Resources.Menu_Cut}"/>
+                <TreeViewItem Name="EditCopy" Header="{x:Static lang:Resources.Menu_Copy}"/>
+                <TreeViewItem Name="EditPaste" Header="{x:Static lang:Resources.Menu_Paste}"/>
+            </TreeViewItem>
+            
+            <TreeViewItem Header="Editor" Classes="HideKeybind">
+                <TreeViewItem Name="EditorInsert" Header="{x:Static lang:Resources.Editor_Insert}"/>
+                <TreeViewItem Name="EditorPlay" Header="{x:Static lang:Resources.Editor_Play}"/>
+                <TreeViewItem Name="EditorNoteTypeTouch" Header="{x:Static lang:Resources.Note_Touch}"/>
+                <TreeViewItem Name="EditorNoteTypeSlideClockwise" Header="{x:Static lang:Resources.Note_SlideClockwise}"/>
+                <TreeViewItem Name="EditorNoteTypeSlideCounterclockwise" Header="{x:Static lang:Resources.Note_SlideCounterclockwise}"/>
+                <TreeViewItem Name="EditorNoteTypeSnapForward" Header="{x:Static lang:Resources.Note_SnapForward}"/>
+                <TreeViewItem Name="EditorNoteTypeSnapBackward" Header="{x:Static lang:Resources.Note_SnapBackward}"/>
+                <TreeViewItem Name="EditorNoteTypeChain" Header="{x:Static lang:Resources.Note_Chain}"/>
+                <TreeViewItem Name="EditorNoteTypeHold" Header="{x:Static lang:Resources.Note_Hold}"/>
+                <TreeViewItem Name="EditorNoteTypeMaskAdd" Header="{x:Static lang:Resources.Note_MaskAdd}"/>
+                <TreeViewItem Name="EditorNoteTypeMaskRemove" Header="{x:Static lang:Resources.Note_MaskRemove}"/>
+                <TreeViewItem Name="EditorNoteTypeEndOfChart" Header="{x:Static lang:Resources.Note_EndOfChart}"/>
+            </TreeViewItem>
+        </TreeView>
+    </ScrollViewer>
 </UserControl>

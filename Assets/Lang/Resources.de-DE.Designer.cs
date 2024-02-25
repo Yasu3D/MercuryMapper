@@ -87,11 +87,29 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Note Einfügen.
+        ///   Looks up a localized string similar to Einfügen.
         /// </summary>
-        public static string Editor_InsertNote {
+        public static string Editor_Insert {
             get {
-                return ResourceManager.GetString("Editor_InsertNote", resourceCulture);
+                return ResourceManager.GetString("Editor_Insert", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pause.
+        /// </summary>
+        public static string Editor_Pause {
+            get {
+                return ResourceManager.GetString("Editor_Pause", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Play.
+        /// </summary>
+        public static string Editor_Play {
+            get {
+                return ResourceManager.GetString("Editor_Play", resourceCulture);
             }
         }
         
@@ -101,6 +119,15 @@ namespace MercuryMapper.Assets.Lang {
         public static string Generic_Close {
             get {
                 return ResourceManager.GetString("Generic_Close", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Speichern und Schließen.
+        /// </summary>
+        public static string Generic_SaveAndClose {
+            get {
+                return ResourceManager.GetString("Generic_SaveAndClose", resourceCulture);
             }
         }
         
@@ -348,6 +375,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Markieren.
+        /// </summary>
+        public static string Note_Highlight {
+            get {
+                return ResourceManager.GetString("Note_Highlight", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Halten.
         /// </summary>
         public static string Note_Hold {
@@ -416,6 +452,15 @@ namespace MercuryMapper.Assets.Lang {
         public static string Note_MaskRemove {
             get {
                 return ResourceManager.GetString("Note_MaskRemove", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Auswahl.
+        /// </summary>
+        public static string Note_Selection {
+            get {
+                return ResourceManager.GetString("Note_Selection", resourceCulture);
             }
         }
         

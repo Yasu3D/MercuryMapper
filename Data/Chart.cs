@@ -173,10 +173,10 @@ public class Chart
             for (int i = 0; i < Notes.Count; i++)
             {
                 if (!nextReferencedIndex.ContainsKey(i)) continue;
-                if (!notesByIndex.ContainsKey(nextReferencedIndex[i])) continue;
+                if (!notesByIndex.TryGetValue(nextReferencedIndex[i], out Note? referencedNote)) continue;
 
-                Notes[i].NextReferencedNote = notesByIndex[nextReferencedIndex[i]];
-                Notes[i].NextReferencedNote!.PrevReferencedNote = Notes[i];
+                Notes[i].NextReferencedNote = referencedNote;
+                referencedNote.PrevReferencedNote = Notes[i];
             }
         }
 

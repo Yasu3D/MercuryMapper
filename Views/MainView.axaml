@@ -102,70 +102,70 @@
                             <Border   ClipToBounds="True" Classes="Outline">
                                 <StackPanel>
                                     <RadioButton Name="RadioNoteTouch" Classes="ToggleRadioStripe" 
-                                            BorderBrush="Teal"
+                                            BorderBrush="White"
                                             IsCheckedChanged="RadioNoteType_IsCheckedChanged" GroupName="NoteType"
                                             Content="{x:Static lang:Resources.Note_Touch}" IsChecked="True"/>
                                     
                                     <Separator Margin="0"/>
                                     
                                     <RadioButton Name="RadioNoteSlideClockwise" Classes="ToggleRadioStripe"
-                                            BorderBrush="Teal"
+                                            BorderBrush="White"
                                             IsCheckedChanged="RadioNoteType_IsCheckedChanged" GroupName="NoteType"
                                             Content="{x:Static lang:Resources.Note_SlideClockwise}" />
                                     
                                     <Separator Margin="0"/>
                                     
                                     <RadioButton Name="RadioNoteSlideCounterclockwise" Classes="ToggleRadioStripe"
-                                            BorderBrush="Teal"
+                                            BorderBrush="White"
                                             IsCheckedChanged="RadioNoteType_IsCheckedChanged" GroupName="NoteType"
                                             Content="{x:Static lang:Resources.Note_SlideCounterclockwise}" />
                                     
                                     <Separator Margin="0"/>
                                     
                                     <RadioButton Name="RadioNoteSnapForward" Classes="ToggleRadioStripe"
-                                            BorderBrush="Teal"
+                                            BorderBrush="White"
                                             IsCheckedChanged="RadioNoteType_IsCheckedChanged" GroupName="NoteType"
                                             Content="{x:Static lang:Resources.Note_SnapForward}" />
                                     
                                     <Separator Margin="0"/>
                                     
                                     <RadioButton Name="RadioNoteSnapBackward" Classes="ToggleRadioStripe"
-                                            BorderBrush="Teal"
+                                            BorderBrush="White"
                                             IsCheckedChanged="RadioNoteType_IsCheckedChanged" GroupName="NoteType"
                                             Content="{x:Static lang:Resources.Note_SnapBackward}" />
                                     
                                     <Separator Margin="0"/>
                                     
                                     <RadioButton Name="RadioNoteChain" Classes="ToggleRadioStripe"
-                                            BorderBrush="Teal"
+                                            BorderBrush="White"
                                             IsCheckedChanged="RadioNoteType_IsCheckedChanged" GroupName="NoteType"
                                             Content="{x:Static lang:Resources.Note_Chain}" />
                                     
                                     <Separator Margin="0"/>
                                     
                                     <RadioButton Name="RadioNoteHold" Classes="ToggleRadioStripe"
-                                            BorderBrush="Teal"
+                                            BorderBrush="White"
                                             IsCheckedChanged="RadioNoteType_IsCheckedChanged" GroupName="NoteType"
                                             Content="{x:Static lang:Resources.Note_Hold}" />
                                     
                                     <Separator Margin="0"/>
                                     
                                     <RadioButton Name="RadioNoteMaskAdd" Classes="ToggleRadioStripe"
-                                                 BorderBrush="#181818" 
+                                                 BorderBrush="White" 
                                                  IsCheckedChanged="RadioNoteType_IsCheckedChanged" GroupName="NoteType"
                                                  Content="{x:Static lang:Resources.Note_MaskAdd}" />
                                     
                                     <Separator Margin="0"/>
                                     
                                     <RadioButton Name="RadioNoteMaskRemove" Classes="ToggleRadioStripe"
-                                                 BorderBrush="#888888"
+                                                 BorderBrush="White"
                                                  IsCheckedChanged="RadioNoteType_IsCheckedChanged" GroupName="NoteType"
                                                  Content="{x:Static lang:Resources.Note_MaskRemove}" />
                                     
                                     <Separator Margin="0"/>
                                     
-                                    <RadioButton Name="RadioNoteEndChart" Classes="ToggleRadioStripe"
-                                                 BorderBrush="#000000" 
+                                    <RadioButton Name="RadioNoteEndOfChart" Classes="ToggleRadioStripe"
+                                                 BorderBrush="White" 
                                                  IsCheckedChanged="RadioNoteType_IsCheckedChanged" GroupName="NoteType"
                                                  Content="{x:Static lang:Resources.Note_EndOfChart}" />
                                     
@@ -255,7 +255,7 @@
                 <Border Grid.Row="1"   ClipToBounds="True" Classes="Outline" Margin="10,10,10,0">
                     <Button Name="ButtonInsert" Click="ButtonInsert_OnClick" HorizontalAlignment="Stretch"
                             HorizontalContentAlignment="Center" Classes="CompactButton"
-                            Content="{x:Static lang:Resources.Editor_InsertNote}"/>
+                            Content="{x:Static lang:Resources.Editor_Insert}"/>
                 </Border>
                 
                 <TextBox Grid.Row="2"/>

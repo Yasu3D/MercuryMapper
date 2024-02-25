@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Input;
-using MercuryMapper.Keybinding;
+using MercuryMapper.Config;
 
 namespace MercuryMapper;
 

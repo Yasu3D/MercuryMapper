@@ -346,7 +346,7 @@
             
             <!--  Selected state  -->
             <Style Selector="^:selected /template/ Border#PART_LayoutRoot">
-                <Setter Property="Background" Value="#80315BB2" />
+                <Setter Property="Background" Value="{DynamicResource TreeViewSelectedBrush}" />
                 <Setter Property="BorderBrush" Value="{DynamicResource TreeViewItemBorderBrushSelected}" />
             </Style>
             <Style Selector="^:selected /template/ Border#PART_LayoutRoot > ContentPresenter#PART_HeaderPresenter">
@@ -357,6 +357,63 @@
             <Style Selector="^:selected /template/ Border#PART_LayoutRoot:pointerover"/>
             <Style Selector="^:selected /template/ Border#PART_LayoutRoot:pointerover > ContentPresenter#PART_HeaderPresenter"/>
         </Style>
+        
+        <Style Selector="TreeView.KeybindList TreeViewItem:not(.HideKeybind)">
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <StackPanel>
+                        <Border Name="PART_LayoutRoot"
+                                Classes="TreeViewItemLayoutRoot"
+                                Focusable="True"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="{TemplateBinding CornerRadius}"
+                                MinHeight="{TemplateBinding MinHeight}"
+                                TemplatedControl.IsTemplateFocusTarget="True">
+                            <Grid Name="PART_Header"
+                                  ColumnDefinitions="Auto, *, Auto"
+                                  Margin="{TemplateBinding Level, Mode=OneWay, Converter={StaticResource TreeViewItemLeftMarginConverter}}">
+                                <Panel Name="PART_ExpandCollapseChevronContainer"
+                                       Margin="{StaticResource TreeViewItemExpandCollapseChevronMargin}">
+                                    <ToggleButton Name="PART_ExpandCollapseChevron"
+                                                  Theme="{StaticResource FluentTreeViewExpandCollapseChevron}"
+                                                  Focusable="False"
+                                                  IsChecked="{TemplateBinding IsExpanded, Mode=TwoWay}" />
+                                </Panel>
+                                <ContentPresenter Name="PART_HeaderPresenter"
+                                                  Grid.Column="1"
+                                                  Focusable="False"
+                                                  Background="Transparent"
+                                                  Content="{TemplateBinding Header}"
+                                                  ContentTemplate="{TemplateBinding HeaderTemplate}"
+                                                  HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+                                                  VerticalAlignment="{TemplateBinding VerticalAlignment}"
+                                                  Margin="{TemplateBinding Padding}" />
+                                    
+                                <ContentPresenter Name="PART_Keybind"
+                                                  Grid.Column="2"
+                                                  Focusable="False"
+                                                  Background="{DynamicResource TreeViewSelectedBrush}"
+                                                  Content="{TemplateBinding Tag}"
+                                                  ContentTemplate="{TemplateBinding HeaderTemplate}"
+                                                  HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+                                                  VerticalAlignment="{TemplateBinding VerticalAlignment}"
+                                                  Margin="3"
+                                                  Padding="7,2,7,2"
+                                                  CornerRadius="2"/>
+                            </Grid>
+                        </Border>
+                        <ItemsPresenter Name="PART_ItemsPresenter"
+                                        IsVisible="{TemplateBinding IsExpanded}"
+                                        ItemsPanel="{TemplateBinding ItemsPanel}" />
+                    </StackPanel>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+        
+        <!-- shut up compiler -->
+        <Style Selector="TreeView.HideKeybind"/>
 
     </Application.Styles>
 </Application>

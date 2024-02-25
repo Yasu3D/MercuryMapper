@@ -20,10 +20,6 @@
         </TreeView>
         <Rectangle Grid.Column="1" VerticalAlignment="Stretch" Width="1" Margin="0,0,10,0" Fill="{DynamicResource MenuBorderBrush}"/>
         
-        <views:SettingsView_Colors Grid.Column="2" IsVisible="False" Name="SettingsViewColors"/>
-        <views:SettingsView_Gimmicks Grid.Column="2" IsVisible="False" Name="SettingsViewGimmicks"/>
-        <views:SettingsView_Rendering Grid.Column="2" IsVisible="False" Name="SettingsViewRendering"/>
-        
-        <views:SettingsView_Keymap Grid.Column="2" IsVisible="False" Name="SettingsViewKeymap"/>
+        <UserControl Grid.Column="2" Name="ViewContainer" Content=""/>
     </Grid>
 </UserControl>

@@ -9,83 +9,83 @@
         <StackPanel Margin="20">
             <UniformGrid Columns="2">
                 <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Note_Touch}"/>
-                <ColorPicker HorizontalAlignment="Right" Margin="5" Name="ColorPickerNoteTouch"/>
+                <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorNoteTouch"/>
             
                 <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Note_Chain}"/>
-                <ColorPicker HorizontalAlignment="Right" Margin="5" Name="ColorPickerNoteChain"/>
+                <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorNoteChain"/>
             </UniformGrid>
             
             <Separator/>
             
             <UniformGrid Columns="2">
                 <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Note_SnapForward}"/>
-                <ColorPicker HorizontalAlignment="Right" Margin="5" Name="ColorPickerNoteSnapForward"/>
+                <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorNoteSnapForward"/>
             
                 <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Note_SnapBackward}"/>
-                <ColorPicker HorizontalAlignment="Right" Margin="5" Name="ColorPickerNoteSnapBackward"/>
+                <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorNoteSnapBackward"/>
                 <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Note_SlideClockwise}"/>
-                <ColorPicker HorizontalAlignment="Right" Margin="5" Name="ColorPickerNoteSlideClockwise"/>
+                <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorNoteSlideClockwise"/>
                 <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Note_SlideCounterclockwise}"/>
-                <ColorPicker HorizontalAlignment="Right" Margin="5" Name="ColorPickerNoteSlideCounterclockwise"/>
+                <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorNoteSlideCounterclockwise"/>
             </UniformGrid>
             
             <Separator/>
             
             <UniformGrid Columns="2">
                 <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Note_HoldStart}"/>
-                <ColorPicker HorizontalAlignment="Right" Margin="5" Name="ColorPickerNoteHoldStart"/>
+                <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorNoteHoldStart"/>
                 <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Note_HoldSegment}"/>
-                <ColorPicker  HorizontalAlignment="Right" Margin="5" Name="ColorPickerNoteHoldSegment"/>
+                <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorNoteHoldSegment"/>
                 <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Note_HoldEnd}"/>
-                <ColorPicker  HorizontalAlignment="Right" Margin="5" Name="ColorPickerNoteHoldEnd"/>
+                <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorNoteHoldEnd"/>
                 <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Note_HoldSurfaceNear}"/>
-                <ColorPicker  HorizontalAlignment="Right" Margin="5" Name="ColorPickerNoteHoldSurfaceNear"/>
+                <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorNoteHoldSurfaceNear"/>
                 <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Note_HoldSurfaceFar}"/>
-                <ColorPicker  HorizontalAlignment="Right" Margin="5" Name="ColorPickerNoteHoldSurfaceFar"/>
+                <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorNoteHoldSurfaceFar"/>
             </UniformGrid>
                 
             <Separator/>
             
             <UniformGrid Columns="2">
                 <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Note_MaskAdd}"/>
-                <ColorPicker  HorizontalAlignment="Right" Margin="5" Name="ColorPickerNoteMaskAdd"/>
+                <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorNoteMaskAdd"/>
                 <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Note_MaskRemove}"/>
-                <ColorPicker  HorizontalAlignment="Right" Margin="5" Name="ColorPickerNoteMaskRemove"/>
+                <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorNoteMaskRemove"/>
                 <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Note_EndOfChart}"/>
-                <ColorPicker  HorizontalAlignment="Right" Margin="5" Name="ColorPickerNoteEndOfChart"/>
+                <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorNoteEndOfChart"/>
             </UniformGrid>
                 
             <Separator/>
             
             <UniformGrid Columns="2">
-                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Note_Chain}"/>
-                <ColorPicker  HorizontalAlignment="Right" Margin="5" Name="ColorPickerHighlight"/>
-                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Note_Chain}"/>
-                <ColorPicker  HorizontalAlignment="Right" Margin="5" Name="ColorPickerSelection"/>
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Note_Highlight}"/>
+                <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorHighlight"/>
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Note_Selection}"/>
+                <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorSelection"/>
             </UniformGrid>
                 
             <Separator/>
             
             <UniformGrid Columns="2">
-                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Note_Chain}"/>
-                <ColorPicker  HorizontalAlignment="Right" Margin="5" Name="ColorPickerBonus"/>
-                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Note_Chain}"/>
-                <ColorPicker  HorizontalAlignment="Right" Margin="5" Name="ColorPickerRNote"/>
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.BonusType_Bonus}"/>
+                <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorBonus"/>
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.BonusType_RNote}"/>
+                <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorRNote"/>
             </UniformGrid>
                 
             <Separator/>
             
             <UniformGrid Columns="2">
                 <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Gimmick_BpmChange}"/>
-                <ColorPicker  HorizontalAlignment="Right" Margin="5" Name="ColorPickerGimmickBpmChange"/>
+                <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorGimmickBpmChange"/>
                 <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Gimmick_TimeSigChange}"/>
-                <ColorPicker  HorizontalAlignment="Right" Margin="5" Name="ColorPickerGimmickTimeSigChange"/>
+                <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorGimmickTimeSigChange"/>
                 <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Gimmick_HiSpeedChange}"/>
-                <ColorPicker  HorizontalAlignment="Right" Margin="5" Name="ColorPickerGimmickHiSpeedChange"/>
+                <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorGimmickHiSpeedChange"/>
                 <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Gimmick_Stop}"/>
-                <ColorPicker  HorizontalAlignment="Right" Margin="5" Name="ColorPickerGimmickStop"/>
+                <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorGimmickStop"/>
                 <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Gimmick_Reverse}"/>
-                <ColorPicker  HorizontalAlignment="Right" Margin="5" Name="ColorPickerGimmickReverse"/>
+                <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorGimmickReverse"/>
             </UniformGrid>
         </StackPanel>
     </ScrollViewer>

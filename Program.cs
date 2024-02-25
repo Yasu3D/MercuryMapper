@@ -1,7 +1,7 @@
 ﻿using Avalonia;
 using System;
 
-namespace MercuryMapper;
+namespace MercuryMapper.Config;
 
 class Program
 {
