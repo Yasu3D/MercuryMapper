@@ -19,11 +19,15 @@ public class Chart
     private List<Gimmick>? TimeEvents { get; set; }
     private List<TimeScaleData> TimeScales { get; set; } = [];
 
+    public string MusicFilePath { get; set; } = "";
+    public string EditorMusicFilePath { get; set; } = "";
+    public float Level { get; set; } = 0;
+    public float ClearThreshold { get; set; } = 0.83f;
+    public string Author { get; set; } = "";
+    public float PreviewTime { get; set; } = 0; // in seconds
+    public float PreviewLength { get; set; } = 10; // in seconds
     public float Offset { get; set; } = 0; // in seconds
     public float MovieOffset { get; set; } = 0; // in seconds
-
-    private string SongFileName { get; set; } = "";
-    public string? EditorSongFileName { get; set; } = "";
 
     /// <summary>
     /// Loads a Chart from a .mer file.
@@ -67,16 +71,31 @@ public class Chart
             {
                 string line = lines[readerIndex];
 
-                string? songFileName = getTag(line, "#MUSIC_FILE_PATH");
-                if (songFileName != null) SongFileName = songFileName;
+                string? musicFilePath = getTag(line, "#MUSIC_FILE_PATH") ?? getTag(line, "#EDITOR_AUDIO") ?? getTag(line, "#AUDIO");
+                if (musicFilePath != null) MusicFilePath = musicFilePath;
 
-                string? editorSongFileName = getTag(line, "#EDITOR_MUSIC_FILE_PATH");
-                if (editorSongFileName != null) EditorSongFileName = editorSongFileName;
+                string? editorMusicFilePath = getTag(line, "#EDITOR_MUSIC_FILE_PATH");
+                if (editorMusicFilePath != null) EditorMusicFilePath = editorMusicFilePath;
 
-                string? offset = getTag(line, "#OFFSET");
+                string? level = getTag(line, "#LEVEL") ?? getTag(line, "#EDITOR_LEVEL");
+                if (level != null) Level = Convert.ToSingle(level);
+
+                string? clearThreshold = getTag(line, "#CLEAR_THRESHOLD") ?? getTag(line, "#EDITOR_CLEAR_THRESHOLD");
+                if (clearThreshold != null) ClearThreshold = Convert.ToSingle(clearThreshold, CultureInfo.InvariantCulture);
+
+                string? author = getTag(line, "#AUTHOR") ?? getTag(line, "#EDITOR_AUTHOR");
+                if (author != null) Author = author;
+                
+                string? previewTime = getTag(line, "#PREVIEW_TIME") ?? getTag(line, "#EDITOR_PREVIEW_TIME");
+                if (clearThreshold != null) PreviewTime = Convert.ToSingle(previewTime, CultureInfo.InvariantCulture);
+                
+                string? previewLength = getTag(line, "#PREVIEW_LENGTH") ?? getTag(line, "#EDITOR_PREVIEW_LENGTH");
+                if (clearThreshold != null) PreviewLength = Convert.ToSingle(previewLength, CultureInfo.InvariantCulture);
+                
+                string? offset = getTag(line, "#OFFSET") ?? getTag(line, "EDITOR_OFFSET");
                 if (offset != null) Offset = Convert.ToSingle(offset, CultureInfo.InvariantCulture);
             
-                string? movieOffset = getTag(line, "#MOVIEOFFSET");
+                string? movieOffset = getTag(line, "#MOVIEOFFSET") ?? getTag(line, "EDITOR_MOVIEOFFSET");
                 if (movieOffset != null) MovieOffset = Convert.ToSingle(movieOffset, CultureInfo.InvariantCulture);
 
                 if (!line.Contains("#BODY")) continue;
@@ -203,26 +222,27 @@ public class Chart
 
             if (writeType is ChartWriteType.Editor)
             {
-                streamWriter.WriteLine($"#EDITOR_MUSIC_FILE_PATH {EditorSongFileName}");
-                streamWriter.WriteLine($"#EDITOR_LEVEL");
-                streamWriter.WriteLine($"#EDITOR_CLEAR_THRESHOLD");
-                streamWriter.WriteLine($"#EDITOR_AUTHOR");
-                streamWriter.WriteLine($"#EDITOR_PREVIEW_TIME");
-                streamWriter.WriteLine($"#EDITOR_PREVIEW_LENGTH");
-                streamWriter.WriteLine($"#EDITOR_OFFSET");
-                streamWriter.WriteLine($"#EDITOR_MOVIEOFFSET");
+                streamWriter.WriteLine($"#EDITOR_MUSIC_FILE_PATH {EditorMusicFilePath}");
+                streamWriter.WriteLine($"#EDITOR_AUDIO {MusicFilePath}");
+                streamWriter.WriteLine($"#EDITOR_LEVEL {Level.ToString("F6", CultureInfo.InvariantCulture)}");
+                streamWriter.WriteLine($"#EDITOR_CLEAR_THRESHOLD {ClearThreshold.ToString("F6", CultureInfo.InvariantCulture)}");
+                streamWriter.WriteLine($"#EDITOR_AUTHOR {Author}");
+                streamWriter.WriteLine($"#EDITOR_PREVIEW_TIME {PreviewTime.ToString("F6", CultureInfo.InvariantCulture)}");
+                streamWriter.WriteLine($"#EDITOR_PREVIEW_LENGTH {PreviewLength.ToString("F6", CultureInfo.InvariantCulture)}");
+                streamWriter.WriteLine($"#EDITOR_OFFSET {Offset.ToString("F6", CultureInfo.InvariantCulture)}");
+                streamWriter.WriteLine($"#EDITOR_MOVIEOFFSET {MovieOffset.ToString("F6", CultureInfo.InvariantCulture)}");
             }
             
             if (writeType is ChartWriteType.Saturn)
             {
-                streamWriter.WriteLine($"#LEVEL");
-                streamWriter.WriteLine($"#AUDIO {EditorSongFileName}");
-                streamWriter.WriteLine($"#CLEAR_THRESHOLD");
-                streamWriter.WriteLine($"#AUTHOR");
-                streamWriter.WriteLine($"#PREVIEW_TIME");
-                streamWriter.WriteLine($"#PREVIEW_LENGTH");
-                streamWriter.WriteLine($"#OFFSET");
-                streamWriter.WriteLine($"#MOVIEOFFSET");
+                streamWriter.WriteLine($"#LEVEL {Level.ToString("F6", CultureInfo.InvariantCulture)}");
+                streamWriter.WriteLine($"#AUDIO {MusicFilePath}");
+                streamWriter.WriteLine($"#CLEAR_THRESHOLD {ClearThreshold.ToString("F6", CultureInfo.InvariantCulture)}");
+                streamWriter.WriteLine($"#AUTHOR {Author}");
+                streamWriter.WriteLine($"#PREVIEW_TIME {PreviewTime.ToString("F6", CultureInfo.InvariantCulture)}");
+                streamWriter.WriteLine($"#PREVIEW_LENGTH {PreviewLength.ToString("F6", CultureInfo.InvariantCulture)}");
+                streamWriter.WriteLine($"#OFFSET {Offset.ToString("F6", CultureInfo.InvariantCulture)}");
+                streamWriter.WriteLine($"#MOVIEOFFSET {MovieOffset.ToString("F6", CultureInfo.InvariantCulture)}");
             }
             
             if (writeType is ChartWriteType.Mercury)
@@ -230,9 +250,9 @@ public class Chart
                 streamWriter.WriteLine("#MUSIC_SCORE_ID 0");
                 streamWriter.WriteLine("#MUSIC_SCORE_VERSION 0");
                 streamWriter.WriteLine("#GAME_VERSION ");
-                streamWriter.WriteLine($"#MUSIC_FILE_PATH {SongFileName}");
+                streamWriter.WriteLine($"#MUSIC_FILE_PATH {MusicFilePath}");
                 streamWriter.WriteLine($"#OFFSET {Offset.ToString("F6", CultureInfo.InvariantCulture)}");
-                streamWriter.WriteLine($"#MOVIEOFFSET {MovieOffset:F6}");
+                streamWriter.WriteLine($"#MOVIEOFFSET {MovieOffset.ToString("F6", CultureInfo.InvariantCulture)}");
             }
             
             streamWriter.WriteLine("#BODY");
