@@ -32,6 +32,8 @@ public partial class SettingsView_Keymap : UserControl
         EditPaste.Tag = Keymap.Keybinds["EditPaste"].ToString();
         EditorInsert.Tag = Keymap.Keybinds["EditorInsert"].ToString();
         EditorPlay.Tag = Keymap.Keybinds["EditorPlay"].ToString();
+        EditorIncreasePlaybackSpeed.Tag = Keymap.Keybinds["EditorIncreasePlaybackSpeed"].ToString();
+        EditorDecreasePlaybackSpeed.Tag = Keymap.Keybinds["EditorDecreasePlaybackSpeed"].ToString();
         EditorNoteTypeTouch.Tag = Keymap.Keybinds["EditorNoteTypeTouch"].ToString();
         EditorNoteTypeSlideClockwise.Tag = Keymap.Keybinds["EditorNoteTypeSlideClockwise"].ToString();
         EditorNoteTypeSlideCounterclockwise.Tag = Keymap.Keybinds["EditorNoteTypeSlideCounterclockwise"].ToString();
@@ -46,11 +48,11 @@ public partial class SettingsView_Keymap : UserControl
     
     private void KeybindsTreeView_OnDoubleTapped(object? sender, TappedEventArgs e)
     {
-        Control item = (Control)KeybindsTreeView.SelectedItem!;
-        if (item.Classes.Contains("HideKeybind")) return;
+        Control? item = (Control?)KeybindsTreeView.SelectedItem;
+        if (item == null || item.Classes.Contains("HideKeybind")) return;
         
         string name = item.Name ?? "";
-        item.Tag = "Waiting for input...";
+        item.Tag = Assets.Lang.Resources.Settings_Keymap_WaitingForInput;
         mainView.KeybindEditor.StartRebinding(name);
     }
 

@@ -196,7 +196,7 @@
                                 </StackPanel>
                             </Border>
                             
-                            <Border   ClipToBounds="True" Classes="Outline" Margin="0,10,0,0" Name="MaskDirectionPanel" IsVisible="True">
+                            <Border   ClipToBounds="True" Classes="Outline" Margin="0,10,0,0" Name="MaskDirectionPanel">
                                 <StackPanel>
                                     <RadioButton Name="RadioMaskClockwise" IsChecked="True"
                                                  GroupName="MaskDirection" Classes="ToggleRadio"
@@ -257,8 +257,6 @@
                             HorizontalContentAlignment="Center" Classes="CompactButton"
                             Content="{x:Static lang:Resources.Editor_Insert}"/>
                 </Border>
-                
-                <TextBox Grid.Row="2"/>
             </Grid>
         
     </Grid>

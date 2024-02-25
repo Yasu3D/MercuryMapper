@@ -87,6 +87,24 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Wiedergabegeschwindigkeit erhöhen.
+        /// </summary>
+        public static string Editor_DecreasePlaybackSpeed {
+            get {
+                return ResourceManager.GetString("Editor_DecreasePlaybackSpeed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wiedergabegeschwindigkeit verringern.
+        /// </summary>
+        public static string Editor_IncreasePlaybackSpeed {
+            get {
+                return ResourceManager.GetString("Editor_IncreasePlaybackSpeed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Einfügen.
         /// </summary>
         public static string Editor_Insert {
@@ -114,6 +132,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Abbrechen.
+        /// </summary>
+        public static string Generic_Cancel {
+            get {
+                return ResourceManager.GetString("Generic_Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Schließen.
         /// </summary>
         public static string Generic_Close {
@@ -123,11 +150,38 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Nein.
+        /// </summary>
+        public static string Generic_No {
+            get {
+                return ResourceManager.GetString("Generic_No", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Speichern und Schließen.
         /// </summary>
         public static string Generic_SaveAndClose {
             get {
                 return ResourceManager.GetString("Generic_SaveAndClose", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Chart ist nicht gespeichert. Möchten Sie speichern?.
+        /// </summary>
+        public static string Generic_SaveWarning {
+            get {
+                return ResourceManager.GetString("Generic_SaveWarning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ja.
+        /// </summary>
+        public static string Generic_Yes {
+            get {
+                return ResourceManager.GetString("Generic_Yes", resourceCulture);
             }
         }
         
@@ -564,11 +618,11 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Aktuelle Tastenkombination:.
+        ///   Looks up a localized string similar to Warte auf Eingabe....
         /// </summary>
-        public static string Settings_Keymap_CurrentKeybind {
+        public static string Settings_Keymap_WaitingForInput {
             get {
-                return ResourceManager.GetString("Settings_Keymap_CurrentKeybind", resourceCulture);
+                return ResourceManager.GetString("Settings_Keymap_WaitingForInput", resourceCulture);
             }
         }
     }

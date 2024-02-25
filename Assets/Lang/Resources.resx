@@ -171,9 +171,6 @@
     <data name="Editor_Insert" xml:space="preserve">
         <value>Insert</value>
     </data>
-    <data name="Settings_Keymap_CurrentKeybind" xml:space="preserve">
-        <value>Current Keybind:</value>
-    </data>
     <data name="Editor_Play" xml:space="preserve">
         <value>Play</value>
     </data>
@@ -188,5 +185,26 @@
     </data>
     <data name="Generic_SaveAndClose" xml:space="preserve">
         <value>Save and Close</value>
+    </data>
+    <data name="Generic_Yes" xml:space="preserve">
+        <value>Yes</value>
+    </data>
+    <data name="Generic_No" xml:space="preserve">
+        <value>No</value>
+    </data>
+    <data name="Generic_Cancel" xml:space="preserve">
+        <value>Cancel</value>
+    </data>
+    <data name="Generic_SaveWarning" xml:space="preserve">
+        <value>Chart is unsaved. Would you like to save?</value>
+    </data>
+    <data name="Settings_Keymap_WaitingForInput" xml:space="preserve">
+        <value>Waiting for input...</value>
+    </data>
+    <data name="Editor_IncreasePlaybackSpeed" xml:space="preserve">
+        <value>Decrease Playback Speed</value>
+    </data>
+    <data name="Editor_DecreasePlaybackSpeed" xml:space="preserve">
+        <value>Increase Playback Speed</value>
     </data>
 </root>

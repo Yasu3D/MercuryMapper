@@ -28,6 +28,8 @@
             <TreeViewItem Header="Editor" Classes="HideKeybind">
                 <TreeViewItem Name="EditorInsert" Header="{x:Static lang:Resources.Editor_Insert}"/>
                 <TreeViewItem Name="EditorPlay" Header="{x:Static lang:Resources.Editor_Play}"/>
+                <TreeViewItem Name="EditorIncreasePlaybackSpeed" Header="{x:Static lang:Resources.Editor_IncreasePlaybackSpeed}"/>
+                <TreeViewItem Name="EditorDecreasePlaybackSpeed" Header="{x:Static lang:Resources.Editor_DecreasePlaybackSpeed}"/>
                 <TreeViewItem Name="EditorNoteTypeTouch" Header="{x:Static lang:Resources.Note_Touch}"/>
                 <TreeViewItem Name="EditorNoteTypeSlideClockwise" Header="{x:Static lang:Resources.Note_SlideClockwise}"/>
                 <TreeViewItem Name="EditorNoteTypeSlideCounterclockwise" Header="{x:Static lang:Resources.Note_SlideCounterclockwise}"/>

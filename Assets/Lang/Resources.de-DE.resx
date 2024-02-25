@@ -171,9 +171,6 @@
     <data name="Editor_Insert" xml:space="preserve">
         <value>Einfügen</value>
     </data>
-    <data name="Settings_Keymap_CurrentKeybind" xml:space="preserve">
-        <value>Aktuelle Tastenkombination:</value>
-    </data>
     <data name="Editor_Play" xml:space="preserve">
         <value>Play</value>
     </data>
@@ -188,5 +185,26 @@
     </data>
     <data name="Generic_SaveAndClose" xml:space="preserve">
         <value>Speichern und Schließen</value>
+    </data>
+    <data name="Generic_Yes" xml:space="preserve">
+        <value>Ja</value>
+    </data>
+    <data name="Generic_No" xml:space="preserve">
+        <value>Nein</value>
+    </data>
+    <data name="Generic_Cancel" xml:space="preserve">
+        <value>Abbrechen</value>
+    </data>
+    <data name="Generic_SaveWarning" xml:space="preserve">
+        <value>Chart ist nicht gespeichert. Möchten Sie speichern?</value>
+    </data>
+    <data name="Settings_Keymap_WaitingForInput" xml:space="preserve">
+        <value>Warte auf Eingabe...</value>
+    </data>
+    <data name="Editor_DecreasePlaybackSpeed" xml:space="preserve">
+        <value>Wiedergabegeschwindigkeit erhöhen</value>
+    </data>
+    <data name="Editor_IncreasePlaybackSpeed" xml:space="preserve">
+        <value>Wiedergabegeschwindigkeit verringern</value>
     </data>
 </root>

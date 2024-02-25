@@ -48,6 +48,8 @@ public class KeymapConfig
         ["EditPaste"] = new(Key.V, true, false, false),
         ["EditorInsert"] = new(Key.I),
         ["EditorPlay"] = new(Key.Space),
+        ["EditorIncreasePlaybackSpeed"] = new(Key.Add),
+        ["EditorDecreasePlaybackSpeed"] = new(Key.Subtract),
         ["EditorNoteTypeTouch"] = new(Key.D1),
         ["EditorNoteTypeSlideClockwise"] = new(Key.D2),
         ["EditorNoteTypeSlideCounterclockwise"] = new(Key.D3),

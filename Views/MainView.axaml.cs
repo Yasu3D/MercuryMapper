@@ -1,14 +1,20 @@
 using System;
-using System.Globalization;
+using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
+using Avalonia.Platform.Storage;
 using Avalonia.Threading;
 using FluentAvalonia.UI.Controls;
-using Tomlyn;
 using MercuryMapper.Config;
+using MercuryMapper.Editor;
+using MercuryMapper.Enums;
+using Tomlyn;
 
 namespace MercuryMapper.Views;
 
@@ -25,10 +31,13 @@ public partial class MainView : UserControl
         KeyUpEvent.AddClassHandler<TopLevel>(OnKeyUp, RoutingStrategies.Tunnel, handledEventsToo: true);
         
         SetButtonColors();
+        ToggleTypeRadio(false);
     }
-    
+
+    public bool CanShutdown;
     public UserConfig UserConfig = new();
-    public KeybindEditor KeybindEditor;
+    public readonly KeybindEditor KeybindEditor;
+    public readonly ChartEditor ChartEditor = new();
     
     // ________________ Setup
 
@@ -53,17 +62,25 @@ public partial class MainView : UserControl
     private void SetButtonColors()
     {
         RadioNoteTouch.BorderBrush = new SolidColorBrush(Convert.ToUInt32(UserConfig.ColorConfig.Colors["ColorNoteTouch"], 16));
-        RadioNoteSlideClockwise.BorderBrush = new SolidColorBrush(Convert.ToUInt32(UserConfig.ColorConfig.Colors["ColorNoteChain"], 16));
-        RadioNoteSlideCounterclockwise.BorderBrush = new SolidColorBrush(Convert.ToUInt32(UserConfig.ColorConfig.Colors["ColorNoteSlideClockwise"], 16));
-        RadioNoteSnapForward.BorderBrush = new SolidColorBrush(Convert.ToUInt32(UserConfig.ColorConfig.Colors["ColorNoteSlideCounterclockwise"], 16));
-        RadioNoteSnapBackward.BorderBrush = new SolidColorBrush(Convert.ToUInt32(UserConfig.ColorConfig.Colors["ColorNoteSnapForward"], 16));
-        RadioNoteChain.BorderBrush = new SolidColorBrush(Convert.ToUInt32(UserConfig.ColorConfig.Colors["ColorNoteSnapBackward"], 16));
+        RadioNoteSlideClockwise.BorderBrush = new SolidColorBrush(Convert.ToUInt32(UserConfig.ColorConfig.Colors["ColorNoteSlideClockwise"], 16));
+        RadioNoteSlideCounterclockwise.BorderBrush = new SolidColorBrush(Convert.ToUInt32(UserConfig.ColorConfig.Colors["ColorNoteSlideCounterclockwise"], 16));
+        RadioNoteSnapForward.BorderBrush = new SolidColorBrush(Convert.ToUInt32(UserConfig.ColorConfig.Colors["ColorNoteSnapForward"], 16));
+        RadioNoteSnapBackward.BorderBrush = new SolidColorBrush(Convert.ToUInt32(UserConfig.ColorConfig.Colors["ColorNoteSnapBackward"], 16));
+        RadioNoteChain.BorderBrush = new SolidColorBrush(Convert.ToUInt32(UserConfig.ColorConfig.Colors["ColorNoteChain"], 16));
         RadioNoteHold.BorderBrush = new SolidColorBrush(Convert.ToUInt32(UserConfig.ColorConfig.Colors["ColorNoteHoldStart"], 16));
         RadioNoteMaskAdd.BorderBrush = new SolidColorBrush(Convert.ToUInt32(UserConfig.ColorConfig.Colors["ColorNoteMaskAdd"], 16));
         RadioNoteMaskRemove.BorderBrush = new SolidColorBrush(Convert.ToUInt32(UserConfig.ColorConfig.Colors["ColorNoteMaskRemove"], 16));
         RadioNoteEndOfChart.BorderBrush = new SolidColorBrush(Convert.ToUInt32(UserConfig.ColorConfig.Colors["ColorNoteEndOfChart"], 16));
     }
-    
+
+    private void ToggleTypeRadio(bool isMask)
+    {
+        if (BonusTypePanel == null || MaskDirectionPanel == null) return;
+        
+        BonusTypePanel.IsVisible = !isMask;
+        MaskDirectionPanel.IsVisible = isMask;
+    }
+
     // ________________ Input
     
     private void OnKeyDown(object sender, KeyEventArgs e)
@@ -79,33 +96,33 @@ public partial class MainView : UserControl
         
         Keybind keybind = new(e);
         
-        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["FileNew"])) 
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["FileNew"]))
         {
-            Console.WriteLine("KeybindFileNew");
+            MenuItemNew_OnClick(null, new());
             e.Handled = true;
             return;
         }
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["FileOpen"])) 
         {
-            Console.WriteLine("KeybindFileOpen");
+            MenuItemOpen_OnClick(null, new());
             e.Handled = true;
             return;
         }
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["FileSave"])) 
         {
-            Console.WriteLine("KeybindFileSave");
+            MenuItemSave_OnClick(null, new());
             e.Handled = true;
             return;
         }
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["FileSaveAs"])) 
         {
-            Console.WriteLine("KeybindFileSaveAs");
+            MenuItemSaveAs_OnClick(null, new());
             e.Handled = true;
             return;
         }
-        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["FileSettings"])) 
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["FileSettings"]))
         {
-            Console.WriteLine("OpenSettings");
+            MenuItemSettings_OnClick(null, new());
             e.Handled = true;
             return;
         }
@@ -153,64 +170,76 @@ public partial class MainView : UserControl
             e.Handled = true;
             return;
         }
-        
-        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorNoteTypeTouch"])) 
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorIncreasePlaybackSpeed"])) 
         {
-            Console.WriteLine("Switched NoteType");
+            Console.WriteLine("Plus");
+            e.Handled = true;
+            return;
+        }
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorDecreasePlaybackSpeed"])) 
+        {
+            Console.WriteLine("Minus");
+            e.Handled = true;
+            return;
+        }
+        
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorNoteTypeTouch"]))
+        {
+            RadioNoteTouch.IsChecked = true;
             e.Handled = true;
             return;
         }
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorNoteTypeSlideClockwise"])) 
         {
-            Console.WriteLine("Switched NoteType");
+            RadioNoteSlideClockwise.IsChecked = true;
             e.Handled = true;
             return;
         }
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorNoteTypeSlideCounterclockwise"])) 
         {
-            Console.WriteLine("Switched NoteType");
+            RadioNoteSlideCounterclockwise.IsChecked = true;
             e.Handled = true;
             return;
         }
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorNoteTypeSnapForward"])) 
         {
-            Console.WriteLine("Switched NoteType");
+            RadioNoteSnapForward.IsChecked = true;
             e.Handled = true;
             return;
         }
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorNoteTypeSnapBackward"])) 
         {
-            Console.WriteLine("Switched NoteType");
+            RadioNoteSnapBackward.IsChecked = true;
             e.Handled = true;
             return;
         }
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorNoteTypeChain"])) 
         {
-            Console.WriteLine("Switched NoteType");
+            RadioNoteChain.IsChecked = true;
             e.Handled = true;
             return;
         }
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorNoteTypeHold"])) 
         {
-            Console.WriteLine("Switched NoteType");
+            RadioNoteHold.IsChecked = true;
             e.Handled = true;
             return;
         }
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorNoteTypeMaskAdd"])) 
         {
-            Console.WriteLine("Switched NoteType");
+            RadioNoteMaskAdd.IsChecked = true;
             e.Handled = true;
             return;
         }
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorNoteTypeMaskRemove"])) 
         {
-            Console.WriteLine("Switched NoteType");
+            RadioNoteMaskRemove.IsChecked = true;
             e.Handled = true;
             return;
         }
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorNoteTypeEndOfChart"])) 
         {
-            Console.WriteLine("Switched NoteType");
+            RadioNoteEndOfChart.IsChecked = true;
             e.Handled = true;
             return;
         }
@@ -219,25 +248,52 @@ public partial class MainView : UserControl
     private static void OnKeyUp(object sender, KeyEventArgs e) => e.Handled = true;
 
     // ________________ UI Events
-    
-    private void MenuItemNew_OnClick(object? sender, RoutedEventArgs e) { }
 
-    private void MenuItemOpen_OnClick(object? sender, RoutedEventArgs e) { }
+    private async void MenuItemNew_OnClick(object? sender, RoutedEventArgs e)
+    {
+        if (await PromptSave()) return;
+        ChartEditor.NewChart();
+    }
 
-    private void MenuItemSave_OnClick(object? sender, RoutedEventArgs e) { }
+    private async void MenuItemOpen_OnClick(object? sender, RoutedEventArgs e)
+    {
+        if (await PromptSave()) return;
+        
+        var file = await OpenChartFilePicker();
+        if (file == null) return;
+        
+        ChartEditor.Chart.LoadFile(file.Path.LocalPath);
+    }
 
-    private void MenuItemSaveAs_OnClick(object? sender, RoutedEventArgs e) { }
-    
-    private void MenuItemExportMercury_OnClick(object? sender, RoutedEventArgs e) { }
-    
-    private void MenuItemExportSaturn_OnClick(object? sender, RoutedEventArgs e) { }
+    private async void MenuItemSave_OnClick(object? sender, RoutedEventArgs e) => await SaveFile(ChartEditor.IsNew);
+
+    private async void MenuItemSaveAs_OnClick(object? sender, RoutedEventArgs e) => await SaveFile(true);
+
+    private async void MenuItemExportMercury_OnClick(object? sender, RoutedEventArgs e) => await ExportFile(ChartWriteType.Mercury);
+
+    private async void MenuItemExportSaturn_OnClick(object? sender, RoutedEventArgs e) => await ExportFile(ChartWriteType.Saturn);
 
     private void MenuItemSettings_OnClick(object? sender, RoutedEventArgs e)
     {
-        OpenSettings();
+        ContentDialog dialog = new()
+        {
+            Title = Assets.Lang.Resources.Menu_Settings,
+            Content = new SettingsView(this),
+            IsPrimaryButtonEnabled = false,
+            CloseButtonText = Assets.Lang.Resources.Generic_SaveAndClose,
+        };
+
+        dialog.Closing += OnSettingsClose;
+        
+        Dispatcher.UIThread.Post(async () => await dialog.ShowAsync());
     }
-    
-    private void MenuItemExit_OnClick(object? sender, RoutedEventArgs e) { }
+
+    public async void MenuItemExit_OnClick(object? sender, RoutedEventArgs e)
+    {
+        if (await PromptSave()) return;
+        CanShutdown = true;
+        (Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.Shutdown();
+    }
 
     private void MenuItemUndo_OnClick(object? sender, RoutedEventArgs e) { }
 
@@ -249,7 +305,13 @@ public partial class MainView : UserControl
 
     private void MenuItemPaste_OnClick(object? sender, RoutedEventArgs e) { }
 
-    private void RadioNoteType_IsCheckedChanged(object? sender, RoutedEventArgs e) { }
+    private void RadioNoteType_IsCheckedChanged(object? sender, RoutedEventArgs e)
+    {
+        if (RadioNoteMaskAdd == null || RadioNoteMaskRemove == null || RadioNoteMaskAdd.IsChecked == null || RadioNoteMaskRemove.IsChecked == null) return;
+        
+        bool isMask = (bool)RadioNoteMaskAdd.IsChecked || (bool)RadioNoteMaskRemove.IsChecked;
+        ToggleTypeRadio(isMask);
+    }
 
     private void RadioBonusType_IsCheckedChanged(object? sender, RoutedEventArgs e) { }
 
@@ -268,22 +330,6 @@ public partial class MainView : UserControl
     private void ButtonInsert_OnClick(object? sender, RoutedEventArgs e) { }
 
     // ________________ UI Dialogs
-    
-    private void OpenSettings()
-    {
-        ContentDialog dialog = new()
-        {
-            Title = Assets.Lang.Resources.Menu_Settings,
-            Content = new SettingsView(this),
-            IsPrimaryButtonEnabled = false,
-            CloseButtonText = Assets.Lang.Resources.Generic_SaveAndClose,
-        };
-
-        dialog.Closing += OnSettingsClose;
-        
-        Dispatcher.UIThread.Post(async () => await dialog.ShowAsync());
-        return;
-    }
 
     private void OnSettingsClose(ContentDialog sender, ContentDialogClosingEventArgs e)
     {
@@ -291,5 +337,107 @@ public partial class MainView : UserControl
         KeybindEditor.StopRebinding();
         SetButtonColors();
         File.WriteAllText("UserConfig.toml", Toml.FromModel(UserConfig));
+    }
+    
+    private IStorageProvider GetStorageProvider()
+    {
+        if (VisualRoot is TopLevel)
+            return (VisualRoot as TopLevel)!.StorageProvider;
+        throw new Exception(":3 something went wrong, too bad.");
+    }
+    
+    private async Task<bool> PromptSave()
+    {
+        if (ChartEditor.Chart.IsSaved) return false;
+
+        ContentDialogResult result = await showSavePrompt();
+
+        switch (result)
+        {
+            case ContentDialogResult.None: return true;
+            case ContentDialogResult.Primary when await SaveFile(true): return true;
+            case ContentDialogResult.Secondary: return false;
+            default: return false;
+        }
+
+        Task<ContentDialogResult> showSavePrompt()
+        {
+            ContentDialog dialog = new()
+            {
+                Title = "Chart is unsaved. Would you like to save?",
+                PrimaryButtonText = Assets.Lang.Resources.Generic_Yes,
+                SecondaryButtonText = Assets.Lang.Resources.Generic_No,
+                CloseButtonText = Assets.Lang.Resources.Generic_Cancel
+            };
+            
+            return dialog.ShowAsync();
+        }
+    }
+
+    private async Task<IStorageFile?> OpenChartFilePicker()
+    {
+        var result = await GetStorageProvider().OpenFilePickerAsync(new FilePickerOpenOptions
+        {
+            AllowMultiple = false,
+            FileTypeFilter = new List<FilePickerFileType>
+            {
+                new("Mercury Chart files")
+                {
+                    Patterns = new[] {"*.mer"},
+                    AppleUniformTypeIdentifiers = new[] {"public.item"}
+                }
+            }
+        });
+
+        return result.Count != 1 ? null : result[0];
+    }
+    
+    private async Task<IStorageFile?> SaveChartFilePicker()
+    {
+        return await GetStorageProvider().SaveFilePickerAsync(new FilePickerSaveOptions()
+        {
+            DefaultExtension = "mer",
+            FileTypeChoices = new[]
+            {
+                new FilePickerFileType("Mercury Chart files")
+                {
+                    Patterns = new[] {"*.mer"},
+                    AppleUniformTypeIdentifiers = new[] {"public.item"}
+                }
+            }
+        });
+        
+        
+    }
+    
+    public async Task<bool> SaveFile(bool openFilePicker)
+    {
+        string filepath = "";
+        
+        if (openFilePicker)
+        {
+            IStorageFile? file = await SaveChartFilePicker();
+
+            if (file == null) return false;
+            filepath = file.Path.LocalPath;
+        }
+
+        if (string.IsNullOrEmpty(filepath)) return false;
+
+        ChartEditor.Chart.WriteFile(filepath, ChartWriteType.Editor, true);
+        ChartEditor.IsNew = false;
+        return true;
+    }
+
+    public async Task ExportFile(ChartWriteType chartWriteType)
+    {
+        string filepath = "";
+        IStorageFile? file = await SaveChartFilePicker();
+
+        if (file == null) return;
+        filepath = file.Path.LocalPath;
+        
+        if (string.IsNullOrEmpty(filepath)) return;
+        ChartEditor.Chart.WriteFile(filepath, chartWriteType, false);
     }
 }

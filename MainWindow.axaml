@@ -11,6 +11,7 @@
         ExtendClientAreaToDecorationsHint="True"
         DragDrop.AllowDrop="True"
         Title="MercuryMapper"
+        Closing="Window_OnClosing"
         x:Class="MercuryMapper.MainWindow">
     
     <view:MainView Name="MainView"/>

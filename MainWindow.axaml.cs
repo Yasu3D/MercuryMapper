@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Threading;
 using MercuryMapper.Config;
 
 namespace MercuryMapper;
@@ -23,5 +24,12 @@ public partial class MainWindow : Window
         
         Console.WriteLine(Path.GetFullPath(Uri.UnescapeDataString(path.LocalPath)));
         e.Handled = true;
+    }
+
+    private void Window_OnClosing(object? sender, WindowClosingEventArgs e)
+    {
+        if (MainView.CanShutdown) return;
+        e.Cancel = true;
+        Dispatcher.UIThread.Post(async () => MainView.MenuItemExit_OnClick(null, new()));
     }
 }
