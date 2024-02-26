@@ -204,6 +204,24 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Edit Hold.
+        /// </summary>
+        public static string Editor_EditHold {
+            get {
+                return ResourceManager.GetString("Editor_EditHold", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to End Hold.
+        /// </summary>
+        public static string Editor_EndHold {
+            get {
+                return ResourceManager.GetString("Editor_EndHold", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Decrease Playback Speed.
         /// </summary>
         public static string Editor_IncreasePlaybackSpeed {
@@ -218,6 +236,15 @@ namespace MercuryMapper.Assets.Lang {
         public static string Editor_Insert {
             get {
                 return ResourceManager.GetString("Editor_Insert", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Measure.
+        /// </summary>
+        public static string Editor_Measure {
+            get {
+                return ResourceManager.GetString("Editor_Measure", resourceCulture);
             }
         }
         
@@ -272,6 +299,24 @@ namespace MercuryMapper.Assets.Lang {
         public static string Editor_Play {
             get {
                 return ResourceManager.GetString("Editor_Play", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Position.
+        /// </summary>
+        public static string Editor_Position {
+            get {
+                return ResourceManager.GetString("Editor_Position", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Size.
+        /// </summary>
+        public static string Editor_Size {
+            get {
+                return ResourceManager.GetString("Editor_Size", resourceCulture);
             }
         }
         

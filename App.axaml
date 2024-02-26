@@ -430,6 +430,8 @@
         </Style>
         
         <Style Selector="Slider.Compact">
+            <Setter Property="UseLayoutRounding" Value="False"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="Background" Value="{DynamicResource SliderTrackFill}" />
             <Setter Property="BorderThickness" Value="{DynamicResource SliderBorderThemeThickness}" />
             <Setter Property="Foreground" Value="{DynamicResource SliderTrackValueFill}" />
@@ -522,6 +524,72 @@
                 </Setter>
             </Style>
         </Style>
+        
+        <Style Selector="ButtonSpinner">
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <DataValidationErrors>
+                        <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{DynamicResource ButtonBorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            MinHeight="{TemplateBinding MinHeight}"
+                            Name="LayoutRoot">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <ContentPresenter Name="PART_ContentPresenter"
+                                              Grid.Column="0"
+                                              ContentTemplate="{TemplateBinding ContentTemplate}"
+                                              Content="{TemplateBinding Content}"
+                                              HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                              Padding="-4" />
+
+                            <Grid Name="PART_SpinnerPanel"
+                                  HorizontalAlignment="Right"
+                                  IsVisible="{TemplateBinding ShowButtonSpinner}"
+                                  Grid.Column="1"
+                                  RowDefinitions="*,*"
+                                  Background="Transparent">
+                                <RepeatButton Grid.Row="0" Name="PART_IncreaseButton"
+                                              Theme="{StaticResource ButtonSpinnerButton}"
+                                              Background="{TemplateBinding Background}"
+                                              Foreground="{TemplateBinding Foreground}"
+                                              Margin="1,0"
+                                              MinWidth="16"
+                                              Content="&#xE70E;" />
+
+                                <RepeatButton Grid.Row="1" Name="PART_DecreaseButton"
+                                              Theme="{StaticResource ButtonSpinnerButton}"
+                                              Background="{TemplateBinding Background}"
+                                              Foreground="{TemplateBinding Foreground}"
+                                              Margin="1,0"
+                                              MinWidth="16"
+                                              Content="&#xE70D;" />
+                            </Grid>
+                        </Grid>
+                    </Border>
+                    </DataValidationErrors>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+        
+        <Style Selector="NumericUpDown">
+            <Style
+                Selector="^ /template/TextBox#PART_TextBox.spinRight /template/ ScrollViewer /template/ ScrollContentPresenter#PART_ContentPresenter">
+                <Setter Property="Margin" Value="2,4,0,0" />
+            </Style>
+        
+            <Style Selector="^ /template/TextBox#PART_TextBox.spinRight /template/ Border#PART_BorderElement">
+                <Setter Property="CornerRadius" Value="4,0,0,4" />
+                <Setter Property="Background" Value="Transparent" />
+            </Style>
+        
+            <Style Selector="^ /template/ButtonSpinner#PART_Spinner /template/ Grid#PART_SpinnerPanel">
+                <Setter Property="Margin" Value="4,0,-1,0" />
+            </Style>
+        </Style>
+        
+        
         
         <!-- shut up compiler -->
         <Style Selector="TreeView.HideKeybind"/>

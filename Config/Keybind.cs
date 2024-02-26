@@ -44,3 +44,16 @@ public class Keybind()
         return result;
     }
 }
+
+public static class KeybindExtensions
+{
+    public static KeyGesture ToGesture(this Keybind keybind)
+    {
+        KeyModifiers modifiers = KeyModifiers.None;
+        if (keybind.Control) modifiers |= KeyModifiers.Control;
+        if (keybind.Shift) modifiers |= KeyModifiers.Shift;
+        if (keybind.Alt) modifiers |= KeyModifiers.Alt;
+
+        return new(keybind.Key, modifiers);
+    }
+}

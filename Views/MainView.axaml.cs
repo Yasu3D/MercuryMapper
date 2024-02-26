@@ -12,6 +12,7 @@ using Avalonia.Media;
 using Avalonia.Platform.Storage;
 using Avalonia.Threading;
 using FluentAvalonia.UI.Controls;
+using MercuryMapper.Audio;
 using MercuryMapper.Config;
 using MercuryMapper.Editor;
 using MercuryMapper.Enums;
@@ -26,21 +27,30 @@ public partial class MainView : UserControl
         InitializeComponent();
         
         LoadUserConfig();
-
+        
         KeybindEditor = new(UserConfig);
+        ChartEditor = new(this);
         KeyDownEvent.AddClassHandler<TopLevel>(OnKeyDown, RoutingStrategies.Tunnel, handledEventsToo: true);
         KeyUpEvent.AddClassHandler<TopLevel>(OnKeyUp, RoutingStrategies.Tunnel, handledEventsToo: true);
         
         SetButtonColors();
+        SetMenuItemInputGestureText();
         ToggleTypeRadio(false);
     }
 
     public bool CanShutdown;
+    
     public UserConfig UserConfig = new();
     public readonly KeybindEditor KeybindEditor;
-    public readonly ChartEditor ChartEditor = new();
+    public readonly ChartEditor ChartEditor;
+    public readonly BassSoundEngine SoundEngine = new();
+
+    private BassSound? currentSong;
     
-    // ________________ Setup
+    public bool IsPlaying = false;
+    public int PlaybackSpeed = 100;
+    
+    // ________________ Setup & UI Updates
 
     private void LoadUserConfig()
     {
@@ -82,6 +92,29 @@ public partial class MainView : UserControl
         MaskDirectionPanel.IsVisible = isMask;
     }
 
+    private void SetMenuItemInputGestureText()
+    {
+        MenuItemNew.InputGesture = UserConfig.KeymapConfig.Keybinds["FileNew"].ToGesture();
+        MenuItemOpen.InputGesture = UserConfig.KeymapConfig.Keybinds["FileOpen"].ToGesture();
+        MenuItemSave.InputGesture = UserConfig.KeymapConfig.Keybinds["FileSave"].ToGesture();
+        MenuItemSaveAs.InputGesture = UserConfig.KeymapConfig.Keybinds["FileSaveAs"].ToGesture();
+        MenuItemSettings.InputGesture = UserConfig.KeymapConfig.Keybinds["FileSettings"].ToGesture();
+        MenuItemUndo.InputGesture = UserConfig.KeymapConfig.Keybinds["EditUndo"].ToGesture();
+        MenuItemRedo.InputGesture = UserConfig.KeymapConfig.Keybinds["EditRedo"].ToGesture();
+        MenuItemCut.InputGesture = UserConfig.KeymapConfig.Keybinds["EditCut"].ToGesture();
+        MenuItemCopy.InputGesture = UserConfig.KeymapConfig.Keybinds["EditCopy"].ToGesture();
+        MenuItemPaste.InputGesture = UserConfig.KeymapConfig.Keybinds["EditPaste"].ToGesture();
+    }
+
+    public void SetHoldContextButton(ChartEditorState state)
+    {
+        ButtonHoldContext.Content = state switch
+        {
+            ChartEditorState.InsertHold => Assets.Lang.Resources.Editor_EndHold,
+            _ => Assets.Lang.Resources.Editor_EditHold
+        };
+    }
+    
     // ________________ Input
     
     private void OnKeyDown(object sender, KeyEventArgs e)
@@ -248,6 +281,67 @@ public partial class MainView : UserControl
 
     private static void OnKeyUp(object sender, KeyEventArgs e) => e.Handled = true;
 
+    // ________________ Canvas Input
+    
+    private void Canvas_OnPointerWheelChanged(object? sender, PointerWheelEventArgs e)
+    {
+        int direction = double.Sign(e.Delta.Y);
+        
+        // Unused at the moment - Reserved for cursor depth
+        if (e.KeyModifiers.HasFlag(KeyModifiers.Control)) { }
+        
+        // Shift Beat Divisor
+        else if (e.KeyModifiers.HasFlag(KeyModifiers.Shift))
+        {
+            decimal value = NumericBeatDivisor.Value ?? 16;
+            NumericBeatDivisor.Value = Math.Clamp(value + direction, NumericBeatDivisor.Minimum, NumericBeatDivisor.Maximum);
+        }
+        
+        // Double/Halve Beat Divisor
+        else if (e.KeyModifiers.HasFlag(KeyModifiers.Alt))
+        {
+            decimal value = NumericBeatDivisor.Value ?? 16;
+            
+            if (direction > 0)
+            {
+                NumericBeatDivisor.Value = Math.Min(value * 2, 1920);
+            }
+            else
+            {
+                switch ((int)value)
+                {
+                    case 1: return;
+                    case 2: NumericBeatDivisor.Value = 1; return;
+                    default: NumericBeatDivisor.Value = Math.Ceiling(value * 0.5m); break;
+                }
+            }
+        }
+
+        // Shift Time
+        else
+        {
+            // I know some gremlin would try this.
+            if (NumericMeasure.Value >= NumericMeasure.Maximum && NumericBeatValue.Value >= NumericBeatDivisor.Value - 1 && direction > 0) return;
+            
+            NumericBeatValue.Value += direction;
+        }
+    }
+    
+    private void Canvas_OnPointerMoved(object? sender, PointerEventArgs e)
+    {
+        
+    }
+
+    private void Canvas_OnPointerPressed(object? sender, PointerPressedEventArgs e)
+    {
+        
+    }
+
+    private void Canvas_OnPointerReleased(object? sender, PointerReleasedEventArgs e)
+    {
+        
+    }
+    
     // ________________ UI Events
 
     private async void MenuItemNew_OnClick(object? sender, RoutedEventArgs e)
@@ -294,6 +388,7 @@ public partial class MainView : UserControl
                 }
                 
                 ChartEditor.NewChart(filepath, author, bpm, timeSigUpper, timeSigLower);
+                currentSong = SoundEngine.Play2d(filepath, false, true);
             }
         });
     }
@@ -384,11 +479,18 @@ public partial class MainView : UserControl
 
     private void ButtonInsert_OnClick(object? sender, RoutedEventArgs e) { }
     
+    private void ButtonHoldContext_OnClick(object? sender, RoutedEventArgs e) { }
+    
     private void ButtonPlay_OnClick(object? sender, RoutedEventArgs e)
     {
-        ChartEditor.Play();
-        IconPlay.IsVisible = !ChartEditor.IsPlaying;
-        IconStop.IsVisible = ChartEditor.IsPlaying;
+        if (currentSong == null) return;
+        
+        IsPlaying = !IsPlaying;
+        currentSong.Volume = 0.2f;
+        currentSong.IsPlaying = IsPlaying;
+        
+        IconPlay.IsVisible = !IsPlaying;
+        IconStop.IsVisible = IsPlaying;
     }
     
     private void SliderSongPosition_OnValueChanged(object? sender, RangeBaseValueChangedEventArgs e)
@@ -399,7 +501,91 @@ public partial class MainView : UserControl
     private void SliderPlaybackSpeed_OnValueChanged(object? sender, RangeBaseValueChangedEventArgs e)
     {
         TextBlockPlaybackSpeed.Text = $"{SliderPlaybackSpeed.Value,3:F0}%";
-        ChartEditor.PlaybackSpeed = (float)SliderPlaybackSpeed.Value;
+        PlaybackSpeed = (int)SliderPlaybackSpeed.Value;
+    }
+
+    private void SliderPosition_OnValueChanged(object? sender, RangeBaseValueChangedEventArgs e) => Position_OnValueChanged(true);
+    private void NumericPosition_OnValueChanged(object? sender, NumericUpDownValueChangedEventArgs e) => Position_OnValueChanged(false);
+    private void Position_OnValueChanged(bool fromSlider)
+    {
+        if (fromSlider) NumericNotePosition.Value = (decimal?)SliderNotePosition.Value;
+        else
+        {
+            NumericNotePosition.Value ??= 0;
+            if (NumericNotePosition.Value > 59) NumericNotePosition.Value = 0;
+            if (NumericNotePosition.Value < 0) NumericNotePosition.Value = 59;
+
+            SliderNotePosition.Value = (double)NumericNotePosition.Value;
+        }
+    }
+    
+    private void SliderNotePosition_OnPointerWheelChanged(object? sender, PointerWheelEventArgs e)
+    {
+        e.Handled = true;
+        int value = double.Sign(e.Delta.Y);
+
+        switch (SliderNotePosition.Value + value)
+        {
+            case > 59: SliderNotePosition.Value = 0; break;
+            case < 0: SliderNotePosition.Value = 59; break;
+            default: SliderNotePosition.Value += value; break;
+        }
+    }
+    
+    private void SliderSize_OnValueChanged(object? sender, RangeBaseValueChangedEventArgs e) => Size_OnValueChanged(true);
+    private void NumericSize_OnValueChanged(object? sender, NumericUpDownValueChangedEventArgs e) => Size_OnValueChanged(false);
+    private void Size_OnValueChanged(bool fromSlider)
+    {
+        if (fromSlider) NumericNoteSize.Value = (decimal?)SliderNoteSize.Value;
+        else SliderNoteSize.Value = NumericNoteSize.Value != null ? (double)NumericNoteSize.Value : 10; // default to a typical note size if null
+    }
+    
+    private void SliderNoteSize_OnPointerWheelChanged(object? sender, PointerWheelEventArgs e)
+    {
+        e.Handled = true;
+        int value = double.Sign(e.Delta.Y);
+        SliderNoteSize.Value += value;
+    }
+
+    private void NumericMeasure_OnValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
+    {
+        if (e.NewValue == null || NumericMeasure?.Value == null) return;
+        NumericMeasure.Value = Math.Clamp((decimal)e.NewValue, NumericMeasure.Minimum, NumericMeasure.Maximum);
+    }
+    
+    private void NumericBeatValue_OnValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
+    {
+        if (e.NewValue == null || NumericMeasure?.Value == null || NumericBeatDivisor?.Value == null) return;
+
+        decimal? value = e.NewValue;
+        
+        if (value >= NumericBeatDivisor.Value)
+        {
+            NumericMeasure.Value++;
+            NumericBeatValue.Value = 0;
+            return;
+        }
+
+        if (value < 0)
+        {
+            if (NumericMeasure.Value > 0)
+            {
+                NumericMeasure.Value--;
+                NumericBeatValue.Value = NumericBeatDivisor.Value - 1;
+                return;
+            }
+
+            if (NumericMeasure.Value <= 0)
+            {
+                NumericMeasure.Value = 0;
+                NumericBeatValue.Value = 0;
+            }
+        }
+    }
+
+    private void NumericBeatDivisor_OnValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
+    {
+        
     }
     
     // ________________ UI Dialogs
@@ -408,10 +594,11 @@ public partial class MainView : UserControl
     {
         KeybindEditor.StopRebinding(); // Stop rebinding in case it was active.
         SetButtonColors(); // Update button colors if they were changed
+        SetMenuItemInputGestureText(); // Update inputgesture text in case stuff was rebound
         File.WriteAllText("UserConfig.toml", Toml.FromModel(UserConfig));
     }
 
-    private void ShowWarningMessage(string title, string? text = null)
+    private static void ShowWarningMessage(string title, string? text = null)
     {
         ContentDialog dialog = new()
         {

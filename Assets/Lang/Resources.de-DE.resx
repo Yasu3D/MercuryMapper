@@ -258,4 +258,19 @@
     <data name="Editor_NewChartInvalidAudio" xml:space="preserve">
         <value>Die ausgewählte Audiodatei konnte nicht gefunden werden.</value>
     </data>
+    <data name="Editor_Position" xml:space="preserve">
+        <value>Position</value>
+    </data>
+    <data name="Editor_Size" xml:space="preserve">
+        <value>Größe</value>
+    </data>
+    <data name="Editor_EndHold" xml:space="preserve">
+        <value>Hold Beenden</value>
+    </data>
+    <data name="Editor_Measure" xml:space="preserve">
+        <value>Takt</value>
+    </data>
+    <data name="Editor_EditHold" xml:space="preserve">
+        <value>Hold Bearbeiten</value>
+    </data>
 </root>

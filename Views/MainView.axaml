@@ -4,17 +4,17 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:converters="clr-namespace:Avalonia.Markup.Xaml.Converters;assembly=Avalonia.Markup.Xaml"
              xmlns:lang="clr-namespace:MercuryMapper.Assets.Lang"
-             mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="800"
+             mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="830"
              x:Class="MercuryMapper.Views.MainView">
     
     <UserControl.Resources>
         <converters:ColorToBrushConverter x:Key="ColorToBrush" />
     </UserControl.Resources>
     
-    <Grid ColumnDefinitions="Auto,*, Auto" RowDefinitions="Auto,*,Auto">
+    <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,*,Auto">
         
         <!-- Title Bar -->
-        <Grid ColumnDefinitions="Auto,*" RowDefinitions="*" Grid.Row="0" Grid.ColumnSpan="3" Grid.Column="0">
+        <Grid ColumnDefinitions="Auto,*" RowDefinitions="*" Grid.Row="0" Grid.ColumnSpan="2" Grid.Column="0">
             <Menu Grid.Column="0" Background="{DynamicResource TitleBar}" Height="40">
                 <MenuItem Width="40">
                     <MenuItem.Header>
@@ -24,20 +24,18 @@
                 </MenuItem>
                 
                 <MenuItem Header="{x:Static lang:Resources.MenuHeader_File}" >
-                    <MenuItem Header="{x:Static lang:Resources.Menu_New}" Click="MenuItemNew_OnClick" Name="MenuItemNew" 
-                              InputGesture="Ctrl+N" />
+                    <MenuItem Header="{x:Static lang:Resources.Menu_New}" Click="MenuItemNew_OnClick" Name="MenuItemNew"/>
                     
-                    <MenuItem Header="{x:Static lang:Resources.Menu_Open}" Click="MenuItemOpen_OnClick" Name="MenuItemOpen" 
-                              InputGesture="Ctrl+O" />
+                    <MenuItem Header="{x:Static lang:Resources.Menu_Open}" Click="MenuItemOpen_OnClick" Name="MenuItemOpen" />
                     
-                    <MenuItem Header="{x:Static lang:Resources.Menu_Save}" Click="MenuItemSave_OnClick" InputGesture="Ctrl+S" Name="MenuItemSave" >
+                    <MenuItem Header="{x:Static lang:Resources.Menu_Save}" Click="MenuItemSave_OnClick" Name="MenuItemSave" >
                         <MenuItem.Icon>
                             <PathIcon Data="{DynamicResource IconSave}" Width="15"/>
                         </MenuItem.Icon>
                     </MenuItem>
                     
                     
-                    <MenuItem Header="{x:Static lang:Resources.Menu_SaveAs}" Click="MenuItemSaveAs_OnClick" InputGesture="Ctrl+Shift+S" Name="MenuItemSaveAs" >
+                    <MenuItem Header="{x:Static lang:Resources.Menu_SaveAs}" Click="MenuItemSaveAs_OnClick" Name="MenuItemSaveAs" >
                         <MenuItem.Icon>
                             <PathIcon Data="{DynamicResource IconSaveAs}"/>
                         </MenuItem.Icon>
@@ -65,16 +63,16 @@
                 
                 <MenuItem Header="{x:Static lang:Resources.MenuHeader_Edit}">
                     <MenuItem Header="{x:Static lang:Resources.Menu_Undo}" Name="MenuItemUndo"
-                              Click="MenuItemUndo_OnClick" InputGesture="Ctrl+Z" />
+                              Click="MenuItemUndo_OnClick"/>
                     <MenuItem Header="{x:Static lang:Resources.Menu_Redo}" Name="MenuItemRedo"
-                              Click="MenuItemRedo_OnClick" InputGesture="Ctrl+Y" />
+                              Click="MenuItemRedo_OnClick"/>
                     <Separator/>
                     <MenuItem Header="{x:Static lang:Resources.Menu_Cut}" Name="MenuItemCut" 
-                              Click="MenuItemCut_OnClick" InputGesture="Ctrl+X" />
+                              Click="MenuItemCut_OnClick"/>
                     <MenuItem Header="{x:Static lang:Resources.Menu_Copy}" Name="MenuItemCopy" 
-                              Click="MenuItemCopy_OnClick" InputGesture="Ctrl+C" />
+                              Click="MenuItemCopy_OnClick"/>
                     <MenuItem Header="{x:Static lang:Resources.Menu_Paste}" Name="MenuItemPaste" 
-                              Click="MenuItemPaste_OnClick" InputGesture="Ctrl+V" />
+                              Click="MenuItemPaste_OnClick"/>
                 </MenuItem>
                 
                 <!-- <MenuItem Header="{x:Static lang:Resources.MenuHeader_Select}">
@@ -95,7 +93,7 @@
         </Grid>
         
         <!-- Left Panel -->
-        <Grid RowDefinitions="*,Auto, Auto" Grid.Row="1" Grid.Column="0" Background="{DynamicResource DarkBrush}">  
+        <Grid RowDefinitions="*,Auto, Auto" Grid.Row="1" Grid.Column="0">  
             <ScrollViewer Grid.Row="0" Width="275" Name="LeftPanel">
                 <Grid ColumnDefinitions="130,130">
                     <StackPanel Grid.Column="0" Width="130" Margin="5,5,5,0">
@@ -171,10 +169,6 @@
                                     
                             </StackPanel>
                         </Border>
-
-                        <!-- <Border   ClipToBounds="True" Classes="Outline" Margin="0,10,0,0">
-                                <Button Classes="CompactButton" Margin="0,0" Click="ButtonEndHold_OnClick" Content="{DynamicResource L.EndHold}" />
-                            </Border>-->
 
                         <Border   ClipToBounds="True" Classes="Outline" Margin="0,10,0,0" Name="BonusTypePanel">
                             <StackPanel>
@@ -252,12 +246,60 @@
                 </Grid>
             </ScrollViewer>
                 
-            <Button Grid.Row="1" Grid.Column="0" Name="ButtonInsert" Click="ButtonInsert_OnClick"
-                    Width="130" Height="45" CornerRadius="5" Margin="5,5,0,0"
-                    HorizontalAlignment="Left" VerticalAlignment="Stretch"
-                    HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
-                    Content="{x:Static lang:Resources.Editor_Insert}"/>
+            <Grid Grid.Row="1" Grid.Column="0" RowDefinitions="*,*,*,*,*,*,*,*" ColumnDefinitions="Auto,*,Auto" Margin="5,5,5,0">
+                <TextBlock Grid.Column="0" Grid.Row="0" 
+                Margin="5,5,0,-7"
+                Text="{x:Static lang:Resources.Editor_Position}"/>
+                <TextBlock Grid.Column="0" Grid.Row="2" 
+                Margin="5,5,0,-7"
+                Text="{x:Static lang:Resources.Editor_Size}"/>
+                
+                <Slider Name="SliderNotePosition" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" 
+                        Classes="Compact" Margin="5" IsSnapToTickEnabled="True" TickPlacement="TopLeft" TickFrequency="1"
+                        Maximum="59" Minimum="0" Value="0" ValueChanged="SliderPosition_OnValueChanged" PointerWheelChanged="SliderNotePosition_OnPointerWheelChanged"/> 
+                <Slider Name="SliderNoteSize" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" 
+                        Classes="Compact" Margin="5" IsSnapToTickEnabled="True" TickPlacement="TopLeft" TickFrequency="1"
+                        Maximum="60" Minimum="0" Value="15" ValueChanged="SliderSize_OnValueChanged" PointerWheelChanged="SliderNoteSize_OnPointerWheelChanged"/> 
+                
+                <NumericUpDown Name="NumericNotePosition" Grid.Row="1" Grid.Column="2" Width="30" 
+                Maximum="60" Minimum="-1" Increment="1" Value="0" ValueChanged="NumericPosition_OnValueChanged"/>
+                <NumericUpDown Name="NumericNoteSize" Grid.Row="3" Grid.Column="2" Width="30" 
+                Maximum="60" Minimum="1" Increment="1" Value="15" ValueChanged="NumericSize_OnValueChanged"/>
+
+                <Separator Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3"/>
+                
+                <TextBlock Grid.Row="5" Grid.Column="0"
+                           Margin="5,5,0,0" Text="{x:Static lang:Resources.Editor_Measure}"/>
+                
+                <Grid Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3" ColumnDefinitions="*,Auto, Auto" Margin="0,5">
+                    <NumericUpDown Grid.Column="0" Name="NumericMeasure" ValueChanged="NumericMeasure_OnValueChanged" Minimum="0" Maximum="9999" Value="0" Increment="1" Margin="0,0,5,0"/>
+                    <NumericUpDown Grid.Column="1" Name="NumericBeatValue" ValueChanged="NumericBeatValue_OnValueChanged" Minimum="0" Maximum="1920" Value="0" Increment="1" Margin="0,0,5,0" Width="60"/>
+                    <NumericUpDown Grid.Column="2" Name="NumericBeatDivisor" ValueChanged="NumericBeatDivisor_OnValueChanged" Minimum="1" Maximum="1920" Value="16" Increment="1" Width="60"/>
+                </Grid>
+                
+                <Grid Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="3" ColumnDefinitions="2*,*">
+                    <Button Name="ButtonInsert" Click="ButtonInsert_OnClick" Grid.Column="0"
+                            Height="45" CornerRadius="3"
+                            HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                            HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                            Content="{x:Static lang:Resources.Editor_Insert}" Margin="0,0,5,0"/>
+                    <Button Name="ButtonHoldContext" Click="ButtonHoldContext_OnClick" Grid.Column="1"
+                            Height="45" CornerRadius="3"
+                            HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                            HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                            Content="{x:Static lang:Resources.Editor_EditHold}"/>
+                </Grid>
+            </Grid>
         </Grid>
+        
+        <!-- TODO: add center alignment when real canvas is done -->
+        <Panel Grid.Row="1" Grid.Column="1" 
+               Name="Canvas"
+               Background="DarkCyan"
+               PointerWheelChanged="Canvas_OnPointerWheelChanged"
+               PointerMoved="Canvas_OnPointerMoved"
+               PointerPressed="Canvas_OnPointerPressed"
+               PointerReleased="Canvas_OnPointerReleased"/>
         
         <!-- Song Controls -->
         <Grid Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="2" Height="65" Name="SongControlPanel"
