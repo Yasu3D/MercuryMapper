@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
@@ -166,19 +167,19 @@ public partial class MainView : UserControl
         }
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorPlay"])) 
         {
-            Console.WriteLine("Play");
+            ButtonPlay_OnClick(null, new());
             e.Handled = true;
             return;
         }
-        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorIncreasePlaybackSpeed"])) 
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorIncreasePlaybackSpeed"]))
         {
-            Console.WriteLine("Plus");
+            SliderPlaybackSpeed.Value += 10;
             e.Handled = true;
             return;
         }
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorDecreasePlaybackSpeed"])) 
         {
-            Console.WriteLine("Minus");
+            SliderPlaybackSpeed.Value -= 10;
             e.Handled = true;
             return;
         }
@@ -252,26 +253,80 @@ public partial class MainView : UserControl
     private async void MenuItemNew_OnClick(object? sender, RoutedEventArgs e)
     {
         if (await PromptSave()) return;
-        ChartEditor.NewChart();
+
+        NewChartView newChartView = new(this);
+        ContentDialog dialog = new()
+        {
+            Title = Assets.Lang.Resources.Editor_NewChart,
+            Content = newChartView,
+            PrimaryButtonText = Assets.Lang.Resources.Menu_Save,
+            CloseButtonText = Assets.Lang.Resources.Generic_Cancel
+        };
+        
+        Dispatcher.UIThread.Post(async () =>
+        {
+            ContentDialogResult result = await dialog.ShowAsync();
+
+            if (result is ContentDialogResult.Primary)
+            {
+                string filepath = newChartView.MusicFilePath;
+                string author = newChartView.AuthorTextBox.Text ?? "";
+                float bpm = (float)newChartView.BpmNumberBox.Value;
+                int timeSigUpper = (int)newChartView.TimeSigUpperNumberBox.Value;
+                int timeSigLower = (int)newChartView.TimeSigLowerNumberBox.Value;
+
+                if (bpm <= 0)
+                {
+                    ShowWarningMessage(Assets.Lang.Resources.Editor_NewChartInvalidBpm);
+                    return;
+                }
+
+                if (timeSigUpper <= 0 || timeSigLower <= 0)
+                {
+                    ShowWarningMessage(Assets.Lang.Resources.Editor_NewChartInvalidTimeSig);
+                    return;
+                }
+
+                if (!File.Exists(filepath))
+                {
+                    ShowWarningMessage(Assets.Lang.Resources.Editor_NewChartInvalidAudio);
+                    return;
+                }
+                
+                ChartEditor.NewChart(filepath, author, bpm, timeSigUpper, timeSigLower);
+            }
+        });
     }
 
     private async void MenuItemOpen_OnClick(object? sender, RoutedEventArgs e)
     {
         if (await PromptSave()) return;
         
-        var file = await OpenChartFilePicker();
+        IStorageFile? file = await OpenChartFilePicker();
         if (file == null) return;
         
         ChartEditor.Chart.LoadFile(file.Path.LocalPath);
     }
 
-    private async void MenuItemSave_OnClick(object? sender, RoutedEventArgs e) => await SaveFile(ChartEditor.IsNew);
+    private async void MenuItemSave_OnClick(object? sender, RoutedEventArgs e)
+    {
+        await SaveFile(ChartEditor.Chart.IsNew);
+    }
 
-    private async void MenuItemSaveAs_OnClick(object? sender, RoutedEventArgs e) => await SaveFile(true);
+    private async void MenuItemSaveAs_OnClick(object? sender, RoutedEventArgs e)
+    {
+        await SaveFile(true);
+    }
 
-    private async void MenuItemExportMercury_OnClick(object? sender, RoutedEventArgs e) => await ExportFile(ChartWriteType.Mercury);
+    private async void MenuItemExportMercury_OnClick(object? sender, RoutedEventArgs e)
+    {
+        await ExportFile(ChartWriteType.Mercury);
+    }
 
-    private async void MenuItemExportSaturn_OnClick(object? sender, RoutedEventArgs e) => await ExportFile(ChartWriteType.Saturn);
+    private async void MenuItemExportSaturn_OnClick(object? sender, RoutedEventArgs e)
+    {
+        await ExportFile(ChartWriteType.Saturn);
+    }
 
     private void MenuItemSettings_OnClick(object? sender, RoutedEventArgs e)
     {
@@ -328,22 +383,44 @@ public partial class MainView : UserControl
     private void ButtonGimmickReverse_OnClick(object? sender, RoutedEventArgs e) { }
 
     private void ButtonInsert_OnClick(object? sender, RoutedEventArgs e) { }
-
-    // ________________ UI Dialogs
-
-    private void OnSettingsClose(ContentDialog sender, ContentDialogClosingEventArgs e)
+    
+    private void ButtonPlay_OnClick(object? sender, RoutedEventArgs e)
     {
-        // Settings closed, stop rebinding in case it was active.
-        KeybindEditor.StopRebinding();
-        SetButtonColors();
-        File.WriteAllText("UserConfig.toml", Toml.FromModel(UserConfig));
+        ChartEditor.Play();
+        IconPlay.IsVisible = !ChartEditor.IsPlaying;
+        IconStop.IsVisible = ChartEditor.IsPlaying;
     }
     
-    private IStorageProvider GetStorageProvider()
+    private void SliderSongPosition_OnValueChanged(object? sender, RangeBaseValueChangedEventArgs e)
     {
-        if (VisualRoot is TopLevel)
-            return (VisualRoot as TopLevel)!.StorageProvider;
-        throw new Exception(":3 something went wrong, too bad.");
+        
+    }
+    
+    private void SliderPlaybackSpeed_OnValueChanged(object? sender, RangeBaseValueChangedEventArgs e)
+    {
+        TextBlockPlaybackSpeed.Text = $"{SliderPlaybackSpeed.Value,3:F0}%";
+        ChartEditor.PlaybackSpeed = (float)SliderPlaybackSpeed.Value;
+    }
+    
+    // ________________ UI Dialogs
+    
+    private void OnSettingsClose(ContentDialog sender, ContentDialogClosingEventArgs e)
+    {
+        KeybindEditor.StopRebinding(); // Stop rebinding in case it was active.
+        SetButtonColors(); // Update button colors if they were changed
+        File.WriteAllText("UserConfig.toml", Toml.FromModel(UserConfig));
+    }
+
+    private void ShowWarningMessage(string title, string? text = null)
+    {
+        ContentDialog dialog = new()
+        {
+            Title = title,
+            Content = text,
+            PrimaryButtonText = Assets.Lang.Resources.Generic_Ok
+        };
+
+        dialog.ShowAsync();
     }
     
     private async Task<bool> PromptSave()
@@ -352,13 +429,13 @@ public partial class MainView : UserControl
 
         ContentDialogResult result = await showSavePrompt();
 
-        switch (result)
+        return result switch
         {
-            case ContentDialogResult.None: return true;
-            case ContentDialogResult.Primary when await SaveFile(true): return true;
-            case ContentDialogResult.Secondary: return false;
-            default: return false;
-        }
+            ContentDialogResult.None => true,
+            ContentDialogResult.Primary when await SaveFile(true) => true,
+            ContentDialogResult.Secondary => false,
+            _ => false
+        };
 
         Task<ContentDialogResult> showSavePrompt()
         {
@@ -374,9 +451,15 @@ public partial class MainView : UserControl
         }
     }
 
+    internal IStorageProvider GetStorageProvider()
+    {
+        if (VisualRoot is TopLevel top) return top.StorageProvider;
+        throw new Exception(":3 something went wrong, too bad.");
+    }
+    
     private async Task<IStorageFile?> OpenChartFilePicker()
     {
-        var result = await GetStorageProvider().OpenFilePickerAsync(new FilePickerOpenOptions
+        var result = await GetStorageProvider().OpenFilePickerAsync(new()
         {
             AllowMultiple = false,
             FileTypeFilter = new List<FilePickerFileType>
@@ -394,7 +477,7 @@ public partial class MainView : UserControl
     
     private async Task<IStorageFile?> SaveChartFilePicker()
     {
-        return await GetStorageProvider().SaveFilePickerAsync(new FilePickerSaveOptions()
+        return await GetStorageProvider().SaveFilePickerAsync(new()
         {
             DefaultExtension = "mer",
             FileTypeChoices = new[]
@@ -406,8 +489,6 @@ public partial class MainView : UserControl
                 }
             }
         });
-        
-        
     }
     
     public async Task<bool> SaveFile(bool openFilePicker)
@@ -425,7 +506,7 @@ public partial class MainView : UserControl
         if (string.IsNullOrEmpty(filepath)) return false;
 
         ChartEditor.Chart.WriteFile(filepath, ChartWriteType.Editor, true);
-        ChartEditor.IsNew = false;
+        ChartEditor.Chart.IsNew = false;
         return true;
     }
 

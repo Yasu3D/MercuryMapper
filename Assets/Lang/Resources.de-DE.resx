@@ -112,7 +112,7 @@
         <value>BPM</value>
     </data>
     <data name="Gimmick_TimeSigChange" xml:space="preserve">
-        <value>Takt</value>
+        <value>Taktart</value>
     </data>
     <data name="Gimmick_HiSpeedChange" xml:space="preserve">
         <value>HiSpeed</value>
@@ -206,5 +206,56 @@
     </data>
     <data name="Editor_IncreasePlaybackSpeed" xml:space="preserve">
         <value>Wiedergabegeschwindigkeit verringern</value>
+    </data>
+    <data name="Editor_NewChart" xml:space="preserve">
+        <value>Neue Chart</value>
+    </data>
+    <data name="ChartProperties_Bpm" xml:space="preserve">
+        <value>BPM</value>
+    </data>
+    <data name="ChartProperties_TimeSignature" xml:space="preserve">
+        <value>Taktart</value>
+    </data>
+    <data name="ChartProperties_Author" xml:space="preserve">
+        <value>Chart Author</value>
+    </data>
+    <data name="ChartProperties_Level" xml:space="preserve">
+        <value>Level</value>
+    </data>
+    <data name="ChartProperties_MusicFilePath" xml:space="preserve">
+        <value>Musik Dateipfad</value>
+    </data>
+    <data name="ChartProperties_PreviewLength" xml:space="preserve">
+        <value>Vorschau Länge</value>
+    </data>
+    <data name="ChartProperties_PreviewTime" xml:space="preserve">
+        <value>Vorschau Start</value>
+    </data>
+    <data name="ChartProperties_Offset" xml:space="preserve">
+        <value>Offset</value>
+    </data>
+    <data name="ChartProperties_MovieOffset" xml:space="preserve">
+        <value>Video Offset</value>
+    </data>
+    <data name="ChartProperties_Artist" xml:space="preserve">
+        <value>Interpret</value>
+    </data>
+    <data name="ChartProperties_Title" xml:space="preserve">
+        <value>Titel</value>
+    </data>
+    <data name="ChartProperties_ClearThreshold" xml:space="preserve">
+        <value>Clear Schwelle</value>
+    </data>
+    <data name="Generic_Ok" xml:space="preserve">
+        <value>Ok</value>
+    </data>
+    <data name="Editor_NewChartInvalidBpm" xml:space="preserve">
+        <value>Chart hat ungültige BPM. BPM muss über Null liegen.</value>
+    </data>
+    <data name="Editor_NewChartInvalidTimeSig" xml:space="preserve">
+        <value>Chart hat ungültige Taktart. Upper und Lower müssen über Null liegen.</value>
+    </data>
+    <data name="Editor_NewChartInvalidAudio" xml:space="preserve">
+        <value>Die ausgewählte Audiodatei konnte nicht gefunden werden.</value>
     </data>
 </root>

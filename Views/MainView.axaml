@@ -95,169 +95,197 @@
         </Grid>
         
         <!-- Left Panel -->
-            <Grid RowDefinitions="*,Auto, Auto" Grid.Row="1" Grid.Column="0" Background="{DynamicResource DarkBrush}">  
-                <ScrollViewer Grid.Row="0" Grid.Column="0" Width="290" Name="LeftPanel">
-                    <Grid ColumnDefinitions="130,130">
-                        <StackPanel Grid.Column="0" Width="130" Margin="10,10,10,0">
-                            <Border   ClipToBounds="True" Classes="Outline">
-                                <StackPanel>
-                                    <RadioButton Name="RadioNoteTouch" Classes="ToggleRadioStripe" 
-                                            BorderBrush="White"
-                                            IsCheckedChanged="RadioNoteType_IsCheckedChanged" GroupName="NoteType"
-                                            Content="{x:Static lang:Resources.Note_Touch}" IsChecked="True"/>
+        <Grid RowDefinitions="*,Auto, Auto" Grid.Row="1" Grid.Column="0" Background="{DynamicResource DarkBrush}">  
+            <ScrollViewer Grid.Row="0" Width="275" Name="LeftPanel">
+                <Grid ColumnDefinitions="130,130">
+                    <StackPanel Grid.Column="0" Width="130" Margin="5,5,5,0">
+                        <Border   ClipToBounds="True" Classes="Outline">
+                            <StackPanel>
+                                <RadioButton Name="RadioNoteTouch" Classes="ToggleRadioStripe" 
+                                             BorderBrush="White"
+                                             IsCheckedChanged="RadioNoteType_IsCheckedChanged" GroupName="NoteType"
+                                             Content="{x:Static lang:Resources.Note_Touch}" IsChecked="True"/>
                                     
-                                    <Separator Margin="0"/>
+                                <Separator Margin="0"/>
                                     
-                                    <RadioButton Name="RadioNoteSlideClockwise" Classes="ToggleRadioStripe"
-                                            BorderBrush="White"
-                                            IsCheckedChanged="RadioNoteType_IsCheckedChanged" GroupName="NoteType"
-                                            Content="{x:Static lang:Resources.Note_SlideClockwise}" />
+                                <RadioButton Name="RadioNoteSlideClockwise" Classes="ToggleRadioStripe"
+                                             BorderBrush="White"
+                                             IsCheckedChanged="RadioNoteType_IsCheckedChanged" GroupName="NoteType"
+                                             Content="{x:Static lang:Resources.Note_SlideClockwise}" />
                                     
-                                    <Separator Margin="0"/>
+                                <Separator Margin="0"/>
                                     
-                                    <RadioButton Name="RadioNoteSlideCounterclockwise" Classes="ToggleRadioStripe"
-                                            BorderBrush="White"
-                                            IsCheckedChanged="RadioNoteType_IsCheckedChanged" GroupName="NoteType"
-                                            Content="{x:Static lang:Resources.Note_SlideCounterclockwise}" />
+                                <RadioButton Name="RadioNoteSlideCounterclockwise" Classes="ToggleRadioStripe"
+                                             BorderBrush="White"
+                                             IsCheckedChanged="RadioNoteType_IsCheckedChanged" GroupName="NoteType"
+                                             Content="{x:Static lang:Resources.Note_SlideCounterclockwise}" />
                                     
-                                    <Separator Margin="0"/>
+                                <Separator Margin="0"/>
                                     
-                                    <RadioButton Name="RadioNoteSnapForward" Classes="ToggleRadioStripe"
-                                            BorderBrush="White"
-                                            IsCheckedChanged="RadioNoteType_IsCheckedChanged" GroupName="NoteType"
-                                            Content="{x:Static lang:Resources.Note_SnapForward}" />
+                                <RadioButton Name="RadioNoteSnapForward" Classes="ToggleRadioStripe"
+                                             BorderBrush="White"
+                                             IsCheckedChanged="RadioNoteType_IsCheckedChanged" GroupName="NoteType"
+                                             Content="{x:Static lang:Resources.Note_SnapForward}" />
                                     
-                                    <Separator Margin="0"/>
+                                <Separator Margin="0"/>
                                     
-                                    <RadioButton Name="RadioNoteSnapBackward" Classes="ToggleRadioStripe"
-                                            BorderBrush="White"
-                                            IsCheckedChanged="RadioNoteType_IsCheckedChanged" GroupName="NoteType"
-                                            Content="{x:Static lang:Resources.Note_SnapBackward}" />
+                                <RadioButton Name="RadioNoteSnapBackward" Classes="ToggleRadioStripe"
+                                             BorderBrush="White"
+                                             IsCheckedChanged="RadioNoteType_IsCheckedChanged" GroupName="NoteType"
+                                             Content="{x:Static lang:Resources.Note_SnapBackward}" />
                                     
-                                    <Separator Margin="0"/>
+                                <Separator Margin="0"/>
                                     
-                                    <RadioButton Name="RadioNoteChain" Classes="ToggleRadioStripe"
-                                            BorderBrush="White"
-                                            IsCheckedChanged="RadioNoteType_IsCheckedChanged" GroupName="NoteType"
-                                            Content="{x:Static lang:Resources.Note_Chain}" />
+                                <RadioButton Name="RadioNoteChain" Classes="ToggleRadioStripe"
+                                             BorderBrush="White"
+                                             IsCheckedChanged="RadioNoteType_IsCheckedChanged" GroupName="NoteType"
+                                             Content="{x:Static lang:Resources.Note_Chain}" />
                                     
-                                    <Separator Margin="0"/>
+                                <Separator Margin="0"/>
                                     
-                                    <RadioButton Name="RadioNoteHold" Classes="ToggleRadioStripe"
-                                            BorderBrush="White"
-                                            IsCheckedChanged="RadioNoteType_IsCheckedChanged" GroupName="NoteType"
-                                            Content="{x:Static lang:Resources.Note_Hold}" />
+                                <RadioButton Name="RadioNoteHold" Classes="ToggleRadioStripe"
+                                             BorderBrush="White"
+                                             IsCheckedChanged="RadioNoteType_IsCheckedChanged" GroupName="NoteType"
+                                             Content="{x:Static lang:Resources.Note_Hold}" />
                                     
-                                    <Separator Margin="0"/>
+                                <Separator Margin="0"/>
                                     
-                                    <RadioButton Name="RadioNoteMaskAdd" Classes="ToggleRadioStripe"
-                                                 BorderBrush="White" 
-                                                 IsCheckedChanged="RadioNoteType_IsCheckedChanged" GroupName="NoteType"
-                                                 Content="{x:Static lang:Resources.Note_MaskAdd}" />
+                                <RadioButton Name="RadioNoteMaskAdd" Classes="ToggleRadioStripe"
+                                             BorderBrush="White" 
+                                             IsCheckedChanged="RadioNoteType_IsCheckedChanged" GroupName="NoteType"
+                                             Content="{x:Static lang:Resources.Note_MaskAdd}" />
                                     
-                                    <Separator Margin="0"/>
+                                <Separator Margin="0"/>
                                     
-                                    <RadioButton Name="RadioNoteMaskRemove" Classes="ToggleRadioStripe"
-                                                 BorderBrush="White"
-                                                 IsCheckedChanged="RadioNoteType_IsCheckedChanged" GroupName="NoteType"
-                                                 Content="{x:Static lang:Resources.Note_MaskRemove}" />
+                                <RadioButton Name="RadioNoteMaskRemove" Classes="ToggleRadioStripe"
+                                             BorderBrush="White"
+                                             IsCheckedChanged="RadioNoteType_IsCheckedChanged" GroupName="NoteType"
+                                             Content="{x:Static lang:Resources.Note_MaskRemove}" />
                                     
-                                    <Separator Margin="0"/>
+                                <Separator Margin="0"/>
                                     
-                                    <RadioButton Name="RadioNoteEndOfChart" Classes="ToggleRadioStripe"
-                                                 BorderBrush="White" 
-                                                 IsCheckedChanged="RadioNoteType_IsCheckedChanged" GroupName="NoteType"
-                                                 Content="{x:Static lang:Resources.Note_EndOfChart}" />
+                                <RadioButton Name="RadioNoteEndOfChart" Classes="ToggleRadioStripe"
+                                             BorderBrush="White" 
+                                             IsCheckedChanged="RadioNoteType_IsCheckedChanged" GroupName="NoteType"
+                                             Content="{x:Static lang:Resources.Note_EndOfChart}" />
                                     
-                                </StackPanel>
-                            </Border>
+                            </StackPanel>
+                        </Border>
 
-                            <!-- <Border   ClipToBounds="True" Classes="Outline" Margin="0,10,0,0">
+                        <!-- <Border   ClipToBounds="True" Classes="Outline" Margin="0,10,0,0">
                                 <Button Classes="CompactButton" Margin="0,0" Click="ButtonEndHold_OnClick" Content="{DynamicResource L.EndHold}" />
                             </Border>-->
 
-                            <Border   ClipToBounds="True" Classes="Outline" Margin="0,10,0,0" Name="BonusTypePanel">
-                                <StackPanel>
-                                    <RadioButton Name="RadioNoBonus" IsChecked="True" GroupName="BonusType"
-                                                 Content="{x:Static lang:Resources.BonusType_None}" Margin="0,0"
-                                                 IsCheckedChanged="RadioBonusType_IsCheckedChanged" Classes="ToggleRadio" />
+                        <Border   ClipToBounds="True" Classes="Outline" Margin="0,10,0,0" Name="BonusTypePanel">
+                            <StackPanel>
+                                <RadioButton Name="RadioNoBonus" IsChecked="True" GroupName="BonusType"
+                                             Content="{x:Static lang:Resources.BonusType_None}" Margin="0,0"
+                                             IsCheckedChanged="RadioBonusType_IsCheckedChanged" Classes="ToggleRadio" />
                                     
-                                    <Separator Margin="0"/>
+                                <Separator Margin="0"/>
                                     
-                                    <RadioButton Name="RadioBonus" IsChecked="False" GroupName="BonusType"
-                                                 Content="{x:Static lang:Resources.BonusType_Bonus}" Margin="0,0"
-                                                 IsCheckedChanged="RadioBonusType_IsCheckedChanged" Classes="ToggleRadio" />
+                                <RadioButton Name="RadioBonus" IsChecked="False" GroupName="BonusType"
+                                             Content="{x:Static lang:Resources.BonusType_Bonus}" Margin="0,0"
+                                             IsCheckedChanged="RadioBonusType_IsCheckedChanged" Classes="ToggleRadio" />
                                     
-                                    <Separator Margin="0"/>
+                                <Separator Margin="0"/>
                                     
-                                    <RadioButton Name="RadioRNote" IsChecked="False" GroupName="BonusType"
-                                                 Content="{x:Static lang:Resources.BonusType_RNote}" Margin="0,0"
-                                                 IsCheckedChanged="RadioBonusType_IsCheckedChanged" Classes="ToggleRadio" />
-                                </StackPanel>
-                            </Border>
+                                <RadioButton Name="RadioRNote" IsChecked="False" GroupName="BonusType"
+                                             Content="{x:Static lang:Resources.BonusType_RNote}" Margin="0,0"
+                                             IsCheckedChanged="RadioBonusType_IsCheckedChanged" Classes="ToggleRadio" />
+                            </StackPanel>
+                        </Border>
                             
-                            <Border   ClipToBounds="True" Classes="Outline" Margin="0,10,0,0" Name="MaskDirectionPanel">
-                                <StackPanel>
-                                    <RadioButton Name="RadioMaskClockwise" IsChecked="True"
-                                                 GroupName="MaskDirection" Classes="ToggleRadio"
-                                                 Content="{x:Static lang:Resources.MaskDirection_Clockwise}"
-                                                 IsCheckedChanged="MaskDirection_IsCheckedChanged" />
+                        <Border   ClipToBounds="True" Classes="Outline" Margin="0,10,0,0" Name="MaskDirectionPanel">
+                            <StackPanel>
+                                <RadioButton Name="RadioMaskClockwise" IsChecked="True"
+                                             GroupName="MaskDirection" Classes="ToggleRadio"
+                                             Content="{x:Static lang:Resources.MaskDirection_Clockwise}"
+                                             IsCheckedChanged="MaskDirection_IsCheckedChanged" />
                                     
-                                    <Separator Margin="0"/>
+                                <Separator Margin="0"/>
                                     
-                                    <RadioButton Name="RadioMaskCounterclockwise" IsChecked="False"
-                                                 GroupName="MaskDirection" Classes="ToggleRadio"
-                                                 Content="{x:Static lang:Resources.MaskDirection_Counterclockwise}"
-                                                 IsCheckedChanged="MaskDirection_IsCheckedChanged" />
+                                <RadioButton Name="RadioMaskCounterclockwise" IsChecked="False"
+                                             GroupName="MaskDirection" Classes="ToggleRadio"
+                                             Content="{x:Static lang:Resources.MaskDirection_Counterclockwise}"
+                                             IsCheckedChanged="MaskDirection_IsCheckedChanged" />
                                     
-                                    <Separator Margin="0"/>
+                                <Separator Margin="0"/>
                                     
-                                    <RadioButton Name="RadioMaskCenter" IsChecked="False"
-                                                 GroupName="MaskDirection" Classes="ToggleRadio"
-                                                 Content="{x:Static lang:Resources.MaskDirection_Center}"
-                                                 IsCheckedChanged="MaskDirection_IsCheckedChanged" />
-                                </StackPanel>
-                            </Border>
-                        </StackPanel>
+                                <RadioButton Name="RadioMaskCenter" IsChecked="False"
+                                             GroupName="MaskDirection" Classes="ToggleRadio"
+                                             Content="{x:Static lang:Resources.MaskDirection_Center}"
+                                             IsCheckedChanged="MaskDirection_IsCheckedChanged" />
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
                     
-                        <StackPanel Grid.Column="1" Width="130" Margin="0,10,10,0">
-                            <Border   ClipToBounds="True" Classes="Outline">
-                                <StackPanel>
-                                    <Button Name="ButtonGimmickBpmChange" Classes="CompactButton" Click="ButtonGimmickBpmChange_OnClick"
-                                            Content="{x:Static lang:Resources.Gimmick_BpmChange}" />
+                    <StackPanel Grid.Column="1" Width="130" Margin="0,5,5,0">
+                        <Border   ClipToBounds="True" Classes="Outline">
+                            <StackPanel>
+                                <Button Name="ButtonGimmickBpmChange" Classes="CompactButton" Click="ButtonGimmickBpmChange_OnClick"
+                                        Content="{x:Static lang:Resources.Gimmick_BpmChange}" />
                                     
-                                    <Separator Margin="0"/>
+                                <Separator Margin="0"/>
                                     
-                                    <Button Name="ButtonGimmickTimeSig" Classes="CompactButton" Click="ButtonGimmickTimeSig_OnClick"
-                                            Content="{x:Static lang:Resources.Gimmick_TimeSigChange}" />
+                                <Button Name="ButtonGimmickTimeSig" Classes="CompactButton" Click="ButtonGimmickTimeSig_OnClick"
+                                        Content="{x:Static lang:Resources.Gimmick_TimeSigChange}" />
                                     
-                                    <Separator Margin="0"/>
+                                <Separator Margin="0"/>
                                     
-                                    <Button Name="ButtonGimmickHiSpeed" Classes="CompactButton" Click="ButtonGimmickHiSpeed_OnClick"
-                                            Content="{x:Static lang:Resources.Gimmick_HiSpeedChange}" />
+                                <Button Name="ButtonGimmickHiSpeed" Classes="CompactButton" Click="ButtonGimmickHiSpeed_OnClick"
+                                        Content="{x:Static lang:Resources.Gimmick_HiSpeedChange}" />
                                     
-                                    <Separator Margin="0"/>
+                                <Separator Margin="0"/>
                                     
-                                    <Button Name="ButtonGimmickStop" Classes="CompactButton" Click="ButtonGimmickStop_OnClick"
-                                            Content="{x:Static lang:Resources.Gimmick_Stop}" />
+                                <Button Name="ButtonGimmickStop" Classes="CompactButton" Click="ButtonGimmickStop_OnClick"
+                                        Content="{x:Static lang:Resources.Gimmick_Stop}" />
                                     
-                                    <Separator Margin="0"/>
+                                <Separator Margin="0"/>
                                     
-                                    <Button Name="ButtonGimmickReverse" Classes="CompactButton" Click="ButtonGimmickReverse_OnClick"
-                                            Content="{x:Static lang:Resources.Gimmick_Reverse}" />
-                                </StackPanel>
-                            </Border>
+                                <Button Name="ButtonGimmickReverse" Classes="CompactButton" Click="ButtonGimmickReverse_OnClick"
+                                        Content="{x:Static lang:Resources.Gimmick_Reverse}" />
+                            </StackPanel>
+                        </Border>
                             
-                        </StackPanel>
-                    </Grid>
-                </ScrollViewer>
+                    </StackPanel>
+                </Grid>
+            </ScrollViewer>
                 
-                <Border Grid.Row="1"   ClipToBounds="True" Classes="Outline" Margin="10,10,10,0">
-                    <Button Name="ButtonInsert" Click="ButtonInsert_OnClick" HorizontalAlignment="Stretch"
-                            HorizontalContentAlignment="Center" Classes="CompactButton"
-                            Content="{x:Static lang:Resources.Editor_Insert}"/>
-                </Border>
+            <Button Grid.Row="1" Grid.Column="0" Name="ButtonInsert" Click="ButtonInsert_OnClick"
+                    Width="130" Height="45" CornerRadius="5" Margin="5,5,0,0"
+                    HorizontalAlignment="Left" VerticalAlignment="Stretch"
+                    HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                    Content="{x:Static lang:Resources.Editor_Insert}"/>
+        </Grid>
+        
+        <!-- Song Controls -->
+        <Grid Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="2" Height="65" Name="SongControlPanel"
+              ColumnDefinitions="Auto, *">
+            
+            <Button Name="ButtonPlay" Click="ButtonPlay_OnClick"
+                    Width="55" Height="55" CornerRadius="3"
+                    Grid.Column="0" Margin="5">
+                <Button.Content>
+                    <Panel>
+                        <PathIcon Data="{DynamicResource IconPlay}" Name="IconPlay"/>
+                        <PathIcon Data="{DynamicResource IconStop}" Name="IconStop" IsVisible="False"/>
+                    </Panel>
+                </Button.Content>
+            </Button>
+            
+            <Grid Grid.Column="1" RowDefinitions="Auto, Auto" ColumnDefinitions="Auto, Auto, *">
+                <Slider Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Classes="Compact" Margin="10,0,15,0"
+                        Name="SliderSongPosition" ValueChanged="SliderSongPosition_OnValueChanged"/>
+                
+                <Slider Grid.Row="1" Grid.Column="0" Classes="Compact" Width="200" HorizontalAlignment="Left" Margin="10,0,15,0" Name="SliderPlaybackSpeed"
+                        Minimum="10" Maximum="200" Value="100" ValueChanged="SliderPlaybackSpeed_OnValueChanged"
+                        TickPlacement="TopLeft" Ticks="0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200" IsSnapToTickEnabled="True"/>
+                
+                <TextBlock Grid.Row="1" Grid.Column="1" Text="100%" VerticalAlignment="Bottom" Name="TextBlockPlaybackSpeed"/>
             </Grid>
+            
+        </Grid>
         
     </Grid>
 </UserControl>

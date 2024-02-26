@@ -1,0 +1,48 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:lang="clr-namespace:MercuryMapper.Assets.Lang"
+             xmlns:fluent="using:FluentAvalonia.UI.Controls"
+             Width="300" Height="250"
+             mc:Ignorable="d" d:DesignWidth="300" d:DesignHeight="250"
+             x:Class="MercuryMapper.Views.NewChartView">
+    <UserControl.Styles>
+        <Style Selector="TextBlock">
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="10"/>
+        </Style>
+        
+        <Style Selector="TextBox">
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Height" Value="30"/>
+        </Style>
+        
+        <Style Selector="fluent|NumberBox">
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        </Style>
+    </UserControl.Styles>
+    
+    <!-- These row definitions remind me of a gladde paling song -->
+    <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto"
+          ColumnDefinitions="Auto,*,*" Margin="10">
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="{x:Static lang:Resources.ChartProperties_Bpm}"/>
+        <fluent:NumberBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" Name="BpmNumberBox" Value="120"/>
+        
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="{x:Static lang:Resources.ChartProperties_TimeSignature}"/>
+        <fluent:NumberBox Grid.Row="1" Grid.Column="1" Name="TimeSigUpperNumberBox" Value="4"/>
+        <fluent:NumberBox Grid.Row="1" Grid.Column="2" Name="TimeSigLowerNumberBox" Value="4"/>
+        
+        <Separator Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3"/>
+        
+        <TextBlock Grid.Row="3" Grid.Column="0" Text="{x:Static lang:Resources.ChartProperties_Author}"/>
+        <TextBox Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Name="AuthorTextBox"/>
+        
+        <Separator Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3"/>
+        
+        <TextBlock Grid.Row="5" Grid.Column="0" Text="{x:Static lang:Resources.ChartProperties_MusicFilePath}"/>
+        <Button Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" Content="Select File" Click="SelectFile_OnClick"/>
+        <TextBox Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3" Name="MusicFilePathTextBox"/>
+    </Grid>
+</UserControl>

@@ -12,22 +12,26 @@ namespace MercuryMapper.Data;
 public class Chart
 {
     public bool IsSaved { get; set; } = true;
+    public bool IsNew { get; set; } = true;
 
     public List<Note> Notes { get; set; } = [];
     public List<Gimmick> Gimmicks { get; set; } = [];
+
+    public Gimmick? StartBpm { get; set; }
+    public Gimmick? StartTimeSig { get; set; }
 
     private List<Gimmick>? TimeEvents { get; set; }
     private List<TimeScaleData> TimeScales { get; set; } = [];
 
     public string MusicFilePath { get; set; } = "";
     public string EditorMusicFilePath { get; set; } = "";
-    public float Level { get; set; } = 0;
-    public float ClearThreshold { get; set; } = 0.83f;
+    public decimal Level { get; set; }
+    public decimal ClearThreshold { get; set; } = 0.83m;
     public string Author { get; set; } = "";
-    public float PreviewTime { get; set; } = 0; // in seconds
-    public float PreviewLength { get; set; } = 10; // in seconds
-    public float Offset { get; set; } = 0; // in seconds
-    public float MovieOffset { get; set; } = 0; // in seconds
+    public decimal PreviewTime { get; set; } // in seconds
+    public decimal PreviewLength { get; set; } = 10; // in seconds
+    public decimal Offset { get; set; } // in seconds
+    public decimal MovieOffset { get; set; } // in seconds
 
     /// <summary>
     /// Loads a Chart from a .mer file.
@@ -63,6 +67,16 @@ public class Chart
             Gimmicks.Clear();
             TimeEvents?.Clear();
             TimeScales.Clear();
+            
+            MusicFilePath = "";
+            EditorMusicFilePath = "";
+            Level = 0;
+            ClearThreshold = 0.83m;
+            Author = "";
+            PreviewTime = 0;
+            PreviewLength = 10;
+            Offset = 0;
+            MovieOffset = 0;
         }
         
         void readTags(List<string> lines)
@@ -78,25 +92,25 @@ public class Chart
                 if (editorMusicFilePath != null) EditorMusicFilePath = editorMusicFilePath;
 
                 string? level = getTag(line, "#LEVEL") ?? getTag(line, "#EDITOR_LEVEL");
-                if (level != null) Level = Convert.ToSingle(level);
+                if (level != null) Level = Convert.ToDecimal(level);
 
                 string? clearThreshold = getTag(line, "#CLEAR_THRESHOLD") ?? getTag(line, "#EDITOR_CLEAR_THRESHOLD");
-                if (clearThreshold != null) ClearThreshold = Convert.ToSingle(clearThreshold, CultureInfo.InvariantCulture);
+                if (clearThreshold != null) ClearThreshold = Convert.ToDecimal(clearThreshold, CultureInfo.InvariantCulture);
 
                 string? author = getTag(line, "#AUTHOR") ?? getTag(line, "#EDITOR_AUTHOR");
                 if (author != null) Author = author;
                 
                 string? previewTime = getTag(line, "#PREVIEW_TIME") ?? getTag(line, "#EDITOR_PREVIEW_TIME");
-                if (clearThreshold != null) PreviewTime = Convert.ToSingle(previewTime, CultureInfo.InvariantCulture);
+                if (clearThreshold != null) PreviewTime = Convert.ToDecimal(previewTime, CultureInfo.InvariantCulture);
                 
                 string? previewLength = getTag(line, "#PREVIEW_LENGTH") ?? getTag(line, "#EDITOR_PREVIEW_LENGTH");
-                if (clearThreshold != null) PreviewLength = Convert.ToSingle(previewLength, CultureInfo.InvariantCulture);
+                if (clearThreshold != null) PreviewLength = Convert.ToDecimal(previewLength, CultureInfo.InvariantCulture);
                 
                 string? offset = getTag(line, "#OFFSET") ?? getTag(line, "EDITOR_OFFSET");
-                if (offset != null) Offset = Convert.ToSingle(offset, CultureInfo.InvariantCulture);
+                if (offset != null) Offset = Convert.ToDecimal(offset, CultureInfo.InvariantCulture);
             
                 string? movieOffset = getTag(line, "#MOVIEOFFSET") ?? getTag(line, "EDITOR_MOVIEOFFSET");
-                if (movieOffset != null) MovieOffset = Convert.ToSingle(movieOffset, CultureInfo.InvariantCulture);
+                if (movieOffset != null) MovieOffset = Convert.ToDecimal(movieOffset, CultureInfo.InvariantCulture);
 
                 if (!line.Contains("#BODY")) continue;
                 

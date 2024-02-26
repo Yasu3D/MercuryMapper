@@ -87,6 +87,114 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Interpret.
+        /// </summary>
+        public static string ChartProperties_Artist {
+            get {
+                return ResourceManager.GetString("ChartProperties_Artist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Chart Author.
+        /// </summary>
+        public static string ChartProperties_Author {
+            get {
+                return ResourceManager.GetString("ChartProperties_Author", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to BPM.
+        /// </summary>
+        public static string ChartProperties_Bpm {
+            get {
+                return ResourceManager.GetString("ChartProperties_Bpm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Clear Schwelle.
+        /// </summary>
+        public static string ChartProperties_ClearThreshold {
+            get {
+                return ResourceManager.GetString("ChartProperties_ClearThreshold", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Level.
+        /// </summary>
+        public static string ChartProperties_Level {
+            get {
+                return ResourceManager.GetString("ChartProperties_Level", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Video Offset.
+        /// </summary>
+        public static string ChartProperties_MovieOffset {
+            get {
+                return ResourceManager.GetString("ChartProperties_MovieOffset", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Musik Dateipfad.
+        /// </summary>
+        public static string ChartProperties_MusicFilePath {
+            get {
+                return ResourceManager.GetString("ChartProperties_MusicFilePath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Offset.
+        /// </summary>
+        public static string ChartProperties_Offset {
+            get {
+                return ResourceManager.GetString("ChartProperties_Offset", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Vorschau Länge.
+        /// </summary>
+        public static string ChartProperties_PreviewLength {
+            get {
+                return ResourceManager.GetString("ChartProperties_PreviewLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Vorschau Start.
+        /// </summary>
+        public static string ChartProperties_PreviewTime {
+            get {
+                return ResourceManager.GetString("ChartProperties_PreviewTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Taktart.
+        /// </summary>
+        public static string ChartProperties_TimeSignature {
+            get {
+                return ResourceManager.GetString("ChartProperties_TimeSignature", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Titel.
+        /// </summary>
+        public static string ChartProperties_Title {
+            get {
+                return ResourceManager.GetString("ChartProperties_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Wiedergabegeschwindigkeit erhöhen.
         /// </summary>
         public static string Editor_DecreasePlaybackSpeed {
@@ -110,6 +218,42 @@ namespace MercuryMapper.Assets.Lang {
         public static string Editor_Insert {
             get {
                 return ResourceManager.GetString("Editor_Insert", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Neue Chart.
+        /// </summary>
+        public static string Editor_NewChart {
+            get {
+                return ResourceManager.GetString("Editor_NewChart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Die ausgewählte Audiodatei konnte nicht gefunden werden..
+        /// </summary>
+        public static string Editor_NewChartInvalidAudio {
+            get {
+                return ResourceManager.GetString("Editor_NewChartInvalidAudio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Chart hat ungültige BPM. BPM muss über Null liegen..
+        /// </summary>
+        public static string Editor_NewChartInvalidBpm {
+            get {
+                return ResourceManager.GetString("Editor_NewChartInvalidBpm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Chart hat ungültige Taktart. Upper und Lower müssen über Null liegen..
+        /// </summary>
+        public static string Editor_NewChartInvalidTimeSig {
+            get {
+                return ResourceManager.GetString("Editor_NewChartInvalidTimeSig", resourceCulture);
             }
         }
         
@@ -155,6 +299,15 @@ namespace MercuryMapper.Assets.Lang {
         public static string Generic_No {
             get {
                 return ResourceManager.GetString("Generic_No", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ok.
+        /// </summary>
+        public static string Generic_Ok {
+            get {
+                return ResourceManager.GetString("Generic_Ok", resourceCulture);
             }
         }
         
@@ -222,7 +375,7 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Takt.
+        ///   Looks up a localized string similar to Taktart.
         /// </summary>
         public static string Gimmick_TimeSigChange {
             get {

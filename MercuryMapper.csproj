@@ -68,9 +68,10 @@
     <ItemGroup>
       <None Remove="Assets\AppIcon.png" />
       <AvaloniaResource Include="Assets\AppIcon.png" />
-      <None Remove="Assets\Inter.ttf" />
-      <AvaloniaResource Include="Assets\Inter.ttf" />
       <None Remove="Assets\AppIcon.ico" />
       <AvaloniaResource Include="Assets\AppIcon.ico" />
+      <None Remove="Assets\JetbrainsMono.ttf" />
+      <None Remove="Assets\Inter.ttf" />
+      <AvaloniaResource Include="Assets\Inter.ttf" />
     </ItemGroup>
 </Project>

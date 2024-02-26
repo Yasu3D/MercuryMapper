@@ -13,12 +13,12 @@
             <StreamGeometry x:Key="IconSave">M17 3H5C3.89 3 3 3.9 3 5V19C3 20.1 3.89 21 5 21H19C20.1 21 21 20.1 21 19V7L17 3M19 19H5V5H16.17L19 7.83V19M12 12C10.34 12 9 13.34 9 15S10.34 18 12 18 15 16.66 15 15 13.66 12 12 12M6 6H15V10H6V6Z</StreamGeometry>
             <StreamGeometry x:Key="IconSaveAs">M4 19H10V21H4C2.89 21 2 20.1 2 19V5C2 3.9 2.89 3 4 3H16L20 7V9.12L18 11.12V7.83L15.17 5H4V19M14 10V6H5V10H14M20.42 12.3C20.31 12.19 20.18 12.13 20.04 12.13C19.9 12.13 19.76 12.19 19.65 12.3L18.65 13.3L20.7 15.35L21.7 14.35C21.92 14.14 21.92 13.79 21.7 13.58L20.42 12.3M12 19.94V22H14.06L20.12 15.93L18.07 13.88L12 19.94M14 15C14 13.34 12.66 12 11 12S8 13.34 8 15 9.34 18 11 18C11.04 18 11.08 18 11.13 18L14 15.13C14 15.09 14 15.05 14 15</StreamGeometry>
             <StreamGeometry x:Key="IconSettings">M12,8A4,4 0 0,1 16,12A4,4 0 0,1 12,16A4,4 0 0,1 8,12A4,4 0 0,1 12,8M12,10A2,2 0 0,0 10,12A2,2 0 0,0 12,14A2,2 0 0,0 14,12A2,2 0 0,0 12,10M10,22C9.75,22 9.54,21.82 9.5,21.58L9.13,18.93C8.5,18.68 7.96,18.34 7.44,17.94L4.95,18.95C4.73,19.03 4.46,18.95 4.34,18.73L2.34,15.27C2.21,15.05 2.27,14.78 2.46,14.63L4.57,12.97L4.5,12L4.57,11L2.46,9.37C2.27,9.22 2.21,8.95 2.34,8.73L4.34,5.27C4.46,5.05 4.73,4.96 4.95,5.05L7.44,6.05C7.96,5.66 8.5,5.32 9.13,5.07L9.5,2.42C9.54,2.18 9.75,2 10,2H14C14.25,2 14.46,2.18 14.5,2.42L14.87,5.07C15.5,5.32 16.04,5.66 16.56,6.05L19.05,5.05C19.27,4.96 19.54,5.05 19.66,5.27L21.66,8.73C21.79,8.95 21.73,9.22 21.54,9.37L19.43,11L19.5,12L19.43,13L21.54,14.63C21.73,14.78 21.79,15.05 21.66,15.27L19.66,18.73C19.54,18.95 19.27,19.04 19.05,18.95L16.56,17.95C16.04,18.34 15.5,18.68 14.87,18.93L14.5,21.58C14.46,21.82 14.25,22 14,22H10M11.25,4L10.88,6.61C9.68,6.86 8.62,7.5 7.85,8.39L5.44,7.35L4.69,8.65L6.8,10.2C6.4,11.37 6.4,12.64 6.8,13.8L4.68,15.36L5.43,16.66L7.86,15.62C8.63,16.5 9.68,17.14 10.87,17.38L11.24,20H12.76L13.13,17.39C14.32,17.14 15.37,16.5 16.14,15.62L18.57,16.66L19.32,15.36L17.2,13.81C17.6,12.64 17.6,11.37 17.2,10.2L19.31,8.65L18.56,7.35L16.15,8.39C15.38,7.5 14.32,6.86 13.12,6.62L12.75,4H11.25Z</StreamGeometry>
-            
+            <StreamGeometry x:Key="IconPlay">M13.7501344,8.41212026 L38.1671892,21.1169293 C39.7594652,21.9454306 40.3786269,23.9078584 39.5501255,25.5001344 C39.2420737,26.0921715 38.7592263,26.5750189 38.1671892,26.8830707 L13.7501344,39.5878797 C12.1578584,40.4163811 10.1954306,39.7972194 9.36692926,38.2049434 C9.12586301,37.7416442 9,37.2270724 9,36.704809 L9,11.295191 C9,9.50026556 10.4550746,8.045191 12.25,8.045191 C12.6976544,8.045191 13.1396577,8.13766178 13.5485655,8.31589049 L13.7501344,8.41212026 Z M12.5961849,10.629867 L12.4856981,10.5831892 C12.4099075,10.5581 12.3303482,10.545191 12.25,10.545191 C11.8357864,10.545191 11.5,10.8809774 11.5,11.295191 L11.5,36.704809 C11.5,36.8253313 11.5290453,36.9440787 11.584676,37.0509939 C11.7758686,37.4184422 12.2287365,37.5613256 12.5961849,37.370133 L37.0132397,24.665324 C37.1498636,24.5942351 37.2612899,24.4828088 37.3323788,24.3461849 C37.5235714,23.9787365 37.380688,23.5258686 37.0132397,23.334676 L12.5961849,10.629867 Z</StreamGeometry>
+            <StreamGeometry x:Key="IconStop">M19.25 4.5C19.3881 4.5 19.5 4.61193 19.5 4.75V19.25C19.5 19.3881 19.3881 19.5 19.25 19.5H4.75C4.61193 19.5 4.5 19.3881 4.5 19.25V4.75C4.5 4.61193 4.61193 4.5 4.75 4.5H19.25ZM4.75 3C3.7835 3 3 3.7835 3 4.75V19.25C3 20.2165 3.7835 21 4.75 21H19.25C20.2165 21 21 20.2165 21 19.25V4.75C21 3.7835 20.2165 3 19.25 3H4.75Z</StreamGeometry>
             
         </ResourceDictionary>
-
-        <FontFamily x:Key="Inter">avares://MercuryMapper/Assets/Inter.ttf#Inter</FontFamily>
-        <FontFamily x:Key="ControlContentThemeFontFamily">Inter</FontFamily>
+        
+        <FontFamily x:Key="ContentControlThemeFontFamily">Inter</FontFamily>
         <x:Double x:Key="ControlContentThemeFontSize">13</x:Double>
         
         <SolidColorBrush x:Key="MenuFlyoutPresenterBackground" Color="{DynamicResource LightBrush}" />
@@ -26,11 +26,28 @@
 
         <CornerRadius x:Key="OverlayCornerRadius">8</CornerRadius>
 
+        <ControlTheme x:Key="MercuryMapperSliderThumbTheme" TargetType="Thumb">
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="0"
+                        CornerRadius="3"/>
+                </ControlTemplate>
+            </Setter>
+        </ControlTheme>
+        
     </Application.Resources>
 
     <Application.Styles>
         <FluentTheme/>
         <styling:FluentAvaloniaTheme CustomAccentColor="#A8A8A8A8"/>
+        
+        <!-- Windows is pepega -->
+        <Style Selector="Window[WindowState=Maximized]">
+            <Setter Property="Padding" Value="8" />
+        </Style>
         
         <Style Selector="Separator">
             <Setter Property="Margin" Value="0, 5, 0, 5" />
@@ -52,7 +69,7 @@
             <Setter Property="BorderThickness" Value="0" />
             <Setter Property="HorizontalAlignment" Value="Stretch" />
         </Style>
-
+        
         <Style Selector="ToggleButton.CompactButton">
             <Setter Property="Height" Value="35" />
             <Setter Property="CornerRadius" Value="0" />
@@ -410,6 +427,100 @@
                     </StackPanel>
                 </ControlTemplate>
             </Setter>
+        </Style>
+        
+        <Style Selector="Slider.Compact">
+            <Setter Property="Background" Value="{DynamicResource SliderTrackFill}" />
+            <Setter Property="BorderThickness" Value="{DynamicResource SliderBorderThemeThickness}" />
+            <Setter Property="Foreground" Value="{DynamicResource SliderTrackValueFill}" />
+            <Style Selector="^:horizontal">
+                <Setter Property="Template">
+                    <ControlTemplate>
+                        <DataValidationErrors>
+                            <Border BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    CornerRadius="{TemplateBinding CornerRadius}"
+                                    Height="25">
+                                <Grid x:Name="SliderContainer"
+                                      Margin="{TemplateBinding Padding}"
+                                      Background="{DynamicResource SliderContainerBackground}">
+                                    <Grid.Styles>
+                                        <Style Selector="TickBar">
+                                            <Setter Property="ReservedSpace" Value="{Binding #PART_Track.Thumb.Bounds}" />
+                                        </Style>
+                                    </Grid.Styles>
+                                    <Grid x:Name="HorizontalTemplate"
+                                          MinHeight="15"
+                                          ColumnDefinitions="Auto,Auto,*">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="{DynamicResource SliderPreContentMargin}" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="{DynamicResource SliderPostContentMargin}" />
+                                        </Grid.RowDefinitions>
+                                        <TickBar Name="TopTickBar"
+                                                 Grid.ColumnSpan="3"
+                                                 Ticks="{TemplateBinding Ticks}"
+                                                 TickFrequency="{TemplateBinding Slider.TickFrequency}"
+                                                 Orientation="{TemplateBinding Slider.Orientation}"
+                                                 Minimum="{TemplateBinding Slider.Minimum}"
+                                                 Maximum="{TemplateBinding Slider.Maximum}"
+                                                 Height="{DynamicResource SliderOutsideTickBarThemeHeight}"
+                                                 Margin="0,0,0,4"
+                                                 VerticalAlignment="Bottom"
+                                                 Placement="Top" 
+                                                 IsVisible="False"
+                                                 Fill="{DynamicResource SliderTickBarFill}"/>
+                                        <TickBar Name="BottomTickBar"
+                                                 Grid.Row="2"
+                                                 Grid.ColumnSpan="3"
+                                                 Ticks="{TemplateBinding Ticks}"
+                                                 TickFrequency="{TemplateBinding Slider.TickFrequency}"
+                                                 Orientation="{TemplateBinding Slider.Orientation}"
+                                                 Minimum="{TemplateBinding Slider.Minimum}"
+                                                 Maximum="{TemplateBinding Slider.Maximum}"
+                                                 Height="{DynamicResource SliderOutsideTickBarThemeHeight}"
+                                                 Margin="0,4,0,0"
+                                                 VerticalAlignment="Top"
+                                                 Placement="Bottom"
+                                                 IsVisible="False"
+                                                 Fill="{DynamicResource SliderTickBarFill}" />
+                                        <Track Name="PART_Track"
+                                               Grid.Row="1"
+                                               Grid.ColumnSpan="3"
+                                               Minimum="{TemplateBinding Minimum}"
+                                               Maximum="{TemplateBinding Maximum}"
+                                               Value="{TemplateBinding Value, Mode=TwoWay}"
+                                               IsDirectionReversed="{TemplateBinding IsDirectionReversed}"
+                                               Orientation="Horizontal">
+                                            <Track.DecreaseButton>
+                                                <RepeatButton Name="PART_DecreaseButton"
+                                                              Theme="{StaticResource FluentSliderHorizontalRepeatButton}"
+                                                              Background="{TemplateBinding Foreground}"
+                                                              Focusable="False"/>
+                                            </Track.DecreaseButton>
+                                            <Track.IncreaseButton>
+                                                <RepeatButton Name="PART_IncreaseButton"
+                                                              Theme="{StaticResource FluentSliderHorizontalRepeatButton}"
+                                                              Background="{TemplateBinding Background}"
+                                                              Focusable="False"/>
+                                            </Track.IncreaseButton>
+                                            <Thumb Name="thumb"
+                                                   Width="25"
+                                                   Height="8"
+                                                   Margin="0"
+                                                   Padding="0"
+                                                   Background="{DynamicResource SliderThumbBackground}"
+                                                   BorderThickness="0"
+                                                   Theme="{StaticResource MercuryMapperSliderThumbTheme}"
+                                                   DataContext="{TemplateBinding Value}"/>
+                                        </Track>
+                                    </Grid>
+                                </Grid>
+                            </Border>
+                        </DataValidationErrors>
+                    </ControlTemplate>
+                </Setter>
+            </Style>
         </Style>
         
         <!-- shut up compiler -->
