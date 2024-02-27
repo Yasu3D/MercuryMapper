@@ -30,6 +30,11 @@ public partial class MainView : UserControl
         
         KeybindEditor = new(UserConfig);
         ChartEditor = new(this);
+        AudioManager = new(this);
+
+        var interval = TimeSpan.FromSeconds(1.0 / UserConfig.RenderConfig.RefreshRate);
+        UpdateTimer = new(interval, DispatcherPriority.Background, UpdateTimer_Tick) { IsEnabled = false };
+
         KeyDownEvent.AddClassHandler<TopLevel>(OnKeyDown, RoutingStrategies.Tunnel, handledEventsToo: true);
         KeyUpEvent.AddClassHandler<TopLevel>(OnKeyUp, RoutingStrategies.Tunnel, handledEventsToo: true);
         
@@ -43,12 +48,8 @@ public partial class MainView : UserControl
     public UserConfig UserConfig = new();
     public readonly KeybindEditor KeybindEditor;
     public readonly ChartEditor ChartEditor;
-    public readonly BassSoundEngine SoundEngine = new();
-
-    private BassSound? currentSong;
-    
-    public bool IsPlaying = false;
-    public int PlaybackSpeed = 100;
+    public readonly AudioManager AudioManager;
+    public DispatcherTimer UpdateTimer;
     
     // ________________ Setup & UI Updates
 
@@ -113,6 +114,30 @@ public partial class MainView : UserControl
             ChartEditorState.InsertHold => Assets.Lang.Resources.Editor_EndHold,
             _ => Assets.Lang.Resources.Editor_EditHold
         };
+    }
+
+    public void SetSongPositionSliderMaximum()
+    {
+        SliderSongPosition.Value = 0;
+        
+        if (AudioManager.CurrentSong == null) return;
+        SliderSongPosition.Maximum = AudioManager.CurrentSong.Length;
+    }
+
+    public void UpdateTimer_Tick(object? sender, EventArgs eventArgs)
+    { 
+        if (AudioManager.CurrentSong == null) return;
+
+        if (AudioManager.CurrentSong.Position >= AudioManager.CurrentSong.Length && AudioManager.CurrentSong.IsPlaying)
+        {
+            // This is a *little* jank. Currently it's not "Pausing" explicitly,
+            // it's only toggling the state from Play to Pause. If this code was triggered
+            // when the song is paused, it would start playing. Too bad!
+            ButtonPlay_OnClick(null, new());
+            AudioManager.CurrentSong.Position = 0;
+        }
+
+        SliderSongPosition.Value = (int)AudioManager.CurrentSong.Position;
     }
     
     // ________________ Input
@@ -320,6 +345,7 @@ public partial class MainView : UserControl
         // Shift Time
         else
         {
+            if (AudioManager.CurrentSong == null || AudioManager.CurrentSong.IsPlaying) return;
             // I know some gremlin would try this.
             if (NumericMeasure.Value >= NumericMeasure.Maximum && NumericBeatValue.Value >= NumericBeatDivisor.Value - 1 && direction > 0) return;
             
@@ -344,6 +370,21 @@ public partial class MainView : UserControl
     
     // ________________ UI Events
 
+    private void MainView_OnPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
+    {
+        if (e.Property == BoundsProperty) Dispatcher.UIThread.Post(MainView_OnResize);
+    }
+
+    private void MainView_OnResize()
+    {
+        double width = RightPanel.Bounds.Left - LeftPanel.Bounds.Right;
+        double height = SongControlPanel.Bounds.Top - TitleBar.Bounds.Bottom;
+        double min = double.Min(width, height);
+
+        Canvas.Width = min;
+        Canvas.Height = min;
+    }
+    
     private async void MenuItemNew_OnClick(object? sender, RoutedEventArgs e)
     {
         if (await PromptSave()) return;
@@ -388,7 +429,8 @@ public partial class MainView : UserControl
                 }
                 
                 ChartEditor.NewChart(filepath, author, bpm, timeSigUpper, timeSigLower);
-                currentSong = SoundEngine.Play2d(filepath, false, true);
+                AudioManager.SetSong(filepath, 0.2f, (int)SliderPlaybackSpeed.Value); // TODO: Make Volume Dynamic!!
+                SetSongPositionSliderMaximum();
             }
         });
     }
@@ -397,10 +439,38 @@ public partial class MainView : UserControl
     {
         if (await PromptSave()) return;
         
+        // Get .mer file
         IStorageFile? file = await OpenChartFilePicker();
         if (file == null) return;
         
+        // Load chart
         ChartEditor.Chart.LoadFile(file.Path.LocalPath);
+
+        // Oopsie, audio not found.
+        if (!File.Exists(ChartEditor.Chart.AudioFilePath))
+        {
+            // Prompt user to select audio.
+            if (!await PromptSelectAudio())
+            {
+                // User said no, clear chart again and return.
+                ChartEditor.Chart.Clear();
+                return;
+            }
+            
+            // Get audio file
+            IStorageFile? audioFile = await OpenAudioFilePicker();
+            if (audioFile == null || !File.Exists(audioFile.Path.LocalPath))
+            {
+                ChartEditor.Chart.Clear();
+                ShowWarningMessage(Assets.Lang.Resources.Editor_NewChartInvalidAudio);
+                return;
+            }
+
+            ChartEditor.Chart.AudioFilePath = audioFile.Path.LocalPath;
+        }
+        
+        AudioManager.SetSong(ChartEditor.Chart.AudioFilePath, 0.2f, (int)SliderPlaybackSpeed.Value); // TODO: Make Volume Dynamic!!
+        SetSongPositionSliderMaximum();
     }
 
     private async void MenuItemSave_OnClick(object? sender, RoutedEventArgs e)
@@ -481,29 +551,6 @@ public partial class MainView : UserControl
     
     private void ButtonHoldContext_OnClick(object? sender, RoutedEventArgs e) { }
     
-    private void ButtonPlay_OnClick(object? sender, RoutedEventArgs e)
-    {
-        if (currentSong == null) return;
-        
-        IsPlaying = !IsPlaying;
-        currentSong.Volume = 0.2f;
-        currentSong.IsPlaying = IsPlaying;
-        
-        IconPlay.IsVisible = !IsPlaying;
-        IconStop.IsVisible = IsPlaying;
-    }
-    
-    private void SliderSongPosition_OnValueChanged(object? sender, RangeBaseValueChangedEventArgs e)
-    {
-        
-    }
-    
-    private void SliderPlaybackSpeed_OnValueChanged(object? sender, RangeBaseValueChangedEventArgs e)
-    {
-        TextBlockPlaybackSpeed.Text = $"{SliderPlaybackSpeed.Value,3:F0}%";
-        PlaybackSpeed = (int)SliderPlaybackSpeed.Value;
-    }
-
     private void SliderPosition_OnValueChanged(object? sender, RangeBaseValueChangedEventArgs e) => Position_OnValueChanged(true);
     private void NumericPosition_OnValueChanged(object? sender, NumericUpDownValueChangedEventArgs e) => Position_OnValueChanged(false);
     private void Position_OnValueChanged(bool fromSlider)
@@ -588,6 +635,40 @@ public partial class MainView : UserControl
         
     }
     
+    private void ButtonPlay_OnClick(object? sender, RoutedEventArgs e)
+    {
+        if (AudioManager.CurrentSong == null)
+        {
+            UpdateTimer.IsEnabled = false;
+            IconPlay.IsVisible = true;
+            IconStop.IsVisible = false;
+            return;
+        }
+        
+        AudioManager.CurrentSong.Volume = 0.2f;
+        AudioManager.CurrentSong.IsPlaying = !AudioManager.CurrentSong.IsPlaying;
+        UpdateTimer.IsEnabled = AudioManager.CurrentSong.IsPlaying;
+        
+        IconPlay.IsVisible = !AudioManager.CurrentSong.IsPlaying;
+        IconStop.IsVisible = AudioManager.CurrentSong.IsPlaying;
+        SliderSongPosition.IsEnabled = !AudioManager.CurrentSong.IsPlaying;
+    }
+    
+    private void SliderSongPosition_OnValueChanged(object? sender, RangeBaseValueChangedEventArgs e)
+    {
+        if (AudioManager.CurrentSong == null || AudioManager.CurrentSong.IsPlaying) return;
+        
+        AudioManager.CurrentSong.Position = (uint)e.NewValue;
+    }
+    
+    private void SliderPlaybackSpeed_OnValueChanged(object? sender, RangeBaseValueChangedEventArgs e)
+    {
+        TextBlockPlaybackSpeed.Text = $"{SliderPlaybackSpeed.Value,3:F0}%";
+        if (AudioManager.CurrentSong == null) return;
+        
+        AudioManager.CurrentSong.PlaybackSpeed = (int)SliderPlaybackSpeed.Value;
+    }
+    
     // ________________ UI Dialogs
     
     private void OnSettingsClose(ContentDialog sender, ContentDialogClosingEventArgs e)
@@ -595,6 +676,11 @@ public partial class MainView : UserControl
         KeybindEditor.StopRebinding(); // Stop rebinding in case it was active.
         SetButtonColors(); // Update button colors if they were changed
         SetMenuItemInputGestureText(); // Update inputgesture text in case stuff was rebound
+        
+        // I know some maniac is gonna change their refresh rate while playing a song.
+        var interval = TimeSpan.FromSeconds(1.0 / UserConfig.RenderConfig.RefreshRate);
+        UpdateTimer = new(interval, DispatcherPriority.Background, UpdateTimer_Tick) { IsEnabled = AudioManager.CurrentSong?.IsPlaying ?? false };
+        
         File.WriteAllText("UserConfig.toml", Toml.FromModel(UserConfig));
     }
 
@@ -628,7 +714,7 @@ public partial class MainView : UserControl
         {
             ContentDialog dialog = new()
             {
-                Title = "Chart is unsaved. Would you like to save?",
+                Title = Assets.Lang.Resources.Generic_SaveWarning,
                 PrimaryButtonText = Assets.Lang.Resources.Generic_Yes,
                 SecondaryButtonText = Assets.Lang.Resources.Generic_No,
                 CloseButtonText = Assets.Lang.Resources.Generic_Cancel
@@ -638,10 +724,47 @@ public partial class MainView : UserControl
         }
     }
 
+    private async Task<bool> PromptSelectAudio()
+    {
+        ContentDialogResult result = await showSelectAudioPrompt();
+        return result == ContentDialogResult.Primary;
+
+        Task<ContentDialogResult> showSelectAudioPrompt()
+        {
+            ContentDialog dialog = new()
+            {
+                Title = Assets.Lang.Resources.Generic_InvalidAudioWarning,
+                Content = Assets.Lang.Resources.Generic_SelectAudioPrompt,
+                PrimaryButtonText = Assets.Lang.Resources.Generic_Yes,
+                CloseButtonText = Assets.Lang.Resources.Generic_No
+            };
+            
+            return dialog.ShowAsync();
+        }
+    }
+    
     internal IStorageProvider GetStorageProvider()
     {
         if (VisualRoot is TopLevel top) return top.StorageProvider;
         throw new Exception(":3 something went wrong, too bad.");
+    }
+    
+    public async Task<IStorageFile?> OpenAudioFilePicker()
+    {
+        var result = await GetStorageProvider().OpenFilePickerAsync(new()
+        {
+            AllowMultiple = false,
+            FileTypeFilter = new List<FilePickerFileType>
+            {
+                new("Audio files")
+                {
+                    Patterns = new[] {"*.wav","*.flac","*.mp3","*.ogg"},
+                    AppleUniformTypeIdentifiers = new[] {"public.item"}
+                }
+            }
+        });
+
+        return result.Count != 1 ? null : result[0];
     }
     
     private async Task<IStorageFile?> OpenChartFilePicker()

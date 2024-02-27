@@ -23,8 +23,7 @@ public class Chart
     private List<Gimmick>? TimeEvents { get; set; }
     private List<TimeScaleData> TimeScales { get; set; } = [];
 
-    public string MusicFilePath { get; set; } = "";
-    public string EditorMusicFilePath { get; set; } = "";
+    public string AudioFilePath { get; set; } = "";
     public decimal Level { get; set; }
     public decimal ClearThreshold { get; set; } = 0.83m;
     public string Author { get; set; } = "";
@@ -49,7 +48,7 @@ public class Chart
         Dictionary<int, Note> notesByIndex = new();
         Dictionary<int, int> nextReferencedIndex = new();
 
-        clear();
+        Clear();
         readTags(merFile);
         readChartElements(merFile);
         getHoldReferences();
@@ -60,24 +59,6 @@ public class Chart
 
         IsSaved = true;
         return true;
-
-        void clear()
-        {
-            Notes.Clear();
-            Gimmicks.Clear();
-            TimeEvents?.Clear();
-            TimeScales.Clear();
-            
-            MusicFilePath = "";
-            EditorMusicFilePath = "";
-            Level = 0;
-            ClearThreshold = 0.83m;
-            Author = "";
-            PreviewTime = 0;
-            PreviewLength = 10;
-            Offset = 0;
-            MovieOffset = 0;
-        }
         
         void readTags(List<string> lines)
         {
@@ -86,10 +67,7 @@ public class Chart
                 string line = lines[readerIndex];
 
                 string? musicFilePath = getTag(line, "#MUSIC_FILE_PATH") ?? getTag(line, "#EDITOR_AUDIO") ?? getTag(line, "#AUDIO");
-                if (musicFilePath != null) MusicFilePath = musicFilePath;
-
-                string? editorMusicFilePath = getTag(line, "#EDITOR_MUSIC_FILE_PATH");
-                if (editorMusicFilePath != null) EditorMusicFilePath = editorMusicFilePath;
+                if (musicFilePath != null) AudioFilePath = musicFilePath;
 
                 string? level = getTag(line, "#LEVEL") ?? getTag(line, "#EDITOR_LEVEL");
                 if (level != null) Level = Convert.ToDecimal(level);
@@ -236,8 +214,7 @@ public class Chart
 
             if (writeType is ChartWriteType.Editor)
             {
-                streamWriter.WriteLine($"#EDITOR_MUSIC_FILE_PATH {EditorMusicFilePath}");
-                streamWriter.WriteLine($"#EDITOR_AUDIO {MusicFilePath}");
+                streamWriter.WriteLine($"#EDITOR_AUDIO {AudioFilePath}");
                 streamWriter.WriteLine($"#EDITOR_LEVEL {Level.ToString("F6", CultureInfo.InvariantCulture)}");
                 streamWriter.WriteLine($"#EDITOR_CLEAR_THRESHOLD {ClearThreshold.ToString("F6", CultureInfo.InvariantCulture)}");
                 streamWriter.WriteLine($"#EDITOR_AUTHOR {Author}");
@@ -250,7 +227,7 @@ public class Chart
             if (writeType is ChartWriteType.Saturn)
             {
                 streamWriter.WriteLine($"#LEVEL {Level.ToString("F6", CultureInfo.InvariantCulture)}");
-                streamWriter.WriteLine($"#AUDIO {MusicFilePath}");
+                streamWriter.WriteLine($"#AUDIO {AudioFilePath}");
                 streamWriter.WriteLine($"#CLEAR_THRESHOLD {ClearThreshold.ToString("F6", CultureInfo.InvariantCulture)}");
                 streamWriter.WriteLine($"#AUTHOR {Author}");
                 streamWriter.WriteLine($"#PREVIEW_TIME {PreviewTime.ToString("F6", CultureInfo.InvariantCulture)}");
@@ -264,7 +241,7 @@ public class Chart
                 streamWriter.WriteLine("#MUSIC_SCORE_ID 0");
                 streamWriter.WriteLine("#MUSIC_SCORE_VERSION 0");
                 streamWriter.WriteLine("#GAME_VERSION ");
-                streamWriter.WriteLine($"#MUSIC_FILE_PATH {MusicFilePath}");
+                streamWriter.WriteLine($"#MUSIC_FILE_PATH {AudioFilePath}");
                 streamWriter.WriteLine($"#OFFSET {Offset.ToString("F6", CultureInfo.InvariantCulture)}");
                 streamWriter.WriteLine($"#MOVIEOFFSET {MovieOffset.ToString("F6", CultureInfo.InvariantCulture)}");
             }
@@ -302,6 +279,23 @@ public class Chart
         
         IsSaved = setSaved;
         return true;
+    }
+
+    public void Clear()
+    {
+        Notes.Clear();
+        Gimmicks.Clear();
+        TimeEvents?.Clear();
+        TimeScales.Clear();
+            
+        AudioFilePath = "";
+        Level = 0;
+        ClearThreshold = 0.83m;
+        Author = "";
+        PreviewTime = 0;
+        PreviewLength = 10;
+        Offset = 0;
+        MovieOffset = 0;
     }
     
     /// <summary>

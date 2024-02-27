@@ -273,4 +273,20 @@
     <data name="Editor_EditHold" xml:space="preserve">
         <value>Edit Hold</value>
     </data>
+    <data name="Settings_Color_JudgementLinePrimary" xml:space="preserve">
+        <value>Judgement Line Primary</value>
+    </data>
+    <data name="Settings_Color_JudgementLineSecondary" xml:space="preserve">
+        <value>Judgement Line Secondary</value>
+    </data>
+    <data name="Generic_SelectAudioPrompt" xml:space="preserve">
+        <value>Chart either has no audio or the specified audio file was not found.
+Would you like to manually select a file?</value>
+    </data>
+    <data name="Generic_InvalidAudioWarning" xml:space="preserve">
+        <value>Audio not found.</value>
+    </data>
+    <data name="Settings_RefreshRate" xml:space="preserve">
+        <value>Refresh Rate [Hz]</value>
+    </data>
 </root>

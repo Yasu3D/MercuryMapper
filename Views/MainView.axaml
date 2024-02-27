@@ -2,19 +2,16 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:converters="clr-namespace:Avalonia.Markup.Xaml.Converters;assembly=Avalonia.Markup.Xaml"
              xmlns:lang="clr-namespace:MercuryMapper.Assets.Lang"
-             mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="830"
+             xmlns:controls="clr-namespace:MercuryMapper.Controls"
+             mc:Ignorable="d" d:DesignWidth="1300" d:DesignHeight="830"
+             PropertyChanged="MainView_OnPropertyChanged"
              x:Class="MercuryMapper.Views.MainView">
-    
-    <UserControl.Resources>
-        <converters:ColorToBrushConverter x:Key="ColorToBrush" />
-    </UserControl.Resources>
     
     <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,*,Auto">
         
         <!-- Title Bar -->
-        <Grid ColumnDefinitions="Auto,*" RowDefinitions="*" Grid.Row="0" Grid.ColumnSpan="2" Grid.Column="0">
+        <Grid ColumnDefinitions="Auto,*" RowDefinitions="*" Grid.Row="0" Grid.ColumnSpan="3" Grid.Column="0" Name="TitleBar">
             <Menu Grid.Column="0" Background="{DynamicResource TitleBar}" Height="40">
                 <MenuItem Width="40">
                     <MenuItem.Header>
@@ -86,7 +83,7 @@
                 </MenuItem>
                 
                 <MenuItem Header="{DynamicResource L.ChartMenuItem}">
-                    <MenuItem Header="{DynamicResource L.InitialChartSettingsMenuOption}"/>
+                    <MenuItem Header="{DynamicResource L.InitialChartSettingsMenuOption}"/> 
                 </MenuItem> -->
             </Menu>
             <Panel Grid.Column="1" Background="{DynamicResource TitleBar}" IsHitTestVisible="False"/>
@@ -292,10 +289,12 @@
             </Grid>
         </Grid>
         
-        <!-- TODO: add center alignment when real canvas is done -->
-        <Panel Grid.Row="1" Grid.Column="1" 
+        <!-- Canvas -->
+        <controls:SkiaCanvas Grid.Row="1" Grid.Column="1" 
                Name="Canvas"
-               Background="DarkCyan"
+               Background="Transparent"
+               HorizontalAlignment="Center"
+               VerticalAlignment="Center"
                PointerWheelChanged="Canvas_OnPointerWheelChanged"
                PointerMoved="Canvas_OnPointerMoved"
                PointerPressed="Canvas_OnPointerPressed"
@@ -329,5 +328,9 @@
             
         </Grid>
         
+        <!-- Action Drawer -->
+        <ScrollViewer Grid.Column="2" Grid.Row="1" Grid.RowSpan="2" Name="RightPanel" Width="300" Background="{DynamicResource LightBrush}">
+            
+        </ScrollViewer>
     </Grid>
 </UserControl>

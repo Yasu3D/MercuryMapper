@@ -2,7 +2,7 @@ using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Utilities;
 
-namespace MercuryMapper.Rendering;
+namespace MercuryMapper.Config;
 
 public class NoteColorPalette : IColorPalette
     {
@@ -20,10 +20,10 @@ public class NoteColorPalette : IColorPalette
 
                 Color.FromArgb(255, 140, 100,   0),
                 Color.FromArgb(255, 220, 185,  50),
-                Color.FromArgb(190, 220, 160,   0),
-                Color.FromArgb(190, 220, 185,  50),
-                Color.FromArgb(184, 178, 178, 178),
-                Color.FromArgb(145, 255, 255, 255)
+                Color.FromArgb(255, 220, 160,   0),
+                Color.FromArgb(255, 220, 185,  50),
+                Color.FromArgb(255, 178, 178, 178),
+                Color.FromArgb(255, 255, 255, 255)
             },
 
             {

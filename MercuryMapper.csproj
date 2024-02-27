@@ -79,4 +79,9 @@
       <None Remove="Assets\Inter.ttf" />
       <AvaloniaResource Include="Assets\Inter.ttf" />
     </ItemGroup>
+
+
+    <ItemGroup>
+      <Folder Include="Rendering\" />
+    </ItemGroup>
 </Project>

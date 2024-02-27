@@ -6,8 +6,14 @@ namespace MercuryMapper.Config;
 
 public class UserConfig
 {
+    public RenderConfig RenderConfig { get; set; } = new();
     public KeymapConfig KeymapConfig { get; set; } = new();
     public ColorConfig ColorConfig { get; set; } = new();
+}
+
+public class RenderConfig
+{
+    public int RefreshRate { get; set; } = 60;
 }
 
 public class KeymapConfig
@@ -76,8 +82,8 @@ public class ColorConfig
         ["ColorNoteHoldStart"] = "FF8C6400",
         ["ColorNoteHoldSegment"] = "FFDCB932",
         ["ColorNoteHoldEnd"] = "FFDCB932",
-        ["ColorNoteHoldSurfaceFar"] = "BEDCA000",
-        ["ColorNoteHoldSurfaceNear"] = "BEDCB932",
+        ["ColorNoteHoldSurfaceFar"] = "FFDCA000",
+        ["ColorNoteHoldSurfaceNear"] = "FFDCB932",
         ["ColorNoteMaskAdd"] = "FF333333",
         ["ColorNoteMaskRemove"] = "FF808080",
         ["ColorNoteEndOfChart"] = "80000000",
@@ -89,6 +95,8 @@ public class ColorConfig
         ["ColorGimmickTimeSigChange"] = "FF000000",
         ["ColorGimmickHiSpeedChange"] = "FF000000",
         ["ColorGimmickStop"] = "FF000000",
-        ["ColorGimmickReverse"] = "FF000000"
+        ["ColorGimmickReverse"] = "FF000000",
+        ["ColorJudgementLinePrimary"] = "FFEF1B96",
+        ["ColorJudgementLineSecondary"] = "FFBB00F5"
     };
 }

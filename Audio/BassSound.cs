@@ -55,11 +55,21 @@ public class BassSound
             playbackSpeed = value;
         }
     }
+
+    public uint Position
+    {
+        get => isPlaying ? GetPosition() : position;
+        set
+        {
+            position = value;
+            if (isPlaying) SetPosition(value);
+        }
+    }
     
     private void SetSpeed(int value)
     {
         int tempo = value - 100;
-        int pitch = (int)(value * 0.24);
+        int pitch = (int)(tempo * 0.24);
         
         Bass.ChannelSetAttribute(channel, ChannelAttribute.Tempo, tempo);
         Bass.ChannelSetAttribute(channel, ChannelAttribute.Pitch, pitch);
@@ -72,7 +82,7 @@ public class BassSound
 
     private uint GetPosition()
     {
-        return (uint)Bass.ChannelBytes2Seconds(channel, Bass.ChannelGetPosition(channel)) * 1000;
+        return (uint)(Bass.ChannelBytes2Seconds(channel, Bass.ChannelGetPosition(channel)) * 1000);
     }
     
     private void SetPlayingState(bool playing)
@@ -84,8 +94,8 @@ public class BassSound
         }
         else
         {
-            Bass.ChannelSetAttribute(channel, ChannelAttribute.Volume, volume);
             SetPosition(position);
+            Bass.ChannelSetAttribute(channel, ChannelAttribute.Volume, volume);
             Bass.ChannelPlay(channel);
         }
     }

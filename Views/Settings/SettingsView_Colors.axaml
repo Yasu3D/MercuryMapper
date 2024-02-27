@@ -54,7 +54,16 @@
                 <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Note_EndOfChart}"/>
                 <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorNoteEndOfChart"/>
             </UniformGrid>
-                
+            
+            <Separator/>
+            
+            <UniformGrid Columns="2">
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_Color_JudgementLinePrimary}"/>
+                <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorJudgementLinePrimary"/>
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_Color_JudgementLineSecondary}"/>
+                <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorJudgementLineSecondary"/>
+            </UniformGrid>
+            
             <Separator/>
             
             <UniformGrid Columns="2">

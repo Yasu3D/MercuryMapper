@@ -5,7 +5,6 @@
              xmlns:lang="clr-namespace:MercuryMapper.Assets.Lang"
              mc:Ignorable="d" d:DesignWidth="350" d:DesignHeight="400"
              KeyDown="OnKeyDown"
-             
              x:Class="MercuryMapper.Views.Settings.SettingsView_Keymap">
     <ScrollViewer>
         <TreeView Margin="0,0,10,0" Name="KeybindsTreeView" Classes="KeybindList" DoubleTapped="KeybindsTreeView_OnDoubleTapped">

@@ -23,7 +23,7 @@ public partial class SettingsView : UserControl
         {
             "TreeViewColors" => new SettingsView_Colors(mainView),
             "TreeViewGimmicks" => new SettingsView_Gimmicks(),
-            "TreeViewRendering" => new SettingsView_Rendering(),
+            "TreeViewRendering" => new SettingsView_Rendering(mainView),
             "TreeViewKeymap" => new SettingsView_Keymap(mainView),
             _ => null
         };

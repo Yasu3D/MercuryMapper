@@ -3,7 +3,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
-using MercuryMapper.Rendering;
+using MercuryMapper.Config;
 
 namespace MercuryMapper.Views.Settings;
 
@@ -48,6 +48,8 @@ public partial class SettingsView_Colors : UserControl
         ColorGimmickHiSpeedChange.Palette = palette;
         ColorGimmickStop.Palette = palette;
         ColorGimmickReverse.Palette = palette;
+        ColorJudgementLinePrimary.Palette = palette;
+        ColorJudgementLineSecondary.Palette = palette;
     }
 
     private void SetColors()
@@ -75,6 +77,9 @@ public partial class SettingsView_Colors : UserControl
         ColorGimmickHiSpeedChange.Color = Color.Parse("#" + Colors["ColorGimmickHiSpeedChange"]);
         ColorGimmickStop.Color = Color.Parse("#" + Colors["ColorGimmickStop"]);
         ColorGimmickReverse.Color = Color.Parse("#" + Colors["ColorGimmickReverse"]);
+        ColorJudgementLinePrimary.Color = Color.Parse("#" + Colors["ColorJudgementLinePrimary"]);
+        ColorJudgementLineSecondary.Color = Color.Parse("#" + Colors["ColorJudgementLineSecondary"]);
+
     }
     
     private void OnColorChanged(object? sender, ColorChangedEventArgs e)

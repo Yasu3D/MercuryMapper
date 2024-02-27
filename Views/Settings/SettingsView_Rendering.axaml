@@ -2,7 +2,17 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:lang="clr-namespace:MercuryMapper.Assets.Lang"
+             mc:Ignorable="d" d:DesignWidth="350" d:DesignHeight="400"
              x:Class="MercuryMapper.Views.Settings.SettingsView_Rendering">
-    Rendering!
+    <ScrollViewer>
+        <StackPanel Margin="20">
+            <UniformGrid Columns="2">
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_RefreshRate}"/>
+                <NumericUpDown Name="NumericRefreshRate" FormatString="N0" ParsingNumberStyle="Integer" 
+                               Minimum="10" Value="60" Increment="1" ValueChanged="RefreshRate_OnValueChanged"
+                               HorizontalAlignment="Right" Width="80"/>
+            </UniformGrid>
+        </StackPanel>
+    </ScrollViewer>
 </UserControl>

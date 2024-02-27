@@ -19,28 +19,10 @@ public partial class NewChartView : UserControl
 
     private async void SelectFile_OnClick(object? sender, RoutedEventArgs e)
     {
-        IStorageFile? file = await OpenAudioFilePicker();
+        IStorageFile? file = await mainView.OpenAudioFilePicker();
         if (file == null) return;
 
         MusicFilePath = file.Path.LocalPath;
         MusicFilePathTextBox.Text = file.Path.LocalPath;
-    }
-    
-    private async Task<IStorageFile?> OpenAudioFilePicker()
-    {
-        var result = await mainView.GetStorageProvider().OpenFilePickerAsync(new()
-        {
-            AllowMultiple = false,
-            FileTypeFilter = new List<FilePickerFileType>
-            {
-                new("Audio files")
-                {
-                    Patterns = new[] {"*.wav","*.flac","*.mp3","*.ogg"},
-                    AppleUniformTypeIdentifiers = new[] {"public.item"}
-                }
-            }
-        });
-
-        return result.Count != 1 ? null : result[0];
     }
 }

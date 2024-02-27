@@ -339,6 +339,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Audio not found..
+        /// </summary>
+        public static string Generic_InvalidAudioWarning {
+            get {
+                return ResourceManager.GetString("Generic_InvalidAudioWarning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No.
         /// </summary>
         public static string Generic_No {
@@ -371,6 +380,16 @@ namespace MercuryMapper.Assets.Lang {
         public static string Generic_SaveWarning {
             get {
                 return ResourceManager.GetString("Generic_SaveWarning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Chart either has no audio or the specified audio file was not found.
+        ///Would you like to manually select a file?.
+        /// </summary>
+        public static string Generic_SelectAudioPrompt {
+            get {
+                return ResourceManager.GetString("Generic_SelectAudioPrompt", resourceCulture);
             }
         }
         
@@ -762,6 +781,24 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Judgement Line Primary.
+        /// </summary>
+        public static string Settings_Color_JudgementLinePrimary {
+            get {
+                return ResourceManager.GetString("Settings_Color_JudgementLinePrimary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Judgement Line Secondary.
+        /// </summary>
+        public static string Settings_Color_JudgementLineSecondary {
+            get {
+                return ResourceManager.GetString("Settings_Color_JudgementLineSecondary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Appearance.
         /// </summary>
         public static string Settings_Header_Appearance {
@@ -821,6 +858,15 @@ namespace MercuryMapper.Assets.Lang {
         public static string Settings_Keymap_WaitingForInput {
             get {
                 return ResourceManager.GetString("Settings_Keymap_WaitingForInput", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Refresh Rate [Hz].
+        /// </summary>
+        public static string Settings_RefreshRate {
+            get {
+                return ResourceManager.GetString("Settings_RefreshRate", resourceCulture);
             }
         }
     }

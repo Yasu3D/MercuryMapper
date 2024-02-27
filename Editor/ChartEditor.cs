@@ -17,7 +17,7 @@ public class ChartEditor(MainView main)
     {
         Chart = new()
         {
-            MusicFilePath = musicFilePath,
+            AudioFilePath = musicFilePath,
             Author = author
         };
 
