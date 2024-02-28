@@ -289,4 +289,49 @@ Would you like to manually select a file?</value>
     <data name="Settings_RefreshRate" xml:space="preserve">
         <value>Refresh Rate [Hz]</value>
     </data>
+    <data name="Settings_Color_Sync" xml:space="preserve">
+        <value>Sync</value>
+    </data>
+    <data name="Settings_Color_MeasureLine" xml:space="preserve">
+        <value>Measure Line</value>
+    </data>
+    <data name="Settings_Color_BeatLine" xml:space="preserve">
+        <value>Beat Line</value>
+    </data>
+    <data name="Settings_Color_BackgroundNear" xml:space="preserve">
+        <value>Background Near</value>
+    </data>
+    <data name="Settings_Color_GuideLines" xml:space="preserve">
+        <value>Guide Lines</value>
+    </data>
+    <data name="Settings_Color_BackgroundFar" xml:space="preserve">
+        <value>Background Far</value>
+    </data>
+    <data name="Settings_Color_BackgroundNoMask" xml:space="preserve">
+        <value>Background [No Mask]</value>
+    </data>
+    <data name="Editor_EditNoteShapeProperties" xml:space="preserve">
+        <value>Edit Note [Both]</value>
+    </data>
+    <data name="Editor_EditNoteShape" xml:space="preserve">
+        <value>Edit Note [Shape]</value>
+    </data>
+    <data name="Editor_EditNoteProperties" xml:space="preserve">
+        <value>Edit Note [Properties]</value>
+    </data>
+    <data name="Editor_Delete" xml:space="preserve">
+        <value>Delete</value>
+    </data>
+    <data name="Settings_Color_NoteCaps" xml:space="preserve">
+        <value>Note Caps</value>
+    </data>
+    <data name="Settings_NoteSize" xml:space="preserve">
+        <value>Note Size</value>
+    </data>
+    <data name="Settings_NoteSpeed" xml:space="preserve">
+        <value>Note Speed</value>
+    </data>
+    <data name="Settings_ShowHiSpeed" xml:space="preserve">
+        <value>Show HiSpeed</value>
+    </data>
 </root>

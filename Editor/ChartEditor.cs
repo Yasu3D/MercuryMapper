@@ -10,8 +10,10 @@ public class ChartEditor(MainView main)
 {
     private MainView mainView = main;
     public Chart Chart { get; private set; } = new();
-    
+
     public ChartEditorState State { get; private set; }
+    
+    public float CurrentMeasure { get; private set; }
     
     public void NewChart(string musicFilePath, string author, float bpm, int timeSigUpper, int timeSigLower)
     {
@@ -44,5 +46,10 @@ public class ChartEditor(MainView main)
             Chart.StartBpm = startBpm;
             Chart.StartTimeSig = startTimeSig;
         }
+    }
+
+    public void UpdateCurrentMeasure(BeatData data)
+    {
+        CurrentMeasure = data.MeasureDecimal;
     }
 }

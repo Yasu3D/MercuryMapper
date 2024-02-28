@@ -44,6 +44,10 @@ public partial class SettingsView_Keymap : UserControl
         EditorNoteTypeMaskAdd.Tag = Keymap.Keybinds["EditorNoteTypeMaskAdd"].ToString();
         EditorNoteTypeMaskRemove.Tag = Keymap.Keybinds["EditorNoteTypeMaskRemove"].ToString();
         EditorNoteTypeEndOfChart.Tag = Keymap.Keybinds["EditorNoteTypeEndOfChart"].ToString();
+        EditorEditNoteShape.Tag = Keymap.Keybinds["EditorEditNoteShape"].ToString();
+        EditorEditNoteProperties.Tag = Keymap.Keybinds["EditorEditNoteProperties"].ToString();
+        EditorEditNoteShapeProperties.Tag = Keymap.Keybinds["EditorEditNoteShapeProperties"].ToString();
+        EditorDelete.Tag = Keymap.Keybinds["EditorDelete"].ToString();
     }
     
     private void KeybindsTreeView_OnDoubleTapped(object? sender, TappedEventArgs e)

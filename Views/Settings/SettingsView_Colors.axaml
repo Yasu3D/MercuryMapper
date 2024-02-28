@@ -6,7 +6,7 @@
              mc:Ignorable="d" d:DesignWidth="350" d:DesignHeight="400"
              x:Class="MercuryMapper.Views.Settings.SettingsView_Colors">
     <ScrollViewer>
-        <StackPanel Margin="20">
+        <StackPanel Margin="20" Name="ColorPickers">
             <UniformGrid Columns="2">
                 <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Note_Touch}"/>
                 <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorNoteTouch"/>
@@ -58,10 +58,35 @@
             <Separator/>
             
             <UniformGrid Columns="2">
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.BonusType_Bonus}"/>
+                <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorBonus"/>
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.BonusType_RNote}"/>
+                <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorRNote"/>
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_Color_NoteCaps}"/>
+                <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorNoteCaps"/>
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_Color_Sync}"/>
+                <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorSync"/>
+            </UniformGrid>
+            
+            <Separator/>
+            
+            <UniformGrid Columns="2">
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_Color_BackgroundNear}"/>
+                <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorBackgroundNear"/>
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_Color_BackgroundFar}"/>
+                <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorBackgroundFar"/>
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_Color_BackgroundNoMask}"/>
+                <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorBackgroundNoMask"/>
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_Color_GuideLines}"/>
+                <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorGuideLines"/>
                 <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_Color_JudgementLinePrimary}"/>
                 <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorJudgementLinePrimary"/>
                 <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_Color_JudgementLineSecondary}"/>
                 <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorJudgementLineSecondary"/>
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_Color_MeasureLine}"/>
+                <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorMeasureLine"/>
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_Color_BeatLine}"/>
+                <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorBeatLine"/>
             </UniformGrid>
             
             <Separator/>
@@ -71,15 +96,6 @@
                 <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorHighlight"/>
                 <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Note_Selection}"/>
                 <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorSelection"/>
-            </UniformGrid>
-                
-            <Separator/>
-            
-            <UniformGrid Columns="2">
-                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.BonusType_Bonus}"/>
-                <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorBonus"/>
-                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.BonusType_RNote}"/>
-                <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorRNote"/>
             </UniformGrid>
                 
             <Separator/>

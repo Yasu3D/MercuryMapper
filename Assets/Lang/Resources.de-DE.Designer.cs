@@ -204,11 +204,47 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Löschen.
+        /// </summary>
+        public static string Editor_Delete {
+            get {
+                return ResourceManager.GetString("Editor_Delete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Hold Bearbeiten.
         /// </summary>
         public static string Editor_EditHold {
             get {
                 return ResourceManager.GetString("Editor_EditHold", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Note Bearbeiten [Eigenschaften].
+        /// </summary>
+        public static string Editor_EditNoteProperties {
+            get {
+                return ResourceManager.GetString("Editor_EditNoteProperties", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Note Bearbeiten [Form].
+        /// </summary>
+        public static string Editor_EditNoteShape {
+            get {
+                return ResourceManager.GetString("Editor_EditNoteShape", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Note Bearbeiten [Beides].
+        /// </summary>
+        public static string Editor_EditNoteShapeProperties {
+            get {
+                return ResourceManager.GetString("Editor_EditNoteShapeProperties", resourceCulture);
             }
         }
         
@@ -781,6 +817,51 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Hintergrund Fern.
+        /// </summary>
+        public static string Settings_Color_BackgroundFar {
+            get {
+                return ResourceManager.GetString("Settings_Color_BackgroundFar", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hintergrund Nah.
+        /// </summary>
+        public static string Settings_Color_BackgroundNear {
+            get {
+                return ResourceManager.GetString("Settings_Color_BackgroundNear", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hintergrund [Ohne Maske].
+        /// </summary>
+        public static string Settings_Color_BackgroundNoMask {
+            get {
+                return ResourceManager.GetString("Settings_Color_BackgroundNoMask", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Beat-Ring.
+        /// </summary>
+        public static string Settings_Color_BeatLine {
+            get {
+                return ResourceManager.GetString("Settings_Color_BeatLine", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Leitlinien.
+        /// </summary>
+        public static string Settings_Color_GuideLines {
+            get {
+                return ResourceManager.GetString("Settings_Color_GuideLines", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Wertungslinie Primär.
         /// </summary>
         public static string Settings_Color_JudgementLinePrimary {
@@ -795,6 +876,33 @@ namespace MercuryMapper.Assets.Lang {
         public static string Settings_Color_JudgementLineSecondary {
             get {
                 return ResourceManager.GetString("Settings_Color_JudgementLineSecondary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Takt-Ring.
+        /// </summary>
+        public static string Settings_Color_MeasureLine {
+            get {
+                return ResourceManager.GetString("Settings_Color_MeasureLine", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Noten Kappen.
+        /// </summary>
+        public static string Settings_Color_NoteCaps {
+            get {
+                return ResourceManager.GetString("Settings_Color_NoteCaps", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sync.
+        /// </summary>
+        public static string Settings_Color_Sync {
+            get {
+                return ResourceManager.GetString("Settings_Color_Sync", resourceCulture);
             }
         }
         
@@ -862,11 +970,38 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Noten-Größe.
+        /// </summary>
+        public static string Settings_NoteSize {
+            get {
+                return ResourceManager.GetString("Settings_NoteSize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Noten-Geschwindigkeit.
+        /// </summary>
+        public static string Settings_NoteSpeed {
+            get {
+                return ResourceManager.GetString("Settings_NoteSpeed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Bildwiederholrate [Hz].
         /// </summary>
         public static string Settings_RefreshRate {
             get {
                 return ResourceManager.GetString("Settings_RefreshRate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zeige HiSpeed.
+        /// </summary>
+        public static string Settings_ShowHiSpeed {
+            get {
+                return ResourceManager.GetString("Settings_ShowHiSpeed", resourceCulture);
             }
         }
     }

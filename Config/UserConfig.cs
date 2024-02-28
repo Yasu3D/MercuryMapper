@@ -14,6 +14,9 @@ public class UserConfig
 public class RenderConfig
 {
     public int RefreshRate { get; set; } = 60;
+    public int NoteSize { get; set; } = 3;
+    public decimal NoteSpeed { get; set; } = 4.5m;
+    public bool ShowHiSpeed { get; set; } = true;
 }
 
 public class KeymapConfig
@@ -65,7 +68,11 @@ public class KeymapConfig
         ["EditorNoteTypeHold"] = new(Key.D7),
         ["EditorNoteTypeMaskAdd"] = new(Key.D8),
         ["EditorNoteTypeMaskRemove"] = new(Key.D9),
-        ["EditorNoteTypeEndOfChart"] = new(Key.D0)
+        ["EditorNoteTypeEndOfChart"] = new(Key.D0),
+        ["EditorEditNoteShape"] = new(Key.E, false, true, false),
+        ["EditorEditNoteProperties"] = new(Key.E, true, false, false),
+        ["EditorEditNoteShapeProperties"] = new(Key.E, true, true, false),
+        ["EditorDelete"] = new(Key.Delete)
     };
 }
 
@@ -91,12 +98,20 @@ public class ColorConfig
         ["ColorSelection"] = "FF000000",
         ["ColorBonus"] = "FF000000",
         ["ColorRNote"] = "FF000000",
+        ["ColorNoteCaps"] = "FF0090FF",
+        ["ColorSync"] = "FF00FFFF",
         ["ColorGimmickBpmChange"] = "FF000000",
         ["ColorGimmickTimeSigChange"] = "FF000000",
         ["ColorGimmickHiSpeedChange"] = "FF000000",
         ["ColorGimmickStop"] = "FF000000",
         ["ColorGimmickReverse"] = "FF000000",
-        ["ColorJudgementLinePrimary"] = "FFEF1B96",
-        ["ColorJudgementLineSecondary"] = "FFBB00F5"
+        ["ColorBackgroundNear"] = "FF1D1F32",
+        ["ColorBackgroundFar"] = "FF141529",
+        ["ColorBackgroundNoMask"] = "FF110A1C",
+        ["ColorGuideLines"] = "FFD3EFFF",
+        ["ColorJudgementLinePrimary"] = "FFFF009D",
+        ["ColorJudgementLineSecondary"] = "FFAE00FF",
+        ["ColorMeasureLine"] = "FFFFFFFF",
+        ["ColorBeatLine"] = "80FFFFFF"
     };
 }

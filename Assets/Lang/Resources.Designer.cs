@@ -204,11 +204,47 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Delete.
+        /// </summary>
+        public static string Editor_Delete {
+            get {
+                return ResourceManager.GetString("Editor_Delete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Edit Hold.
         /// </summary>
         public static string Editor_EditHold {
             get {
                 return ResourceManager.GetString("Editor_EditHold", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit Note [Properties].
+        /// </summary>
+        public static string Editor_EditNoteProperties {
+            get {
+                return ResourceManager.GetString("Editor_EditNoteProperties", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit Note [Shape].
+        /// </summary>
+        public static string Editor_EditNoteShape {
+            get {
+                return ResourceManager.GetString("Editor_EditNoteShape", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit Note [Both].
+        /// </summary>
+        public static string Editor_EditNoteShapeProperties {
+            get {
+                return ResourceManager.GetString("Editor_EditNoteShapeProperties", resourceCulture);
             }
         }
         
@@ -781,6 +817,51 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Background Far.
+        /// </summary>
+        public static string Settings_Color_BackgroundFar {
+            get {
+                return ResourceManager.GetString("Settings_Color_BackgroundFar", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Background Near.
+        /// </summary>
+        public static string Settings_Color_BackgroundNear {
+            get {
+                return ResourceManager.GetString("Settings_Color_BackgroundNear", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Background [No Mask].
+        /// </summary>
+        public static string Settings_Color_BackgroundNoMask {
+            get {
+                return ResourceManager.GetString("Settings_Color_BackgroundNoMask", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Beat Line.
+        /// </summary>
+        public static string Settings_Color_BeatLine {
+            get {
+                return ResourceManager.GetString("Settings_Color_BeatLine", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Guide Lines.
+        /// </summary>
+        public static string Settings_Color_GuideLines {
+            get {
+                return ResourceManager.GetString("Settings_Color_GuideLines", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Judgement Line Primary.
         /// </summary>
         public static string Settings_Color_JudgementLinePrimary {
@@ -795,6 +876,33 @@ namespace MercuryMapper.Assets.Lang {
         public static string Settings_Color_JudgementLineSecondary {
             get {
                 return ResourceManager.GetString("Settings_Color_JudgementLineSecondary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Measure Line.
+        /// </summary>
+        public static string Settings_Color_MeasureLine {
+            get {
+                return ResourceManager.GetString("Settings_Color_MeasureLine", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Note Caps.
+        /// </summary>
+        public static string Settings_Color_NoteCaps {
+            get {
+                return ResourceManager.GetString("Settings_Color_NoteCaps", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sync.
+        /// </summary>
+        public static string Settings_Color_Sync {
+            get {
+                return ResourceManager.GetString("Settings_Color_Sync", resourceCulture);
             }
         }
         
@@ -862,11 +970,38 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Note Size.
+        /// </summary>
+        public static string Settings_NoteSize {
+            get {
+                return ResourceManager.GetString("Settings_NoteSize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Note Speed.
+        /// </summary>
+        public static string Settings_NoteSpeed {
+            get {
+                return ResourceManager.GetString("Settings_NoteSpeed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Refresh Rate [Hz].
         /// </summary>
         public static string Settings_RefreshRate {
             get {
                 return ResourceManager.GetString("Settings_RefreshRate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show HiSpeed.
+        /// </summary>
+        public static string Settings_ShowHiSpeed {
+            get {
+                return ResourceManager.GetString("Settings_ShowHiSpeed", resourceCulture);
             }
         }
     }

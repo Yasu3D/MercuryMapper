@@ -11,7 +11,24 @@
                 <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_RefreshRate}"/>
                 <NumericUpDown Name="NumericRefreshRate" FormatString="N0" ParsingNumberStyle="Integer" 
                                Minimum="10" Value="60" Increment="1" ValueChanged="RefreshRate_OnValueChanged"
-                               HorizontalAlignment="Right" Width="80"/>
+                               HorizontalAlignment="Right" Width="80" Margin="5"/>
+                
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_NoteSize}"/>
+                <NumericUpDown Name="NumericNoteSize" FormatString="N0" ParsingNumberStyle="Integer" 
+                               Minimum="1" Maximum="5" Value="3" Increment="1" ValueChanged="NoteSize_OnValueChanged"
+                               HorizontalAlignment="Right" Width="80" Margin="5"/>
+                
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_NoteSpeed}"/>
+                <NumericUpDown Name="NumericNoteSpeed" FormatString="N1" ParsingNumberStyle="Integer" 
+                               Minimum="1" Maximum="6" Value="4.5" Increment="0.1" ValueChanged="NoteSpeed_OnValueChanged"
+                               HorizontalAlignment="Right" Width="80" Margin="5"/>
+            </UniformGrid>
+            
+            <Separator/>
+            
+            <UniformGrid Columns="2">
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_ShowHiSpeed}"/>
+                <CheckBox Name="CheckBoxShowHiSpeed" HorizontalAlignment="Right" IsCheckedChanged="ShowHiSpeed_OnIsCheckedChanged"/>
             </UniformGrid>
         </StackPanel>
     </ScrollViewer>

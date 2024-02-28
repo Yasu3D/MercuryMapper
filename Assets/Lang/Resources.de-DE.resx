@@ -289,4 +289,49 @@ Möchten Sie eine Datei manuell auswählen?</value>
     <data name="Settings_RefreshRate" xml:space="preserve">
         <value>Bildwiederholrate [Hz]</value>
     </data>
+    <data name="Settings_Color_Sync" xml:space="preserve">
+        <value>Sync</value>
+    </data>
+    <data name="Settings_Color_MeasureLine" xml:space="preserve">
+        <value>Takt-Ring</value>
+    </data>
+    <data name="Settings_Color_BeatLine" xml:space="preserve">
+        <value>Beat-Ring</value>
+    </data>
+    <data name="Settings_Color_BackgroundNear" xml:space="preserve">
+        <value>Hintergrund Nah</value>
+    </data>
+    <data name="Settings_Color_GuideLines" xml:space="preserve">
+        <value>Leitlinien</value>
+    </data>
+    <data name="Settings_Color_BackgroundFar" xml:space="preserve">
+        <value>Hintergrund Fern</value>
+    </data>
+    <data name="Settings_Color_BackgroundNoMask" xml:space="preserve">
+        <value>Hintergrund [Ohne Maske]</value>
+    </data>
+    <data name="Editor_Delete" xml:space="preserve">
+        <value>Löschen</value>
+    </data>
+    <data name="Editor_EditNoteProperties" xml:space="preserve">
+        <value>Note Bearbeiten [Eigenschaften]</value>
+    </data>
+    <data name="Editor_EditNoteShape" xml:space="preserve">
+        <value>Note Bearbeiten [Form]</value>
+    </data>
+    <data name="Editor_EditNoteShapeProperties" xml:space="preserve">
+        <value>Note Bearbeiten [Beides]</value>
+    </data>
+    <data name="Settings_Color_NoteCaps" xml:space="preserve">
+        <value>Noten Kappen</value>
+    </data>
+    <data name="Settings_NoteSize" xml:space="preserve">
+        <value>Noten-Größe</value>
+    </data>
+    <data name="Settings_NoteSpeed" xml:space="preserve">
+        <value>Noten-Geschwindigkeit</value>
+    </data>
+    <data name="Settings_ShowHiSpeed" xml:space="preserve">
+        <value>Zeige HiSpeed</value>
+    </data>
 </root>

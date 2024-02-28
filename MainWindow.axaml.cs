@@ -14,15 +14,15 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
         
-        AddHandler(DragDrop.DropEvent, MainWindow_Drop);
+        AddHandler(DragDrop.DropEvent, Window_Drop);
     }
     
-    private static void MainWindow_Drop(object? sender, DragEventArgs e)
+    private void Window_Drop(object? sender, DragEventArgs e)
     {
-        var path = e.Data.GetFiles()?.First().Path;
-        if (path == null) return;
+        Uri? path = e.Data.GetFiles()?.First().Path;
+        if (path == null || !File.Exists(path.LocalPath) || Path.GetExtension(path.LocalPath) != ".mer") return;
         
-        Console.WriteLine(Path.GetFullPath(Uri.UnescapeDataString(path.LocalPath)));
+        MainView.DragDrop(path.LocalPath);
         e.Handled = true;
     }
 

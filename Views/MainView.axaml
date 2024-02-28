@@ -295,6 +295,7 @@
                Background="Transparent"
                HorizontalAlignment="Center"
                VerticalAlignment="Center"
+               RenderSkia="Canvas_OnRenderSkia"
                PointerWheelChanged="Canvas_OnPointerWheelChanged"
                PointerMoved="Canvas_OnPointerMoved"
                PointerPressed="Canvas_OnPointerPressed"

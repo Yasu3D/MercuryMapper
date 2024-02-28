@@ -447,13 +447,42 @@ public class Chart
     }
     
     
-
-    public BeatData GetBeatDataFromTimestamp(float time)
+    /// <summary>
+    /// Convert a Timestamp [milliseconds] to MeasureDecimal value
+    /// </summary>
+    public float Timestamp2MeasureDecimal(float time)
     {
-        if (TimeEvents == null || TimeEvents.Count == 0) return new(-1, 0);
+        if (TimeEvents == null || TimeEvents.Count == 0) return -1;
 
         Gimmick gimmick = TimeEvents.LastOrDefault(x => time >= x.TimeStamp) ?? TimeEvents[0];
-        return new((time - gimmick.TimeStamp) / (60000.0f / gimmick.Bpm * 4.0f * gimmick.TimeSig.Ratio) + gimmick.BeatData.MeasureDecimal);
+        return (time - gimmick.TimeStamp) / (60000.0f / gimmick.Bpm * 4.0f * gimmick.TimeSig.Ratio) + gimmick.BeatData.MeasureDecimal;
+    }
+
+    /// <summary>
+    /// Convert a Timestamp [milliseconds] to BeatData
+    /// </summary>
+    public BeatData Timestamp2BeatData(float time)
+    {
+        return new(Timestamp2MeasureDecimal(time));
+    }
+
+    /// <summary>
+    /// Convert MeasureDecimal value to a Timestamp [milliseconds]
+    /// </summary>
+    public float MeasureDecimal2Timestamp(float measureDecimal)
+    {
+        if (TimeEvents == null || TimeEvents.Count == 0) return 0;
+        
+        Gimmick gimmick = TimeEvents.LastOrDefault(x => measureDecimal >= x.BeatData.MeasureDecimal) ?? TimeEvents[0];
+        return (60000.0f / gimmick.Bpm * 4 * gimmick.TimeSig.Ratio * (measureDecimal - gimmick.BeatData.MeasureDecimal) + gimmick.TimeStamp);
+    }
+
+    /// <summary>
+    /// Convert BeatData to a Timestamp [milliseconds]
+    /// </summary>
+    public float BeatData2Timestamp(BeatData data)
+    {
+        return MeasureDecimal2Timestamp(data.MeasureDecimal);
     }
     
     public static List<string> ReadLines(Stream stream)

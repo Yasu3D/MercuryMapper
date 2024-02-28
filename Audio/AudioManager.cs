@@ -9,9 +9,11 @@ public class AudioManager(MainView mainView)
     public readonly BassSoundEngine SoundEngine = new();
 
     public BassSound? CurrentSong { get; private set; }
-    
+
     public void SetSong(string filepath, float volume, int tempo)
     {
+        if (CurrentSong is { IsPlaying: true }) mainView.SetPlayState(false);
+        
         CurrentSong = BassSoundEngine.GetSound(filepath, false, true);
         if (CurrentSong == null) return;
         

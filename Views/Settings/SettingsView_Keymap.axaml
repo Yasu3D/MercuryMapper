@@ -39,6 +39,10 @@
                 <TreeViewItem Name="EditorNoteTypeMaskAdd" Header="{x:Static lang:Resources.Note_MaskAdd}"/>
                 <TreeViewItem Name="EditorNoteTypeMaskRemove" Header="{x:Static lang:Resources.Note_MaskRemove}"/>
                 <TreeViewItem Name="EditorNoteTypeEndOfChart" Header="{x:Static lang:Resources.Note_EndOfChart}"/>
+                <TreeViewItem Name="EditorEditNoteShape" Header="{x:Static lang:Resources.Editor_EditNoteShape}"/>
+                <TreeViewItem Name="EditorEditNoteProperties" Header="{x:Static lang:Resources.Editor_EditNoteProperties}"/>
+                <TreeViewItem Name="EditorEditNoteShapeProperties" Header="{x:Static lang:Resources.Editor_EditNoteShapeProperties}"/>
+                <TreeViewItem Name="EditorDelete" Header="{x:Static lang:Resources.Editor_Delete}"/>
             </TreeViewItem>
         </TreeView>
     </ScrollViewer>

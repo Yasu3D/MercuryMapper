@@ -14,8 +14,11 @@ using Avalonia.Threading;
 using FluentAvalonia.UI.Controls;
 using MercuryMapper.Audio;
 using MercuryMapper.Config;
+using MercuryMapper.Data;
 using MercuryMapper.Editor;
 using MercuryMapper.Enums;
+using MercuryMapper.Rendering;
+using SkiaSharp;
 using Tomlyn;
 
 namespace MercuryMapper.Views;
@@ -31,6 +34,7 @@ public partial class MainView : UserControl
         KeybindEditor = new(UserConfig);
         ChartEditor = new(this);
         AudioManager = new(this);
+        RenderEngine = new(this);
 
         var interval = TimeSpan.FromSeconds(1.0 / UserConfig.RenderConfig.RefreshRate);
         UpdateTimer = new(interval, DispatcherPriority.Background, UpdateTimer_Tick) { IsEnabled = false };
@@ -49,7 +53,17 @@ public partial class MainView : UserControl
     public readonly KeybindEditor KeybindEditor;
     public readonly ChartEditor ChartEditor;
     public readonly AudioManager AudioManager;
+    public readonly RenderEngine RenderEngine;
     public DispatcherTimer UpdateTimer;
+    
+    private TimeUpdateSource timeUpdateSource = TimeUpdateSource.None;
+    private enum TimeUpdateSource
+    {
+        None,
+        Slider,
+        Numeric,
+        Timer
+    }
     
     // ________________ Setup & UI Updates
 
@@ -127,17 +141,59 @@ public partial class MainView : UserControl
     public void UpdateTimer_Tick(object? sender, EventArgs eventArgs)
     { 
         if (AudioManager.CurrentSong == null) return;
-
+        
         if (AudioManager.CurrentSong.Position >= AudioManager.CurrentSong.Length && AudioManager.CurrentSong.IsPlaying)
         {
-            // This is a *little* jank. Currently it's not "Pausing" explicitly,
-            // it's only toggling the state from Play to Pause. If this code was triggered
-            // when the song is paused, it would start playing. Too bad!
-            ButtonPlay_OnClick(null, new());
+            SetPlayState(false);
             AudioManager.CurrentSong.Position = 0;
         }
+        
+        if (timeUpdateSource == TimeUpdateSource.None)
+            UpdateTime(TimeUpdateSource.Timer);
+    }
 
-        SliderSongPosition.Value = (int)AudioManager.CurrentSong.Position;
+    /// <summary>
+    /// (Don't confuse this with UpdateTimer_Tick please)
+    /// Updates the current time/measureDecimal the user is looking at.
+    /// Requires a persistent "source" to track, otherwise the
+    /// OnValueChanged events firing at each other causes an exponential
+    /// chain reaction that turns your computer into a nuclear reactor.
+    /// </summary>
+    private void UpdateTime(TimeUpdateSource source)
+    {
+        if (AudioManager.CurrentSong == null) return;
+        timeUpdateSource = source;
+        
+        BeatData data = ChartEditor.Chart.Timestamp2BeatData(AudioManager.CurrentSong.Position);
+        
+        if (source is not TimeUpdateSource.Timer && !AudioManager.CurrentSong.IsPlaying)
+        {
+            if (source is TimeUpdateSource.Slider) AudioManager.CurrentSong.Position = (uint)SliderSongPosition.Value;
+            if (source is TimeUpdateSource.Numeric)
+            {
+                if (NumericMeasure.Value == null || NumericBeatValue.Value == null || NumericBeatDivisor.Value == null) return;
+                
+                float measureDecimal = (float)(NumericMeasure.Value + NumericBeatValue.Value / NumericBeatDivisor.Value);
+                AudioManager.CurrentSong.Position = (uint)ChartEditor.Chart.BeatData2Timestamp(new(measureDecimal));
+            }
+        }
+        
+        if (source is not TimeUpdateSource.Numeric && NumericBeatDivisor.Value != null)
+        {
+            NumericMeasure.Value = data.Measure;
+            NumericBeatValue.Value = (int)((data.MeasureDecimal - data.Measure) * (float)NumericBeatDivisor.Value);
+        }
+
+        if (source is not TimeUpdateSource.Slider)
+        {
+            SliderSongPosition.Value = (int)AudioManager.CurrentSong.Position;
+        }
+        
+        ChartEditor.UpdateCurrentMeasure(data);
+
+        Console.WriteLine(ChartEditor.CurrentMeasure);
+        
+        timeUpdateSource = TimeUpdateSource.None;
     }
     
     // ________________ Input
@@ -302,11 +358,40 @@ public partial class MainView : UserControl
             e.Handled = true;
             return;
         }
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorEditNoteShape"])) 
+        {
+            // ChartEditor.EditNote(true, false);
+            e.Handled = true;
+            return;
+        }
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorEditNoteProperties"])) 
+        {
+            // ChartEditor.EditNote(false, true);
+            e.Handled = true;
+            return;
+        }
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorEditNoteShapeProperties"])) 
+        {
+            // ChartEditor.EditNote(true, true);
+            e.Handled = true;
+            return;
+        }
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorDelete"])) 
+        {
+            // Delete
+            e.Handled = true;
+            return;
+        }
     }
 
     private static void OnKeyUp(object sender, KeyEventArgs e) => e.Handled = true;
 
-    // ________________ Canvas Input
+    // ________________ Canvas
+
+    private void Canvas_OnRenderSkia(SKCanvas canvas)
+    {
+        lock (ChartEditor.Chart) RenderEngine.Render(canvas);
+    }
     
     private void Canvas_OnPointerWheelChanged(object? sender, PointerWheelEventArgs e)
     {
@@ -369,7 +454,7 @@ public partial class MainView : UserControl
     }
     
     // ________________ UI Events
-
+    
     private void MainView_OnPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
     {
         if (e.Property == BoundsProperty) Dispatcher.UIThread.Post(MainView_OnResize);
@@ -383,6 +468,8 @@ public partial class MainView : UserControl
 
         Canvas.Width = min;
         Canvas.Height = min;
+        RenderEngine.UpdateSize(min);
+        RenderEngine.UpdateBrushes();
     }
     
     private async void MenuItemNew_OnClick(object? sender, RoutedEventArgs e)
@@ -442,37 +529,16 @@ public partial class MainView : UserControl
         // Get .mer file
         IStorageFile? file = await OpenChartFilePicker();
         if (file == null) return;
-        
-        // Load chart
-        ChartEditor.Chart.LoadFile(file.Path.LocalPath);
 
-        // Oopsie, audio not found.
-        if (!File.Exists(ChartEditor.Chart.AudioFilePath))
-        {
-            // Prompt user to select audio.
-            if (!await PromptSelectAudio())
-            {
-                // User said no, clear chart again and return.
-                ChartEditor.Chart.Clear();
-                return;
-            }
-            
-            // Get audio file
-            IStorageFile? audioFile = await OpenAudioFilePicker();
-            if (audioFile == null || !File.Exists(audioFile.Path.LocalPath))
-            {
-                ChartEditor.Chart.Clear();
-                ShowWarningMessage(Assets.Lang.Resources.Editor_NewChartInvalidAudio);
-                return;
-            }
-
-            ChartEditor.Chart.AudioFilePath = audioFile.Path.LocalPath;
-        }
-        
-        AudioManager.SetSong(ChartEditor.Chart.AudioFilePath, 0.2f, (int)SliderPlaybackSpeed.Value); // TODO: Make Volume Dynamic!!
-        SetSongPositionSliderMaximum();
+        OpenChart(file.Path.LocalPath);
     }
 
+    public async void DragDrop(string path)
+    {
+        if (await PromptSave()) return;
+        OpenChart(path);
+    }
+    
     private async void MenuItemSave_OnClick(object? sender, RoutedEventArgs e)
     {
         await SaveFile(ChartEditor.Chart.IsNew);
@@ -598,6 +664,9 @@ public partial class MainView : UserControl
     {
         if (e.NewValue == null || NumericMeasure?.Value == null) return;
         NumericMeasure.Value = Math.Clamp((decimal)e.NewValue, NumericMeasure.Minimum, NumericMeasure.Maximum);
+        
+        if (timeUpdateSource is TimeUpdateSource.None)
+            UpdateTime(TimeUpdateSource.Numeric);
     }
     
     private void NumericBeatValue_OnValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
@@ -610,24 +679,24 @@ public partial class MainView : UserControl
         {
             NumericMeasure.Value++;
             NumericBeatValue.Value = 0;
-            return;
         }
 
-        if (value < 0)
+        else if (value < 0)
         {
             if (NumericMeasure.Value > 0)
             {
                 NumericMeasure.Value--;
                 NumericBeatValue.Value = NumericBeatDivisor.Value - 1;
-                return;
             }
-
-            if (NumericMeasure.Value <= 0)
+            else
             {
                 NumericMeasure.Value = 0;
                 NumericBeatValue.Value = 0;
             }
         }
+        
+        if (timeUpdateSource is TimeUpdateSource.None)
+            UpdateTime(TimeUpdateSource.Numeric);
     }
 
     private void NumericBeatDivisor_OnValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
@@ -636,6 +705,12 @@ public partial class MainView : UserControl
     }
     
     private void ButtonPlay_OnClick(object? sender, RoutedEventArgs e)
+    {
+        if (AudioManager.CurrentSong == null) return;
+        SetPlayState(!AudioManager.CurrentSong.IsPlaying);
+    }
+
+    public void SetPlayState(bool play)
     {
         if (AudioManager.CurrentSong == null)
         {
@@ -646,19 +721,18 @@ public partial class MainView : UserControl
         }
         
         AudioManager.CurrentSong.Volume = 0.2f;
-        AudioManager.CurrentSong.IsPlaying = !AudioManager.CurrentSong.IsPlaying;
-        UpdateTimer.IsEnabled = AudioManager.CurrentSong.IsPlaying;
+        AudioManager.CurrentSong.IsPlaying = play;
+        UpdateTimer.IsEnabled = play;
         
-        IconPlay.IsVisible = !AudioManager.CurrentSong.IsPlaying;
-        IconStop.IsVisible = AudioManager.CurrentSong.IsPlaying;
-        SliderSongPosition.IsEnabled = !AudioManager.CurrentSong.IsPlaying;
+        IconPlay.IsVisible = !play;
+        IconStop.IsVisible = play;
+        SliderSongPosition.IsEnabled = !play;
     }
     
     private void SliderSongPosition_OnValueChanged(object? sender, RangeBaseValueChangedEventArgs e)
     {
-        if (AudioManager.CurrentSong == null || AudioManager.CurrentSong.IsPlaying) return;
-        
-        AudioManager.CurrentSong.Position = (uint)e.NewValue;
+        if (timeUpdateSource is TimeUpdateSource.None)
+            UpdateTime(TimeUpdateSource.Slider);
     }
     
     private void SliderPlaybackSpeed_OnValueChanged(object? sender, RangeBaseValueChangedEventArgs e)
@@ -669,13 +743,16 @@ public partial class MainView : UserControl
         AudioManager.CurrentSong.PlaybackSpeed = (int)SliderPlaybackSpeed.Value;
     }
     
-    // ________________ UI Dialogs
+    // ________________ UI Dialogs & Misc
+    // TODO: SORT THIS SHIT!!!
     
     private void OnSettingsClose(ContentDialog sender, ContentDialogClosingEventArgs e)
     {
         KeybindEditor.StopRebinding(); // Stop rebinding in case it was active.
         SetButtonColors(); // Update button colors if they were changed
         SetMenuItemInputGestureText(); // Update inputgesture text in case stuff was rebound
+        RenderEngine.UpdateBrushes();
+        RenderEngine.UpdateNoteSpeed();
         
         // I know some maniac is gonna change their refresh rate while playing a song.
         var interval = TimeSpan.FromSeconds(1.0 / UserConfig.RenderConfig.RefreshRate);
@@ -799,6 +876,38 @@ public partial class MainView : UserControl
                 }
             }
         });
+    }
+    
+    private async void OpenChart(string path)
+    {
+        // Load chart
+        ChartEditor.Chart.LoadFile(path);
+        
+        // Oopsie, audio not found.
+        if (!File.Exists(ChartEditor.Chart.AudioFilePath))
+        {
+            // Prompt user to select audio.
+            if (!await PromptSelectAudio())
+            {
+                // User said no, clear chart again and return.
+                ChartEditor.Chart.Clear();
+                return;
+            }
+            
+            // Get audio file
+            IStorageFile? audioFile = await OpenAudioFilePicker();
+            if (audioFile == null || !File.Exists(audioFile.Path.LocalPath))
+            {
+                ChartEditor.Chart.Clear();
+                ShowWarningMessage(Assets.Lang.Resources.Editor_NewChartInvalidAudio);
+                return;
+            }
+
+            ChartEditor.Chart.AudioFilePath = audioFile.Path.LocalPath;
+        }
+        
+        AudioManager.SetSong(ChartEditor.Chart.AudioFilePath, 0.2f, (int)SliderPlaybackSpeed.Value); // TODO: Make Volume Dynamic!!
+        SetSongPositionSliderMaximum();
     }
     
     public async Task<bool> SaveFile(bool openFilePicker)
