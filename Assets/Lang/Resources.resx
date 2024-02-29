@@ -334,4 +334,13 @@ Would you like to manually select a file?</value>
     <data name="Settings_ShowHiSpeed" xml:space="preserve">
         <value>Show HiSpeed</value>
     </data>
+    <data name="Settings_GuideLineType" xml:space="preserve">
+        <value>Guide Line Type</value>
+    </data>
+    <data name="Settings_Color_AngleTicks" xml:space="preserve">
+        <value>Angle Ticks</value>
+    </data>
+    <data name="Settings_BeatDivision" xml:space="preserve">
+        <value>Beat Division</value>
+    </data>
 </root>

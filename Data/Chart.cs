@@ -197,6 +197,8 @@ public class Chart
             {
                 if (note.Position is < 0 or >= 60)
                     note.Position = MathExtensions.Modulo(note.Position, 60);
+
+                note.Size = int.Clamp(note.Size, 1, 60);
             }
         }
     }
@@ -315,7 +317,7 @@ public class Chart
         
         foreach (Gimmick gimmick in Gimmicks)
         {
-            if (gimmick.GimmickType is not GimmickType.BpmChange or GimmickType.TimeSigChange) continue;
+            if (gimmick.GimmickType is not (GimmickType.BpmChange or GimmickType.TimeSigChange)) continue;
             
             if (gimmick.GimmickType is GimmickType.BpmChange)
             {
@@ -339,7 +341,7 @@ public class Chart
             Gimmick previous = TimeEvents[i - 1];
 
             float timeDifference = current.BeatData.MeasureDecimal - previous.BeatData.MeasureDecimal;
-            float timeStamp = timeDifference * (4 * previous.TimeSig.Ratio) * (60000.0f / previous.Bpm) + previous.TimeStamp;
+            TimeEvents[i].TimeStamp = timeDifference * (4 * previous.TimeSig.Ratio) * (60000.0f / previous.Bpm) + previous.TimeStamp;
         }
     }
 
@@ -362,7 +364,8 @@ public class Chart
     /// </summary>
     public TimeScaleData CalculateTimeScaleData(float measureDecimal)
     {
-        float scaledPosition = 0;
+        float partialScaledMeasureDecimalShowHiSpeed = 0;
+        float partialScaledMeasureDecimal = 0;
         float lastMeasurePosition = 0;
         float currentHiSpeedValue = 1;
         float currentTimeSigValue = 1;
@@ -372,19 +375,22 @@ public class Chart
             x.BeatData.MeasureDecimal < measureDecimal &&
             x.GimmickType is GimmickType.HiSpeedChange or GimmickType.TimeSigChange or GimmickType.BpmChange);
 
-        float startBpm = Gimmicks.First(x => x.GimmickType is GimmickType.BpmChange).Bpm;
+        // Take Last at 0 instead of First beca
+        float startBpm = Gimmicks.Last(x => x.GimmickType is GimmickType.BpmChange && x.BeatData.FullTick == 0).Bpm;
+        float startTimeSigRatio = Gimmicks.Last(x => x.GimmickType is GimmickType.TimeSigChange && x.BeatData.FullTick == 0).TimeSig.Ratio;
 
         foreach (Gimmick gimmick in relevantGimmicks)
         {
             float distance = gimmick.BeatData.MeasureDecimal - lastMeasurePosition;
-            scaledPosition += (distance * currentHiSpeedValue * currentTimeSigValue * currentBpmValue) - distance;
+            partialScaledMeasureDecimalShowHiSpeed += distance * currentHiSpeedValue * currentTimeSigValue * currentBpmValue - distance;
+            partialScaledMeasureDecimal += distance * currentTimeSigValue * currentBpmValue - distance;
 
             lastMeasurePosition = gimmick.BeatData.MeasureDecimal;
 
             switch (gimmick.GimmickType)
             {
                 case GimmickType.TimeSigChange:
-                    currentTimeSigValue = gimmick.TimeSig.Ratio;
+                    currentTimeSigValue = gimmick.TimeSig.Ratio / startTimeSigRatio;
                     break;
                 case GimmickType.HiSpeedChange:
                     currentHiSpeedValue = gimmick.HiSpeed;
@@ -398,26 +404,37 @@ public class Chart
         return new()
         {
             UnscaledMeasureDecimal = measureDecimal,
-            PartialScaledPosition = scaledPosition,
-            LastMeasurePosition = lastMeasurePosition,
-            CurrentHiSpeed = currentHiSpeedValue,
-            CurrentTimeSigRatio = currentTimeSigValue,
-            CurrentBpmRatio = currentBpmValue
+            ScaledMeasureDecimalHiSpeed = partialScaledMeasureDecimalShowHiSpeed,
+            ScaledMeasureDecimal = partialScaledMeasureDecimal,
+            GimmickMeasureDecimal = lastMeasurePosition,
+            HiSpeed = currentHiSpeedValue,
+            TimeSigRatio = currentTimeSigValue,
+            BpmRatio = currentBpmValue
         };
     }
 
     /// <summary>
     /// Finds nearest TimeScaleData via binary search and calculates ScaledMeasureDecimal off of it.
     /// </summary>
-    public float GetScaledMeasureDecimal(float measureDecimal)
+    public float GetScaledMeasureDecimal(float measureDecimal, bool showHiSpeed)
     {
         TimeScaleData? timeScaleData = binarySearchTimeScales(measureDecimal);
         if (timeScaleData == null) return measureDecimal;
 
-        float scaledPosition = measureDecimal + timeScaleData.PartialScaledPosition;
-        float distance = measureDecimal - timeScaleData.LastMeasurePosition;
+        float distance = measureDecimal - timeScaleData.GimmickMeasureDecimal;
+        float scaledPosition;
+        
+        if (showHiSpeed)
+        {
+            scaledPosition = measureDecimal + timeScaleData.ScaledMeasureDecimalHiSpeed;
+            scaledPosition += distance * timeScaleData.HiSpeed * timeScaleData.TimeSigRatio * timeScaleData.BpmRatio - distance;
+        }
+        else
+        {
+            scaledPosition = measureDecimal + timeScaleData.ScaledMeasureDecimal;
+            scaledPosition += distance * timeScaleData.TimeSigRatio * timeScaleData.BpmRatio - distance;
+        }
 
-        scaledPosition += distance * timeScaleData.CurrentHiSpeed * timeScaleData.CurrentTimeSigRatio * timeScaleData.CurrentBpmRatio - distance;
         return scaledPosition;
         
         TimeScaleData? binarySearchTimeScales(float measure)
@@ -446,7 +463,6 @@ public class Chart
         }
     }
     
-    
     /// <summary>
     /// Convert a Timestamp [milliseconds] to MeasureDecimal value
     /// </summary>
@@ -454,8 +470,8 @@ public class Chart
     {
         if (TimeEvents == null || TimeEvents.Count == 0) return -1;
 
-        Gimmick gimmick = TimeEvents.LastOrDefault(x => time >= x.TimeStamp) ?? TimeEvents[0];
-        return (time - gimmick.TimeStamp) / (60000.0f / gimmick.Bpm * 4.0f * gimmick.TimeSig.Ratio) + gimmick.BeatData.MeasureDecimal;
+        Gimmick timeEvent = TimeEvents.LastOrDefault(x => time >= x.TimeStamp) ?? TimeEvents[0];
+        return (time - timeEvent.TimeStamp) / (60000.0f / timeEvent.Bpm * 4.0f * timeEvent.TimeSig.Ratio) + timeEvent.BeatData.MeasureDecimal;
     }
 
     /// <summary>

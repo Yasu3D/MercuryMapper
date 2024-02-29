@@ -56,14 +56,14 @@ public class BeatData
 
 public class TimeScaleData
 {
-    // TODO: RENAME!!!!!!!
     public float UnscaledMeasureDecimal { get; set; }
-    public float PartialScaledPosition { get; set; }
-    public float LastMeasurePosition { get; set; }
+    public float ScaledMeasureDecimal { get; set; }
+    public float ScaledMeasureDecimalHiSpeed { get; set; }
+    public float GimmickMeasureDecimal { get; set; }
 
-    public float CurrentHiSpeed { get; set; }
-    public float CurrentTimeSigRatio { get; set; }
-    public float CurrentBpmRatio { get; set; }
+    public float HiSpeed { get; set; }
+    public float TimeSigRatio { get; set; }
+    public float BpmRatio { get; set; }
 }
 
 public class TimeSig(int upper, int lower)

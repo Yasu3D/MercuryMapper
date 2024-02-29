@@ -87,6 +87,8 @@
                 <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorMeasureLine"/>
                 <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_Color_BeatLine}"/>
                 <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorBeatLine"/>
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_Color_AngleTicks}"/>
+                <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorAngleTicks"/>
             </UniformGrid>
             
             <Separator/>

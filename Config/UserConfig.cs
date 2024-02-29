@@ -17,6 +17,8 @@ public class RenderConfig
     public int NoteSize { get; set; } = 3;
     public decimal NoteSpeed { get; set; } = 4.5m;
     public bool ShowHiSpeed { get; set; } = true;
+    public int GuideLineType { get; set; } = 1;
+    public int BeatDivision { get; set; } = 4;
 }
 
 public class KeymapConfig
@@ -112,6 +114,7 @@ public class ColorConfig
         ["ColorJudgementLinePrimary"] = "FFFF009D",
         ["ColorJudgementLineSecondary"] = "FFAE00FF",
         ["ColorMeasureLine"] = "FFFFFFFF",
-        ["ColorBeatLine"] = "80FFFFFF"
+        ["ColorBeatLine"] = "80FFFFFF",
+        ["ColorAngleTicks"] = "AAFFFFFF"
     };
 }

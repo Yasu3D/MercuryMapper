@@ -9,31 +9,35 @@ namespace MercuryMapper.Rendering;
 
 public class Brushes(UserConfig userConfig)
 {
-    private UserConfig userConfig = userConfig;
+    private readonly UserConfig userConfig = userConfig;
     private readonly Dictionary<string, string> colors = userConfig.ColorConfig.Colors;
     
     // ________ Constants
     private const float TickPenStrokeWidth = 1.5f;
-    private const float MeasurePenStrokeWidth = 2.0f;
-    private const float BeatPenStrokeWidth = 1f;
-    private const float GuidelinePenStrokeWidth = 1.0f;
-    private const float NoteStrokeWidth = 9f;
-    private float noteWidthMultiplier = 1;
+    private const float MeasurePenStrokeWidth = 2;
+    private const float BeatPenStrokeWidth = 1;
+    private const float GuidelinePenStrokeWidth = 1;
+    private const float NotePenStrokeWidth = 9;
+    private const float CursorPenStrokeWidth = 15;
     
-    private SKColor colorNoteTouch = new();
-    private SKColor colorNoteChain = new();
-    private SKColor colorNoteSlideClockwise = new();
-    private SKColor colorNoteSlideCounterclockwise = new();
-    private SKColor colorNoteSnapForward = new();
-    private SKColor colorNoteSnapBackward = new();
-    private SKColor colorNoteHoldStart = new();
-    private SKColor colorNoteHoldSegment = new();
-    private SKColor colorNoteHoldEnd = new();
-    private SKColor colorNoteHoldSurfaceFar = new();
-    private SKColor colorNoteHoldSurfaceNear = new();
-    private SKColor colorNoteMaskAdd = new();
-    private SKColor colorNoteMaskRemove = new();
-    private SKColor colorNoteEndOfChart = new();
+    public float NoteWidthMultiplier = 1;
+    private float cursorWidthMultiplier = 1;
+    
+    private SKColor colorNoteTouch;
+    private SKColor colorNoteChain;
+    private SKColor colorNoteSlideClockwise;
+    private SKColor colorNoteSlideCounterclockwise;
+    private SKColor colorNoteSnapForward;
+    private SKColor colorNoteSnapBackward;
+    private SKColor colorNoteHoldStart;
+    private SKColor colorNoteHoldSegment;
+    private SKColor colorNoteHoldEnd;
+    private SKColor colorNoteHoldSurfaceFar;
+    private SKColor colorNoteHoldSurfaceNear;
+    private SKColor colorNoteMaskAdd;
+    private SKColor colorNoteMaskRemove;
+    private SKColor colorNoteEndOfChart;
+    private SKColor colorNoteCaps;
     
     // ________ Private Brushes
     private readonly SKPaint guideLinePen = new()
@@ -53,18 +57,24 @@ public class Brushes(UserConfig userConfig)
     {
         Style = SKPaintStyle.Stroke,
         IsAntialias = true,
-        StrokeWidth = NoteStrokeWidth,
+        StrokeWidth = NotePenStrokeWidth,
+    };
+
+    private readonly SKPaint cursorPen = new()
+    {
+        Style = SKPaintStyle.Stroke,
+        IsAntialias = true,
+        StrokeWidth = CursorPenStrokeWidth
     };
     
     // ________ Public Brushes
     public SKColor BackgroundColor = new(0xFF1A1A1A);
 
-    public readonly SKPaint TickPen = new()
+    public readonly SKPaint AngleTickPen = new()
     {
         StrokeWidth = TickPenStrokeWidth,
         Style = SKPaintStyle.Stroke,
-        IsAntialias = true,
-        Color = SKColors.White
+        IsAntialias = true
     };
     
     public readonly SKPaint MeasurePen = new()
@@ -90,14 +100,14 @@ public class Brushes(UserConfig userConfig)
 
     public readonly SKPaint JudgementLinePen = new()
     {
-        StrokeWidth = NoteStrokeWidth,
+        StrokeWidth = NotePenStrokeWidth,
         Style = SKPaintStyle.Stroke,
         IsAntialias = true
     };
 
     public readonly SKPaint JudgementLineShadingPen = new()
     {
-        StrokeWidth = NoteStrokeWidth,
+        StrokeWidth = NotePenStrokeWidth,
         Style = SKPaintStyle.Stroke,
         IsAntialias = true
     };
@@ -105,7 +115,7 @@ public class Brushes(UserConfig userConfig)
     public readonly SKPaint MaskFill = new()
     {
         Style = SKPaintStyle.Fill,
-        IsAntialias = true
+        IsAntialias = false
     };
     
     // ________ Dynamic Brushes
@@ -124,17 +134,32 @@ public class Brushes(UserConfig userConfig)
         return guideLinePen;
     }
 
-    public SKPaint GetNotePen(Note note, float scale)
+    public SKPaint GetNotePen(Note note, float canvasScale)
     {
-        notePen.StrokeWidth = noteWidthMultiplier * scale;
-        notePen.Color = NoteType2Color(note);
+        notePen.StrokeWidth = NoteWidthMultiplier * canvasScale;
+        notePen.Color = NoteType2Color(note.NoteType);
         return notePen;
+    }
+
+    public SKPaint GetNoteCapPen(float canvasScale)
+    {
+        // Rreusing the Note pen because why not
+        notePen.StrokeWidth = NoteWidthMultiplier * canvasScale;
+        notePen.Color = colorNoteCaps;
+        return notePen;
+    }
+
+    public SKPaint GetCursorPen(NoteType type, float canvasScale)
+    {
+        cursorPen.StrokeWidth = cursorWidthMultiplier * canvasScale;
+        cursorPen.Color = NoteType2Color(type).WithAlpha(0x80);
+        return cursorPen;
     }
     
     // ________ Other
-    private SKColor NoteType2Color(Note note)
+    private SKColor NoteType2Color(NoteType type)
     {
-        return note.NoteType switch
+        return type switch
         {
             NoteType.Touch
                 or NoteType.TouchBonus
@@ -162,7 +187,7 @@ public class Brushes(UserConfig userConfig)
         };
     }
     
-    public void SetBrushes(SKPoint center, float radius, float maxRadius, float scale, UserConfig config)
+    public void SetBrushes(SKPoint center, float radius, float maxRadius, float scale)
     {
         setColors();
         setStrokeWidths();
@@ -184,9 +209,12 @@ public class Brushes(UserConfig userConfig)
             colorNoteHoldSurfaceNear = SKColor.Parse(colors["ColorNoteHoldSurfaceNear"]);
             colorNoteMaskAdd = SKColor.Parse(colors["ColorNoteMaskAdd"]);
             colorNoteMaskRemove = SKColor.Parse(colors["ColorNoteMaskRemove"]);
+            colorNoteEndOfChart = SKColor.Parse(colors["ColorNoteEndOfChart"]);
+            colorNoteCaps = SKColor.Parse(colors["ColorNoteCaps"]);
             
             MeasurePen.Color = SKColor.Parse(colors["ColorMeasureLine"]);
             BeatPen.Color = SKColor.Parse(colors["ColorBeatLine"]);
+            AngleTickPen.Color = SKColor.Parse(colors["ColorAngleTicks"]);
         
             MaskFill.Color = SKColor.Parse(colors["ColorBackgroundNoMask"]);
             tunnelStripesPen.Color = SKColor.Parse(colors["ColorBackgroundFar"]).WithAlpha(0x80);
@@ -194,9 +222,10 @@ public class Brushes(UserConfig userConfig)
 
         void setStrokeWidths()
         {
-            noteWidthMultiplier = NoteStrokeWidth * config.RenderConfig.NoteSize;
-            JudgementLinePen.StrokeWidth = NoteStrokeWidth * scale * config.RenderConfig.NoteSize;
-            JudgementLineShadingPen.StrokeWidth = NoteStrokeWidth * scale * config.RenderConfig.NoteSize;
+            NoteWidthMultiplier = NotePenStrokeWidth * userConfig.RenderConfig.NoteSize;
+            cursorWidthMultiplier = CursorPenStrokeWidth * userConfig.RenderConfig.NoteSize;
+            JudgementLinePen.StrokeWidth = NotePenStrokeWidth * scale * userConfig.RenderConfig.NoteSize;
+            JudgementLineShadingPen.StrokeWidth = NotePenStrokeWidth * scale * userConfig.RenderConfig.NoteSize;
         }
         
         void setShaders()
@@ -210,7 +239,7 @@ public class Brushes(UserConfig userConfig)
             SKColor judgementShading0 = SKColors.Black.WithAlpha(0x80);
             SKColor judgementShading1 = SKColors.Empty;
             SKColor[] judgementShadingColors = [judgementShading1, judgementShading0, judgementShading1];
-            float shadingWidth = noteWidthMultiplier * 0.5f;
+            float shadingWidth = NoteWidthMultiplier * 0.5f;
             float shadingInside = (radius - shadingWidth) / maxRadius;
             float shadingCenter = radius / maxRadius;
             float shadingOutside = (radius + shadingWidth) / maxRadius;

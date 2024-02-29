@@ -595,7 +595,9 @@
             </Style>
         </Style>
         
-        
+        <Style Selector="ComboBox">
+            <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderBrush}"/>
+        </Style>
         
         <!-- shut up compiler -->
         <Style Selector="TreeView.HideKeybind"/>

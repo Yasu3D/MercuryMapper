@@ -164,11 +164,13 @@ public partial class MainView : UserControl
         if (AudioManager.CurrentSong == null) return;
         timeUpdateSource = source;
         
-        BeatData data = ChartEditor.Chart.Timestamp2BeatData(AudioManager.CurrentSong.Position);
-        
         if (source is not TimeUpdateSource.Timer && !AudioManager.CurrentSong.IsPlaying)
         {
-            if (source is TimeUpdateSource.Slider) AudioManager.CurrentSong.Position = (uint)SliderSongPosition.Value;
+            if (source is TimeUpdateSource.Slider)
+            {
+                AudioManager.CurrentSong.Position = (uint)SliderSongPosition.Value;
+            }
+
             if (source is TimeUpdateSource.Numeric)
             {
                 if (NumericMeasure.Value == null || NumericBeatValue.Value == null || NumericBeatDivisor.Value == null) return;
@@ -178,10 +180,16 @@ public partial class MainView : UserControl
             }
         }
         
+        BeatData data = ChartEditor.Chart.Timestamp2BeatData(AudioManager.CurrentSong.Position);
+        
         if (source is not TimeUpdateSource.Numeric && NumericBeatDivisor.Value != null)
         {
+            // The + 0.002f is a hacky "fix". There's some weird rounding issue that has carried over from BAKKA,
+            // most likely caused by ManagedBass or AvaloniaUI jank. If you increment NumericBeatValue up,
+            // it's often not quite enough and it falls back to the value it was before.
+            
             NumericMeasure.Value = data.Measure;
-            NumericBeatValue.Value = (int)((data.MeasureDecimal - data.Measure) * (float)NumericBeatDivisor.Value);
+            NumericBeatValue.Value = (int)((data.MeasureDecimal - data.Measure + 0.002f) * (float)NumericBeatDivisor.Value);
         }
 
         if (source is not TimeUpdateSource.Slider)
@@ -190,8 +198,6 @@ public partial class MainView : UserControl
         }
         
         ChartEditor.UpdateCurrentMeasure(data);
-
-        Console.WriteLine(ChartEditor.CurrentMeasure);
         
         timeUpdateSource = TimeUpdateSource.None;
     }
@@ -672,8 +678,11 @@ public partial class MainView : UserControl
     private void NumericBeatValue_OnValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
     {
         if (e.NewValue == null || NumericMeasure?.Value == null || NumericBeatDivisor?.Value == null) return;
-
+        if (AudioManager.CurrentSong is { IsPlaying: true }) return;
+        
         decimal? value = e.NewValue;
+        
+        Console.WriteLine("ValueChanged");
         
         if (value >= NumericBeatDivisor.Value)
         {
@@ -752,7 +761,7 @@ public partial class MainView : UserControl
         SetButtonColors(); // Update button colors if they were changed
         SetMenuItemInputGestureText(); // Update inputgesture text in case stuff was rebound
         RenderEngine.UpdateBrushes();
-        RenderEngine.UpdateNoteSpeed();
+        RenderEngine.UpdateVisibleTime();
         
         // I know some maniac is gonna change their refresh rate while playing a song.
         var interval = TimeSpan.FromSeconds(1.0 / UserConfig.RenderConfig.RefreshRate);
@@ -908,6 +917,7 @@ public partial class MainView : UserControl
         
         AudioManager.SetSong(ChartEditor.Chart.AudioFilePath, 0.2f, (int)SliderPlaybackSpeed.Value); // TODO: Make Volume Dynamic!!
         SetSongPositionSliderMaximum();
+        RenderEngine.UpdateVisibleTime();
     }
     
     public async Task<bool> SaveFile(bool openFilePicker)

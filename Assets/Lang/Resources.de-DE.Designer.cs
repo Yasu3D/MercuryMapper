@@ -817,6 +817,24 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Beat Unterteilung.
+        /// </summary>
+        public static string Settings_BeatDivision {
+            get {
+                return ResourceManager.GetString("Settings_BeatDivision", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Winkel-Striche.
+        /// </summary>
+        public static string Settings_Color_AngleTicks {
+            get {
+                return ResourceManager.GetString("Settings_Color_AngleTicks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Hintergrund Fern.
         /// </summary>
         public static string Settings_Color_BackgroundFar {
@@ -903,6 +921,15 @@ namespace MercuryMapper.Assets.Lang {
         public static string Settings_Color_Sync {
             get {
                 return ResourceManager.GetString("Settings_Color_Sync", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Leitlinien-Typ.
+        /// </summary>
+        public static string Settings_GuideLineType {
+            get {
+                return ResourceManager.GetString("Settings_GuideLineType", resourceCulture);
             }
         }
         

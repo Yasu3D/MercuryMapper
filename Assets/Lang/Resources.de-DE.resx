@@ -334,4 +334,13 @@ Möchten Sie eine Datei manuell auswählen?</value>
     <data name="Settings_ShowHiSpeed" xml:space="preserve">
         <value>Zeige HiSpeed</value>
     </data>
+    <data name="Settings_GuideLineType" xml:space="preserve">
+        <value>Leitlinien-Typ</value>
+    </data>
+    <data name="Settings_Color_AngleTicks" xml:space="preserve">
+        <value>Winkel-Striche</value>
+    </data>
+    <data name="Settings_BeatDivision" xml:space="preserve">
+        <value>Beat Unterteilung</value>
+    </data>
 </root>

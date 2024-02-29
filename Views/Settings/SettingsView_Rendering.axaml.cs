@@ -22,6 +22,8 @@ public partial class SettingsView_Rendering : UserControl
         NumericNoteSize.Value = mainView.UserConfig.RenderConfig.NoteSize;
         NumericNoteSpeed.Value = mainView.UserConfig.RenderConfig.NoteSpeed;
         CheckBoxShowHiSpeed.IsChecked = mainView.UserConfig.RenderConfig.ShowHiSpeed;
+        ComboGuideLineType.SelectedIndex = mainView.UserConfig.RenderConfig.GuideLineType;
+        NumericBeatDivision.Value = mainView.UserConfig.RenderConfig.BeatDivision;
     }
     
     private void RefreshRate_OnValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
@@ -42,5 +44,16 @@ public partial class SettingsView_Rendering : UserControl
     private void ShowHiSpeed_OnIsCheckedChanged(object? sender, RoutedEventArgs e)
     {
         mainView.UserConfig.RenderConfig.ShowHiSpeed = CheckBoxShowHiSpeed.IsChecked ?? true;
+    }
+
+    private void GuideLineType_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        if (ComboGuideLineType == null) return; // ??? why the fuck is there a NullReferenceException if this is not here.
+        mainView.UserConfig.RenderConfig.GuideLineType = ComboGuideLineType.SelectedIndex;
+    }
+
+    private void BeatDivision_OnValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
+    {
+        mainView.UserConfig.RenderConfig.BeatDivision = (int)(NumericBeatDivision.Value ?? 4);
     }
 }
