@@ -451,7 +451,19 @@ public partial class MainView : UserControl
 
     private void Canvas_OnPointerPressed(object? sender, PointerPressedEventArgs e)
     {
+        PointerPoint p = e.GetCurrentPoint(Canvas);
+        SKPoint point = new((float)p.Position.X, (float)p.Position.Y);
+        point.X -= (float)Canvas.Width * 0.5f;
+        point.Y -= (float)Canvas.Height * 0.5f;
+        point.X /= (float)(Canvas.Width - 30) * 0.5f;
+        point.Y /= (float)(Canvas.Height - 30) * 0.5f;
+        point.X /= 0.9f;
+        point.Y /= 0.9f;
         
+        if (e.KeyModifiers.HasFlag(KeyModifiers.Shift))
+        {
+            RenderEngine.GetMeasureAtPointer(point);
+        }
     }
 
     private void Canvas_OnPointerReleased(object? sender, PointerReleasedEventArgs e)
@@ -681,9 +693,7 @@ public partial class MainView : UserControl
         if (AudioManager.CurrentSong is { IsPlaying: true }) return;
         
         decimal? value = e.NewValue;
-        
-        Console.WriteLine("ValueChanged");
-        
+
         if (value >= NumericBeatDivisor.Value)
         {
             NumericMeasure.Value++;
@@ -710,7 +720,12 @@ public partial class MainView : UserControl
 
     private void NumericBeatDivisor_OnValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
     {
-        
+        if (e.NewValue == null || NumericMeasure?.Value == null || NumericBeatValue?.Value == null) return;
+        if (AudioManager.CurrentSong is { IsPlaying: true }) return;
+
+        decimal oldValue = e.OldValue ?? 16;
+        decimal ratio = (decimal)e.NewValue / oldValue;
+        NumericBeatValue.Value = decimal.Round((decimal)NumericBeatValue.Value * ratio);
     }
     
     private void ButtonPlay_OnClick(object? sender, RoutedEventArgs e)

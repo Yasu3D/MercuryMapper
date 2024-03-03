@@ -20,10 +20,10 @@ public class NoteColorPalette : IColorPalette
 
                 Color.FromArgb(255, 140, 100,   0),
                 Color.FromArgb(255, 220, 185,  50),
-                Color.FromArgb(255, 220, 160,   0),
-                Color.FromArgb(255, 220, 185,  50),
-                Color.FromArgb(255, 178, 178, 178),
-                Color.FromArgb(255, 255, 255, 255)
+                Color.FromArgb(190, 237, 174,  42),
+                Color.FromArgb(190, 220, 185,  50),
+                Color.FromArgb(190, 178, 178, 178),
+                Color.FromArgb(190, 255, 255, 255)
             },
 
             {

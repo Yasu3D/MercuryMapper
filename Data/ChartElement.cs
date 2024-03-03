@@ -175,6 +175,14 @@ public class Note : ChartElement
         or NoteType.HoldSegment 
         or NoteType.HoldEnd;
 
+    public bool IsSegment => NoteType
+        is NoteType.HoldSegment
+        or NoteType.HoldEnd;
+
+    public bool IsChain => NoteType
+        is NoteType.Chain
+        or NoteType.ChainRNote;
+    
     public bool IsSlide => NoteType 
         is NoteType.SlideClockwise 
         or NoteType.SlideCounterclockwise

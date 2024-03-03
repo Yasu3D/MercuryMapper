@@ -17,8 +17,11 @@ public class Brushes(UserConfig userConfig)
     private const float MeasurePenStrokeWidth = 2;
     private const float BeatPenStrokeWidth = 1;
     private const float GuidelinePenStrokeWidth = 1;
-    private const float NotePenStrokeWidth = 9;
+    private const float NotePenStrokeWidth = 8f;
+    private const float HoldEndPenStrokeWidth = 12f;
+    private const float SnapPenStrokeWidth = 8f;
     private const float CursorPenStrokeWidth = 15;
+    private const float SyncPenStrokeWidth = 6;
     
     public float NoteWidthMultiplier = 1;
     private float cursorWidthMultiplier = 1;
@@ -31,9 +34,6 @@ public class Brushes(UserConfig userConfig)
     private SKColor colorNoteSnapBackward;
     private SKColor colorNoteHoldStart;
     private SKColor colorNoteHoldSegment;
-    private SKColor colorNoteHoldEnd;
-    private SKColor colorNoteHoldSurfaceFar;
-    private SKColor colorNoteHoldSurfaceNear;
     private SKColor colorNoteMaskAdd;
     private SKColor colorNoteMaskRemove;
     private SKColor colorNoteEndOfChart;
@@ -60,11 +60,38 @@ public class Brushes(UserConfig userConfig)
         StrokeWidth = NotePenStrokeWidth,
     };
 
+    private readonly SKPaint snapPen = new()
+    {
+        Style = SKPaintStyle.Stroke,
+        IsAntialias = true,
+        StrokeWidth = SnapPenStrokeWidth
+    };
+
+    private readonly SKPaint swipeFill = new()
+    {
+        Style = SKPaintStyle.Fill,
+        IsAntialias = true
+    };
+
     private readonly SKPaint cursorPen = new()
     {
         Style = SKPaintStyle.Stroke,
         IsAntialias = true,
         StrokeWidth = CursorPenStrokeWidth
+    };
+    
+    private readonly SKPaint syncPen = new()
+    {
+        StrokeWidth = SyncPenStrokeWidth,
+        Style = SKPaintStyle.Stroke,
+        IsAntialias = true
+    };
+    
+    private readonly SKPaint holdEndPen = new()
+    {
+        StrokeWidth = HoldEndPenStrokeWidth,
+        Style = SKPaintStyle.Stroke,
+        StrokeCap = SKStrokeCap.Round
     };
     
     // ________ Public Brushes
@@ -117,6 +144,12 @@ public class Brushes(UserConfig userConfig)
         Style = SKPaintStyle.Fill,
         IsAntialias = false
     };
+
+    public readonly SKPaint HoldFill = new()
+    {
+        Style = SKPaintStyle.Fill,
+        IsAntialias = false
+    };
     
     // ________ Dynamic Brushes
     public SKPaint GetTunnelStripes(float strokeWidth)
@@ -134,26 +167,51 @@ public class Brushes(UserConfig userConfig)
         return guideLinePen;
     }
 
-    public SKPaint GetNotePen(Note note, float canvasScale)
+    public SKPaint GetNotePen(Note note, float scale)
     {
-        notePen.StrokeWidth = NoteWidthMultiplier * canvasScale;
+        notePen.StrokeWidth = NoteWidthMultiplier * scale;
         notePen.Color = NoteType2Color(note.NoteType);
         return notePen;
     }
 
-    public SKPaint GetNoteCapPen(float canvasScale)
+    public SKPaint GetNoteCapPen(float scale)
     {
         // Rreusing the Note pen because why not
-        notePen.StrokeWidth = NoteWidthMultiplier * canvasScale;
+        notePen.StrokeWidth = NoteWidthMultiplier * scale;
         notePen.Color = colorNoteCaps;
         return notePen;
     }
 
-    public SKPaint GetCursorPen(NoteType type, float canvasScale)
+    public SKPaint GetSyncPen(float scale)
     {
-        cursorPen.StrokeWidth = cursorWidthMultiplier * canvasScale;
+        syncPen.StrokeWidth = SyncPenStrokeWidth * scale;
+        return syncPen;
+    }
+
+    public SKPaint GetCursorPen(NoteType type, float scale)
+    {
+        cursorPen.StrokeWidth = cursorWidthMultiplier * scale;
         cursorPen.Color = NoteType2Color(type).WithAlpha(0x80);
         return cursorPen;
+    }
+
+    public SKPaint GetSnapPen(NoteType type, float scale)
+    {
+        snapPen.StrokeWidth = SnapPenStrokeWidth * scale;
+        snapPen.Color = NoteType2Color(type);
+        return snapPen;
+    }
+
+    public SKPaint GetSwipeFill(NoteType type)
+    {
+        swipeFill.Color = NoteType2Color(type);
+        return swipeFill;
+    }
+
+    public SKPaint GetHoldEndPen(float scale)
+    {
+        holdEndPen.StrokeWidth = HoldEndPenStrokeWidth * scale;
+        return holdEndPen;
     }
     
     // ________ Other
@@ -179,7 +237,6 @@ public class Brushes(UserConfig userConfig)
             NoteType.HoldStart
                 or NoteType.HoldStartRNote => colorNoteHoldStart,
             NoteType.HoldSegment => colorNoteHoldSegment,
-            NoteType.HoldEnd => colorNoteHoldEnd,
             NoteType.MaskAdd => colorNoteMaskAdd,
             NoteType.MaskRemove => colorNoteMaskRemove,
             NoteType.EndOfChart => colorNoteEndOfChart,
@@ -204,13 +261,13 @@ public class Brushes(UserConfig userConfig)
             colorNoteSnapBackward = SKColor.Parse(colors["ColorNoteSnapBackward"]);
             colorNoteHoldStart = SKColor.Parse(colors["ColorNoteHoldStart"]);
             colorNoteHoldSegment = SKColor.Parse(colors["ColorNoteHoldSegment"]);
-            colorNoteHoldEnd = SKColor.Parse(colors["ColorNoteHoldEnd"]);
-            colorNoteHoldSurfaceFar = SKColor.Parse(colors["ColorNoteHoldSurfaceFar"]);
-            colorNoteHoldSurfaceNear = SKColor.Parse(colors["ColorNoteHoldSurfaceNear"]);
             colorNoteMaskAdd = SKColor.Parse(colors["ColorNoteMaskAdd"]);
             colorNoteMaskRemove = SKColor.Parse(colors["ColorNoteMaskRemove"]);
             colorNoteEndOfChart = SKColor.Parse(colors["ColorNoteEndOfChart"]);
             colorNoteCaps = SKColor.Parse(colors["ColorNoteCaps"]);
+            
+            syncPen.Color = SKColor.Parse(colors["ColorSync"]);
+            holdEndPen.Color = SKColor.Parse(colors["ColorNoteHoldEnd"]);
             
             MeasurePen.Color = SKColor.Parse(colors["ColorMeasureLine"]);
             BeatPen.Color = SKColor.Parse(colors["ColorBeatLine"]);
@@ -250,8 +307,14 @@ public class Brushes(UserConfig userConfig)
             SKColor tunnel0 = SKColor.Parse(colors["ColorBackgroundFar"]);
             SKColor tunnel1 = SKColor.Parse(colors["ColorBackgroundNear"]);
             SKColor[] tunnelGradient = [tunnel0, tunnel1];
-            SKShader shader = SKShader.CreateRadialGradient(center, radius, tunnelGradient, SKShaderTileMode.Clamp);
-            TunnelFill.Shader = shader;
+            SKShader tunnelShader = SKShader.CreateRadialGradient(center, radius, tunnelGradient, SKShaderTileMode.Clamp);
+            TunnelFill.Shader = tunnelShader;
+            
+            var holdColor0 = SKColor.Parse(colors["ColorNoteHoldSurfaceFar"]);
+            var holdColor1 = SKColor.Parse(colors["ColorNoteHoldSurfaceNear"]);
+            SKColor[] holdColors = [holdColor0, holdColor1];
+            var holdShader = SKShader.CreateRadialGradient(center, radius, holdColors, SKShaderTileMode.Clamp);
+            HoldFill.Shader = holdShader;
         }
     }
 }
