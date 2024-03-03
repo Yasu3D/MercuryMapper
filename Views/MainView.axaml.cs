@@ -637,20 +637,6 @@ public partial class MainView : UserControl
     private void ButtonHoldContext_OnClick(object? sender, RoutedEventArgs e) { }
     
     private void SliderPosition_OnValueChanged(object? sender, RangeBaseValueChangedEventArgs e) => Position_OnValueChanged(true);
-    private void NumericPosition_OnValueChanged(object? sender, NumericUpDownValueChangedEventArgs e) => Position_OnValueChanged(false);
-    private void Position_OnValueChanged(bool fromSlider)
-    {
-        if (fromSlider) NumericNotePosition.Value = (decimal?)SliderNotePosition.Value;
-        else
-        {
-            NumericNotePosition.Value ??= 0;
-            if (NumericNotePosition.Value > 59) NumericNotePosition.Value = 0;
-            if (NumericNotePosition.Value < 0) NumericNotePosition.Value = 59;
-
-            SliderNotePosition.Value = (double)NumericNotePosition.Value;
-        }
-    }
-    
     private void SliderNotePosition_OnPointerWheelChanged(object? sender, PointerWheelEventArgs e)
     {
         e.Handled = true;
@@ -663,21 +649,38 @@ public partial class MainView : UserControl
             default: SliderNotePosition.Value += value; break;
         }
     }
-    
-    private void SliderSize_OnValueChanged(object? sender, RangeBaseValueChangedEventArgs e) => Size_OnValueChanged(true);
-    private void NumericSize_OnValueChanged(object? sender, NumericUpDownValueChangedEventArgs e) => Size_OnValueChanged(false);
-    private void Size_OnValueChanged(bool fromSlider)
+    private void NumericPosition_OnValueChanged(object? sender, NumericUpDownValueChangedEventArgs e) => Position_OnValueChanged(false);
+    private void Position_OnValueChanged(bool fromSlider)
     {
-        if (fromSlider) NumericNoteSize.Value = (decimal?)SliderNoteSize.Value;
-        else SliderNoteSize.Value = NumericNoteSize.Value != null ? (double)NumericNoteSize.Value : 10; // default to a typical note size if null
+        if (fromSlider) NumericNotePosition.Value = (decimal?)SliderNotePosition.Value;
+        else
+        {
+            NumericNotePosition.Value ??= 0;
+            if (NumericNotePosition.Value > 59) NumericNotePosition.Value = 0;
+            if (NumericNotePosition.Value < 0) NumericNotePosition.Value = 59;
+
+            SliderNotePosition.Value = (double)NumericNotePosition.Value;
+        }
+
+        ChartEditor.Cursor.Position = (int)NumericNotePosition.Value;
     }
     
+    private void SliderSize_OnValueChanged(object? sender, RangeBaseValueChangedEventArgs e) => Size_OnValueChanged(true);
     private void SliderNoteSize_OnPointerWheelChanged(object? sender, PointerWheelEventArgs e)
     {
         e.Handled = true;
         int value = double.Sign(e.Delta.Y);
         SliderNoteSize.Value += value;
     }
+    private void NumericSize_OnValueChanged(object? sender, NumericUpDownValueChangedEventArgs e) => Size_OnValueChanged(false);
+    private void Size_OnValueChanged(bool fromSlider)
+    {
+        if (fromSlider) NumericNoteSize.Value = (decimal?)SliderNoteSize.Value;
+        else SliderNoteSize.Value = (double)(NumericNoteSize.Value ?? 15); // default to a typical note size if null
+
+        ChartEditor.Cursor.Size = (int)(NumericNoteSize.Value ?? 15);
+    }
+    
 
     private void NumericMeasure_OnValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
     {

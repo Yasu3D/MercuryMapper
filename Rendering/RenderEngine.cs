@@ -42,7 +42,7 @@ public class RenderEngine(MainView mainView)
         if (!IsPlaying)
         {
             // TODO: Create a cursor class and get data from there instead.
-            DrawCursor(canvas, NoteType.Touch, 0, 15);
+            DrawCursor(canvas, NoteType.Touch, mainView.ChartEditor.Cursor.Position, mainView.ChartEditor.Cursor.Size);
             DrawAngleTicks(canvas);
         }
         
@@ -466,9 +466,6 @@ public class RenderEngine(MainView mainView)
                 
                 ArcData intermediateData = new(canvasRect, 1, MathExtensions.Lerp(currentData.StartAngle, prevData.StartAngle, ratio), MathExtensions.Lerp(currentData.SweepAngle, prevData.SweepAngle, ratio));
                 FlipArc(ref intermediateData);
-                
-                // TODO: Figure out if this is necessary
-                if (intermediateData.SweepAngle > 359.999f) TrimCircleArc(ref intermediateData);
                 
                 SKPath path = new(); 
                 path.ArcTo(currentData.Rect, currentData.StartAngle, currentData.SweepAngle, true);

@@ -8,12 +8,14 @@ namespace MercuryMapper.Editor;
 
 public class ChartEditor(MainView main)
 {
+    // TODO: SORT THIS SHIT!
     private MainView mainView = main;
     public Chart Chart { get; private set; } = new();
-
+    public readonly Cursor Cursor = new();
     public ChartEditorState State { get; private set; }
-    
     public float CurrentMeasure { get; private set; }
+    
+    
     
     public void NewChart(string musicFilePath, string author, float bpm, int timeSigUpper, int timeSigLower)
     {
