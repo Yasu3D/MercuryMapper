@@ -59,7 +59,7 @@ public class TimeScaleData
     public float UnscaledMeasureDecimal { get; set; }
     public float ScaledMeasureDecimal { get; set; }
     public float ScaledMeasureDecimalHiSpeed { get; set; }
-    public float GimmickMeasureDecimal { get; set; }
+    public float LastGimmickMeasureDecimal { get; set; }
 
     public float HiSpeed { get; set; }
     public float TimeSigRatio { get; set; }

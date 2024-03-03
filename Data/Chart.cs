@@ -366,7 +366,7 @@ public class Chart
     {
         float partialScaledMeasureDecimalShowHiSpeed = 0;
         float partialScaledMeasureDecimal = 0;
-        float lastMeasurePosition = 0;
+        float lastGimmickMeasureDecimal = 0;
         float currentHiSpeedValue = 1;
         float currentTimeSigValue = 1;
         float currentBpmValue = 1;
@@ -381,11 +381,11 @@ public class Chart
 
         foreach (Gimmick gimmick in relevantGimmicks)
         {
-            float distance = gimmick.BeatData.MeasureDecimal - lastMeasurePosition;
+            float distance = gimmick.BeatData.MeasureDecimal - lastGimmickMeasureDecimal;
             partialScaledMeasureDecimalShowHiSpeed += distance * currentHiSpeedValue * currentTimeSigValue * currentBpmValue - distance;
             partialScaledMeasureDecimal += distance * currentTimeSigValue * currentBpmValue - distance;
 
-            lastMeasurePosition = gimmick.BeatData.MeasureDecimal;
+            lastGimmickMeasureDecimal = gimmick.BeatData.MeasureDecimal;
 
             switch (gimmick.GimmickType)
             {
@@ -406,7 +406,7 @@ public class Chart
             UnscaledMeasureDecimal = measureDecimal,
             ScaledMeasureDecimalHiSpeed = partialScaledMeasureDecimalShowHiSpeed,
             ScaledMeasureDecimal = partialScaledMeasureDecimal,
-            GimmickMeasureDecimal = lastMeasurePosition,
+            LastGimmickMeasureDecimal = lastGimmickMeasureDecimal,
             HiSpeed = currentHiSpeedValue,
             TimeSigRatio = currentTimeSigValue,
             BpmRatio = currentBpmValue
@@ -414,53 +414,61 @@ public class Chart
     }
 
     /// <summary>
-    /// Finds nearest TimeScaleData via binary search and calculates ScaledMeasureDecimal off of it.
+    /// Finds nearest previous TimeScaleData via binary search and calculates ScaledMeasureDecimal off of it.
     /// </summary>
     public float GetScaledMeasureDecimal(float measureDecimal, bool showHiSpeed)
     {
-        TimeScaleData? timeScaleData = binarySearchTimeScales(measureDecimal);
+        TimeScaleData? timeScaleData = BinarySearchTimeScales(measureDecimal);
         if (timeScaleData == null) return measureDecimal;
 
-        float distance = measureDecimal - timeScaleData.GimmickMeasureDecimal;
-        float scaledPosition;
+        float distance = measureDecimal - timeScaleData.LastGimmickMeasureDecimal;
+        float scaledDistance = showHiSpeed
+            ? distance * timeScaleData.HiSpeed * timeScaleData.TimeSigRatio * timeScaleData.BpmRatio - distance
+            : distance * timeScaleData.TimeSigRatio * timeScaleData.BpmRatio - distance;
         
-        if (showHiSpeed)
-        {
-            scaledPosition = measureDecimal + timeScaleData.ScaledMeasureDecimalHiSpeed;
-            scaledPosition += distance * timeScaleData.HiSpeed * timeScaleData.TimeSigRatio * timeScaleData.BpmRatio - distance;
-        }
-        else
-        {
-            scaledPosition = measureDecimal + timeScaleData.ScaledMeasureDecimal;
-            scaledPosition += distance * timeScaleData.TimeSigRatio * timeScaleData.BpmRatio - distance;
-        }
+        return measureDecimal + timeScaleData.ScaledMeasureDecimalHiSpeed + scaledDistance;
+    }
 
-        return scaledPosition;
+    /// <summary>
+    /// Finds nearest previous TimeScaleData via binary search and calculates the unscaled MeasureDecimal off of it.
+    /// This is the inverse of GetScaledMeasureDecimal.
+    /// </summary>
+    public float GetUnscaledMeasureDecimal(float scaledMeasureDecimal, bool showHiSpeed)
+    {
+        TimeScaleData? timeScaleData = BinarySearchTimeScales(scaledMeasureDecimal);
+        if (timeScaleData == null) return scaledMeasureDecimal;
+
+        return (timeScaleData.LastGimmickMeasureDecimal * (timeScaleData.BpmRatio * timeScaleData.HiSpeed * timeScaleData.TimeSigRatio - 1) - timeScaleData.ScaledMeasureDecimalHiSpeed + scaledMeasureDecimal) / (timeScaleData.BpmRatio * timeScaleData.HiSpeed * timeScaleData.TimeSigRatio);
         
-        TimeScaleData? binarySearchTimeScales(float measure)
-        {
-            int left = 0;
-            int right = TimeScales.Count - 1;
-            TimeScaleData? result = null;
+        //(lastGimmickMD * (bpm * hispeed * timesig - 1) - timeScaleScaledMD + scaledMeasureDecimal) / (bpm * hispeed * timesig)
+    }
+    
+    /// <summary>
+    /// Finds nearest TimeScaleData via Binary Search.
+    /// </summary>
+    public TimeScaleData? BinarySearchTimeScales(float measure)
+    {
+        int left = 0;
+        int right = TimeScales.Count - 1;
+        TimeScaleData? result = null;
 
-            while (left <= right)
+        while (left <= right)
+        {
+            int center = left + (right - left) / 2;
+
+            if (TimeScales[center].UnscaledMeasureDecimal <= measure)
             {
-                int center = left + (right - left) / 2;
-
-                if (TimeScales[center].UnscaledMeasureDecimal <= measure)
-                {
-                    left = center + 1;
-                }
-                
-                else
-                {
-                    result = TimeScales[center];
-                    right = center - 1;
-                }
+                left = center + 1;
             }
-
-            return result;
+                
+            else
+            {
+                result = TimeScales[center];
+                right = center - 1;
+            }
         }
+
+        return result;
     }
     
     /// <summary>

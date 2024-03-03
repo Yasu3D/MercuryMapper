@@ -462,7 +462,7 @@ public partial class MainView : UserControl
         
         if (e.KeyModifiers.HasFlag(KeyModifiers.Shift))
         {
-            RenderEngine.GetMeasureAtPointer(point);
+            RenderEngine.GetNoteAtPointer(ChartEditor.Chart, point);
         }
     }
 
@@ -548,6 +548,7 @@ public partial class MainView : UserControl
         IStorageFile? file = await OpenChartFilePicker();
         if (file == null) return;
 
+        AudioManager.ResetSong();
         OpenChart(file.Path.LocalPath);
     }
 
@@ -906,6 +907,7 @@ public partial class MainView : UserControl
     {
         // Load chart
         ChartEditor.Chart.LoadFile(path);
+        
         
         // Oopsie, audio not found.
         if (!File.Exists(ChartEditor.Chart.AudioFilePath))

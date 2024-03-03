@@ -17,14 +17,16 @@ public class Brushes(UserConfig userConfig)
     private const float MeasurePenStrokeWidth = 2;
     private const float BeatPenStrokeWidth = 1;
     private const float GuidelinePenStrokeWidth = 1;
-    private const float NotePenStrokeWidth = 8f;
-    private const float HoldEndPenStrokeWidth = 12f;
-    private const float SnapPenStrokeWidth = 8f;
+    private const float NotePenStrokeWidth = 8;
+    private const float HoldEndPenStrokeWidth = 12;
+    private const float SnapPenStrokeWidth = 8;
     private const float CursorPenStrokeWidth = 15;
     private const float SyncPenStrokeWidth = 6;
+    private const float RNotePenStrokeWidth = 17;
     
     public float NoteWidthMultiplier = 1;
     private float cursorWidthMultiplier = 1;
+    private float rNoteWidthMultiplier = 1;
     
     private SKColor colorNoteTouch;
     private SKColor colorNoteChain;
@@ -92,6 +94,13 @@ public class Brushes(UserConfig userConfig)
         StrokeWidth = HoldEndPenStrokeWidth,
         Style = SKPaintStyle.Stroke,
         StrokeCap = SKStrokeCap.Round
+    };
+
+    private readonly SKPaint rNotePen = new()
+    {
+        StrokeWidth = RNotePenStrokeWidth,
+        Style = SKPaintStyle.Stroke,
+        IsAntialias = true
     };
     
     // ________ Public Brushes
@@ -213,6 +222,12 @@ public class Brushes(UserConfig userConfig)
         holdEndPen.StrokeWidth = HoldEndPenStrokeWidth * scale;
         return holdEndPen;
     }
+
+    public SKPaint GetRNotePen(float scale)
+    {
+        rNotePen.StrokeWidth = rNoteWidthMultiplier * scale;
+        return rNotePen;
+    }
     
     // ________ Other
     private SKColor NoteType2Color(NoteType type)
@@ -268,6 +283,7 @@ public class Brushes(UserConfig userConfig)
             
             syncPen.Color = SKColor.Parse(colors["ColorSync"]);
             holdEndPen.Color = SKColor.Parse(colors["ColorNoteHoldEnd"]);
+            rNotePen.Color = SKColor.Parse(colors["ColorRNote"]);
             
             MeasurePen.Color = SKColor.Parse(colors["ColorMeasureLine"]);
             BeatPen.Color = SKColor.Parse(colors["ColorBeatLine"]);
@@ -281,6 +297,7 @@ public class Brushes(UserConfig userConfig)
         {
             NoteWidthMultiplier = NotePenStrokeWidth * userConfig.RenderConfig.NoteSize;
             cursorWidthMultiplier = CursorPenStrokeWidth * userConfig.RenderConfig.NoteSize;
+            rNoteWidthMultiplier = RNotePenStrokeWidth * userConfig.RenderConfig.NoteSize;
             JudgementLinePen.StrokeWidth = NotePenStrokeWidth * scale * userConfig.RenderConfig.NoteSize;
             JudgementLineShadingPen.StrokeWidth = NotePenStrokeWidth * scale * userConfig.RenderConfig.NoteSize;
         }

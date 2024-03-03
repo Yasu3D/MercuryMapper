@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using FluentAvalonia.Core;
 using MercuryMapper.Config;
 using MercuryMapper.Data;
 using MercuryMapper.Enums;
@@ -83,12 +84,29 @@ public class RenderEngine(MainView mainView)
     
     // ________________
 
-    //TODO: MAKE THIS SHIT WORK!!!
-    public void GetMeasureAtPointer(SKPoint point)
+    public Note? GetNoteAtPointer(Chart chart, SKPoint point)
     {
-        float measureDecimal = (1 - point.Length) * visibleDistanceMeasureDecimal;
-        
-        Console.WriteLine(CurrentMeasureDecimal + measureDecimal);
+        int clickPosition = MathExtensions.GetThetaNotePosition(point.X, point.Y);
+        float clickRadius = (1 - MathExtensions.InversePerspective(point.Length)) * visibleDistanceMeasureDecimal;
+        float measureDecimal = CurrentMeasureDecimal + chart.GetUnscaledMeasureDecimal(clickRadius, RenderConfig.ShowHiSpeed);
+
+        List<Note> notesInRange = chart.Notes.Where(x => !x.IsMask && Math.Abs(x.BeatData.MeasureDecimal - measureDecimal) < 0.005f).ToList();
+
+        foreach (Note note in notesInRange)
+        {
+            float center = MathExtensions.Modulo(note.Position + note.Size * 0.5f, 60);
+            float maxDistance = note.Size * 0.5f;
+
+            float distance = float.Abs(center - clickPosition);
+            distance = distance > 30 ? 60 - distance : distance;
+
+            if (!(distance < maxDistance)) continue;
+            
+            Console.WriteLine($"Note HIT! Distance {distance}, Type {note.NoteType}");
+            return note;
+        }
+
+        return null;
     }
     
     // ________________
@@ -351,7 +369,7 @@ public class RenderEngine(MainView mainView)
     private void DrawSyncs(SKCanvas canvas, Chart chart)
     {
         List<Note> visibleNotes = chart.Notes.Where(x =>
-            x is { IsChain: false, IsSegment: false, IsMask: false }
+            x is { IsSegment: false, IsMask: false } && (!x.IsChain || x is { IsChain: true, IsRNote: true }) // because apparently R Note chains have syncs. Just being accurate to the game (:
             && x.BeatData.MeasureDecimal >= CurrentMeasureDecimal
             && chart.GetScaledMeasureDecimal(x.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) <= ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal).ToList();
         
@@ -375,7 +393,7 @@ public class RenderEngine(MainView mainView)
         {
             int position0 = MathExtensions.Modulo(current.Position + current.Size - 1, 60); // pos + 1 // size  - 2
             int size0 = MathExtensions.Modulo(previous.Position - position0, 60) + 1;  // pos + 1 // shift - 1
-
+            
             int position1 = MathExtensions.Modulo(previous.Position + previous.Size - 1, 60); // pos + 1 // size  - 2
             int size1 = MathExtensions.Modulo(current.Position - position1, 60) + 1;  // pos + 1 // shift - 1
 
@@ -518,6 +536,13 @@ public class RenderEngine(MainView mainView)
             ArcData data = GetArc(chart, note);
 
             if (data.Rect.Width < 1) continue;
+
+            if (note.IsRNote)
+            {
+                float start = data.StartAngle - (note.Size != 60 ? 1.5f : 0);
+                float sweep = data.SweepAngle + (note.Size != 60 ? 3.0f : 0);
+                canvas.DrawArc(data.Rect, start, sweep, false, brushes.GetRNotePen(canvasScale * data.Scale));
+            }
             
             // Normal Note
             if (note.Size != 60)

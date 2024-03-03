@@ -2,7 +2,7 @@ using System;
 
 namespace MercuryMapper.Utils;
 
-public class MathExtensions
+public static class MathExtensions
 {
     public static int Modulo(int x, int m)
     {
@@ -37,12 +37,19 @@ public class MathExtensions
 
     public static float InversePerspective(float x)
     {
-        return x / Perspective(x);
+        // Ima be real I used a lil chatGPT for this one
+        // I need to refresh my math skills... my math professor wouldn't be proud.
+        return 13.825f * x / (10.5f * x + 3.325f);
     }
 
     public static float GetTheta(float x, float y)
     {
         float t = MathF.Atan2(y, x) * 180.0f / MathF.PI;
         return t < 0 ? t + 360 : t;
+    }
+
+    public static int GetThetaNotePosition(float x, float y)
+    {
+        return (int)(360 - GetTheta(x, y)) / 6;
     }
 }
