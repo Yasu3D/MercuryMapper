@@ -107,6 +107,17 @@ public partial class MainView : UserControl
         MaskDirectionPanel.IsVisible = isMask;
     }
 
+    private void ToggleBonusTypeRadios(bool noBonus, bool bonus, bool rNote)
+    {
+        if (RadioNoBonus == null || RadioBonus == null || RadioRNote == null) return;
+        RadioNoBonus.IsEnabled = noBonus;
+        RadioBonus.IsEnabled = bonus;
+        RadioRNote.IsEnabled = rNote;
+
+        if ((RadioBonus.IsChecked == true && !bonus) || (RadioRNote.IsChecked == true && !rNote))
+            RadioNoBonus.IsChecked = true;
+    }
+
     private void SetMenuItemInputGestureText()
     {
         MenuItemNew.InputGesture = UserConfig.KeymapConfig.Keybinds["FileNew"].ToGesture();
@@ -197,7 +208,7 @@ public partial class MainView : UserControl
             SliderSongPosition.Value = (int)AudioManager.CurrentSong.Position;
         }
         
-        ChartEditor.UpdateCurrentMeasure(data);
+        ChartEditor.CurrentMeasure = data.MeasureDecimal;
         
         timeUpdateSource = TimeUpdateSource.None;
     }
@@ -361,6 +372,30 @@ public partial class MainView : UserControl
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorNoteTypeEndOfChart"])) 
         {
             RadioNoteEndOfChart.IsChecked = true;
+            e.Handled = true;
+            return;
+        }
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorTypeRadio1"]))
+        {
+            if (BonusTypePanel.IsVisible) RadioNoBonus.IsChecked = true;
+            else RadioMaskClockwise.IsChecked = true;
+            
+            e.Handled = true;
+            return;
+        }
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorTypeRadio2"]))
+        {
+            if (BonusTypePanel.IsVisible && RadioBonus.IsEnabled) RadioBonus.IsChecked = true;
+            else RadioMaskCounterclockwise.IsChecked = true;
+            
+            e.Handled = true;
+            return;
+        }
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorTypeRadio3"]))
+        {
+            if (BonusTypePanel.IsVisible) RadioRNote.IsChecked = true;
+            else RadioMaskCenter.IsChecked = true;
+            
             e.Handled = true;
             return;
         }
@@ -612,15 +647,71 @@ public partial class MainView : UserControl
 
     private void RadioNoteType_IsCheckedChanged(object? sender, RoutedEventArgs e)
     {
-        if (RadioNoteMaskAdd == null || RadioNoteMaskRemove == null || RadioNoteMaskAdd.IsChecked == null || RadioNoteMaskRemove.IsChecked == null) return;
+        if (RadioNoteMaskAdd?.IsChecked == null || RadioNoteMaskRemove?.IsChecked == null) return;
+        if (sender is not RadioButton selected || selected.IsChecked == false) return;
+
+        NoteType noteType = selected.Name switch
+        {
+            "RadioNoteTouch" => NoteType.Touch,
+            "RadioNoteSlideClockwise" => NoteType.SlideClockwise,
+            "RadioNoteSlideCounterclockwise" => NoteType.SlideCounterclockwise,
+            "RadioNoteSnapForward" => NoteType.SnapForward,
+            "RadioNoteSnapBackward" => NoteType.SnapBackward,
+            "RadioNoteChain" => NoteType.Chain,
+            "RadioNoteHold" => NoteType.HoldStart,
+            "RadioNoteMaskAdd" => NoteType.MaskAdd,
+            "RadioNoteMaskRemove" => NoteType.MaskRemove,
+            "RadioNoteEndOfChart" => NoteType.EndOfChart,
+            _ => throw new ArgumentOutOfRangeException()
+        };
+
+        ChartEditor.CurrentNoteType = noteType;
+        ChartEditor.UpdateNoteType();
+
+        bool isMask = noteType is NoteType.MaskAdd or NoteType.MaskRemove;
+        bool noBonusAvailable = noteType is not NoteType.EndOfChart;
+        bool bonusAvailable = noteType is NoteType.Touch or NoteType.SlideClockwise or NoteType.SlideCounterclockwise;
+        bool rNoteAvailable = noteType is not NoteType.EndOfChart;
         
-        bool isMask = (bool)RadioNoteMaskAdd.IsChecked || (bool)RadioNoteMaskRemove.IsChecked;
         ToggleTypeRadio(isMask);
+        ToggleBonusTypeRadios(noBonusAvailable, bonusAvailable, rNoteAvailable);
+        
+        Console.WriteLine(ChartEditor.CurrentNoteType);
     }
 
-    private void RadioBonusType_IsCheckedChanged(object? sender, RoutedEventArgs e) { }
+    private void RadioBonusType_IsCheckedChanged(object? sender, RoutedEventArgs e)
+    {
+        if (sender is not RadioButton selected || selected.IsChecked == false) return;
+        BonusType bonusType = selected.Name switch
+        {
+            "RadioNoBonus" => BonusType.None,
+            "RadioBonus" => BonusType.Bonus,
+            "RadioRNote" => BonusType.RNote,
+            _ => throw new ArgumentOutOfRangeException()
+        };
 
-    private void MaskDirection_IsCheckedChanged(object? sender, RoutedEventArgs e) { }
+        ChartEditor.CurrentBonusType = bonusType;
+        ChartEditor.UpdateNoteType();
+        
+        Console.WriteLine(ChartEditor.CurrentNoteType);
+    }
+
+    private void RadioMaskDirection_IsCheckedChanged(object? sender, RoutedEventArgs e)
+    {
+        if (sender is not RadioButton selected || selected.IsChecked == false) return;
+        MaskDirection maskDirection = selected.Name switch
+        {
+            "RadioMaskClockwise" => MaskDirection.Clockwise,
+            "RadioMaskCounterclockwise" => MaskDirection.Counterclockwise,
+            "RadioMaskCenter" => MaskDirection.Center,
+            _ => throw new ArgumentOutOfRangeException()
+        };
+
+        ChartEditor.CurrentMaskDirection = maskDirection;
+        ChartEditor.UpdateNoteType();
+        
+        Console.WriteLine(ChartEditor.CurrentNoteType);
+    }
 
     private void ButtonGimmickBpmChange_OnClick(object? sender, RoutedEventArgs e) { }
 
@@ -681,7 +772,6 @@ public partial class MainView : UserControl
         ChartEditor.Cursor.Size = (int)(NumericNoteSize.Value ?? 15);
     }
     
-
     private void NumericMeasure_OnValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
     {
         if (e.NewValue == null || NumericMeasure?.Value == null) return;
@@ -737,25 +827,6 @@ public partial class MainView : UserControl
         if (AudioManager.CurrentSong == null) return;
         SetPlayState(!AudioManager.CurrentSong.IsPlaying);
     }
-
-    public void SetPlayState(bool play)
-    {
-        if (AudioManager.CurrentSong == null)
-        {
-            UpdateTimer.IsEnabled = false;
-            IconPlay.IsVisible = true;
-            IconStop.IsVisible = false;
-            return;
-        }
-        
-        AudioManager.CurrentSong.Volume = 0.2f;
-        AudioManager.CurrentSong.IsPlaying = play;
-        UpdateTimer.IsEnabled = play;
-        
-        IconPlay.IsVisible = !play;
-        IconStop.IsVisible = play;
-        SliderSongPosition.IsEnabled = !play;
-    }
     
     private void SliderSongPosition_OnValueChanged(object? sender, RangeBaseValueChangedEventArgs e)
     {
@@ -799,6 +870,25 @@ public partial class MainView : UserControl
         };
 
         dialog.ShowAsync();
+    }
+    
+    public void SetPlayState(bool play)
+    {
+        if (AudioManager.CurrentSong == null)
+        {
+            UpdateTimer.IsEnabled = false;
+            IconPlay.IsVisible = true;
+            IconStop.IsVisible = false;
+            return;
+        }
+        
+        AudioManager.CurrentSong.Volume = 0.2f;
+        AudioManager.CurrentSong.IsPlaying = play;
+        UpdateTimer.IsEnabled = play;
+        
+        IconPlay.IsVisible = !play;
+        IconStop.IsVisible = play;
+        SliderSongPosition.IsEnabled = !play;
     }
     
     private async Task<bool> PromptSave()

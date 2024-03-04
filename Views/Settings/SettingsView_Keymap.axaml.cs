@@ -1,6 +1,8 @@
 using System;
+using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.VisualTree;
 using MercuryMapper.Config;
 
 namespace MercuryMapper.Views.Settings;
@@ -20,6 +22,10 @@ public partial class SettingsView_Keymap : UserControl
 
     private void SetKeybindTags()
     {
+        // This doesn't work because Avalonia is stupid.
+        //foreach (TreeViewItem item in KeybindsTreeView.GetVisualDescendants().OfType<TreeViewItem>())
+        //    item.Tag = Keymap.Keybinds[item.Name!].ToString();
+        
         FileNew.Tag = Keymap.Keybinds["FileNew"].ToString();
         FileOpen.Tag = Keymap.Keybinds["FileOpen"].ToString();
         FileSave.Tag = Keymap.Keybinds["FileSave"].ToString();
@@ -44,6 +50,9 @@ public partial class SettingsView_Keymap : UserControl
         EditorNoteTypeMaskAdd.Tag = Keymap.Keybinds["EditorNoteTypeMaskAdd"].ToString();
         EditorNoteTypeMaskRemove.Tag = Keymap.Keybinds["EditorNoteTypeMaskRemove"].ToString();
         EditorNoteTypeEndOfChart.Tag = Keymap.Keybinds["EditorNoteTypeEndOfChart"].ToString();
+        EditorTypeRadio1.Tag = Keymap.Keybinds["EditorTypeRadio1"].ToString();
+        EditorTypeRadio2.Tag = Keymap.Keybinds["EditorTypeRadio2"].ToString();
+        EditorTypeRadio3.Tag = Keymap.Keybinds["EditorTypeRadio3"].ToString();
         EditorEditNoteShape.Tag = Keymap.Keybinds["EditorEditNoteShape"].ToString();
         EditorEditNoteProperties.Tag = Keymap.Keybinds["EditorEditNoteProperties"].ToString();
         EditorEditNoteShapeProperties.Tag = Keymap.Keybinds["EditorEditNoteShapeProperties"].ToString();

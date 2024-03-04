@@ -41,8 +41,7 @@ public class RenderEngine(MainView mainView)
         DrawMaskEffect(canvas);
         if (!IsPlaying)
         {
-            // TODO: Create a cursor class and get data from there instead.
-            DrawCursor(canvas, NoteType.Touch, mainView.ChartEditor.Cursor.Position, mainView.ChartEditor.Cursor.Size);
+            DrawCursor(canvas, mainView.ChartEditor.CurrentNoteType, mainView.ChartEditor.Cursor.Position, mainView.ChartEditor.Cursor.Size);
             DrawAngleTicks(canvas);
         }
         

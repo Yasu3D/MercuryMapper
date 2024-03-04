@@ -988,6 +988,33 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Type Radio 1.
+        /// </summary>
+        public static string Settings_Keymap_TypeRadio1 {
+            get {
+                return ResourceManager.GetString("Settings_Keymap_TypeRadio1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Type Radio 2.
+        /// </summary>
+        public static string Settings_Keymap_TypeRadio2 {
+            get {
+                return ResourceManager.GetString("Settings_Keymap_TypeRadio2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Type Radio 3.
+        /// </summary>
+        public static string Settings_Keymap_TypeRadio3 {
+            get {
+                return ResourceManager.GetString("Settings_Keymap_TypeRadio3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Waiting for input....
         /// </summary>
         public static string Settings_Keymap_WaitingForInput {

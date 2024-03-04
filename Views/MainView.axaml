@@ -192,21 +192,21 @@
                                 <RadioButton Name="RadioMaskClockwise" IsChecked="True"
                                              GroupName="MaskDirection" Classes="ToggleRadio"
                                              Content="{x:Static lang:Resources.MaskDirection_Clockwise}"
-                                             IsCheckedChanged="MaskDirection_IsCheckedChanged" />
+                                             IsCheckedChanged="RadioMaskDirection_IsCheckedChanged" />
                                     
                                 <Separator Margin="0"/>
                                     
                                 <RadioButton Name="RadioMaskCounterclockwise" IsChecked="False"
                                              GroupName="MaskDirection" Classes="ToggleRadio"
                                              Content="{x:Static lang:Resources.MaskDirection_Counterclockwise}"
-                                             IsCheckedChanged="MaskDirection_IsCheckedChanged" />
+                                             IsCheckedChanged="RadioMaskDirection_IsCheckedChanged" />
                                     
                                 <Separator Margin="0"/>
                                     
                                 <RadioButton Name="RadioMaskCenter" IsChecked="False"
                                              GroupName="MaskDirection" Classes="ToggleRadio"
                                              Content="{x:Static lang:Resources.MaskDirection_Center}"
-                                             IsCheckedChanged="MaskDirection_IsCheckedChanged" />
+                                             IsCheckedChanged="RadioMaskDirection_IsCheckedChanged" />
                             </StackPanel>
                         </Border>
                     </StackPanel>

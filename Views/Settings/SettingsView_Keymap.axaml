@@ -6,9 +6,9 @@
              mc:Ignorable="d" d:DesignWidth="350" d:DesignHeight="400"
              KeyDown="OnKeyDown"
              x:Class="MercuryMapper.Views.Settings.SettingsView_Keymap">
-    <ScrollViewer>
+    <ScrollViewer Name="KeybindList">
         <TreeView Margin="0,0,10,0" Name="KeybindsTreeView" Classes="KeybindList" DoubleTapped="KeybindsTreeView_OnDoubleTapped">
-            <TreeViewItem Header="File" Classes="HideKeybind" IsExpanded="True">
+            <TreeViewItem Header="{x:Static lang:Resources.MenuHeader_File}" Classes="HideKeybind" IsExpanded="True">
                 <TreeViewItem Name="FileNew" Header="{x:Static lang:Resources.Menu_New}"/>
                 <TreeViewItem Name="FileOpen" Header="{x:Static lang:Resources.Menu_Open}"/>
                 <TreeViewItem Name="FileSave" Header="{x:Static lang:Resources.Menu_Save}"/>
@@ -16,7 +16,7 @@
                 <TreeViewItem Name="FileSettings" Header="{x:Static lang:Resources.Menu_Settings}"/>
             </TreeViewItem>
             
-            <TreeViewItem Header="Edit" Classes="HideKeybind">
+            <TreeViewItem Header="{x:Static lang:Resources.MenuHeader_Edit}" Classes="HideKeybind">
                 <TreeViewItem Name="EditUndo" Header="{x:Static lang:Resources.Menu_Undo}"/>
                 <TreeViewItem Name="EditRedo" Header="{x:Static lang:Resources.Menu_Redo}"/>
                 <TreeViewItem Name="EditCut" Header="{x:Static lang:Resources.Menu_Cut}"/>
@@ -24,7 +24,7 @@
                 <TreeViewItem Name="EditPaste" Header="{x:Static lang:Resources.Menu_Paste}"/>
             </TreeViewItem>
             
-            <TreeViewItem Header="Editor" Classes="HideKeybind">
+            <TreeViewItem Header="{x:Static lang:Resources.Settings_Header_Editor}" Classes="HideKeybind">
                 <TreeViewItem Name="EditorInsert" Header="{x:Static lang:Resources.Editor_Insert}"/>
                 <TreeViewItem Name="EditorPlay" Header="{x:Static lang:Resources.Editor_Play}"/>
                 <TreeViewItem Name="EditorIncreasePlaybackSpeed" Header="{x:Static lang:Resources.Editor_IncreasePlaybackSpeed}"/>
@@ -39,6 +39,9 @@
                 <TreeViewItem Name="EditorNoteTypeMaskAdd" Header="{x:Static lang:Resources.Note_MaskAdd}"/>
                 <TreeViewItem Name="EditorNoteTypeMaskRemove" Header="{x:Static lang:Resources.Note_MaskRemove}"/>
                 <TreeViewItem Name="EditorNoteTypeEndOfChart" Header="{x:Static lang:Resources.Note_EndOfChart}"/>
+                <TreeViewItem Name="EditorTypeRadio1" Header="{x:Static lang:Resources.Settings_Keymap_TypeRadio1}"/>
+                <TreeViewItem Name="EditorTypeRadio2" Header="{x:Static lang:Resources.Settings_Keymap_TypeRadio2}"/>
+                <TreeViewItem Name="EditorTypeRadio3" Header="{x:Static lang:Resources.Settings_Keymap_TypeRadio3}"/>
                 <TreeViewItem Name="EditorEditNoteShape" Header="{x:Static lang:Resources.Editor_EditNoteShape}"/>
                 <TreeViewItem Name="EditorEditNoteProperties" Header="{x:Static lang:Resources.Editor_EditNoteProperties}"/>
                 <TreeViewItem Name="EditorEditNoteShapeProperties" Header="{x:Static lang:Resources.Editor_EditNoteShapeProperties}"/>

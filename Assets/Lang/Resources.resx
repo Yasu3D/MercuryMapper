@@ -343,4 +343,13 @@ Would you like to manually select a file?</value>
     <data name="Settings_BeatDivision" xml:space="preserve">
         <value>Beat Division</value>
     </data>
+    <data name="Settings_Keymap_TypeRadio1" xml:space="preserve">
+        <value>Type Radio 1</value>
+    </data>
+    <data name="Settings_Keymap_TypeRadio2" xml:space="preserve">
+        <value>Type Radio 2</value>
+    </data>
+    <data name="Settings_Keymap_TypeRadio3" xml:space="preserve">
+        <value>Type Radio 3</value>
+    </data>
 </root>
