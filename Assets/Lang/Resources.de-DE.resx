@@ -343,4 +343,19 @@ Möchten Sie eine Datei manuell auswählen?</value>
     <data name="Settings_BeatDivision" xml:space="preserve">
         <value>Beat Unterteilung</value>
     </data>
+    <data name="Settings_Keymap_IncreaseNoteSpeed" xml:space="preserve">
+        <value>Noten-Geschwindigkeit erhöhen</value>
+    </data>
+    <data name="Settings_Keymap_DecreaseNoteSpeed" xml:space="preserve">
+        <value>Noten-Geschwindigkeit verringern</value>
+    </data>
+    <data name="Settings_Keymap_TypeRadio1" xml:space="preserve">
+        <value>Typ-Auswahl 1</value>
+    </data>
+    <data name="Settings_Keymap_TypeRadio2" xml:space="preserve">
+        <value>Typ-Auswahl 2</value>
+    </data>
+    <data name="Settings_Keymap_TypeRadio3" xml:space="preserve">
+        <value>Typ-Auswahl 3</value>
+    </data>
 </root>

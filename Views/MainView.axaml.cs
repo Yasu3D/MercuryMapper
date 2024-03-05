@@ -423,6 +423,24 @@ public partial class MainView : UserControl
             e.Handled = true;
             return;
         }
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["RenderIncreaseNoteSpeed"]))
+        {
+            UserConfig.RenderConfig.NoteSpeed = decimal.Min(UserConfig.RenderConfig.NoteSpeed + 0.1m, 6);
+            File.WriteAllText("UserConfig.toml", Toml.FromModel(UserConfig));
+            RenderEngine.UpdateVisibleTime();
+            
+            e.Handled = true;
+            return;
+        }
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["RenderDecreaseNoteSpeed"]))
+        {
+            UserConfig.RenderConfig.NoteSpeed = decimal.Max(UserConfig.RenderConfig.NoteSpeed - 0.1m, 1);
+            File.WriteAllText("UserConfig.toml", Toml.FromModel(UserConfig));
+            RenderEngine.UpdateVisibleTime();
+            
+            e.Handled = true;
+            return;
+        }
     }
 
     private static void OnKeyUp(object sender, KeyEventArgs e) => e.Handled = true;

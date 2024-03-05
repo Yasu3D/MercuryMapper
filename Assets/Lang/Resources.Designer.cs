@@ -988,7 +988,25 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Type Radio 1.
+        ///   Looks up a localized string similar to Decrease Note Speed.
+        /// </summary>
+        public static string Settings_Keymap_DecreaseNoteSpeed {
+            get {
+                return ResourceManager.GetString("Settings_Keymap_DecreaseNoteSpeed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Increase Note Speed.
+        /// </summary>
+        public static string Settings_Keymap_IncreaseNoteSpeed {
+            get {
+                return ResourceManager.GetString("Settings_Keymap_IncreaseNoteSpeed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Type Selection 1.
         /// </summary>
         public static string Settings_Keymap_TypeRadio1 {
             get {
@@ -997,7 +1015,7 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Type Radio 2.
+        ///   Looks up a localized string similar to Type Selection 2.
         /// </summary>
         public static string Settings_Keymap_TypeRadio2 {
             get {
@@ -1006,7 +1024,7 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Type Radio 3.
+        ///   Looks up a localized string similar to Type Selection 3.
         /// </summary>
         public static string Settings_Keymap_TypeRadio3 {
             get {
@@ -1033,7 +1051,7 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Note Speed.
+        ///   Looks up a localized string similar to  .
         /// </summary>
         public static string Settings_NoteSpeed {
             get {

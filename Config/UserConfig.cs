@@ -77,7 +77,9 @@ public class KeymapConfig
         ["EditorEditNoteShape"] = new(Key.E, false, true, false),
         ["EditorEditNoteProperties"] = new(Key.E, true, false, false),
         ["EditorEditNoteShapeProperties"] = new(Key.E, true, true, false),
-        ["EditorDelete"] = new(Key.Delete)
+        ["EditorDelete"] = new(Key.Delete),
+        ["RenderIncreaseNoteSpeed"] = new(Key.Add, false, true, false),
+        ["RenderDecreaseNoteSpeed"] = new(Key.Subtract, false, true, false)
     };
 }
 

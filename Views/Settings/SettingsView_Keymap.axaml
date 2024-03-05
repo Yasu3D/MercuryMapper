@@ -47,6 +47,11 @@
                 <TreeViewItem Name="EditorEditNoteShapeProperties" Header="{x:Static lang:Resources.Editor_EditNoteShapeProperties}"/>
                 <TreeViewItem Name="EditorDelete" Header="{x:Static lang:Resources.Editor_Delete}"/>
             </TreeViewItem>
+            
+            <TreeViewItem Header="{x:Static lang:Resources.MenuHeader_Edit}" Classes="HideKeybind">
+                <TreeViewItem Name="RenderIncreaseNoteSpeed" Header="{x:Static lang:Resources.Settings_Keymap_IncreaseNoteSpeed}"/>
+                <TreeViewItem Name="RenderDecreaseNoteSpeed" Header="{x:Static lang:Resources.Settings_Keymap_DecreaseNoteSpeed}"/>
+            </TreeViewItem>
         </TreeView>
     </ScrollViewer>
 </UserControl>

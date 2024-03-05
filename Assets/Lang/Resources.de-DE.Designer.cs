@@ -988,6 +988,51 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Noten-Geschwindigkeit verringern.
+        /// </summary>
+        public static string Settings_Keymap_DecreaseNoteSpeed {
+            get {
+                return ResourceManager.GetString("Settings_Keymap_DecreaseNoteSpeed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Noten-Geschwindigkeit erhöhen.
+        /// </summary>
+        public static string Settings_Keymap_IncreaseNoteSpeed {
+            get {
+                return ResourceManager.GetString("Settings_Keymap_IncreaseNoteSpeed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Typ-Auswahl 1.
+        /// </summary>
+        public static string Settings_Keymap_TypeRadio1 {
+            get {
+                return ResourceManager.GetString("Settings_Keymap_TypeRadio1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Typ-Auswahl 2.
+        /// </summary>
+        public static string Settings_Keymap_TypeRadio2 {
+            get {
+                return ResourceManager.GetString("Settings_Keymap_TypeRadio2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Typ-Auswahl 3.
+        /// </summary>
+        public static string Settings_Keymap_TypeRadio3 {
+            get {
+                return ResourceManager.GetString("Settings_Keymap_TypeRadio3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Warte auf Eingabe....
         /// </summary>
         public static string Settings_Keymap_WaitingForInput {
