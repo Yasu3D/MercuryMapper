@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using MercuryMapper.Data;
 using MercuryMapper.Enums;
 using MercuryMapper.Views;
@@ -18,6 +19,9 @@ public class ChartEditor(MainView main)
     public NoteType CurrentNoteType { get; set; } = NoteType.Touch;
     public BonusType CurrentBonusType { get; set; } = BonusType.None;
     public MaskDirection CurrentMaskDirection { get; set; } = MaskDirection.Clockwise;
+
+    public List<Note> SelectedNotes { get; private set; } = [];
+    public Note? LastSelectedNote = null;
 
     public void NewChart(string musicFilePath, string author, float bpm, int timeSigUpper, int timeSigLower)
     {
@@ -44,14 +48,30 @@ public class ChartEditor(MainView main)
                 TimeSig = new(timeSigUpper, timeSigLower),
                 TimeStamp = 0
             };
+
+            Note startMask = new()
+            {
+                BeatData = new(0, 0),
+                GimmickType = GimmickType.None,
+                NoteType = NoteType.MaskAdd,
+                MaskDirection = MaskDirection.Center,
+                Position = 15,
+                Size = 60,
+                RenderSegment = true
+            };
             
             Chart.Gimmicks.Add(startBpm);
             Chart.Gimmicks.Add(startTimeSig);
             Chart.StartBpm = startBpm;
             Chart.StartTimeSig = startTimeSig;
+
+            Chart.GenerateTimeEvents();
+            Chart.GenerateTimeScales();
+            
+            Chart.Notes.Add(startMask);
         }
     }
-
+    
     public void UpdateNoteType()
     {
         switch (CurrentNoteType)
@@ -181,6 +201,30 @@ public class ChartEditor(MainView main)
             }
             
             default: return;
+        }
+    }
+
+    public void SelectNote(Note note)
+    {
+        lock (SelectedNotes)
+        {
+            SelectedNotes.Add(note);
+        }
+    }
+
+    public void DeselectNote(Note note)
+    {
+        lock (SelectedNotes)
+        {
+            SelectedNotes.Remove(note);
+        }
+    }
+
+    public void DeselectAllNotes()
+    {
+        lock (SelectedNotes)
+        {
+            SelectedNotes.Clear();
         }
     }
 }

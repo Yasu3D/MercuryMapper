@@ -358,4 +358,31 @@ Möchten Sie eine Datei manuell auswählen?</value>
     <data name="Settings_Keymap_TypeRadio3" xml:space="preserve">
         <value>Typ-Auswahl 3</value>
     </data>
+    <data name="Generic_Create" xml:space="preserve">
+        <value>Erstellen</value>
+    </data>
+    <data name="Settings_Header_Audio" xml:space="preserve">
+        <value>Audio</value>
+    </data>
+    <data name="Settings_Hitsound_Bonus" xml:space="preserve">
+        <value>Bonus Hitsound</value>
+    </data>
+    <data name="Settings_Hitsound_Guide" xml:space="preserve">
+        <value>Guide Hitsound</value>
+    </data>
+    <data name="Settings_Hitsound_RNote" xml:space="preserve">
+        <value>R-Note Hitsound</value>
+    </data>
+    <data name="Settings_Hitsound_Swipe" xml:space="preserve">
+        <value>Wisch Hitsound</value>
+    </data>
+    <data name="Settings_Hitsound_Touch" xml:space="preserve">
+        <value>Tip Hitsound</value>
+    </data>
+    <data name="Settings_Audio_MusicVolume" xml:space="preserve">
+        <value>Musik Lautstärke</value>
+    </data>
+    <data name="Settings_Audio_HitsoundVolume" xml:space="preserve">
+        <value>Hitsound Lautstärke</value>
+    </data>
 </root>

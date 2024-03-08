@@ -28,7 +28,7 @@
                                HorizontalAlignment="Right" Width="80" Margin="5"/>
                 <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_GuideLineType}"/>
                 <ComboBox Name="ComboGuideLineType" SelectedIndex="1" SelectionChanged="GuideLineType_OnSelectionChanged"
-                          HorizontalAlignment="Right" Width="80" Margin="5" >
+                          HorizontalAlignment="Right" Width="80" Margin="5">
                     <ComboBoxItem Content="None"/>
                     <ComboBoxItem Content="A"/>
                     <ComboBoxItem Content="B"/>

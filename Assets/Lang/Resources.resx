@@ -329,7 +329,7 @@ Would you like to manually select a file?</value>
         <value>Note Size</value>
     </data>
     <data name="Settings_NoteSpeed" xml:space="preserve">
-        <value> </value>
+        <value>Note Speed</value>
     </data>
     <data name="Settings_ShowHiSpeed" xml:space="preserve">
         <value>Show HiSpeed</value>
@@ -357,5 +357,32 @@ Would you like to manually select a file?</value>
     </data>
     <data name="Settings_Keymap_DecreaseNoteSpeed" xml:space="preserve">
         <value>Decrease Note Speed</value>
+    </data>
+    <data name="Generic_Create" xml:space="preserve">
+        <value>Create</value>
+    </data>
+    <data name="Settings_Header_Audio" xml:space="preserve">
+        <value>Audio</value>
+    </data>
+    <data name="Settings_Hitsound_Touch" xml:space="preserve">
+        <value>Touch Hitsound</value>
+    </data>
+    <data name="Settings_Hitsound_Guide" xml:space="preserve">
+        <value>Guide Hitsound</value>
+    </data>
+    <data name="Settings_Hitsound_Swipe" xml:space="preserve">
+        <value>Swipe Hitsound</value>
+    </data>
+    <data name="Settings_Hitsound_Bonus" xml:space="preserve">
+        <value>Bonus Hitsound</value>
+    </data>
+    <data name="Settings_Hitsound_RNote" xml:space="preserve">
+        <value>R-Note Hitsound</value>
+    </data>
+    <data name="Settings_Audio_MusicVolume" xml:space="preserve">
+        <value>Music Volume</value>
+    </data>
+    <data name="Settings_Audio_HitsoundVolume" xml:space="preserve">
+        <value>Hitsound Volume</value>
     </data>
 </root>

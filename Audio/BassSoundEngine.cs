@@ -47,5 +47,10 @@ public class BassSoundEngine
         if (startPaused) bassSound.IsPlaying = false;
         return bassSound;
     }
-    
+
+    public static float GetLatency()
+    {
+        bool hasBassInfo = Bass.GetInfo(out BassInfo bassInfo);
+        return hasBassInfo ? bassInfo.Latency * 0.001f : 0;
+    }
 }

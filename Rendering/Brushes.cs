@@ -21,11 +21,13 @@ public class Brushes(UserConfig userConfig)
     private const float HoldEndPenStrokeWidth = 12;
     private const float SnapPenStrokeWidth = 8;
     private const float CursorPenStrokeWidth = 15;
+    private const float SelectionPenStrokeWidth = 15;
     private const float SyncPenStrokeWidth = 6;
     private const float RNotePenStrokeWidth = 17;
     
     public float NoteWidthMultiplier = 1;
     private float cursorWidthMultiplier = 1;
+    private float selectionWidthMultiplier = 1;
     private float rNoteWidthMultiplier = 1;
     
     private SKColor colorNoteTouch;
@@ -80,6 +82,13 @@ public class Brushes(UserConfig userConfig)
         Style = SKPaintStyle.Stroke,
         IsAntialias = true,
         StrokeWidth = CursorPenStrokeWidth
+    };
+
+    private readonly SKPaint selectionPen = new()
+    {
+        Style = SKPaintStyle.Stroke,
+        IsAntialias = true,
+        StrokeWidth = SelectionPenStrokeWidth
     };
     
     private readonly SKPaint syncPen = new()
@@ -203,6 +212,12 @@ public class Brushes(UserConfig userConfig)
         cursorPen.Color = NoteType2Color(type).WithAlpha(0x80);
         return cursorPen;
     }
+    
+    public SKPaint GetSelectionPen(float scale)
+    {
+        selectionPen.StrokeWidth = selectionWidthMultiplier * scale;
+        return selectionPen;
+    }
 
     public SKPaint GetSnapPen(NoteType type, float scale)
     {
@@ -284,6 +299,7 @@ public class Brushes(UserConfig userConfig)
             syncPen.Color = SKColor.Parse(colors["ColorSync"]);
             holdEndPen.Color = SKColor.Parse(colors["ColorNoteHoldEnd"]);
             rNotePen.Color = SKColor.Parse(colors["ColorRNote"]);
+            selectionPen.Color = SKColor.Parse(colors["ColorSelection"]);
             
             MeasurePen.Color = SKColor.Parse(colors["ColorMeasureLine"]);
             BeatPen.Color = SKColor.Parse(colors["ColorBeatLine"]);
@@ -297,6 +313,7 @@ public class Brushes(UserConfig userConfig)
         {
             NoteWidthMultiplier = NotePenStrokeWidth * userConfig.RenderConfig.NoteSize;
             cursorWidthMultiplier = CursorPenStrokeWidth * userConfig.RenderConfig.NoteSize;
+            selectionWidthMultiplier = SelectionPenStrokeWidth * userConfig.RenderConfig.NoteSize;
             rNoteWidthMultiplier = RNotePenStrokeWidth * userConfig.RenderConfig.NoteSize;
             JudgementLinePen.StrokeWidth = NotePenStrokeWidth * scale * userConfig.RenderConfig.NoteSize;
             JudgementLineShadingPen.StrokeWidth = NotePenStrokeWidth * scale * userConfig.RenderConfig.NoteSize;

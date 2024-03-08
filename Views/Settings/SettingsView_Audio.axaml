@@ -1,0 +1,65 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:lang="clr-namespace:MercuryMapper.Assets.Lang"
+             mc:Ignorable="d" d:DesignWidth="350" d:DesignHeight="400"
+             x:Class="MercuryMapper.Views.Settings.SettingsView_Audio">
+    <ScrollViewer>
+        <StackPanel Margin="20">
+            <TextBlock VerticalAlignment="Center" Margin="0,0,0,-7" Text="{x:Static lang:Resources.Settings_Audio_MusicVolume}"/>
+            <Slider Classes="Compact" Margin="0,0,0,20" TickFrequency="5" TickPlacement="TopLeft"
+                    Minimum="0" Maximum="100" Value="50" Name="SliderMusic" ValueChanged="SliderMusic_OnValueChanged"/>
+                
+            <TextBlock VerticalAlignment="Center" Margin="0,0,0,-7" Text="{x:Static lang:Resources.Settings_Audio_HitsoundVolume}"/>
+            <Slider Classes="Compact" Margin="0,0,0,20" TickFrequency="5" TickPlacement="TopLeft"
+                    Minimum="0" Maximum="100" Value="50" Name="SliderHitsound" ValueChanged="SliderHitsound_OnValueChanged"/>
+            
+            <Separator/>
+                
+            <TextBlock VerticalAlignment="Center" Margin="0,0,0,-7" Text="{x:Static lang:Resources.Settings_Hitsound_Touch}"/>
+            <Slider Classes="Compact" Margin="0,0,0,20" TickFrequency="5" TickPlacement="TopLeft"
+                    Minimum="0" Maximum="100" Value="50" Name="SliderTouch" ValueChanged="SliderTouch_OnValueChanged"/>
+                
+            <TextBlock VerticalAlignment="Center" Margin="0,0,0,-7" Text="{x:Static lang:Resources.Settings_Hitsound_Guide}"/>
+            <Slider Classes="Compact" Margin="0,0,0,20" TickFrequency="5" TickPlacement="TopLeft"
+                    Minimum="0" Maximum="100" Value="50" Name="SliderGuide" ValueChanged="SliderGuide_OnValueChanged"/>
+                
+            <TextBlock VerticalAlignment="Center" Margin="0,0,0,-7" Text="{x:Static lang:Resources.Settings_Hitsound_Swipe}"/>
+            <Slider Classes="Compact" Margin="0,0,0,20" TickFrequency="5" TickPlacement="TopLeft"
+                    Minimum="0" Maximum="100" Value="50" Name="SliderSwipe" ValueChanged="SliderSwipe_OnValueChanged"/>
+                
+            <TextBlock VerticalAlignment="Center" Margin="0,0,0,-7" Text="{x:Static lang:Resources.Settings_Hitsound_Bonus}"/>
+            <Slider Classes="Compact" Margin="0,0,0,20" TickFrequency="5" TickPlacement="TopLeft"
+                    Minimum="0" Maximum="100" Value="50" Name="SliderBonus" ValueChanged="SliderBonus_OnValueChanged"/>
+                
+            <TextBlock VerticalAlignment="Center" Margin="0,0,0,-7" Text="{x:Static lang:Resources.Settings_Hitsound_RNote}"/>
+            <Slider Classes="Compact" Margin="0,0,0,20" TickFrequency="5" TickPlacement="TopLeft"
+                    Minimum="0" Maximum="100" Value="50" Name="SliderRNote" ValueChanged="SliderRNote_OnValueChanged"/>
+            
+            <Separator/>
+            
+            <Grid ColumnDefinitions="*,Auto" RowDefinitions="*,*,*,*,*,*,*,*,*,*" VerticalAlignment="Top">
+                <TextBlock Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_Hitsound_Touch}"/>
+                <TextBox Grid.Column="0" Grid.Row="1" Margin="0,0,0,10" Name="TextBoxTouch" TextChanged="Touch_TextChanged"/>
+                <Button Grid.Column="1" Grid.Row="1" Content="Pick File" HorizontalAlignment="Right" Margin="5,0,0,10" Click="Touch_OnClick"/>
+                
+                <TextBlock Grid.Column="0" Grid.Row="2" VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_Hitsound_Guide}"/>
+                <TextBox Grid.Column="0" Grid.Row="3" Margin="0,0,0,10" Name="TextBoxGuide" TextChanged="Guide_TextChanged"/>
+                <Button Grid.Column="1" Grid.Row="3" Content="Pick File" HorizontalAlignment="Right" Margin="5,0,0,10" Click="Guide_OnClick"/>
+                
+                <TextBlock Grid.Column="0" Grid.Row="4" VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_Hitsound_Swipe}"/>
+                <TextBox Grid.Column="0" Grid.Row="5" Margin="0,0,0,10" Name="TextBoxSwipe" TextChanged="Swipe_TextChanged"/>
+                <Button Grid.Column="1" Grid.Row="5" Content="Pick File" HorizontalAlignment="Right" Margin="5,0,0,10" Click="Swipe_OnClick"/>
+                
+                <TextBlock Grid.Column="0" Grid.Row="6" VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_Hitsound_Bonus}"/>
+                <TextBox Grid.Column="0" Grid.Row="7" Margin="0,0,0,10" Name="TextBoxBonus" TextChanged="Bonus_TextChanged"/>
+                <Button Grid.Column="1" Grid.Row="7" Content="Pick File" HorizontalAlignment="Right" Margin="5,0,0,10" Click="Bonus_OnClick"/>
+                
+                <TextBlock Grid.Column="0" Grid.Row="8" VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_Hitsound_RNote}"/>
+                <TextBox Grid.Column="0" Grid.Row="9" Margin="0,0,0,10" Name="TextBoxRNote" TextChanged="RNote_TextChanged"/>
+                <Button Grid.Column="1" Grid.Row="9" Content="Pick File" HorizontalAlignment="Right" Margin="5,0,0,10" Click="RNote_OnClick"/>
+            </Grid>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

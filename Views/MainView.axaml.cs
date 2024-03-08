@@ -18,6 +18,7 @@ using MercuryMapper.Data;
 using MercuryMapper.Editor;
 using MercuryMapper.Enums;
 using MercuryMapper.Rendering;
+using MercuryMapper.Utils;
 using SkiaSharp;
 using Tomlyn;
 
@@ -38,6 +39,7 @@ public partial class MainView : UserControl
 
         var interval = TimeSpan.FromSeconds(1.0 / UserConfig.RenderConfig.RefreshRate);
         UpdateTimer = new(interval, DispatcherPriority.Background, UpdateTimer_Tick) { IsEnabled = false };
+        HitsoundTimer = new(TimeSpan.FromMilliseconds(5), DispatcherPriority.Background, HitsoundTimer_Tick) { IsEnabled = false };
 
         KeyDownEvent.AddClassHandler<TopLevel>(OnKeyDown, RoutingStrategies.Tunnel, handledEventsToo: true);
         KeyUpEvent.AddClassHandler<TopLevel>(OnKeyUp, RoutingStrategies.Tunnel, handledEventsToo: true);
@@ -45,6 +47,9 @@ public partial class MainView : UserControl
         SetButtonColors();
         SetMenuItemInputGestureText();
         ToggleTypeRadio(false);
+        
+        AudioManager.LoadHitsoundSamples();
+        AudioManager.UpdateVolume();
     }
 
     public bool CanShutdown;
@@ -55,6 +60,7 @@ public partial class MainView : UserControl
     public readonly AudioManager AudioManager;
     public readonly RenderEngine RenderEngine;
     public DispatcherTimer UpdateTimer;
+    public readonly DispatcherTimer HitsoundTimer;
     
     private TimeUpdateSource timeUpdateSource = TimeUpdateSource.None;
     private enum TimeUpdateSource
@@ -63,6 +69,13 @@ public partial class MainView : UserControl
         Slider,
         Numeric,
         Timer
+    }
+
+    private PointerState pointerState = PointerState.Released;
+    private enum PointerState
+    {
+        Released,
+        Pressed
     }
     
     // ________________ Setup & UI Updates
@@ -149,7 +162,7 @@ public partial class MainView : UserControl
         SliderSongPosition.Maximum = AudioManager.CurrentSong.Length;
     }
 
-    public void UpdateTimer_Tick(object? sender, EventArgs eventArgs)
+    public void UpdateTimer_Tick(object? sender, EventArgs e)
     { 
         if (AudioManager.CurrentSong == null) return;
         
@@ -162,7 +175,19 @@ public partial class MainView : UserControl
         if (timeUpdateSource == TimeUpdateSource.None)
             UpdateTime(TimeUpdateSource.Timer);
     }
+    
+    public void HitsoundTimer_Tick(object? sender, EventArgs e)
+    {
+        float latency = BassSoundEngine.GetLatency();
+        float measure = ChartEditor.CurrentMeasure + latency;
 
+        while (AudioManager.HitsoundNoteIndex < ChartEditor.Chart.Notes.Count
+               && ChartEditor.Chart.Notes[AudioManager.HitsoundNoteIndex].BeatData.MeasureDecimal <= measure)
+        {
+            AudioManager.PlayHitsound(ChartEditor.Chart.Notes[AudioManager.HitsoundNoteIndex]);
+        }
+    }
+    
     /// <summary>
     /// (Don't confuse this with UpdateTimer_Tick please)
     /// Updates the current time/measureDecimal the user is looking at.
@@ -499,12 +524,34 @@ public partial class MainView : UserControl
     
     private void Canvas_OnPointerMoved(object? sender, PointerEventArgs e)
     {
+        if (pointerState is not PointerState.Pressed) return;
+
+        PointerPoint p = e.GetCurrentPoint(Canvas);
         
+        if (e.KeyModifiers.HasFlag(KeyModifiers.Control))
+        {
+            OnClick(p, e.KeyModifiers, true);
+            return;
+        }
+        
+        float x = (float)(p.Position.X - Canvas.Width * 0.5);
+        float y = (float)(p.Position.Y - Canvas.Height * 0.5);
+        int theta = MathExtensions.GetThetaNotePosition(x, y);
+        
+        ChartEditor.Cursor.Drag(theta);
+        NumericNotePosition.Value = ChartEditor.Cursor.Position;
+        NumericNoteSize.Value = ChartEditor.Cursor.Size;
     }
 
     private void Canvas_OnPointerPressed(object? sender, PointerPressedEventArgs e)
     {
         PointerPoint p = e.GetCurrentPoint(Canvas);
+        OnClick(p, e.KeyModifiers, false);
+    }
+
+    // TODO: RENAME THIS SHIT!!!
+    private void OnClick(PointerPoint p, KeyModifiers modifiers, bool pointerMoved)
+    {
         SKPoint point = new((float)p.Position.X, (float)p.Position.Y);
         point.X -= (float)Canvas.Width * 0.5f;
         point.Y -= (float)Canvas.Height * 0.5f;
@@ -513,15 +560,53 @@ public partial class MainView : UserControl
         point.X /= 0.9f;
         point.Y /= 0.9f;
         
-        if (e.KeyModifiers.HasFlag(KeyModifiers.Shift))
+        if (modifiers.HasFlag(KeyModifiers.Control))
         {
-            RenderEngine.GetNoteAtPointer(ChartEditor.Chart, point);
+            pointerState = PointerState.Pressed;
+            
+            if (RenderEngine.GetNoteAtPointer(ChartEditor.Chart, point) is not { } note) return;
+            
+            if (pointerMoved && note == ChartEditor.LastSelectedNote) return;
+            
+            // TODO: Code repetition. Fix it?
+            if (ChartEditor.SelectedNotes.Contains(note))
+            {
+                if (!modifiers.HasFlag(KeyModifiers.Shift))
+                {
+                    ChartEditor.DeselectAllNotes();
+                    ChartEditor.LastSelectedNote = null;
+                }
+                
+                ChartEditor.DeselectNote(note);
+            }
+            else
+            {
+                if (!modifiers.HasFlag(KeyModifiers.Shift))
+                {
+                    ChartEditor.DeselectAllNotes();
+                    ChartEditor.LastSelectedNote = null;
+                }
+                
+                ChartEditor.SelectNote(note);
+            }
+
+            ChartEditor.LastSelectedNote = note;
+        }
+
+        else
+        {
+            pointerState = PointerState.Pressed;
+            
+            int theta = MathExtensions.GetThetaNotePosition(point.X, point.Y);
+            ChartEditor.Cursor.Move(theta);
+            NumericNotePosition.Value = ChartEditor.Cursor.Position;
+            NumericNoteSize.Value = ChartEditor.Cursor.Size;
         }
     }
 
     private void Canvas_OnPointerReleased(object? sender, PointerReleasedEventArgs e)
     {
-        
+        pointerState = PointerState.Released;
     }
     
     // ________________ UI Events
@@ -543,6 +628,12 @@ public partial class MainView : UserControl
         RenderEngine.UpdateBrushes();
     }
     
+    public async void DragDrop(string path)
+    {
+        if (await PromptSave()) return;
+        OpenChart(path);
+    }
+    
     private async void MenuItemNew_OnClick(object? sender, RoutedEventArgs e)
     {
         if (await PromptSave()) return;
@@ -552,7 +643,7 @@ public partial class MainView : UserControl
         {
             Title = Assets.Lang.Resources.Editor_NewChart,
             Content = newChartView,
-            PrimaryButtonText = Assets.Lang.Resources.Menu_Save,
+            PrimaryButtonText = Assets.Lang.Resources.Generic_Create,
             CloseButtonText = Assets.Lang.Resources.Generic_Cancel
         };
         
@@ -586,8 +677,10 @@ public partial class MainView : UserControl
                     return;
                 }
                 
+                AudioManager.ResetSong();
+                
                 ChartEditor.NewChart(filepath, author, bpm, timeSigUpper, timeSigLower);
-                AudioManager.SetSong(filepath, 0.2f, (int)SliderPlaybackSpeed.Value); // TODO: Make Volume Dynamic!!
+                AudioManager.SetSong(filepath, (float)UserConfig.AudioConfig.MusicVolume * 0.01f, (int)SliderPlaybackSpeed.Value);
                 SetSongPositionSliderMaximum();
             }
         });
@@ -603,12 +696,6 @@ public partial class MainView : UserControl
 
         AudioManager.ResetSong();
         OpenChart(file.Path.LocalPath);
-    }
-
-    public async void DragDrop(string path)
-    {
-        if (await PromptSave()) return;
-        OpenChart(path);
     }
     
     private async void MenuItemSave_OnClick(object? sender, RoutedEventArgs e)
@@ -870,6 +957,8 @@ public partial class MainView : UserControl
         SetMenuItemInputGestureText(); // Update inputgesture text in case stuff was rebound
         RenderEngine.UpdateBrushes();
         RenderEngine.UpdateVisibleTime();
+        AudioManager.LoadHitsoundSamples();
+        AudioManager.UpdateVolume();
         
         // I know some maniac is gonna change their refresh rate while playing a song.
         var interval = TimeSpan.FromSeconds(1.0 / UserConfig.RenderConfig.RefreshRate);
@@ -895,18 +984,22 @@ public partial class MainView : UserControl
         if (AudioManager.CurrentSong == null)
         {
             UpdateTimer.IsEnabled = false;
+            HitsoundTimer.IsEnabled = false;
             IconPlay.IsVisible = true;
             IconStop.IsVisible = false;
             return;
         }
-        
-        AudioManager.CurrentSong.Volume = 0.2f;
+
+        AudioManager.CurrentSong.Volume = (float)(UserConfig.AudioConfig.MusicVolume * 0.01);
         AudioManager.CurrentSong.IsPlaying = play;
         UpdateTimer.IsEnabled = play;
+        HitsoundTimer.IsEnabled = play;
         
         IconPlay.IsVisible = !play;
         IconStop.IsVisible = play;
         SliderSongPosition.IsEnabled = !play;
+
+        AudioManager.HitsoundNoteIndex = ChartEditor.Chart.Notes.FindIndex(x => x.BeatData.MeasureDecimal >= ChartEditor.CurrentMeasure);
     }
     
     private async Task<bool> PromptSave()
@@ -1019,7 +1112,6 @@ public partial class MainView : UserControl
         // Load chart
         ChartEditor.Chart.LoadFile(path);
         
-        
         // Oopsie, audio not found.
         if (!File.Exists(ChartEditor.Chart.AudioFilePath))
         {
@@ -1043,7 +1135,7 @@ public partial class MainView : UserControl
             ChartEditor.Chart.AudioFilePath = audioFile.Path.LocalPath;
         }
         
-        AudioManager.SetSong(ChartEditor.Chart.AudioFilePath, 0.2f, (int)SliderPlaybackSpeed.Value); // TODO: Make Volume Dynamic!!
+        AudioManager.SetSong(ChartEditor.Chart.AudioFilePath, (float)(UserConfig.AudioConfig.MusicVolume * 0.01), (int)SliderPlaybackSpeed.Value);
         SetSongPositionSliderMaximum();
         RenderEngine.UpdateVisibleTime();
     }

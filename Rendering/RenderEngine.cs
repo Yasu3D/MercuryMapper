@@ -88,24 +88,26 @@ public class RenderEngine(MainView mainView)
         int clickPosition = MathExtensions.GetThetaNotePosition(point.X, point.Y);
         float clickRadius = (1 - MathExtensions.InversePerspective(point.Length)) * visibleDistanceMeasureDecimal;
         float measureDecimal = CurrentMeasureDecimal + chart.GetUnscaledMeasureDecimal(clickRadius, RenderConfig.ShowHiSpeed);
+        
+        // Holy mother of LINQ
+        List<Note> clickedNotes = chart.Notes
+            .Where(x => Math.Abs(x.BeatData.MeasureDecimal - measureDecimal) < 0.005f)
+            .Select(note =>
+            {
+                float center = MathExtensions.Modulo(note.Position + note.Size * 0.5f, 60);
+                float maxDistance = note.Size * 0.5f;
+                float distance = float.Min(float.Abs(center - clickPosition), 60 - float.Abs(center - clickPosition));
 
-        List<Note> notesInRange = chart.Notes.Where(x => !x.IsMask && Math.Abs(x.BeatData.MeasureDecimal - measureDecimal) < 0.005f).ToList();
+                return new { Note = note, Distance = distance };
+            })
+            .Where(item => item.Distance < item.Note.Size * 0.5f)
+            .OrderBy(item => item.Distance)
+            .Select(item => item.Note)
+            .ToList();
 
-        foreach (Note note in notesInRange)
-        {
-            float center = MathExtensions.Modulo(note.Position + note.Size * 0.5f, 60);
-            float maxDistance = note.Size * 0.5f;
-
-            float distance = float.Abs(center - clickPosition);
-            distance = distance > 30 ? 60 - distance : distance;
-
-            if (!(distance < maxDistance)) continue;
-            
-            Console.WriteLine($"Note HIT! Distance {distance}, Type {note.NoteType}");
-            return note;
-        }
-
-        return null;
+        Console.WriteLine($"Note HIT! Type {clickedNotes.MinBy(x => x.IsHold)?.NoteType}");
+        
+        return clickedNotes.MinBy(x => x.IsHold);
     }
     
     // ________________
@@ -516,6 +518,12 @@ public class RenderEngine(MainView mainView)
             {
                 canvas.DrawArc(currentData.Rect, currentData.StartAngle, currentData.SweepAngle, false, brushes.GetHoldEndPen(canvasScale * currentData.Scale));
             }
+            
+            if (mainView.ChartEditor.SelectedNotes.Contains(note))
+            {
+                ArcData selectedData = GetArc(chart, note);
+                canvas.DrawArc(selectedData.Rect, selectedData.StartAngle, selectedData.SweepAngle, false, brushes.GetSelectionPen(canvasScale * selectedData.Scale));
+            }
         }
     }
     
@@ -548,6 +556,12 @@ public class RenderEngine(MainView mainView)
             }
             
             canvas.DrawArc(data.Rect, data.StartAngle, data.SweepAngle, false, brushes.GetNotePen(note, canvasScale * data.Scale));
+
+            if (mainView.ChartEditor.SelectedNotes.Contains(note))
+            {
+                ArcData selectedData = GetArc(chart, note);
+                canvas.DrawArc(selectedData.Rect, selectedData.StartAngle, selectedData.SweepAngle, false, brushes.GetSelectionPen(canvasScale * selectedData.Scale));
+            }
         }
     }
     

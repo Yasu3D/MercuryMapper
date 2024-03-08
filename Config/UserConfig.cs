@@ -9,6 +9,7 @@ public class UserConfig
     public RenderConfig RenderConfig { get; set; } = new();
     public KeymapConfig KeymapConfig { get; set; } = new();
     public ColorConfig ColorConfig { get; set; } = new();
+    public AudioConfig AudioConfig { get; set; } = new();
 }
 
 public class RenderConfig
@@ -122,4 +123,21 @@ public class ColorConfig
         ["ColorBeatLine"] = "80FFFFFF",
         ["ColorAngleTicks"] = "AAFFFFFF"
     };
+}
+
+public class AudioConfig
+{
+    public double MusicVolume { get; set; } = 50;
+    public double HitsoundVolume { get; set; } = 20;
+    public double TouchVolume { get; set; } = 80;
+    public double GuideVolume { get; set; } = 30;
+    public double SwipeVolume { get; set; } = 80;
+    public double BonusVolume { get; set; } = 80;
+    public double RNoteVolume { get; set; } = 80;
+
+    public string TouchHitsoundPath { get; set; } = "";
+    public string GuideHitsoundPath { get; set; } = "";
+    public string SwipeHitsoundPath { get; set; } = "";
+    public string BonusHitsoundPath { get; set; } = "";
+    public string RNoteHitsoundPath { get; set; } = "";
 }

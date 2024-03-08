@@ -212,7 +212,7 @@
                     </StackPanel>
                     
                     <StackPanel Grid.Column="1" Width="130" Margin="0,5,5,0">
-                        <Border   ClipToBounds="True" Classes="Outline">
+                        <Border ClipToBounds="True" Classes="Outline">
                             <StackPanel>
                                 <Button Name="ButtonGimmickBpmChange" Classes="CompactButton" Click="ButtonGimmickBpmChange_OnClick"
                                         Content="{x:Static lang:Resources.Gimmick_BpmChange}" />
@@ -238,7 +238,6 @@
                                         Content="{x:Static lang:Resources.Gimmick_Reverse}" />
                             </StackPanel>
                         </Border>
-                            
                     </StackPanel>
                 </Grid>
             </ScrollViewer>
@@ -299,7 +298,8 @@
                PointerWheelChanged="Canvas_OnPointerWheelChanged"
                PointerMoved="Canvas_OnPointerMoved"
                PointerPressed="Canvas_OnPointerPressed"
-               PointerReleased="Canvas_OnPointerReleased"/>
+               PointerReleased="Canvas_OnPointerReleased">
+        </controls:SkiaCanvas>
         
         <!-- Song Controls -->
         <Grid Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="2" Height="65" Name="SongControlPanel"

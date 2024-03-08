@@ -22,9 +22,9 @@ public partial class SettingsView : UserControl
         ViewContainer.Content = name switch
         {
             "TreeViewColors" => new SettingsView_Colors(mainView),
-            "TreeViewGimmicks" => new SettingsView_Gimmicks(),
             "TreeViewRendering" => new SettingsView_Rendering(mainView),
             "TreeViewKeymap" => new SettingsView_Keymap(mainView),
+            "TreeViewAudio" => new SettingsView_Audio(mainView),
             _ => null
         };
         

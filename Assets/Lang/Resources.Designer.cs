@@ -375,6 +375,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Create.
+        /// </summary>
+        public static string Generic_Create {
+            get {
+                return ResourceManager.GetString("Generic_Create", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Audio not found..
         /// </summary>
         public static string Generic_InvalidAudioWarning {
@@ -817,6 +826,24 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Hitsound Volume.
+        /// </summary>
+        public static string Settings_Audio_HitsoundVolume {
+            get {
+                return ResourceManager.GetString("Settings_Audio_HitsoundVolume", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Music Volume.
+        /// </summary>
+        public static string Settings_Audio_MusicVolume {
+            get {
+                return ResourceManager.GetString("Settings_Audio_MusicVolume", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Beat Division.
         /// </summary>
         public static string Settings_BeatDivision {
@@ -943,6 +970,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Audio.
+        /// </summary>
+        public static string Settings_Header_Audio {
+            get {
+                return ResourceManager.GetString("Settings_Header_Audio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Colors.
         /// </summary>
         public static string Settings_Header_Colors {
@@ -984,6 +1020,51 @@ namespace MercuryMapper.Assets.Lang {
         public static string Settings_Header_Rendering {
             get {
                 return ResourceManager.GetString("Settings_Header_Rendering", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bonus Hitsound.
+        /// </summary>
+        public static string Settings_Hitsound_Bonus {
+            get {
+                return ResourceManager.GetString("Settings_Hitsound_Bonus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Guide Hitsound.
+        /// </summary>
+        public static string Settings_Hitsound_Guide {
+            get {
+                return ResourceManager.GetString("Settings_Hitsound_Guide", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to R-Note Hitsound.
+        /// </summary>
+        public static string Settings_Hitsound_RNote {
+            get {
+                return ResourceManager.GetString("Settings_Hitsound_RNote", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Swipe Hitsound.
+        /// </summary>
+        public static string Settings_Hitsound_Swipe {
+            get {
+                return ResourceManager.GetString("Settings_Hitsound_Swipe", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Touch Hitsound.
+        /// </summary>
+        public static string Settings_Hitsound_Touch {
+            get {
+                return ResourceManager.GetString("Settings_Hitsound_Touch", resourceCulture);
             }
         }
         
@@ -1051,7 +1132,7 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to  .
+        ///   Looks up a localized string similar to Note Speed.
         /// </summary>
         public static string Settings_NoteSpeed {
             get {
