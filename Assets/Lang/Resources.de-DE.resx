@@ -331,8 +331,8 @@ Möchten Sie eine Datei manuell auswählen?</value>
     <data name="Settings_NoteSpeed" xml:space="preserve">
         <value>Noten-Geschwindigkeit</value>
     </data>
-    <data name="Settings_ShowHiSpeed" xml:space="preserve">
-        <value>Zeige HiSpeed</value>
+    <data name="Settings_ShowSpeedChanges" xml:space="preserve">
+        <value>Zeige Speed-Changes</value>
     </data>
     <data name="Settings_GuideLineType" xml:space="preserve">
         <value>Leitlinien-Typ</value>
@@ -384,5 +384,11 @@ Möchten Sie eine Datei manuell auswählen?</value>
     </data>
     <data name="Settings_Audio_HitsoundVolume" xml:space="preserve">
         <value>Hitsound Lautstärke</value>
+    </data>
+    <data name="Settings_ShowMaskDuringPlayback" xml:space="preserve">
+        <value>Zeige Maske-Noten während Playback</value>
+    </data>
+    <data name="Settings_ShowGimmickNotesDuringPlayback" xml:space="preserve">
+        <value>Zeige Gimmick-Noten während Playback</value>
     </data>
 </root>

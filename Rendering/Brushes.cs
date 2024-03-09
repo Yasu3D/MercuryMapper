@@ -42,6 +42,12 @@ public class Brushes(UserConfig userConfig)
     private SKColor colorNoteMaskRemove;
     private SKColor colorNoteEndOfChart;
     private SKColor colorNoteCaps;
+
+    private SKColor colorGimmickBpmChange;
+    private SKColor colorGimmickTimeSigChange;
+    private SKColor colorGimmickHiSpeedChange;
+    private SKColor colorGimmickReverse;
+    private SKColor colorGimmickStop;
     
     // ________ Private Brushes
     private readonly SKPaint guideLinePen = new()
@@ -192,9 +198,17 @@ public class Brushes(UserConfig userConfig)
         return notePen;
     }
 
+    public SKPaint GetGimmickPen(Gimmick gimmick, float scale)
+    {
+        // Reusing NotePen again because why not.
+        notePen.StrokeWidth = NoteWidthMultiplier * scale;
+        notePen.Color = GimmickType2Color(gimmick.GimmickType);
+        return notePen;
+    }
+
     public SKPaint GetNoteCapPen(float scale)
     {
-        // Rreusing the Note pen because why not
+        // Rreusing Note pen because why not
         notePen.StrokeWidth = NoteWidthMultiplier * scale;
         notePen.Color = colorNoteCaps;
         return notePen;
@@ -273,6 +287,23 @@ public class Brushes(UserConfig userConfig)
             _ => throw new ArgumentOutOfRangeException()
         };
     }
+
+    private SKColor GimmickType2Color(GimmickType type)
+    {
+        return type switch
+        {
+            GimmickType.None => SKColor.Empty,
+            GimmickType.BpmChange => colorGimmickBpmChange,
+            GimmickType.TimeSigChange => colorGimmickTimeSigChange,
+            GimmickType.HiSpeedChange => colorGimmickHiSpeedChange,
+            GimmickType.ReverseEffectStart
+            or GimmickType.ReverseEffectEnd
+            or GimmickType.ReverseNoteEnd => colorGimmickReverse,
+            GimmickType.StopStart
+            or GimmickType.StopEnd => colorGimmickStop,
+            _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
+        };
+    }
     
     public void SetBrushes(SKPoint center, float radius, float maxRadius, float scale)
     {
@@ -295,6 +326,12 @@ public class Brushes(UserConfig userConfig)
             colorNoteMaskRemove = SKColor.Parse(colors["ColorNoteMaskRemove"]);
             colorNoteEndOfChart = SKColor.Parse(colors["ColorNoteEndOfChart"]);
             colorNoteCaps = SKColor.Parse(colors["ColorNoteCaps"]);
+            
+            colorGimmickBpmChange = SKColor.Parse(colors["ColorGimmickBpmChange"]);
+            colorGimmickTimeSigChange = SKColor.Parse(colors["ColorGimmickTimeSigChange"]);
+            colorGimmickHiSpeedChange = SKColor.Parse(colors["ColorGimmickHiSpeedChange"]);
+            colorGimmickReverse = SKColor.Parse(colors["ColorGimmickStop"]);
+            colorGimmickStop = SKColor.Parse(colors["ColorGimmickReverse"]);
             
             syncPen.Color = SKColor.Parse(colors["ColorSync"]);
             holdEndPen.Color = SKColor.Parse(colors["ColorNoteHoldEnd"]);

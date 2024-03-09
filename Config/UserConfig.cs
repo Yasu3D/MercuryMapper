@@ -17,9 +17,11 @@ public class RenderConfig
     public int RefreshRate { get; set; } = 60;
     public int NoteSize { get; set; } = 3;
     public decimal NoteSpeed { get; set; } = 4.5m;
-    public bool ShowHiSpeed { get; set; } = true;
     public int GuideLineType { get; set; } = 1;
     public int BeatDivision { get; set; } = 4;
+    public bool ShowHiSpeed { get; set; } = true;
+    public bool ShowMaskDuringPlayback { get; set; } = false;
+    public bool ShowGimmickNotesDuringPlayback { get; set; } = false;
 }
 
 public class KeymapConfig

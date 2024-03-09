@@ -47,8 +47,14 @@
             <Separator/>
             
             <UniformGrid Columns="2">
-                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_ShowHiSpeed}"/>
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_ShowSpeedChanges}"/>
                 <CheckBox Name="CheckBoxShowHiSpeed" HorizontalAlignment="Right" IsCheckedChanged="ShowHiSpeed_OnIsCheckedChanged"/>
+                
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_ShowMaskDuringPlayback}"/>
+                <CheckBox Name="CheckBoxShowMaskDuringPlayback" HorizontalAlignment="Right" IsCheckedChanged="CheckBoxShowMaskDuringPlayback_OnIsCheckedChanged"/>
+                
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_ShowGimmickNotesDuringPlayback}"/>
+                <CheckBox Name="CheckBoxShowGimmickNotesDuringPlayback" HorizontalAlignment="Right" IsCheckedChanged="CheckBoxShowGimmickNotesDuringPlayback_OnIsCheckedChanged"/>
             </UniformGrid>
         </StackPanel>
     </ScrollViewer>

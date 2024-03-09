@@ -10,7 +10,6 @@
         <TreeView Grid.Column="0" SelectionChanged="Tabs_OnSelectionChanged" Name="TabsTreeView">
             <TreeViewItem Header="{x:Static lang:Resources.Settings_Header_Appearance}" Name="TreeViewAppearance" IsExpanded="True">
                 <TreeViewItem Header="{x:Static lang:Resources.Settings_Header_Colors}" Name="TreeViewColors" IsSelected="True"/>
-                <TreeViewItem Header="{x:Static lang:Resources.Settings_Header_Gimmicks}" Name="TreeViewGimmicks"/>
                 <TreeViewItem Header="{x:Static lang:Resources.Settings_Header_Rendering}" Name="TreeViewRendering"/>
             </TreeViewItem>
             <TreeViewItem Header="{x:Static lang:Resources.Settings_Header_Editor}" Name="TreeViewEditor">

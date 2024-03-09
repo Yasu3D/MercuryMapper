@@ -46,6 +46,8 @@ public class RenderEngine(MainView mainView)
         }
         
         DrawMeasureLines(canvas, Chart);
+        if (!IsPlaying || (IsPlaying && RenderConfig.ShowGimmickNotesDuringPlayback)) DrawGimmickNotes(canvas, Chart);
+        if (!IsPlaying || (IsPlaying && RenderConfig.ShowMaskDuringPlayback)) DrawMaskNotes(canvas, Chart);
         DrawSyncs(canvas, Chart); // Hold Surfaces normally render under syncs but the syncs poke into the note a bit and it looks shit.
         DrawHolds(canvas, Chart);
         DrawNotes(canvas, Chart);
@@ -134,6 +136,14 @@ public class RenderEngine(MainView mainView)
         return new(rect, scale, startAngle, sweepAngle);
     }
 
+    private ArcData GetArc(Chart chart, Gimmick gimmick)
+    {
+        float scale = GetNoteScale(chart, gimmick.BeatData.MeasureDecimal);
+        SKRect rect = GetRect(scale);
+
+        return new(rect, scale, 0, 360);
+    }
+    
     private static void TruncateArc(ref ArcData data, bool includeCaps)
     {
         if (includeCaps)
@@ -413,14 +423,14 @@ public class RenderEngine(MainView mainView)
         //
         // IsHold &&
         // (Note is in vision range || Next note it's referencing is in front of vision range)
-        IEnumerable<Note> visibleNotes = chart.Notes.Where(x =>
+        List<Note> visibleNotes = chart.Notes.Where(x =>
             x.IsHold &&
             (
                 (x.BeatData.MeasureDecimal >= CurrentMeasureDecimal && chart.GetScaledMeasureDecimal(x.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) <= ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal)
                 ||
                 (x.NextReferencedNote != null && x.BeatData.MeasureDecimal < CurrentMeasureDecimal && chart.GetScaledMeasureDecimal(x.NextReferencedNote.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) > ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal)
             )
-        );
+        ).ToList();
         
         foreach (Note note in visibleNotes)
         {
@@ -500,8 +510,26 @@ public class RenderEngine(MainView mainView)
                 
                 canvas.DrawArc(intermediateData.Rect, intermediateData.StartAngle, intermediateData.SweepAngle, true, brushes.HoldFill);
             }
-
+        }
+        
+        // Second foreach to ensure notes are rendered on top of surfaces.
+        // Reverse so notes further away are rendered first, then closer notes
+        // are rendered on top.
+        visibleNotes.Reverse();
+        foreach (Note note in visibleNotes)
+        {
+            ArcData currentData = GetArc(chart, note);
+            if (note.Size != 60) TruncateArc(ref currentData, true);
+            else TrimCircleArc(ref currentData);
+            
             if (currentData.Rect.Width < 1 || note.BeatData.MeasureDecimal < CurrentMeasureDecimal) continue;
+            
+            if (note.IsRNote)
+            {
+                float start = currentData.StartAngle + (note.Size != 60 ? 4.5f : 0);
+                float sweep = currentData.SweepAngle - (note.Size != 60 ? 9.0f : 0);
+                canvas.DrawArc(currentData.Rect, start, sweep, false, brushes.GetRNotePen(canvasScale * currentData.Scale));
+            }
             
             if (note.NoteType is NoteType.HoldStart or NoteType.HoldStartRNote)
             {
@@ -540,7 +568,7 @@ public class RenderEngine(MainView mainView)
             ArcData data = GetArc(chart, note);
 
             if (data.Rect.Width < 1) continue;
-
+            
             if (note.IsRNote)
             {
                 float start = data.StartAngle - (note.Size != 60 ? 1.5f : 0);
@@ -562,6 +590,42 @@ public class RenderEngine(MainView mainView)
                 ArcData selectedData = GetArc(chart, note);
                 canvas.DrawArc(selectedData.Rect, selectedData.StartAngle, selectedData.SweepAngle, false, brushes.GetSelectionPen(canvasScale * selectedData.Scale));
             }
+        }
+    }
+
+    private void DrawMaskNotes(SKCanvas canvas, Chart chart)
+    {
+        IEnumerable<Note> visibleNotes = chart.Notes.Where(x =>
+            x.IsMask
+            && x.BeatData.MeasureDecimal >= CurrentMeasureDecimal
+            && chart.GetScaledMeasureDecimal(x.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) <= ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal).Reverse();
+        
+        foreach (Note note in visibleNotes)
+        {
+            ArcData data = GetArc(chart, note);
+
+            if (data.Rect.Width < 1) continue;
+            
+            canvas.DrawArc(data.Rect, data.StartAngle, data.SweepAngle, false, brushes.GetNotePen(note, canvasScale * data.Scale));
+
+            if (mainView.ChartEditor.SelectedNotes.Contains(note))
+            {
+                ArcData selectedData = GetArc(chart, note);
+                canvas.DrawArc(selectedData.Rect, selectedData.StartAngle, selectedData.SweepAngle, false, brushes.GetSelectionPen(canvasScale * selectedData.Scale));
+            }
+        }
+    }
+
+    private void DrawGimmickNotes(SKCanvas canvas, Chart chart)
+    {
+        IEnumerable<Gimmick> visibleGimmicks = chart.Gimmicks.Where(x =>
+            x.BeatData.MeasureDecimal >= CurrentMeasureDecimal
+            && chart.GetScaledMeasureDecimal(x.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) <= ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal).Reverse();
+
+        foreach (Gimmick gimmick in visibleGimmicks)
+        {
+            ArcData data = GetArc(chart, gimmick);
+            canvas.DrawOval(data.Rect, brushes.GetGimmickPen(gimmick, canvasScale * data.Scale));
         }
     }
     

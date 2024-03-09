@@ -44,12 +44,8 @@ public partial class MainView : UserControl
         KeyDownEvent.AddClassHandler<TopLevel>(OnKeyDown, RoutingStrategies.Tunnel, handledEventsToo: true);
         KeyUpEvent.AddClassHandler<TopLevel>(OnKeyUp, RoutingStrategies.Tunnel, handledEventsToo: true);
         
-        SetButtonColors();
-        SetMenuItemInputGestureText();
+        ApplySettings();
         ToggleTypeRadio(false);
-        
-        AudioManager.LoadHitsoundSamples();
-        AudioManager.UpdateVolume();
     }
 
     public bool CanShutdown;
@@ -147,11 +143,11 @@ public partial class MainView : UserControl
 
     public void SetHoldContextButton(ChartEditorState state)
     {
-        ButtonHoldContext.Content = state switch
-        {
-            ChartEditorState.InsertHold => Assets.Lang.Resources.Editor_EndHold,
-            _ => Assets.Lang.Resources.Editor_EditHold
-        };
+        ButtonEditHold.IsVisible = state is not ChartEditorState.InsertHold;
+        ButtonEndHold.IsVisible = state is ChartEditorState.InsertHold;
+
+        ButtonEditHold.IsEnabled = state is not ChartEditorState.InsertGimmick;
+        ButtonEndHold.IsEnabled = state is not ChartEditorState.InsertGimmick;
     }
 
     public void SetSongPositionSliderMaximum()
@@ -286,13 +282,13 @@ public partial class MainView : UserControl
 
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditUndo"])) 
         {
-            Console.WriteLine("Undo");
+            ChartEditor.Undo();
             e.Handled = true;
             return;
         }
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditRedo"])) 
         {
-            Console.WriteLine("Redo");
+            ChartEditor.Redo();
             e.Handled = true;
             return;
         }
@@ -315,9 +311,11 @@ public partial class MainView : UserControl
             return;
         }
         
-        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorInsert"])) 
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorInsert"]))
         {
-            Console.WriteLine("InsertNote");
+            if (!ButtonInsert.IsEnabled) return;
+            
+            ChartEditor.InsertNote();
             e.Handled = true;
             return;
         }
@@ -568,7 +566,7 @@ public partial class MainView : UserControl
             
             if (pointerMoved && note == ChartEditor.LastSelectedNote) return;
             
-            // TODO: Code repetition. Fix it?
+            // If there's an elegant way to avoid the code repetition here that would be cool.
             if (ChartEditor.SelectedNotes.Contains(note))
             {
                 if (!modifiers.HasFlag(KeyModifiers.Shift))
@@ -740,9 +738,9 @@ public partial class MainView : UserControl
         (Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.Shutdown();
     }
 
-    private void MenuItemUndo_OnClick(object? sender, RoutedEventArgs e) { }
+    private void MenuItemUndo_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.Undo();
 
-    private void MenuItemRedo_OnClick(object? sender, RoutedEventArgs e) { }
+    private void MenuItemRedo_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.Redo();
 
     private void MenuItemCut_OnClick(object? sender, RoutedEventArgs e) { }
 
@@ -771,7 +769,7 @@ public partial class MainView : UserControl
         };
 
         ChartEditor.CurrentNoteType = noteType;
-        ChartEditor.UpdateNoteType();
+        ChartEditor.UpdateCursorNoteType();
 
         bool isMask = noteType is NoteType.MaskAdd or NoteType.MaskRemove;
         bool noBonusAvailable = noteType is not NoteType.EndOfChart;
@@ -796,7 +794,7 @@ public partial class MainView : UserControl
         };
 
         ChartEditor.CurrentBonusType = bonusType;
-        ChartEditor.UpdateNoteType();
+        ChartEditor.UpdateCursorNoteType();
         
         Console.WriteLine(ChartEditor.CurrentNoteType);
     }
@@ -813,7 +811,7 @@ public partial class MainView : UserControl
         };
 
         ChartEditor.CurrentMaskDirection = maskDirection;
-        ChartEditor.UpdateNoteType();
+        ChartEditor.UpdateCursorNoteType();
         
         Console.WriteLine(ChartEditor.CurrentNoteType);
     }
@@ -828,9 +826,17 @@ public partial class MainView : UserControl
 
     private void ButtonGimmickReverse_OnClick(object? sender, RoutedEventArgs e) { }
 
-    private void ButtonInsert_OnClick(object? sender, RoutedEventArgs e) { }
+    private void ButtonInsert_OnClick(object? sender, RoutedEventArgs e)
+    {
+        ChartEditor.InsertNote();
+    }
     
-    private void ButtonHoldContext_OnClick(object? sender, RoutedEventArgs e) { }
+    private void ButtonEditHold_OnClick(object? sender, RoutedEventArgs e) { }
+
+    private void ButtonEndHold_OnClick(object? sender, RoutedEventArgs e)
+    {
+        ChartEditor.EndHold();
+    }
     
     private void SliderPosition_OnValueChanged(object? sender, RangeBaseValueChangedEventArgs e) => Position_OnValueChanged(true);
     private void SliderNotePosition_OnPointerWheelChanged(object? sender, PointerWheelEventArgs e)
@@ -948,9 +954,14 @@ public partial class MainView : UserControl
     }
     
     // ________________ UI Dialogs & Misc
-    // TODO: SORT THIS SHIT!!!
     
+    // TODO: SORT THIS SHIT!!!
     private void OnSettingsClose(ContentDialog sender, ContentDialogClosingEventArgs e)
+    {
+        ApplySettings();
+    }
+
+    private void ApplySettings()
     {
         KeybindEditor.StopRebinding(); // Stop rebinding in case it was active.
         SetButtonColors(); // Update button colors if they were changed

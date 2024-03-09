@@ -1,19 +1,33 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using MercuryMapper.Data;
 using MercuryMapper.Enums;
+using MercuryMapper.UndoRedo;
+using MercuryMapper.UndoRedo.NoteOperations;
 using MercuryMapper.Views;
 
 namespace MercuryMapper.Editor;
 
-public class ChartEditor(MainView main)
+public class ChartEditor
 {
-    private MainView mainView = main;
+    public ChartEditor(MainView main)
+    {
+        mainView = main;
+        UndoRedoManager.OperationHistoryChanged += (sender, e) =>
+        {
+            Chart.Notes = Chart.Notes.OrderBy(x => x.BeatData.FullTick).ToList();
+            Chart.Gimmicks = Chart.Gimmicks.OrderBy(x => x.BeatData.FullTick).ToList();
+        };
+    }
+    
+    private MainView mainView;
     
     public readonly Cursor Cursor = new();
+    public readonly UndoRedoManager UndoRedoManager = new();
     public Chart Chart { get; private set; } = new();
     
-    public ChartEditorState State { get; private set; }
+    public ChartEditorState EditorState { get; private set; }
     
     public float CurrentMeasure { get; set; }
     public NoteType CurrentNoteType { get; set; } = NoteType.Touch;
@@ -22,6 +36,7 @@ public class ChartEditor(MainView main)
 
     public List<Note> SelectedNotes { get; private set; } = [];
     public Note? LastSelectedNote = null;
+    public Note? LastPlacedHoldNote = null;
 
     public void NewChart(string musicFilePath, string author, float bpm, int timeSigUpper, int timeSigLower)
     {
@@ -72,8 +87,14 @@ public class ChartEditor(MainView main)
         }
     }
     
-    public void UpdateNoteType()
+    public void UpdateCursorNoteType()
     {
+        // Reset Editor State
+        EndHold();
+        mainView.SetHoldContextButton(EditorState);
+        
+        // TODO: delete hold start if you switch to another notetype
+        
         switch (CurrentNoteType)
         {
             case NoteType.Touch:
@@ -204,6 +225,53 @@ public class ChartEditor(MainView main)
         }
     }
 
+    // ________________ Edit Menu
+    public void Undo()
+    {
+        if (!UndoRedoManager.CanUndo) return;
+        IOperation operation = UndoRedoManager.Undo();
+
+        // TODO: figure out a way to roll back last placed hold note.
+        
+        // When undoing this:
+        // [HoldStart] + [HoldEnd] - undo placing the hold end
+        // Automatically undo the [HoldStart] as well.
+        //if (operation is InsertHoldNote { LastPlacedNote.NoteType: NoteType.HoldStart })
+        //{
+        //    if (UndoRedoManager.CanUndo) UndoRedoManager.Undo();
+        //}
+    }
+
+    public void Redo()
+    {
+        if (!UndoRedoManager.CanRedo) return;
+        IOperation operation = UndoRedoManager.Redo();
+        
+        // When redoing this:
+        // [HoldStart] + [HoldEnd] - redo placing the hold start
+        // Automatically redo the [HoldEnd] as well.
+        //if (operation is InsertNote { Note.NoteType: NoteType.HoldStart })
+        //{
+        //    if (UndoRedoManager.CanRedo) UndoRedoManager.Redo();
+        //}
+    }
+    
+    public void Cut()
+    {
+        
+    }
+    
+    public void Copy()
+    {
+        
+    }
+    
+    public void Paste()
+    {
+        
+    }
+    
+    // ________________ Selections
     public void SelectNote(Note note)
     {
         lock (SelectedNotes)
@@ -227,4 +295,110 @@ public class ChartEditor(MainView main)
             SelectedNotes.Clear();
         }
     }
+    
+    // ________________ Note Operations
+    public void InsertNote()
+    {
+        BeatData data = new(CurrentMeasure);
+
+        if (EditorState is ChartEditorState.InsertHold)
+        {
+            // Place Hold End
+            // Hold end's prevReferencedNote is LastPlacedNote
+            // LastPlacedNote's nextReferencedNote is Hold End
+            // If previous note is hold end, convert it to hold segment
+
+            if (LastPlacedHoldNote is null) return;
+            
+            Note note = new()
+            {
+                BeatData = data,
+                GimmickType = GimmickType.None,
+                MaskDirection = CurrentMaskDirection,
+                NoteType = NoteType.HoldEnd,
+                Position = Cursor.Position,
+                Size = Cursor.Size,
+                PrevReferencedNote = LastPlacedHoldNote
+            };
+
+            LastPlacedHoldNote.NextReferencedNote = note;
+            if (LastPlacedHoldNote.NoteType is NoteType.HoldEnd)
+            {
+                LastPlacedHoldNote.NoteType = NoteType.HoldSegment;
+            }
+
+            lock (Chart)
+            {
+                Chart.Notes.Add(note);
+            }
+
+            UndoRedoManager.Push(new InsertHoldNote(Chart, SelectedNotes, note, LastPlacedHoldNote));
+            Chart.IsSaved = false;
+            LastPlacedHoldNote = note;
+            
+            return;
+        }
+        
+        if (EditorState is ChartEditorState.InsertNote)
+        {
+            bool endOfChart = CurrentNoteType is NoteType.EndOfChart;
+            
+            Note note = new()
+            {
+                BeatData = data,
+                GimmickType = GimmickType.None,
+                MaskDirection = CurrentMaskDirection,
+                NoteType = CurrentNoteType,
+                Position = endOfChart ? 0 : Cursor.Position,
+                Size = endOfChart ? 60 : Cursor.Size
+            };
+            
+            lock (Chart)
+            {
+                Chart.Notes.Add(note);
+            }
+
+            LastPlacedHoldNote = note;
+            Chart.IsSaved = false;
+            UndoRedoManager.Push(new InsertNote(Chart, SelectedNotes, note));
+
+            if (note.NoteType is NoteType.HoldStart or NoteType.HoldStartRNote)
+            {
+                EditorState = ChartEditorState.InsertHold;
+                mainView.SetHoldContextButton(EditorState);
+            }
+            
+            return;
+        }
+
+        if (EditorState is ChartEditorState.InsertGimmick)
+        {
+            return;
+        }
+    }
+
+    public void DeleteNote()
+    {
+        
+    }
+
+    public void EndHold()
+    {
+        EditorState = ChartEditorState.InsertNote;
+        mainView.SetHoldContextButton(EditorState);
+        
+        if (LastPlacedHoldNote?.NoteType is NoteType.HoldStart)
+        {
+            lock (Chart)
+            {
+                Chart.Notes.Remove(LastPlacedHoldNote);
+            }
+        }
+    }
+    
+    public void EditHold() { }
+    
+    public void EditSelection() { }
+    
+    public void MirrorSelection() { }
 }

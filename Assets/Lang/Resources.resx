@@ -331,8 +331,8 @@ Would you like to manually select a file?</value>
     <data name="Settings_NoteSpeed" xml:space="preserve">
         <value>Note Speed</value>
     </data>
-    <data name="Settings_ShowHiSpeed" xml:space="preserve">
-        <value>Show HiSpeed</value>
+    <data name="Settings_ShowSpeedChanges" xml:space="preserve">
+        <value>Show Speed Changes</value>
     </data>
     <data name="Settings_GuideLineType" xml:space="preserve">
         <value>Guide Line Type</value>
@@ -384,5 +384,11 @@ Would you like to manually select a file?</value>
     </data>
     <data name="Settings_Audio_HitsoundVolume" xml:space="preserve">
         <value>Hitsound Volume</value>
+    </data>
+    <data name="Settings_ShowMaskDuringPlayback" xml:space="preserve">
+        <value>Show Mask Notes during Playback</value>
+    </data>
+    <data name="Settings_ShowGimmickNotesDuringPlayback" xml:space="preserve">
+        <value>Show Gimmick Notes during Playback</value>
     </data>
 </root>

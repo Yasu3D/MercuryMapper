@@ -373,7 +373,7 @@ public class Chart
 
         var relevantGimmicks = Gimmicks.Where(x =>
             x.BeatData.MeasureDecimal < measureDecimal &&
-            x.GimmickType is GimmickType.HiSpeedChange or GimmickType.TimeSigChange or GimmickType.BpmChange);
+            x.GimmickType is GimmickType.HiSpeedChange or GimmickType.StopStart or GimmickType.StopEnd or GimmickType.TimeSigChange or GimmickType.BpmChange);
 
         // Take Last at 0 instead of First beca
         float startBpm = Gimmicks.Last(x => x.GimmickType is GimmickType.BpmChange && x.BeatData.FullTick == 0).Bpm;
@@ -394,6 +394,12 @@ public class Chart
                     break;
                 case GimmickType.HiSpeedChange:
                     currentHiSpeedValue = gimmick.HiSpeed;
+                    break;
+                case GimmickType.StopStart:
+                    currentHiSpeedValue = 0.0001f;
+                    break;
+                case GimmickType.StopEnd:
+                    currentHiSpeedValue = Gimmicks.LastOrDefault(x => x.BeatData.FullTick < gimmick.BeatData.FullTick && x.GimmickType is GimmickType.HiSpeedChange)?.HiSpeed ?? 1;
                     break;
                 case GimmickType.BpmChange:
                     currentBpmValue = startBpm / gimmick.Bpm;

@@ -11,6 +11,9 @@ public class UndoRedoManager
     public bool CanUndo => UndoStack.Count > 0;
     public bool CanRedo => RedoStack.Count > 0;
 
+    public IOperation PeekUndo => UndoStack.Peek();
+    public IOperation PeekRedo => RedoStack.Peek();
+
     public event EventHandler? OperationHistoryChanged;
 
     public void Push(IOperation operation)

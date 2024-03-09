@@ -1150,11 +1150,29 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Zeige HiSpeed.
+        ///   Looks up a localized string similar to Zeige Gimmick-Noten während Playback.
         /// </summary>
-        public static string Settings_ShowHiSpeed {
+        public static string Settings_ShowGimmickNotesDuringPlayback {
             get {
-                return ResourceManager.GetString("Settings_ShowHiSpeed", resourceCulture);
+                return ResourceManager.GetString("Settings_ShowGimmickNotesDuringPlayback", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zeige Maske-Noten während Playback.
+        /// </summary>
+        public static string Settings_ShowMaskDuringPlayback {
+            get {
+                return ResourceManager.GetString("Settings_ShowMaskDuringPlayback", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zeige Speed-Changes.
+        /// </summary>
+        public static string Settings_ShowSpeedChanges {
+            get {
+                return ResourceManager.GetString("Settings_ShowSpeedChanges", resourceCulture);
             }
         }
     }
