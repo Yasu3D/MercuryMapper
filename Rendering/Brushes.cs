@@ -97,6 +97,13 @@ public class Brushes(UserConfig userConfig)
         StrokeWidth = SelectionPenStrokeWidth
     };
     
+    private readonly SKPaint highlightPen = new()
+    {
+        Style = SKPaintStyle.Stroke,
+        IsAntialias = true,
+        StrokeWidth = SelectionPenStrokeWidth
+    };
+    
     private readonly SKPaint syncPen = new()
     {
         StrokeWidth = SyncPenStrokeWidth,
@@ -233,6 +240,12 @@ public class Brushes(UserConfig userConfig)
         return selectionPen;
     }
 
+    public SKPaint GetHighlightPen(float scale)
+    {
+        highlightPen.StrokeWidth = selectionWidthMultiplier * scale;
+        return highlightPen;
+    }
+
     public SKPaint GetSnapPen(NoteType type, float scale)
     {
         snapPen.StrokeWidth = SnapPenStrokeWidth * scale;
@@ -278,9 +291,10 @@ public class Brushes(UserConfig userConfig)
                 or NoteType.SlideCounterclockwiseRNote => colorNoteSlideCounterclockwise,
             NoteType.Chain
                 or NoteType.ChainRNote => colorNoteChain,
-            NoteType.HoldStart
+            NoteType.HoldStart 
                 or NoteType.HoldStartRNote => colorNoteHoldStart,
-            NoteType.HoldSegment => colorNoteHoldSegment,
+            NoteType.HoldSegment
+                or NoteType.HoldEnd => colorNoteHoldSegment,
             NoteType.MaskAdd => colorNoteMaskAdd,
             NoteType.MaskRemove => colorNoteMaskRemove,
             NoteType.EndOfChart => colorNoteEndOfChart,
@@ -337,6 +351,7 @@ public class Brushes(UserConfig userConfig)
             holdEndPen.Color = SKColor.Parse(colors["ColorNoteHoldEnd"]);
             rNotePen.Color = SKColor.Parse(colors["ColorRNote"]);
             selectionPen.Color = SKColor.Parse(colors["ColorSelection"]);
+            highlightPen.Color = SKColor.Parse(colors["ColorHighlight"]);
             
             MeasurePen.Color = SKColor.Parse(colors["ColorMeasureLine"]);
             BeatPen.Color = SKColor.Parse(colors["ColorBeatLine"]);

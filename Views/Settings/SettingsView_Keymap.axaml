@@ -27,6 +27,12 @@
             <TreeViewItem Header="{x:Static lang:Resources.Settings_Header_Editor}" Classes="HideKeybind">
                 <TreeViewItem Name="EditorInsert" Header="{x:Static lang:Resources.Editor_Insert}"/>
                 <TreeViewItem Name="EditorPlay" Header="{x:Static lang:Resources.Editor_Play}"/>
+                <TreeViewItem Name="EditorSelectAll" Header="{x:Static lang:Resources.Editor_SelectAll}"/>
+                <TreeViewItem Name="EditorDeselectAll" Header="{x:Static lang:Resources.Editor_DeselectAll}"/>
+                <TreeViewItem Name="EditorEndHold" Header="{x:Static lang:Resources.Editor_EndHold}"/>
+                <TreeViewItem Name="EditorHighlightNextNote" Header="{x:Static lang:Resources.Editor_HighlightNextNote}"/>
+                <TreeViewItem Name="EditorHighlightPrevNote" Header="{x:Static lang:Resources.Editor_HighlightPrevNote}"/>
+                <TreeViewItem Name="EditorSelectHighlightedNote" Header="{x:Static lang:Resources.Editor_SelectHighlightedNote}"/>
                 <TreeViewItem Name="EditorIncreasePlaybackSpeed" Header="{x:Static lang:Resources.Editor_IncreasePlaybackSpeed}"/>
                 <TreeViewItem Name="EditorDecreasePlaybackSpeed" Header="{x:Static lang:Resources.Editor_DecreasePlaybackSpeed}"/>
                 <TreeViewItem Name="EditorNoteTypeTouch" Header="{x:Static lang:Resources.Note_Touch}"/>
@@ -45,7 +51,9 @@
                 <TreeViewItem Name="EditorEditNoteShape" Header="{x:Static lang:Resources.Editor_EditNoteShape}"/>
                 <TreeViewItem Name="EditorEditNoteProperties" Header="{x:Static lang:Resources.Editor_EditNoteProperties}"/>
                 <TreeViewItem Name="EditorEditNoteShapeProperties" Header="{x:Static lang:Resources.Editor_EditNoteShapeProperties}"/>
+                <TreeViewItem Name="EditorMirrorNote" Header="{x:Static lang:Resources.Editor_MirrorNote}"/>
                 <TreeViewItem Name="EditorDelete" Header="{x:Static lang:Resources.Editor_Delete}"/>
+                <TreeViewItem Name="EditorBakeHold" Header="{x:Static lang:Resources.Editor_BakeHold}"/>
             </TreeViewItem>
             
             <TreeViewItem Header="{x:Static lang:Resources.Settings_Header_Rendering}" Classes="HideKeybind">

@@ -391,4 +391,25 @@ Möchten Sie eine Datei manuell auswählen?</value>
     <data name="Settings_ShowGimmickNotesDuringPlayback" xml:space="preserve">
         <value>Zeige Gimmick-Noten während Playback</value>
     </data>
+    <data name="Editor_SelectAll" xml:space="preserve">
+        <value>Alles Auswählen</value>
+    </data>
+    <data name="Editor_DeselectAll" xml:space="preserve">
+        <value>Alles Abwählen</value>
+    </data>
+    <data name="Editor_HighlightNextNote" xml:space="preserve">
+        <value>Nächste Note Hervorheben</value>
+    </data>
+    <data name="Editor_HighlightPrevNote" xml:space="preserve">
+        <value>Vorherige Note Hervorheben</value>
+    </data>
+    <data name="Editor_SelectHighlightedNote" xml:space="preserve">
+        <value>Hervorgehobene Note Auswählen</value>
+    </data>
+    <data name="Editor_MirrorNote" xml:space="preserve">
+        <value>Note Spiegeln</value>
+    </data>
+    <data name="Editor_BakeHold" xml:space="preserve">
+        <value>Hold Note Vorberechnen</value>
+    </data>
 </root>

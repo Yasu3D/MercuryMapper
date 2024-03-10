@@ -62,6 +62,12 @@ public class KeymapConfig
         ["EditPaste"] = new(Key.V, true, false, false),
         ["EditorInsert"] = new(Key.I),
         ["EditorPlay"] = new(Key.Space),
+        ["EditorSelectAll"] = new(Key.A, true, false, false),
+        ["EditorDeselectAll"] = new(Key.D, true, false, false),
+        ["EditorEndHold"] = new(Key.Enter, false, false, false),
+        ["EditorHighlightNextNote"] = new(Key.W, false, true, false),
+        ["EditorHighlightPrevNote"] = new(Key.S, false, true, false),
+        ["EditorSelectHighlightedNote"] = new(Key.Space, false, true, false),
         ["EditorIncreasePlaybackSpeed"] = new(Key.Add),
         ["EditorDecreasePlaybackSpeed"] = new(Key.Subtract),
         ["EditorNoteTypeTouch"] = new(Key.D1),
@@ -80,7 +86,9 @@ public class KeymapConfig
         ["EditorEditNoteShape"] = new(Key.E, false, true, false),
         ["EditorEditNoteProperties"] = new(Key.E, true, false, false),
         ["EditorEditNoteShapeProperties"] = new(Key.E, true, true, false),
+        ["EditorMirrorNote"] = new(Key.M, false, true, false),
         ["EditorDelete"] = new(Key.Delete),
+        ["EditorBakeHold"] = new(Key.B, false, true, false),
         ["RenderIncreaseNoteSpeed"] = new(Key.Add, false, true, false),
         ["RenderDecreaseNoteSpeed"] = new(Key.Subtract, false, true, false)
     };

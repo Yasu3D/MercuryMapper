@@ -391,4 +391,25 @@ Would you like to manually select a file?</value>
     <data name="Settings_ShowGimmickNotesDuringPlayback" xml:space="preserve">
         <value>Show Gimmick Notes during Playback</value>
     </data>
+    <data name="Editor_SelectAll" xml:space="preserve">
+        <value>Select All</value>
+    </data>
+    <data name="Editor_DeselectAll" xml:space="preserve">
+        <value>Deselect All</value>
+    </data>
+    <data name="Editor_HighlightNextNote" xml:space="preserve">
+        <value>Highlight Next Note</value>
+    </data>
+    <data name="Editor_HighlightPrevNote" xml:space="preserve">
+        <value>Highlight Prev Note</value>
+    </data>
+    <data name="Editor_SelectHighlightedNote" xml:space="preserve">
+        <value>Select Highlighted Note</value>
+    </data>
+    <data name="Editor_MirrorNote" xml:space="preserve">
+        <value>Mirror Note</value>
+    </data>
+    <data name="Editor_BakeHold" xml:space="preserve">
+        <value>Bake Hold</value>
+    </data>
 </root>

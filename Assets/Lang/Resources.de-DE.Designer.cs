@@ -195,6 +195,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Hold Note Vorberechnen.
+        /// </summary>
+        public static string Editor_BakeHold {
+            get {
+                return ResourceManager.GetString("Editor_BakeHold", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Wiedergabegeschwindigkeit erhöhen.
         /// </summary>
         public static string Editor_DecreasePlaybackSpeed {
@@ -209,6 +218,15 @@ namespace MercuryMapper.Assets.Lang {
         public static string Editor_Delete {
             get {
                 return ResourceManager.GetString("Editor_Delete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Alles Abwählen.
+        /// </summary>
+        public static string Editor_DeselectAll {
+            get {
+                return ResourceManager.GetString("Editor_DeselectAll", resourceCulture);
             }
         }
         
@@ -258,6 +276,24 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Nächste Note Hervorheben.
+        /// </summary>
+        public static string Editor_HighlightNextNote {
+            get {
+                return ResourceManager.GetString("Editor_HighlightNextNote", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Vorherige Note Hervorheben.
+        /// </summary>
+        public static string Editor_HighlightPrevNote {
+            get {
+                return ResourceManager.GetString("Editor_HighlightPrevNote", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Wiedergabegeschwindigkeit verringern.
         /// </summary>
         public static string Editor_IncreasePlaybackSpeed {
@@ -281,6 +317,15 @@ namespace MercuryMapper.Assets.Lang {
         public static string Editor_Measure {
             get {
                 return ResourceManager.GetString("Editor_Measure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Note Spiegeln.
+        /// </summary>
+        public static string Editor_MirrorNote {
+            get {
+                return ResourceManager.GetString("Editor_MirrorNote", resourceCulture);
             }
         }
         
@@ -344,6 +389,24 @@ namespace MercuryMapper.Assets.Lang {
         public static string Editor_Position {
             get {
                 return ResourceManager.GetString("Editor_Position", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Alles Auswählen.
+        /// </summary>
+        public static string Editor_SelectAll {
+            get {
+                return ResourceManager.GetString("Editor_SelectAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hervorgehobene Note Auswählen.
+        /// </summary>
+        public static string Editor_SelectHighlightedNote {
+            get {
+                return ResourceManager.GetString("Editor_SelectHighlightedNote", resourceCulture);
             }
         }
         

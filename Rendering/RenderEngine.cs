@@ -552,6 +552,12 @@ public class RenderEngine(MainView mainView)
                 ArcData selectedData = GetArc(chart, note);
                 canvas.DrawArc(selectedData.Rect, selectedData.StartAngle, selectedData.SweepAngle, false, brushes.GetSelectionPen(canvasScale * selectedData.Scale));
             }
+            
+            if (note == mainView.ChartEditor.HighlightedNote)
+            {
+                ArcData selectedData = GetArc(chart, note);
+                canvas.DrawArc(selectedData.Rect, selectedData.StartAngle, selectedData.SweepAngle, false, brushes.GetHighlightPen(canvasScale * selectedData.Scale));
+            }
         }
     }
     
@@ -590,6 +596,12 @@ public class RenderEngine(MainView mainView)
                 ArcData selectedData = GetArc(chart, note);
                 canvas.DrawArc(selectedData.Rect, selectedData.StartAngle, selectedData.SweepAngle, false, brushes.GetSelectionPen(canvasScale * selectedData.Scale));
             }
+
+            if (note == mainView.ChartEditor.HighlightedNote)
+            {
+                ArcData selectedData = GetArc(chart, note);
+                canvas.DrawArc(selectedData.Rect, selectedData.StartAngle, selectedData.SweepAngle, false, brushes.GetHighlightPen(canvasScale * selectedData.Scale));
+            }
         }
     }
 
@@ -612,6 +624,12 @@ public class RenderEngine(MainView mainView)
             {
                 ArcData selectedData = GetArc(chart, note);
                 canvas.DrawArc(selectedData.Rect, selectedData.StartAngle, selectedData.SweepAngle, false, brushes.GetSelectionPen(canvasScale * selectedData.Scale));
+            }
+            
+            if (note == mainView.ChartEditor.HighlightedNote)
+            {
+                ArcData selectedData = GetArc(chart, note);
+                canvas.DrawArc(selectedData.Rect, selectedData.StartAngle, selectedData.SweepAngle, false, brushes.GetHighlightPen(canvasScale * selectedData.Scale));
             }
         }
     }

@@ -28,6 +28,17 @@ public static class MathExtensions
         return (v - a) / (b - a);
     }
 
+    public static float ShortLerp(bool shortPath, int a, int b, float t)
+    {
+        if (shortPath)
+        {
+            if (a > b) a -= 60;
+            else b -= 60;
+        }
+
+        return Lerp(a, b, t);
+    }
+
     public static float Perspective(float x)
     {
         // Huge thanks to CG505 for figuring out the perspective math:

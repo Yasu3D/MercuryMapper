@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
@@ -230,8 +231,27 @@ public partial class MainView : UserControl
         }
         
         ChartEditor.CurrentMeasure = data.MeasureDecimal;
+        UpdateControls();
         
         timeUpdateSource = TimeUpdateSource.None;
+    }
+
+    public void UpdateControls()
+    {
+        enableInsertButton();
+        return;
+        
+        void enableInsertButton()
+        {
+            int endOfChartCount = ChartEditor.Chart.Notes.Count(x => x.NoteType is NoteType.EndOfChart);
+            
+            bool blockEndOfChart = endOfChartCount == 1 && ChartEditor.CurrentNoteType is NoteType.EndOfChart;
+            bool behindEndOfChart = endOfChartCount != 0 && ChartEditor.CurrentMeasure >= ChartEditor.Chart.Notes.FirstOrDefault(x => x.NoteType is NoteType.EndOfChart)?.BeatData.MeasureDecimal;
+            bool beforeHoldStart = ChartEditor is { CurrentHoldStart: not null, EditorState: ChartEditorState.InsertHold } && ChartEditor.CurrentMeasure <= ChartEditor.CurrentHoldStart.BeatData.MeasureDecimal;
+            bool beforeLastHold = ChartEditor is { LastPlacedHold: not null, EditorState: ChartEditorState.InsertHold } && ChartEditor.CurrentMeasure <= ChartEditor.LastPlacedHold.BeatData.MeasureDecimal;
+            
+            ButtonInsert.IsEnabled = !(blockEndOfChart || behindEndOfChart || beforeHoldStart || beforeLastHold);
+        }
     }
     
     // ________________ Input
@@ -325,6 +345,42 @@ public partial class MainView : UserControl
             e.Handled = true;
             return;
         }
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorSelectAll"])) 
+        {
+            ChartEditor.SelectAllNotes();
+            e.Handled = true;
+            return;
+        }
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorDeselectAll"])) 
+        {
+            ChartEditor.DeselectAllNotes();
+            e.Handled = true;
+            return;
+        }
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorEndHold"]))
+        {
+            ChartEditor.EndHold();
+            e.Handled = true;
+            return;
+        }
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorHighlightNextNote"]))
+        {
+            ChartEditor.HighlightNextNote();
+            e.Handled = true;
+            return;
+        }
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorHighlightPrevNote"]))
+        {
+            ChartEditor.HighlightPrevNote();
+            e.Handled = true;
+            return;
+        }
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorSelectHighlightedNote"]))
+        {
+            ChartEditor.SelectHighlightedNote();
+            e.Handled = true;
+            return;
+        }
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorIncreasePlaybackSpeed"]))
         {
             SliderPlaybackSpeed.Value += 10;
@@ -337,7 +393,6 @@ public partial class MainView : UserControl
             e.Handled = true;
             return;
         }
-        
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorNoteTypeTouch"]))
         {
             RadioNoteTouch.IsChecked = true;
@@ -424,25 +479,37 @@ public partial class MainView : UserControl
         }
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorEditNoteShape"])) 
         {
-            // ChartEditor.EditNote(true, false);
+            ChartEditor.EditSelectionShape();
             e.Handled = true;
             return;
         }
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorEditNoteProperties"])) 
         {
-            // ChartEditor.EditNote(false, true);
+            ChartEditor.EditSelectionProperties();
             e.Handled = true;
             return;
         }
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorEditNoteShapeProperties"])) 
         {
-            // ChartEditor.EditNote(true, true);
+            ChartEditor.EditSelectionFull();
+            e.Handled = true;
+            return;
+        }
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorMirrorNote"])) 
+        {
+            ChartEditor.MirrorSelection();
             e.Handled = true;
             return;
         }
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorDelete"])) 
         {
-            // Delete
+            ChartEditor.DeleteSelection();
+            e.Handled = true;
+            return;
+        }
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorBakeHold"]))
+        {
+            ChartEditor.BakeHold();
             e.Handled = true;
             return;
         }
@@ -558,43 +625,31 @@ public partial class MainView : UserControl
         point.X /= 0.9f;
         point.Y /= 0.9f;
         
+        pointerState = PointerState.Pressed;
+        
         if (modifiers.HasFlag(KeyModifiers.Control))
         {
-            pointerState = PointerState.Pressed;
-            
+            // Selecting
             if (RenderEngine.GetNoteAtPointer(ChartEditor.Chart, point) is not { } note) return;
             
             if (pointerMoved && note == ChartEditor.LastSelectedNote) return;
             
-            // If there's an elegant way to avoid the code repetition here that would be cool.
-            if (ChartEditor.SelectedNotes.Contains(note))
-            {
-                if (!modifiers.HasFlag(KeyModifiers.Shift))
-                {
-                    ChartEditor.DeselectAllNotes();
-                    ChartEditor.LastSelectedNote = null;
-                }
-                
-                ChartEditor.DeselectNote(note);
-            }
-            else
-            {
-                if (!modifiers.HasFlag(KeyModifiers.Shift))
-                {
-                    ChartEditor.DeselectAllNotes();
-                    ChartEditor.LastSelectedNote = null;
-                }
-                
-                ChartEditor.SelectNote(note);
-            }
-
+            ChartEditor.SelectNote(note);
             ChartEditor.LastSelectedNote = note;
+        }
+        else if (modifiers.HasFlag(KeyModifiers.Shift))
+        {
+            // Highlighting
+            if (RenderEngine.GetNoteAtPointer(ChartEditor.Chart, point) is not { } note) return;
+            
+            if (pointerMoved && note == ChartEditor.HighlightedNote) return;
+            
+            ChartEditor.HighlightNote(note);
         }
 
         else
         {
-            pointerState = PointerState.Pressed;
-            
+            // Moving Cursor
             int theta = MathExtensions.GetThetaNotePosition(point.X, point.Y);
             ChartEditor.Cursor.Move(theta);
             NumericNotePosition.Value = ChartEditor.Cursor.Position;
@@ -605,6 +660,7 @@ public partial class MainView : UserControl
     private void Canvas_OnPointerReleased(object? sender, PointerReleasedEventArgs e)
     {
         pointerState = PointerState.Released;
+        ChartEditor.LastSelectedNote = null;
     }
     
     // ________________ UI Events
@@ -680,6 +736,7 @@ public partial class MainView : UserControl
                 ChartEditor.NewChart(filepath, author, bpm, timeSigUpper, timeSigLower);
                 AudioManager.SetSong(filepath, (float)UserConfig.AudioConfig.MusicVolume * 0.01f, (int)SliderPlaybackSpeed.Value);
                 SetSongPositionSliderMaximum();
+                RenderEngine.UpdateVisibleTime();
             }
         });
     }
@@ -830,8 +887,11 @@ public partial class MainView : UserControl
     {
         ChartEditor.InsertNote();
     }
-    
-    private void ButtonEditHold_OnClick(object? sender, RoutedEventArgs e) { }
+
+    private void ButtonEditHold_OnClick(object? sender, RoutedEventArgs e)
+    {
+        ChartEditor.EditHold();
+    }
 
     private void ButtonEndHold_OnClick(object? sender, RoutedEventArgs e)
     {
@@ -1121,7 +1181,7 @@ public partial class MainView : UserControl
     private async void OpenChart(string path)
     {
         // Load chart
-        ChartEditor.Chart.LoadFile(path);
+        ChartEditor.LoadChart(path);
         
         // Oopsie, audio not found.
         if (!File.Exists(ChartEditor.Chart.AudioFilePath))
