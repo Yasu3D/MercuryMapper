@@ -412,4 +412,7 @@ Möchten Sie eine Datei manuell auswählen?</value>
     <data name="Editor_BakeHold" xml:space="preserve">
         <value>Hold Note Vorberechnen</value>
     </data>
+    <data name="Settings_RevertToDefault" xml:space="preserve">
+        <value>Auf Standard-Einstellungen zurücksetzen</value>
+    </data>
 </root>

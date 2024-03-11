@@ -65,6 +65,7 @@ public class KeymapConfig
         ["EditorSelectAll"] = new(Key.A, true, false, false),
         ["EditorDeselectAll"] = new(Key.D, true, false, false),
         ["EditorEndHold"] = new(Key.Enter, false, false, false),
+        ["EditorEditHold"] = new(Key.Enter, false, true, false),
         ["EditorHighlightNextNote"] = new(Key.W, false, true, false),
         ["EditorHighlightPrevNote"] = new(Key.S, false, true, false),
         ["EditorSelectHighlightedNote"] = new(Key.Space, false, true, false),

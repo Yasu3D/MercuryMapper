@@ -125,6 +125,13 @@ public class Brushes(UserConfig userConfig)
         IsAntialias = true
     };
     
+    private readonly SKPaint bonusPen = new()
+    {
+        StrokeWidth = RNotePenStrokeWidth,
+        Style = SKPaintStyle.Stroke,
+        IsAntialias = true
+    };
+    
     // ________ Public Brushes
     public SKColor BackgroundColor = new(0xFF1A1A1A);
 
@@ -271,6 +278,12 @@ public class Brushes(UserConfig userConfig)
         return rNotePen;
     }
     
+    public SKPaint GetBonusPen(float scale)
+    {
+        bonusPen.StrokeWidth = rNoteWidthMultiplier * scale;
+        return bonusPen;
+    }
+    
     // ________ Other
     private SKColor NoteType2Color(NoteType type)
     {
@@ -350,6 +363,7 @@ public class Brushes(UserConfig userConfig)
             syncPen.Color = SKColor.Parse(colors["ColorSync"]);
             holdEndPen.Color = SKColor.Parse(colors["ColorNoteHoldEnd"]);
             rNotePen.Color = SKColor.Parse(colors["ColorRNote"]);
+            bonusPen.Color = SKColor.Parse(colors["ColorBonus"]);
             selectionPen.Color = SKColor.Parse(colors["ColorSelection"]);
             highlightPen.Color = SKColor.Parse(colors["ColorHighlight"]);
             

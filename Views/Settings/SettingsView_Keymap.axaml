@@ -30,6 +30,7 @@
                 <TreeViewItem Name="EditorSelectAll" Header="{x:Static lang:Resources.Editor_SelectAll}"/>
                 <TreeViewItem Name="EditorDeselectAll" Header="{x:Static lang:Resources.Editor_DeselectAll}"/>
                 <TreeViewItem Name="EditorEndHold" Header="{x:Static lang:Resources.Editor_EndHold}"/>
+                <TreeViewItem Name="EditorEditHold" Header="{x:Static lang:Resources.Editor_EditHold}"/>
                 <TreeViewItem Name="EditorHighlightNextNote" Header="{x:Static lang:Resources.Editor_HighlightNextNote}"/>
                 <TreeViewItem Name="EditorHighlightPrevNote" Header="{x:Static lang:Resources.Editor_HighlightPrevNote}"/>
                 <TreeViewItem Name="EditorSelectHighlightedNote" Header="{x:Static lang:Resources.Editor_SelectHighlightedNote}"/>

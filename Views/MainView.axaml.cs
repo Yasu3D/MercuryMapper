@@ -363,6 +363,12 @@ public partial class MainView : UserControl
             e.Handled = true;
             return;
         }
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorEditHold"]))
+        {
+            ChartEditor.EditHold();
+            e.Handled = true;
+            return;
+        }
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorHighlightNextNote"]))
         {
             ChartEditor.HighlightNextNote();
@@ -779,11 +785,12 @@ public partial class MainView : UserControl
         {
             Title = Assets.Lang.Resources.Menu_Settings,
             Content = new SettingsView(this),
-            IsPrimaryButtonEnabled = false,
+            PrimaryButtonText = Assets.Lang.Resources.Settings_RevertToDefault,
             CloseButtonText = Assets.Lang.Resources.Generic_SaveAndClose,
         };
 
-        dialog.Closing += OnSettingsClose;
+        dialog.PrimaryButtonClick += OnSettingsPrimary;
+        dialog.CloseButtonClick += OnSettingsClose;
         
         Dispatcher.UIThread.Post(async () => await dialog.ShowAsync());
     }
@@ -1016,11 +1023,29 @@ public partial class MainView : UserControl
     // ________________ UI Dialogs & Misc
     
     // TODO: SORT THIS SHIT!!!
-    private void OnSettingsClose(ContentDialog sender, ContentDialogClosingEventArgs e)
+    private void OnSettingsClose(ContentDialog sender, ContentDialogButtonClickEventArgs args)
     {
         ApplySettings();
     }
 
+    private void OnSettingsPrimary(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+    {
+        ContentDialog dialog = new()
+        {
+            Title = "Are you sure you want to Revert your Settings?",
+            PrimaryButtonText = "Yes",
+            CloseButtonText = "No",
+        };
+        
+        Dispatcher.UIThread.Post(async () =>
+        {
+            ContentDialogResult result = await dialog.ShowAsync();
+            if (result is ContentDialogResult.Primary) UserConfig = new();
+        });
+        
+        ApplySettings();
+    }
+    
     private void ApplySettings()
     {
         KeybindEditor.StopRebinding(); // Stop rebinding in case it was active.

@@ -1213,6 +1213,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Auf Standard-Einstellungen zurücksetzen.
+        /// </summary>
+        public static string Settings_RevertToDefault {
+            get {
+                return ResourceManager.GetString("Settings_RevertToDefault", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Zeige Gimmick-Noten während Playback.
         /// </summary>
         public static string Settings_ShowGimmickNotesDuringPlayback {

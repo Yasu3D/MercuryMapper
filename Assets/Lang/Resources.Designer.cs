@@ -1186,7 +1186,7 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Note Size.
+        ///   Looks up a localized string similar to Note Thickness.
         /// </summary>
         public static string Settings_NoteSize {
             get {
@@ -1209,6 +1209,15 @@ namespace MercuryMapper.Assets.Lang {
         public static string Settings_RefreshRate {
             get {
                 return ResourceManager.GetString("Settings_RefreshRate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Revert to Default Settings.
+        /// </summary>
+        public static string Settings_RevertToDefault {
+            get {
+                return ResourceManager.GetString("Settings_RevertToDefault", resourceCulture);
             }
         }
         

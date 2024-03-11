@@ -89,7 +89,7 @@ public class DeleteHoldNote(Chart chart, List<Note> selected, Note note) : IOper
             case NoteType.HoldEnd:
                 if (PrevNote == null) break;
                 PrevNote.NextReferencedNote = null;
-                PrevNote.NoteType = NoteType.HoldEnd;
+                PrevNote.NoteType = PrevNote.IsSegment ? NoteType.HoldEnd : PrevNote.NoteType;
                 break;
         }
         

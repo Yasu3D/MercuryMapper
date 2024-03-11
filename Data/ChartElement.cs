@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using MercuryMapper.Enums;
 
 namespace MercuryMapper.Data;
@@ -214,4 +216,43 @@ public class Note : ChartElement
     public bool IsMask => NoteType
         is NoteType.MaskAdd
         or NoteType.MaskRemove;
+
+    public IEnumerable<Note> References()
+    {
+        List<Note> refs = [this];
+        if (!IsHold) return refs;
+
+        Note? prev = PrevReferencedNote;
+        Note? next = NextReferencedNote;
+
+        while (prev is not null)
+        {
+            refs.Add(prev);
+            prev = prev.PrevReferencedNote;
+        }
+
+        while (next is not null)
+        {
+            refs.Add(next);
+            next = next.NextReferencedNote;
+        }
+
+        return refs.OrderBy(x => x.BeatData.FullTick);
+    }
+
+    public Note? FirstReference()
+    {
+        if (!IsHold) return null;
+        
+        Note? first = this;
+        Note? prev = PrevReferencedNote;
+        
+        while (prev is not null)
+        {
+            first = prev;
+            prev = prev.PrevReferencedNote;
+        }
+
+        return first;
+    }
 }

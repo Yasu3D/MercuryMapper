@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace MercuryMapper.UndoRedo;
 
@@ -9,7 +10,7 @@ public class CompositeOperation(string description, IEnumerable<IOperation> oper
 
     public void Undo()
     {
-        foreach (IOperation operation in Operations) operation.Undo();
+        foreach (IOperation operation in Operations.Reverse()) operation.Undo();
     }
 
     public void Redo()

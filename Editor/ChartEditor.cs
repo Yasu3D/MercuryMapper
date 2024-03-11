@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using FluentAvalonia.Core;
 using MercuryMapper.Data;
 using MercuryMapper.Enums;
 using MercuryMapper.UndoRedo;
@@ -290,9 +291,6 @@ public class ChartEditor
         if (!UndoRedoManager.CanRedo) return;
         IOperation operation = UndoRedoManager.Redo();
         
-        // End hold automatically when hitting Redo.
-        EndHold();
-        
         // Update LastPlacedHold
         if (operation is InsertHoldNote insertHoldOperation)
         {
@@ -484,18 +482,45 @@ public class ChartEditor
 
     public void DeleteSelection()
     {
+        // So... this is more complicated than expected.
+        // Bulk deleting hold notes requires each deletion to reference the state of the last,
+        // otherwise hold note references get mangled.
+        // The most elegant solution I can think of for that is to
+        // pre-apply each hold deletion, undo them and add them to the full operationList,
+        // then Redoing all operations together.
+        // This handles state and preserves the operation as one whole CompositeOperation.
+        
         List<IOperation> operationList = [];
+        List<DeleteHoldNote> holdOperationList = [];
         
         if (EditorState is ChartEditorState.InsertHold && CurrentHoldStart != null && SelectedNotes.Contains(CurrentHoldStart))
         {
             EndHold();
         }
+
+        List<Note> checkedHolds = [];
         
-        foreach (Note note in SelectedNotes)
+        foreach (Note note in SelectedNotes.OrderByDescending(x => x.BeatData.FullTick))
         {
             if (note.IsHold)
             {
-                operationList.Add(new DeleteHoldNote(Chart, SelectedNotes, note));
+                DeleteHoldNote holdOp = new(Chart, SelectedNotes, note);
+                holdOperationList.Add(holdOp);
+                UndoRedoManager.InvokeAndPush(holdOp);
+
+                // If deleting all but one segment, delete the last one too.
+                if (checkedHolds.Contains(note)) continue;
+
+                Console.WriteLine(note.References().Count());
+                
+                List<Note> unselectedReferences = note.References().Where(x => !SelectedNotes.Contains(x)).ToList();
+                if (unselectedReferences.Count == 1)
+                {
+                    DeleteHoldNote holdOp2 = new(Chart, SelectedNotes, unselectedReferences[0]);
+                    holdOperationList.Add(holdOp2);
+                    UndoRedoManager.InvokeAndPush(holdOp2);
+                }
+                checkedHolds.AddRange(note.References());
             }
             else
             {
@@ -503,6 +528,13 @@ public class ChartEditor
             }
         }
 
+        // Temporarily undo all hold operations, then add them to the operationList
+        foreach (DeleteHoldNote deleteHoldOp in holdOperationList)
+        {
+            UndoRedoManager.Undo();
+            operationList.Add(deleteHoldOp);
+        }
+        
         if (operationList.Count == 0) return;
         UndoRedoManager.InvokeAndPush(new CompositeOperation(operationList[0].Description, operationList));
         Chart.IsSaved = false;
@@ -710,5 +742,6 @@ public class ChartEditor
         if (HighlightedNote?.NoteType is not NoteType.HoldEnd) return;
         StartHold();
         LastPlacedHold = HighlightedNote;
+        CurrentHoldStart = HighlightedNote.FirstReference();
     }
 }

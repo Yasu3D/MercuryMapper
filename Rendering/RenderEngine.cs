@@ -582,6 +582,13 @@ public class RenderEngine(MainView mainView)
                 canvas.DrawArc(data.Rect, start, sweep, false, brushes.GetRNotePen(canvasScale * data.Scale));
             }
             
+            if (note.IsBonus)
+            {
+                float start = data.StartAngle - (note.Size != 60 ? 1.5f : 0);
+                float sweep = data.SweepAngle + (note.Size != 60 ? 3.0f : 0);
+                canvas.DrawArc(data.Rect, start, sweep, false, brushes.GetBonusPen(canvasScale * data.Scale));
+            }
+            
             // Normal Note
             if (note.Size != 60)
             {
