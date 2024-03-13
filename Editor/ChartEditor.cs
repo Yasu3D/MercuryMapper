@@ -24,6 +24,9 @@ public class ChartEditor
             Chart.Notes = Chart.Notes.OrderBy(x => x.BeatData.FullTick).ToList();
             Chart.Gimmicks = Chart.Gimmicks.OrderBy(x => x.BeatData.FullTick).ToList();
             Chart.IsSaved = false;
+            
+            mainView.ToggleInsertButton();
+            mainView.SetSelectionInfo();
         };
     }
     
@@ -118,7 +121,7 @@ public class ChartEditor
         // Reset Editor State
         EndHold();
         mainView.SetHoldContextButton(EditorState);
-        mainView.UpdateControls();
+        mainView.ToggleInsertButton();
         
         switch (CurrentNoteType)
         {
@@ -285,8 +288,6 @@ public class ChartEditor
                 return;
             }
         }
-        
-        mainView.UpdateControls();
     }
 
     public void Redo()
@@ -319,8 +320,6 @@ public class ChartEditor
                 return;
             }
         }
-        
-        mainView.UpdateControls();
     }
     
     public void Cut()
@@ -431,14 +430,22 @@ public class ChartEditor
                 SelectedNotes.Add(note);
             }
         }
+        
+        mainView.SetSelectionInfo();
     }
 
     public void SelectAllNotes()
     {
         lock (SelectedNotes)
         {
-            SelectedNotes.AddRange(Chart.Notes);
+            foreach (Note note in Chart.Notes)
+            {
+                if (SelectedNotes.Contains(note)) continue;
+                SelectedNotes.Add(note);
+            }
         }
+        
+        mainView.SetSelectionInfo();
     }
     
     public void DeselectAllNotes()
@@ -447,32 +454,44 @@ public class ChartEditor
         {
             SelectedNotes.Clear();
         }
+        
+        mainView.SetSelectionInfo();
     }
     
     // ________________ Highlighting
-    public void HighlightElement(ChartElement element)
+    public void HighlightElement(ChartElement? element)
     {
         HighlightedElement = HighlightedElement == element ? null : element;
+        mainView.SetSelectionInfo();
     }
 
-    public void HighlightNextNote()
+    public void HighlightNextElement()
     {
         if (HighlightedElement is null) return;
 
         List<ChartElement> elements = Chart.Notes.Concat<ChartElement>(Chart.Gimmicks).OrderBy(x => x.BeatData.FullTick).ToList();
         int index = elements.IndexOf(HighlightedElement);
-        HighlightedElement = elements[MathExtensions.Modulo(index + 1, Chart.Notes.Count)];
+        HighlightedElement = elements[MathExtensions.Modulo(index + 1, elements.Count)];
+        mainView.SetSelectionInfo();
     }
 
-    public void HighlightPrevNote()
+    public void HighlightPrevElement()
     {
         if (HighlightedElement is null) return;
         
         List<ChartElement> elements = Chart.Notes.Concat<ChartElement>(Chart.Gimmicks).OrderBy(x => x.BeatData.FullTick).ToList();
         int index = elements.IndexOf(HighlightedElement);
-        HighlightedElement = elements[MathExtensions.Modulo(index - 1, Chart.Notes.Count)];
+        HighlightedElement = elements[MathExtensions.Modulo(index - 1, elements.Count)];
+        mainView.SetSelectionInfo();
     }
 
+    public void HighlightNearestElement()
+    {
+        List<ChartElement> elements = Chart.Notes.Concat<ChartElement>(Chart.Gimmicks).OrderBy(x => x.BeatData.FullTick).ToList();
+        HighlightElement(elements.FirstOrDefault(x => x.BeatData.MeasureDecimal >= CurrentMeasureDecimal) ?? null);
+        mainView.SetSelectionInfo();
+    }
+    
     public void SelectHighlightedNote()
     {
         if (HighlightedElement is null or Gimmick) return;
@@ -515,8 +534,6 @@ public class ChartEditor
             UndoRedoManager.InvokeAndPush(new InsertHoldNote(Chart, SelectedNotes, note, LastPlacedHold));
             Chart.IsSaved = false;
             LastPlacedHold = note;
-            mainView.UpdateControls();
-            
             return;
         }
         
@@ -543,9 +560,6 @@ public class ChartEditor
                 StartHold();
                 CurrentHoldStart = note;
             }
-            
-            mainView.UpdateControls();
-            
             return;
         }
 

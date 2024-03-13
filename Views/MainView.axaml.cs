@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -48,6 +49,8 @@ public partial class MainView : UserControl
         
         ApplySettings();
         ToggleTypeRadio(false);
+        ToggleInsertButton();
+        SetSelectionInfo();
     }
 
     public bool CanShutdown;
@@ -178,7 +181,7 @@ public partial class MainView : UserControl
     {
         float latency = BassSoundEngine.GetLatency();
         float measure = ChartEditor.CurrentMeasureDecimal + latency;
-
+        
         while (AudioManager.HitsoundNoteIndex < ChartEditor.Chart.Notes.Count
                && ChartEditor.Chart.Notes[AudioManager.HitsoundNoteIndex].BeatData.MeasureDecimal <= measure)
         {
@@ -232,28 +235,119 @@ public partial class MainView : UserControl
         }
         
         ChartEditor.CurrentMeasureDecimal = data.MeasureDecimal;
-        UpdateControls();
+        ToggleInsertButton();
         
         timeUpdateSource = TimeUpdateSource.None;
     }
 
-    public void UpdateControls()
+    public void ToggleInsertButton()
     {
-        enableInsertButton();
-        return;
-        
-        void enableInsertButton()
-        {
-            int endOfChartCount = ChartEditor.Chart.Notes.Count(x => x.NoteType is NoteType.EndOfChart);
+        int endOfChartCount = ChartEditor.Chart.Notes.Count(x => x.NoteType is NoteType.EndOfChart);
             
-            bool blockEndOfChart = endOfChartCount == 1 && ChartEditor.CurrentNoteType is NoteType.EndOfChart;
-            bool behindEndOfChart = endOfChartCount != 0 && ChartEditor.CurrentMeasureDecimal >= ChartEditor.Chart.Notes.FirstOrDefault(x => x.NoteType is NoteType.EndOfChart)?.BeatData.MeasureDecimal;
-            bool beforeHoldStart = ChartEditor is { CurrentHoldStart: not null, EditorState: ChartEditorState.InsertHold } && ChartEditor.CurrentMeasureDecimal <= ChartEditor.CurrentHoldStart.BeatData.MeasureDecimal;
-            bool beforeLastHold = ChartEditor is { LastPlacedHold: not null, EditorState: ChartEditorState.InsertHold } && ChartEditor.CurrentMeasureDecimal <= ChartEditor.LastPlacedHold.BeatData.MeasureDecimal;
+        bool blockEndOfChart = endOfChartCount == 1 && ChartEditor.CurrentNoteType is NoteType.EndOfChart;
+        bool behindEndOfChart = endOfChartCount != 0 && ChartEditor.CurrentMeasureDecimal >= ChartEditor.Chart.Notes.FirstOrDefault(x => x.NoteType is NoteType.EndOfChart)?.BeatData.MeasureDecimal;
+        bool beforeHoldStart = ChartEditor is { CurrentHoldStart: not null, EditorState: ChartEditorState.InsertHold } && ChartEditor.CurrentMeasureDecimal <= ChartEditor.CurrentHoldStart.BeatData.MeasureDecimal;
+        bool beforeLastHold = ChartEditor is { LastPlacedHold: not null, EditorState: ChartEditorState.InsertHold } && ChartEditor.CurrentMeasureDecimal <= ChartEditor.LastPlacedHold.BeatData.MeasureDecimal;
             
-            ButtonInsert.IsEnabled = !(blockEndOfChart || behindEndOfChart || beforeHoldStart || beforeLastHold);
-        }
+        ButtonInsert.IsEnabled = !(blockEndOfChart || behindEndOfChart || beforeHoldStart || beforeLastHold);
     }
+    
+    public void SetSelectionInfo()
+        {
+            SelectionInfoSelectedNotesValue.Text = ChartEditor.SelectedNotes.Count.ToString();
+            
+            if (ChartEditor.HighlightedElement is null)
+            {
+                SelectionInfoMeasureValue.Text = "/";
+                SelectionInfoBeatValue.Text = "/";
+                
+                SelectionInfoNoteType.IsVisible = false;
+                SelectionInfoNoteTypeValue.IsVisible = false;
+                SelectionInfoGimmickType.IsVisible = false;
+                SelectionInfoGimmickTypeValue.IsVisible = false;
+                SelectionInfoPosition.IsVisible = false;
+                SelectionInfoPositionValue.IsVisible = false;
+                SelectionInfoSize.IsVisible = false;
+                SelectionInfoSizeValue.IsVisible = false;
+                SelectionInfoMaskDirection.IsVisible = false;
+                SelectionInfoMaskDirectionValue.IsVisible = false;
+                SelectionInfoBpm.IsVisible = false;
+                SelectionInfoBpmValue.IsVisible = false;
+                SelectionInfoHiSpeed.IsVisible = false;
+                SelectionInfoHiSpeedValue.IsVisible = false;
+                SelectionInfoTimeSig.IsVisible = false;
+                SelectionInfoTimeSigValue.IsVisible = false;
+                
+                SelectionInfoSeparator1.IsVisible = false;
+                SelectionInfoSeparator2.IsVisible = false;
+
+                return;
+            }
+
+            SelectionInfoMeasureValue.Text = ChartEditor.HighlightedElement.BeatData.Measure.ToString();
+
+            int tick = ChartEditor.HighlightedElement.BeatData.Tick;
+            int gcd = MathExtensions.GreatestCommonDivisor(tick, 1920);
+            SelectionInfoBeatValue.Text = $"{tick / gcd} / {1920 / gcd}";
+            
+            if (ChartEditor.HighlightedElement is Gimmick gimmick)
+            {
+                SelectionInfoGimmickTypeValue.Text = Enums2String.GimmickType2String(gimmick.GimmickType);
+                SelectionInfoBpmValue.Text = gimmick.Bpm.ToString(CultureInfo.CurrentCulture);
+                SelectionInfoHiSpeedValue.Text = gimmick.HiSpeed.ToString(CultureInfo.CurrentCulture);
+                SelectionInfoTimeSigValue.Text = $"{gimmick.TimeSig.Upper} / {gimmick.TimeSig.Lower}";
+                
+                SelectionInfoNoteType.IsVisible = false;
+                SelectionInfoNoteTypeValue.IsVisible = false;
+                SelectionInfoPosition.IsVisible = false;
+                SelectionInfoPositionValue.IsVisible = false;
+                SelectionInfoSize.IsVisible = false;
+                SelectionInfoSizeValue.IsVisible = false;
+                SelectionInfoMaskDirection.IsVisible = false;
+                SelectionInfoMaskDirectionValue.IsVisible = false;
+                
+                SelectionInfoGimmickType.IsVisible = true;
+                SelectionInfoGimmickTypeValue.IsVisible = true;
+                SelectionInfoBpm.IsVisible = gimmick.GimmickType is GimmickType.BpmChange;
+                SelectionInfoBpmValue.IsVisible = gimmick.GimmickType is GimmickType.BpmChange;
+                SelectionInfoHiSpeed.IsVisible = gimmick.GimmickType is GimmickType.HiSpeedChange;
+                SelectionInfoHiSpeedValue.IsVisible = gimmick.GimmickType is GimmickType.HiSpeedChange;
+                SelectionInfoTimeSig.IsVisible = gimmick.GimmickType is GimmickType.TimeSigChange;
+                SelectionInfoTimeSigValue.IsVisible = gimmick.GimmickType is GimmickType.TimeSigChange;
+                
+                SelectionInfoSeparator1.IsVisible = true;
+                SelectionInfoSeparator2.IsVisible = gimmick is { IsStop: false, IsReverse: false };
+            }
+
+            if (ChartEditor.HighlightedElement is Note note)
+            {
+                SelectionInfoPositionValue.Text = note.Position.ToString();
+                SelectionInfoSizeValue.Text = note.Size.ToString();
+                SelectionInfoNoteTypeValue.Text = Enums2String.NoteType2String(note.NoteType);
+                SelectionInfoMaskDirectionValue.Text = Enums2String.MaskDirection2String(note.MaskDirection);
+                
+                SelectionInfoNoteType.IsVisible = true;
+                SelectionInfoNoteTypeValue.IsVisible = true;
+                SelectionInfoGimmickType.IsVisible = false;
+                SelectionInfoGimmickTypeValue.IsVisible = false;
+                SelectionInfoPosition.IsVisible = true;
+                SelectionInfoPositionValue.IsVisible = true;
+                SelectionInfoSize.IsVisible = true;
+                SelectionInfoSizeValue.IsVisible = true;
+                SelectionInfoMaskDirection.IsVisible = note.IsMask;
+                SelectionInfoMaskDirectionValue.IsVisible = note.IsMask;
+                
+                SelectionInfoBpm.IsVisible = false;
+                SelectionInfoBpmValue.IsVisible = false;
+                SelectionInfoHiSpeed.IsVisible = false;
+                SelectionInfoHiSpeedValue.IsVisible = false;
+                SelectionInfoTimeSig.IsVisible = false;
+                SelectionInfoTimeSigValue.IsVisible = false;
+                
+                SelectionInfoSeparator1.IsVisible = true;
+                SelectionInfoSeparator2.IsVisible = true;
+            }
+        }
     
     // ________________ Input
     
@@ -382,13 +476,13 @@ public partial class MainView : UserControl
         }
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorHighlightNextNote"]))
         {
-            ChartEditor.HighlightNextNote();
+            ChartEditor.HighlightNextElement();
             e.Handled = true;
             return;
         }
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorHighlightPrevNote"]))
         {
-            ChartEditor.HighlightPrevNote();
+            ChartEditor.HighlightPrevElement();
             e.Handled = true;
             return;
         }
@@ -1116,6 +1210,10 @@ public partial class MainView : UserControl
         
         AudioManager.CurrentSong.PlaybackSpeed = (int)SliderPlaybackSpeed.Value;
     }
+
+    private void ButtonHighlightNext_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.HighlightNextElement();
+    private void ButtonHighlightPrev_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.HighlightPrevElement();
+    private void ButtonHighlightNearest_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.HighlightNearestElement();
     
     // ________________ UI Dialogs & Misc
     
@@ -1192,7 +1290,7 @@ public partial class MainView : UserControl
         IconStop.IsVisible = play;
         SliderSongPosition.IsEnabled = !play;
 
-        AudioManager.HitsoundNoteIndex = ChartEditor.Chart.Notes.FindIndex(x => x.BeatData.MeasureDecimal >= ChartEditor.CurrentMeasureDecimal);
+        AudioManager.HitsoundNoteIndex = int.Max(0, ChartEditor.Chart.Notes.FindIndex(x => x.BeatData.MeasureDecimal >= ChartEditor.CurrentMeasureDecimal));
     }
     
     private async Task<bool> PromptSave()

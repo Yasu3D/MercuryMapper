@@ -62,7 +62,7 @@
                 <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorBonus"/>
                 <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.BonusType_RNote}"/>
                 <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorRNote"/>
-                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_Color_NoteCaps}"/>
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Editor_NoteCaps}"/>
                 <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorNoteCaps"/>
                 <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_Color_Sync}"/>
                 <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorSync"/>

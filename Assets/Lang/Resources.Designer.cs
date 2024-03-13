@@ -213,6 +213,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Beat.
+        /// </summary>
+        public static string Editor_Beat {
+            get {
+                return ResourceManager.GetString("Editor_Beat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Increase Playback Speed.
         /// </summary>
         public static string Editor_DecreasePlaybackSpeed {
@@ -294,11 +303,92 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Chart Info.
+        /// </summary>
+        public static string Editor_ExpanderHeader_ChartInfo {
+            get {
+                return ResourceManager.GetString("Editor_ExpanderHeader_ChartInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Modify Gimmicks.
+        /// </summary>
+        public static string Editor_ExpanderHeader_ModifyGimmicks {
+            get {
+                return ResourceManager.GetString("Editor_ExpanderHeader_ModifyGimmicks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Modify Notes.
+        /// </summary>
+        public static string Editor_ExpanderHeader_ModifyNotes {
+            get {
+                return ResourceManager.GetString("Editor_ExpanderHeader_ModifyNotes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Quick Settings.
+        /// </summary>
+        public static string Editor_ExpanderHeader_QuickSettings {
+            get {
+                return ResourceManager.GetString("Editor_ExpanderHeader_QuickSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Selection Info.
+        /// </summary>
+        public static string Editor_ExpanderHeader_SelectionInfo {
+            get {
+                return ResourceManager.GetString("Editor_ExpanderHeader_SelectionInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Gimmick Type.
+        /// </summary>
+        public static string Editor_GimmickType {
+            get {
+                return ResourceManager.GetString("Editor_GimmickType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nearest.
+        /// </summary>
+        public static string Editor_HighlightNearest {
+            get {
+                return ResourceManager.GetString("Editor_HighlightNearest", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Next &gt;.
+        /// </summary>
+        public static string Editor_HighlightNext {
+            get {
+                return ResourceManager.GetString("Editor_HighlightNext", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Highlight Next Note.
         /// </summary>
         public static string Editor_HighlightNextNote {
             get {
                 return ResourceManager.GetString("Editor_HighlightNextNote", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt; Previous.
+        /// </summary>
+        public static string Editor_HighlightPrev {
+            get {
+                return ResourceManager.GetString("Editor_HighlightPrev", resourceCulture);
             }
         }
         
@@ -326,6 +416,15 @@ namespace MercuryMapper.Assets.Lang {
         public static string Editor_Insert {
             get {
                 return ResourceManager.GetString("Editor_Insert", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mask Direction.
+        /// </summary>
+        public static string Editor_MaskDirection {
+            get {
+                return ResourceManager.GetString("Editor_MaskDirection", resourceCulture);
             }
         }
         
@@ -380,6 +479,24 @@ namespace MercuryMapper.Assets.Lang {
         public static string Editor_NewChartInvalidTimeSig {
             get {
                 return ResourceManager.GetString("Editor_NewChartInvalidTimeSig", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Note Caps.
+        /// </summary>
+        public static string Editor_NoteCaps {
+            get {
+                return ResourceManager.GetString("Editor_NoteCaps", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Note Type.
+        /// </summary>
+        public static string Editor_NoteType {
+            get {
+                return ResourceManager.GetString("Editor_NoteType", resourceCulture);
             }
         }
         
@@ -483,6 +600,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Selected Notes.
+        /// </summary>
+        public static string Editor_SelectionInfo_SelectedNotes {
+            get {
+                return ResourceManager.GetString("Editor_SelectionInfo_SelectedNotes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Size.
         /// </summary>
         public static string Editor_Size {
@@ -533,6 +659,15 @@ namespace MercuryMapper.Assets.Lang {
         public static string Generic_No {
             get {
                 return ResourceManager.GetString("Generic_No", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to None.
+        /// </summary>
+        public static string Generic_None {
+            get {
+                return ResourceManager.GetString("Generic_None", resourceCulture);
             }
         }
         
@@ -619,11 +754,56 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Reverse Effect End.
+        /// </summary>
+        public static string Gimmick_ReverseEffectEnd {
+            get {
+                return ResourceManager.GetString("Gimmick_ReverseEffectEnd", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reverse Effect Start.
+        /// </summary>
+        public static string Gimmick_ReverseEffectStart {
+            get {
+                return ResourceManager.GetString("Gimmick_ReverseEffectStart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reverse Note Zone End.
+        /// </summary>
+        public static string Gimmick_ReverseNoteEnd {
+            get {
+                return ResourceManager.GetString("Gimmick_ReverseNoteEnd", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Stop.
         /// </summary>
         public static string Gimmick_Stop {
             get {
                 return ResourceManager.GetString("Gimmick_Stop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stop End.
+        /// </summary>
+        public static string Gimmick_StopEnd {
+            get {
+                return ResourceManager.GetString("Gimmick_StopEnd", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stop Start.
+        /// </summary>
+        public static string Gimmick_StopStart {
+            get {
+                return ResourceManager.GetString("Gimmick_StopStart", resourceCulture);
             }
         }
         
@@ -1074,15 +1254,6 @@ namespace MercuryMapper.Assets.Lang {
         public static string Settings_Color_MeasureLine {
             get {
                 return ResourceManager.GetString("Settings_Color_MeasureLine", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Note Caps.
-        /// </summary>
-        public static string Settings_Color_NoteCaps {
-            get {
-                return ResourceManager.GetString("Settings_Color_NoteCaps", resourceCulture);
             }
         }
         

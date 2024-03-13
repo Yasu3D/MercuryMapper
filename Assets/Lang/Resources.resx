@@ -322,7 +322,7 @@ Would you like to manually select a file?</value>
     <data name="Editor_Delete" xml:space="preserve">
         <value>Delete</value>
     </data>
-    <data name="Settings_Color_NoteCaps" xml:space="preserve">
+    <data name="Editor_NoteCaps" xml:space="preserve">
         <value>Note Caps</value>
     </data>
     <data name="Settings_NoteSize" xml:space="preserve">
@@ -444,5 +444,62 @@ Would you like to manually select a file?</value>
     </data>
     <data name="Editor_QuickEditIncreaseTimestamp" xml:space="preserve">
         <value>Timestamp + [Quick Edit]</value>
+    </data>
+    <data name="Editor_ExpanderHeader_SelectionInfo" xml:space="preserve">
+        <value>Selection Info</value>
+    </data>
+    <data name="Editor_ExpanderHeader_ModifyNotes" xml:space="preserve">
+        <value>Modify Notes</value>
+    </data>
+    <data name="Editor_ExpanderHeader_QuickSettings" xml:space="preserve">
+        <value>Quick Settings</value>
+    </data>
+    <data name="Editor_ExpanderHeader_ModifyGimmicks" xml:space="preserve">
+        <value>Modify Gimmicks</value>
+    </data>
+    <data name="Editor_ExpanderHeader_ChartInfo" xml:space="preserve">
+        <value>Chart Info</value>
+    </data>
+    <data name="Gimmick_ReverseEffectStart" xml:space="preserve">
+        <value>Reverse Effect Start</value>
+    </data>
+    <data name="Gimmick_ReverseEffectEnd" xml:space="preserve">
+        <value>Reverse Effect End</value>
+    </data>
+    <data name="Gimmick_ReverseNoteEnd" xml:space="preserve">
+        <value>Reverse Note Zone End</value>
+    </data>
+    <data name="Gimmick_StopStart" xml:space="preserve">
+        <value>Stop Start</value>
+    </data>
+    <data name="Gimmick_StopEnd" xml:space="preserve">
+        <value>Stop End</value>
+    </data>
+    <data name="Generic_None" xml:space="preserve">
+        <value>None</value>
+    </data>
+    <data name="Editor_HighlightNearest" xml:space="preserve">
+        <value>Nearest</value>
+    </data>
+    <data name="Editor_HighlightNext" xml:space="preserve">
+        <value>Next &gt;</value>
+    </data>
+    <data name="Editor_HighlightPrev" xml:space="preserve">
+        <value>&lt; Previous</value>
+    </data>
+    <data name="Editor_SelectionInfo_SelectedNotes" xml:space="preserve">
+        <value>Selected Notes</value>
+    </data>
+    <data name="Editor_Beat" xml:space="preserve">
+        <value>Beat</value>
+    </data>
+    <data name="Editor_NoteType" xml:space="preserve">
+        <value>Note Type</value>
+    </data>
+    <data name="Editor_GimmickType" xml:space="preserve">
+        <value>Gimmick Type</value>
+    </data>
+    <data name="Editor_MaskDirection" xml:space="preserve">
+        <value>Mask Direction</value>
     </data>
 </root>

@@ -6,12 +6,16 @@ public static class MathExtensions
 {
     public static int Modulo(int x, int m)
     {
+        if (m <= 0) return 0;
+        
         int r = x % m;
         return r < 0 ? r + m : r;
     }
     
     public static float Modulo(float x, int m)
     {
+        if (m <= 0) return 0;
+        
         float r = x % m;
         return r < 0 ? r + m : r;
     }
@@ -62,5 +66,17 @@ public static class MathExtensions
     public static int GetThetaNotePosition(float x, float y)
     {
         return (int)(360 - GetTheta(x, y)) / 6;
+    }
+
+    public static int GreatestCommonDivisor(int x, int y)
+    {
+        if (x < 0 || y < 0) return 1;
+        
+        while (x != 0 && y != 0)
+        {
+            if (x > y) x %= y;
+            else y %= x;
+        }
+        return x | y;
     }
 }

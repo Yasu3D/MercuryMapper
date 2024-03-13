@@ -151,13 +151,13 @@
         <value>Tastaturbelegung</value>
     </data>
     <data name="Note_HoldEnd" xml:space="preserve">
-        <value>Halten Ende</value>
+        <value>Halte-Ende</value>
     </data>
     <data name="Note_HoldSegment" xml:space="preserve">
-        <value>Halten Segment</value>
+        <value>Halte-Segment</value>
     </data>
     <data name="Note_HoldStart" xml:space="preserve">
-        <value>Halten Start</value>
+        <value>Halte-Start</value>
     </data>
     <data name="Note_HoldSurfaceFar" xml:space="preserve">
         <value>Haltefläche Fern</value>
@@ -322,7 +322,7 @@ Möchten Sie eine Datei manuell auswählen?</value>
     <data name="Editor_EditNoteShapeProperties" xml:space="preserve">
         <value>Note Bearbeiten [Beides]</value>
     </data>
-    <data name="Settings_Color_NoteCaps" xml:space="preserve">
+    <data name="Editor_NoteCaps" xml:space="preserve">
         <value>Noten Kappen</value>
     </data>
     <data name="Settings_NoteSize" xml:space="preserve">
@@ -444,5 +444,62 @@ Möchten Sie eine Datei manuell auswählen?</value>
     </data>
     <data name="Editor_QuickEditIncreaseTimestamp" xml:space="preserve">
         <value>Timestamp + [Quick Edit]</value>
+    </data>
+    <data name="Editor_ExpanderHeader_SelectionInfo" xml:space="preserve">
+        <value>Auswahl-Info</value>
+    </data>
+    <data name="Editor_ExpanderHeader_ModifyNotes" xml:space="preserve">
+        <value>Noten Modifizieren</value>
+    </data>
+    <data name="Editor_ExpanderHeader_QuickSettings" xml:space="preserve">
+        <value>Schnell-Einstellungen</value>
+    </data>
+    <data name="Editor_ExpanderHeader_ModifyGimmicks" xml:space="preserve">
+        <value>Gimmicks Modifizieren</value>
+    </data>
+    <data name="Editor_ExpanderHeader_ChartInfo" xml:space="preserve">
+        <value>Chart-Info</value>
+    </data>
+    <data name="Gimmick_ReverseEffectStart" xml:space="preserve">
+        <value>Reverse Effekt Anfang</value>
+    </data>
+    <data name="Gimmick_ReverseEffectEnd" xml:space="preserve">
+        <value>Reverse Effekt Ende</value>
+    </data>
+    <data name="Gimmick_ReverseNoteEnd" xml:space="preserve">
+        <value>Reverse Noten-Zone Ende</value>
+    </data>
+    <data name="Gimmick_StopStart" xml:space="preserve">
+        <value>Stopp Anfang</value>
+    </data>
+    <data name="Gimmick_StopEnd" xml:space="preserve">
+        <value>Stopp Ende</value>
+    </data>
+    <data name="Generic_None" xml:space="preserve">
+        <value>Keine</value>
+    </data>
+    <data name="Editor_HighlightNearest" xml:space="preserve">
+        <value>Naheste</value>
+    </data>
+    <data name="Editor_HighlightNext" xml:space="preserve">
+        <value>Nächste &gt;</value>
+    </data>
+    <data name="Editor_HighlightPrev" xml:space="preserve">
+        <value>&lt; Vorherige</value>
+    </data>
+    <data name="Editor_Beat" xml:space="preserve">
+        <value>Beat</value>
+    </data>
+    <data name="Editor_SelectionInfo_SelectedNotes" xml:space="preserve">
+        <value>Ausgewählte Noten</value>
+    </data>
+    <data name="Editor_NoteType" xml:space="preserve">
+        <value>Noten-Art</value>
+    </data>
+    <data name="Editor_GimmickType" xml:space="preserve">
+        <value>Gimmick-Art</value>
+    </data>
+    <data name="Editor_MaskDirection" xml:space="preserve">
+        <value>Masken-Richtung</value>
     </data>
 </root>
