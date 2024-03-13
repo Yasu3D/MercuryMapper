@@ -3,10 +3,9 @@ using System.Linq;
 
 namespace MercuryMapper.UndoRedo;
 
-public class CompositeOperation(string description, IEnumerable<IOperation> operations) : IOperation
+public class CompositeOperation(IEnumerable<IOperation> operations) : IOperation
 {
     public IEnumerable<IOperation> Operations { get; } = operations;
-    public string Description { get; } = description;
 
     public void Undo()
     {

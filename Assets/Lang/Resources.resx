@@ -415,4 +415,34 @@ Would you like to manually select a file?</value>
     <data name="Settings_RevertToDefault" xml:space="preserve">
         <value>Revert to Default Settings</value>
     </data>
+    <data name="Settings_RevertWarning" xml:space="preserve">
+        <value>Are you sure you want to revert your Settings?</value>
+    </data>
+    <data name="Generic_SelectFile" xml:space="preserve">
+        <value>Select File</value>
+    </data>
+    <data name="Editor_AddGimmick" xml:space="preserve">
+        <value>Add Gimmick</value>
+    </data>
+    <data name="Editor_EditGimmick" xml:space="preserve">
+        <value>Edit Gimmick</value>
+    </data>
+    <data name="Editor_QuickEditDecreaseSize" xml:space="preserve">
+        <value>Size - [Quick Edit]</value>
+    </data>
+    <data name="Editor_QuickEditIncreasePosition" xml:space="preserve">
+        <value>Position + [Quick Edit]</value>
+    </data>
+    <data name="Editor_QuickEditIncreaseSize" xml:space="preserve">
+        <value>Size + [Quick Edit]</value>
+    </data>
+    <data name="Editor_QuickEditDecreasePosition" xml:space="preserve">
+        <value>Position - [Quick Edit]</value>
+    </data>
+    <data name="Editor_QuickEditDecreaseTimestamp" xml:space="preserve">
+        <value>Timestamp - [Quick Edit]</value>
+    </data>
+    <data name="Editor_QuickEditIncreaseTimestamp" xml:space="preserve">
+        <value>Timestamp + [Quick Edit]</value>
+    </data>
 </root>

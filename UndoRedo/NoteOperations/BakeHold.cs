@@ -6,12 +6,11 @@ namespace MercuryMapper.UndoRedo.NoteOperations;
 
 public class BakeHold(Chart chart, List<Note> selected, List<Note> segments, Note start, Note end) : IOperation
 {
-    public Chart Chart = chart;
+    public readonly Chart Chart = chart;
     public List<Note> Segments { get; } = segments;
     public List<Note> Selected { get; } = selected;
     public Note Start { get; } = start;
     public Note End { get; } = end;
-    public string Description => "Bake Hold";
     
     public void Undo()
     {

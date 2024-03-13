@@ -42,7 +42,7 @@
         <Separator Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3"/>
         
         <TextBlock Grid.Row="5" Grid.Column="0" Text="{x:Static lang:Resources.ChartProperties_MusicFilePath}"/>
-        <Button Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" Content="Select File" Click="SelectFile_OnClick"/>
+        <Button Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" Content="{x:Static lang:Resources.Generic_SelectFile}" Click="SelectFile_OnClick"/>
         <TextBox Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3" Name="MusicFilePathTextBox"/>
     </Grid>
 </UserControl>

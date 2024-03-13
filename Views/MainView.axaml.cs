@@ -20,6 +20,7 @@ using MercuryMapper.Editor;
 using MercuryMapper.Enums;
 using MercuryMapper.Rendering;
 using MercuryMapper.Utils;
+using MercuryMapper.Views.Gimmicks;
 using SkiaSharp;
 using Tomlyn;
 
@@ -176,7 +177,7 @@ public partial class MainView : UserControl
     public void HitsoundTimer_Tick(object? sender, EventArgs e)
     {
         float latency = BassSoundEngine.GetLatency();
-        float measure = ChartEditor.CurrentMeasure + latency;
+        float measure = ChartEditor.CurrentMeasureDecimal + latency;
 
         while (AudioManager.HitsoundNoteIndex < ChartEditor.Chart.Notes.Count
                && ChartEditor.Chart.Notes[AudioManager.HitsoundNoteIndex].BeatData.MeasureDecimal <= measure)
@@ -230,7 +231,7 @@ public partial class MainView : UserControl
             SliderSongPosition.Value = (int)AudioManager.CurrentSong.Position;
         }
         
-        ChartEditor.CurrentMeasure = data.MeasureDecimal;
+        ChartEditor.CurrentMeasureDecimal = data.MeasureDecimal;
         UpdateControls();
         
         timeUpdateSource = TimeUpdateSource.None;
@@ -246,9 +247,9 @@ public partial class MainView : UserControl
             int endOfChartCount = ChartEditor.Chart.Notes.Count(x => x.NoteType is NoteType.EndOfChart);
             
             bool blockEndOfChart = endOfChartCount == 1 && ChartEditor.CurrentNoteType is NoteType.EndOfChart;
-            bool behindEndOfChart = endOfChartCount != 0 && ChartEditor.CurrentMeasure >= ChartEditor.Chart.Notes.FirstOrDefault(x => x.NoteType is NoteType.EndOfChart)?.BeatData.MeasureDecimal;
-            bool beforeHoldStart = ChartEditor is { CurrentHoldStart: not null, EditorState: ChartEditorState.InsertHold } && ChartEditor.CurrentMeasure <= ChartEditor.CurrentHoldStart.BeatData.MeasureDecimal;
-            bool beforeLastHold = ChartEditor is { LastPlacedHold: not null, EditorState: ChartEditorState.InsertHold } && ChartEditor.CurrentMeasure <= ChartEditor.LastPlacedHold.BeatData.MeasureDecimal;
+            bool behindEndOfChart = endOfChartCount != 0 && ChartEditor.CurrentMeasureDecimal >= ChartEditor.Chart.Notes.FirstOrDefault(x => x.NoteType is NoteType.EndOfChart)?.BeatData.MeasureDecimal;
+            bool beforeHoldStart = ChartEditor is { CurrentHoldStart: not null, EditorState: ChartEditorState.InsertHold } && ChartEditor.CurrentMeasureDecimal <= ChartEditor.CurrentHoldStart.BeatData.MeasureDecimal;
+            bool beforeLastHold = ChartEditor is { LastPlacedHold: not null, EditorState: ChartEditorState.InsertHold } && ChartEditor.CurrentMeasureDecimal <= ChartEditor.LastPlacedHold.BeatData.MeasureDecimal;
             
             ButtonInsert.IsEnabled = !(blockEndOfChart || behindEndOfChart || beforeHoldStart || beforeLastHold);
         }
@@ -259,11 +260,21 @@ public partial class MainView : UserControl
     private void OnKeyDown(object sender, KeyEventArgs e)
     {
         if (TopLevel.GetTopLevel(this)?.FocusManager?.GetFocusedElement() is TextBox) return;
-        if (KeybindEditor.RebindingActive) return;
-        
         if (e.Key is Key.LeftAlt or Key.RightAlt or Key.LeftShift or Key.RightShift or Key.LeftCtrl or Key.RightCtrl)
         {
             e.Handled = true;
+            return;
+        }
+        if (KeybindEditor.RebindingActive)
+        {
+            // Sink arrow keys and manually "invoke" OnKeyDown to avoid
+            // Avalonia arrow key navigation interfering with rebinding.
+            if (e.Key is Key.Up or Key.Down or Key.Left or Key.Right)
+            {
+                KeybindEditor.OnKeyDown(e);
+                e.Handled = true;
+            }
+
             return;
         }
         
@@ -312,21 +323,21 @@ public partial class MainView : UserControl
             e.Handled = true;
             return;
         }
-        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditCut"])) 
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditCut"]))
         {
-            Console.WriteLine("Cut");
+            ChartEditor.Cut();
             e.Handled = true;
             return;
         }
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditCopy"])) 
         {
-            Console.WriteLine("Copy");
+            ChartEditor.Copy();
             e.Handled = true;
             return;
         }
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditPaste"])) 
         {
-            Console.WriteLine("Paste");
+            ChartEditor.Paste();
             e.Handled = true;
             return;
         }
@@ -335,7 +346,7 @@ public partial class MainView : UserControl
         {
             if (!ButtonInsert.IsEnabled) return;
             
-            ChartEditor.InsertNote();
+            ChartEditor.InsertChartElement();
             e.Handled = true;
             return;
         }
@@ -519,6 +530,42 @@ public partial class MainView : UserControl
             e.Handled = true;
             return;
         }
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorQuickEditIncreaseSize"]))
+        {
+            ChartEditor.QuickEditSize(1);
+            e.Handled = true;
+            return;
+        }
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorQuickEditDecreaseSize"]))
+        {
+            ChartEditor.QuickEditSize(-1);
+            e.Handled = true;
+            return;
+        }
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorQuickEditIncreasePosition"]))
+        {
+            ChartEditor.QuickEditPosition(1);
+            e.Handled = true;
+            return;
+        }
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorQuickEditDecreasePosition"]))
+        {
+            ChartEditor.QuickEditPosition(-1);
+            e.Handled = true;
+            return;
+        }
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorQuickEditIncreaseTimestamp"]))
+        {
+            ChartEditor.QuickEditTimestamp(1);
+            e.Handled = true;
+            return;
+        }
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorQuickEditDecreaseTimestamp"]))
+        {
+            ChartEditor.QuickEditTimestamp(-1);
+            e.Handled = true;
+            return;
+        }
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["RenderIncreaseNoteSpeed"]))
         {
             UserConfig.RenderConfig.NoteSpeed = decimal.Min(UserConfig.RenderConfig.NoteSpeed + 0.1m, 6);
@@ -540,7 +587,7 @@ public partial class MainView : UserControl
     }
 
     private static void OnKeyUp(object sender, KeyEventArgs e) => e.Handled = true;
-
+    
     // ________________ Canvas
 
     private void Canvas_OnRenderSkia(SKCanvas canvas)
@@ -599,7 +646,7 @@ public partial class MainView : UserControl
 
         PointerPoint p = e.GetCurrentPoint(Canvas);
         
-        if (e.KeyModifiers.HasFlag(KeyModifiers.Control))
+        if (e.KeyModifiers.HasFlag(KeyModifiers.Control) || e.KeyModifiers.HasFlag(KeyModifiers.Shift))
         {
             OnClick(p, e.KeyModifiers, true);
             return;
@@ -619,8 +666,13 @@ public partial class MainView : UserControl
         PointerPoint p = e.GetCurrentPoint(Canvas);
         OnClick(p, e.KeyModifiers, false);
     }
-
-    // TODO: RENAME THIS SHIT!!!
+    
+    private void Canvas_OnPointerReleased(object? sender, PointerReleasedEventArgs e)
+    {
+        pointerState = PointerState.Released;
+        ChartEditor.LastSelectedNote = null;
+    }
+    
     private void OnClick(PointerPoint p, KeyModifiers modifiers, bool pointerMoved)
     {
         SKPoint point = new((float)p.Position.X, (float)p.Position.Y);
@@ -636,7 +688,7 @@ public partial class MainView : UserControl
         if (modifiers.HasFlag(KeyModifiers.Control))
         {
             // Selecting
-            if (RenderEngine.GetNoteAtPointer(ChartEditor.Chart, point) is not { } note) return;
+            if ((Note?)RenderEngine.GetChartElementAtPointer(ChartEditor.Chart, point, false) is not { } note) return;
             
             if (pointerMoved && note == ChartEditor.LastSelectedNote) return;
             
@@ -646,11 +698,11 @@ public partial class MainView : UserControl
         else if (modifiers.HasFlag(KeyModifiers.Shift))
         {
             // Highlighting
-            if (RenderEngine.GetNoteAtPointer(ChartEditor.Chart, point) is not { } note) return;
+            if (RenderEngine.GetChartElementAtPointer(ChartEditor.Chart, point, true) is not { } note) return;
             
-            if (pointerMoved && note == ChartEditor.HighlightedNote) return;
+            if (pointerMoved && note == ChartEditor.HighlightedElement) return;
             
-            ChartEditor.HighlightNote(note);
+            ChartEditor.HighlightElement(note);
         }
 
         else
@@ -661,12 +713,6 @@ public partial class MainView : UserControl
             NumericNotePosition.Value = ChartEditor.Cursor.Position;
             NumericNoteSize.Value = ChartEditor.Cursor.Size;
         }
-    }
-
-    private void Canvas_OnPointerReleased(object? sender, PointerReleasedEventArgs e)
-    {
-        pointerState = PointerState.Released;
-        ChartEditor.LastSelectedNote = null;
     }
     
     // ________________ UI Events
@@ -806,11 +852,11 @@ public partial class MainView : UserControl
 
     private void MenuItemRedo_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.Redo();
 
-    private void MenuItemCut_OnClick(object? sender, RoutedEventArgs e) { }
+    private void MenuItemCut_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.Cut();
 
-    private void MenuItemCopy_OnClick(object? sender, RoutedEventArgs e) { }
+    private void MenuItemCopy_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.Copy();
 
-    private void MenuItemPaste_OnClick(object? sender, RoutedEventArgs e) { }
+    private void MenuItemPaste_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.Paste();
 
     private void RadioNoteType_IsCheckedChanged(object? sender, RoutedEventArgs e)
     {
@@ -880,11 +926,62 @@ public partial class MainView : UserControl
         Console.WriteLine(ChartEditor.CurrentNoteType);
     }
 
-    private void ButtonGimmickBpmChange_OnClick(object? sender, RoutedEventArgs e) { }
+    private void ButtonGimmickBpmChange_OnClick(object? sender, RoutedEventArgs e)
+    {
+        GimmickView_Bpm gimmickView = new();
+        ContentDialog dialog = new()
+        {
+            Content = gimmickView,
+            Title = Assets.Lang.Resources.Editor_AddGimmick,
+            CloseButtonText = Assets.Lang.Resources.Generic_Cancel,
+            PrimaryButtonText = Assets.Lang.Resources.Generic_Create
+        };
+        
+        Dispatcher.UIThread.Post(async () =>
+        {
+            ContentDialogResult result = await dialog.ShowAsync();
+            if (result is not ContentDialogResult.Primary) return;
+            ChartEditor.InsertBpmChange((float)gimmickView.BpmNumberBox.Value);
+        });
+    }
 
-    private void ButtonGimmickTimeSig_OnClick(object? sender, RoutedEventArgs e) { }
+    private void ButtonGimmickTimeSig_OnClick(object? sender, RoutedEventArgs e)
+    {
+        GimmickView_TimeSig gimmickView = new();
+        ContentDialog dialog = new()
+        {
+            Content = gimmickView,
+            Title = Assets.Lang.Resources.Editor_AddGimmick,
+            CloseButtonText = Assets.Lang.Resources.Generic_Cancel,
+            PrimaryButtonText = Assets.Lang.Resources.Generic_Create
+        };
+        
+        Dispatcher.UIThread.Post(async () =>
+        {
+            ContentDialogResult result = await dialog.ShowAsync();
+            if (result is not ContentDialogResult.Primary) return;
+            ChartEditor.InsertTimeSigChange((int)gimmickView.TimeSigUpperNumberBox.Value, (int)gimmickView.TimeSigLowerNumberBox.Value);
+        });
+    }
 
-    private void ButtonGimmickHiSpeed_OnClick(object? sender, RoutedEventArgs e) { }
+    private void ButtonGimmickHiSpeed_OnClick(object? sender, RoutedEventArgs e)
+    {
+        GimmickView_HiSpeed gimmickView = new();
+        ContentDialog dialog = new()
+        {
+            Content = gimmickView,
+            Title = Assets.Lang.Resources.Editor_AddGimmick,
+            CloseButtonText = Assets.Lang.Resources.Generic_Cancel,
+            PrimaryButtonText = Assets.Lang.Resources.Generic_Create
+        };
+        
+        Dispatcher.UIThread.Post(async () =>
+        {
+            ContentDialogResult result = await dialog.ShowAsync();
+            if (result is not ContentDialogResult.Primary) return;
+            ChartEditor.InsertHiSpeedChange((float)gimmickView.HiSpeedNumberBox.Value);
+        });
+    }
 
     private void ButtonGimmickStop_OnClick(object? sender, RoutedEventArgs e) { }
 
@@ -892,7 +989,7 @@ public partial class MainView : UserControl
 
     private void ButtonInsert_OnClick(object? sender, RoutedEventArgs e)
     {
-        ChartEditor.InsertNote();
+        ChartEditor.InsertChartElement();
     }
 
     private void ButtonEditHold_OnClick(object? sender, RoutedEventArgs e)
@@ -1032,9 +1129,9 @@ public partial class MainView : UserControl
     {
         ContentDialog dialog = new()
         {
-            Title = "Are you sure you want to Revert your Settings?",
-            PrimaryButtonText = "Yes",
-            CloseButtonText = "No",
+            Title = Assets.Lang.Resources.Settings_RevertWarning,
+            PrimaryButtonText = Assets.Lang.Resources.Generic_Yes,
+            CloseButtonText = Assets.Lang.Resources.Generic_No,
         };
         
         Dispatcher.UIThread.Post(async () =>
@@ -1095,7 +1192,7 @@ public partial class MainView : UserControl
         IconStop.IsVisible = play;
         SliderSongPosition.IsEnabled = !play;
 
-        AudioManager.HitsoundNoteIndex = ChartEditor.Chart.Notes.FindIndex(x => x.BeatData.MeasureDecimal >= ChartEditor.CurrentMeasure);
+        AudioManager.HitsoundNoteIndex = ChartEditor.Chart.Notes.FindIndex(x => x.BeatData.MeasureDecimal >= ChartEditor.CurrentMeasureDecimal);
     }
     
     private async Task<bool> PromptSave()
@@ -1178,7 +1275,7 @@ public partial class MainView : UserControl
             {
                 new("Mercury Chart files")
                 {
-                    Patterns = new[] {"*.mer"},
+                    Patterns = new[] {"*.mer", "*.map"},
                     AppleUniformTypeIdentifiers = new[] {"public.item"}
                 }
             }
@@ -1187,17 +1284,35 @@ public partial class MainView : UserControl
         return result.Count != 1 ? null : result[0];
     }
     
-    private async Task<IStorageFile?> SaveChartFilePicker()
+    private async Task<IStorageFile?> SaveChartFilePicker(ChartWriteType writeType)
     {
         return await GetStorageProvider().SaveFilePickerAsync(new()
         {
-            DefaultExtension = "mer",
+            DefaultExtension = writeType switch
+            {
+                ChartWriteType.Editor => ".map",
+                ChartWriteType.Mercury => ".mer",
+                ChartWriteType.Saturn => ".mer",
+                _ => ""
+            },
             FileTypeChoices = new[]
             {
-                new FilePickerFileType("Mercury Chart files")
+                new FilePickerFileType(writeType switch
                 {
-                    Patterns = new[] {"*.mer"},
-                    AppleUniformTypeIdentifiers = new[] {"public.item"}
+                    ChartWriteType.Editor => "Editor Chart File",
+                    ChartWriteType.Mercury => "Mercury Chart File",
+                    ChartWriteType.Saturn => "Saturn Chart File",
+                    _ => ""
+                })
+                {
+                    Patterns = writeType switch
+                    {
+                        ChartWriteType.Editor => ["*.map"],
+                        ChartWriteType.Mercury => ["*.mer"],
+                        ChartWriteType.Saturn => ["*.mer"],
+                        _ => []
+                    },
+                    AppleUniformTypeIdentifiers = ["public.item"]
                 }
             }
         });
@@ -1242,7 +1357,7 @@ public partial class MainView : UserControl
         
         if (openFilePicker)
         {
-            IStorageFile? file = await SaveChartFilePicker();
+            IStorageFile? file = await SaveChartFilePicker(ChartWriteType.Editor);
 
             if (file == null) return false;
             filepath = file.Path.LocalPath;
@@ -1258,7 +1373,7 @@ public partial class MainView : UserControl
     public async Task ExportFile(ChartWriteType chartWriteType)
     {
         string filepath = "";
-        IStorageFile? file = await SaveChartFilePicker();
+        IStorageFile? file = await SaveChartFilePicker(chartWriteType);
 
         if (file == null) return;
         filepath = file.Path.LocalPath;

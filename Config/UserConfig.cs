@@ -90,6 +90,12 @@ public class KeymapConfig
         ["EditorMirrorNote"] = new(Key.M, false, true, false),
         ["EditorDelete"] = new(Key.Delete),
         ["EditorBakeHold"] = new(Key.B, false, true, false),
+        ["EditorQuickEditIncreaseSize"] = new(Key.Up, false, true, false),
+        ["EditorQuickEditDecreaseSize"] = new(Key.Down, false, true, false),
+        ["EditorQuickEditIncreasePosition"] = new(Key.Right, false, true, false),
+        ["EditorQuickEditDecreasePosition"] = new(Key.Left, false, true, false),
+        ["EditorQuickEditIncreaseTimestamp"] = new(Key.Up, true, false, false),
+        ["EditorQuickEditDecreaseTimestamp"] = new(Key.Down, true, false, false),
         ["RenderIncreaseNoteSpeed"] = new(Key.Add, false, true, false),
         ["RenderDecreaseNoteSpeed"] = new(Key.Subtract, false, true, false)
     };

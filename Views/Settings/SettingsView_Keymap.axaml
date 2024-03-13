@@ -55,6 +55,12 @@
                 <TreeViewItem Name="EditorMirrorNote" Header="{x:Static lang:Resources.Editor_MirrorNote}"/>
                 <TreeViewItem Name="EditorDelete" Header="{x:Static lang:Resources.Editor_Delete}"/>
                 <TreeViewItem Name="EditorBakeHold" Header="{x:Static lang:Resources.Editor_BakeHold}"/>
+                <TreeViewItem Name="EditorQuickEditIncreaseSize" Header="{x:Static lang:Resources.Editor_QuickEditIncreaseSize}"/>
+                <TreeViewItem Name="EditorQuickEditDecreaseSize" Header="{x:Static lang:Resources.Editor_QuickEditDecreaseSize}"/>
+                <TreeViewItem Name="EditorQuickEditIncreasePosition" Header="{x:Static lang:Resources.Editor_QuickEditIncreasePosition}"/>
+                <TreeViewItem Name="EditorQuickEditDecreasePosition" Header="{x:Static lang:Resources.Editor_QuickEditDecreasePosition}"/>
+                <TreeViewItem Name="EditorQuickEditIncreaseTimestamp" Header="{x:Static lang:Resources.Editor_QuickEditIncreaseTimestamp}"/>
+                <TreeViewItem Name="EditorQuickEditDecreaseTimestamp" Header="{x:Static lang:Resources.Editor_QuickEditDecreaseTimestamp}"/>
             </TreeViewItem>
             
             <TreeViewItem Header="{x:Static lang:Resources.Settings_Header_Rendering}" Classes="HideKeybind">

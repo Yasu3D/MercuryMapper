@@ -56,12 +56,23 @@ public class BeatData
     }
 }
 
-public class TimeScaleData
+public class TimeScaleDataLEGACY
 {
     public float UnscaledMeasureDecimal { get; set; }
     public float ScaledMeasureDecimal { get; set; }
     public float ScaledMeasureDecimalHiSpeed { get; set; }
     public float LastGimmickMeasureDecimal { get; set; }
+
+    public float HiSpeed { get; set; }
+    public float TimeSigRatio { get; set; }
+    public float BpmRatio { get; set; }
+}
+
+public class TimeScaleData
+{
+    public float MeasureDecimal { get; set; }
+    public float ScaledMeasureDecimal { get; set; }
+    public float ScaledMeasureDecimalHiSpeed { get; set; }
 
     public float HiSpeed { get; set; }
     public float TimeSigRatio { get; set; }

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using MercuryMapper.Data;
 using MercuryMapper.Enums;
@@ -10,7 +9,6 @@ public class DeleteNote(Chart chart, List<Note> selected, Note note) : IOperatio
     public Chart Chart { get; } = chart;
     public Note Note { get; } = note;
     public List<Note> Selected { get; } = selected;
-    public string Description => "Delete Note";
     
     public void Undo()
     {
@@ -39,7 +37,6 @@ public class DeleteHoldNote(Chart chart, List<Note> selected, Note note) : IOper
     public NoteType NextNoteType { get; } = note.NextReferencedNote?.NoteType ?? NoteType.Touch;
     public NoteType PrevNoteType { get; } = note.PrevReferencedNote?.NoteType ?? NoteType.Touch;
     public List<Note> Selected { get; } = selected;
-    public string Description => "Delete Hold Note";
     
     public void Undo()
     {

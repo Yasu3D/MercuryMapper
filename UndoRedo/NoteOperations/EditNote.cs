@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
 using MercuryMapper.Data;
-using MercuryMapper.Enums;
 
 namespace MercuryMapper.UndoRedo.NoteOperations;
 
@@ -10,7 +7,6 @@ public class EditNoteShape(Note note, Note newNote) : IOperation
     public Note BaseNote { get; } = note;
     public Note OldNote { get; } = new(note);
     public Note NewNote { get; } = newNote;
-    public string Description => "Edit Note Shape";
     
     public void Undo()
     {
@@ -30,7 +26,6 @@ public class EditNoteProperties(Note note, Note newNote) : IOperation
     public Note BaseNote { get; } = note;
     public Note OldNote { get; } = new(note);
     public Note NewNote { get; } = newNote;
-    public string Description => "Edit Note Properties";
     
     public void Undo()
     {
@@ -50,7 +45,6 @@ public class EditNoteFull(Note note, Note newNote) : IOperation
     public Note BaseNote { get; } = note;
     public Note OldNote { get; } = new(note);
     public Note NewNote { get; } = newNote;
-    public string Description => "Edit Note";
     
     public void Undo()
     {
@@ -69,12 +63,28 @@ public class EditNoteFull(Note note, Note newNote) : IOperation
     }
 }
 
+public class EditNoteTimestamp(Note note, Note newNote) : IOperation
+{
+    public Note BaseNote { get; } = note;
+    public Note OldNote { get; } = new(note);
+    public Note NewNote { get; } = newNote;
+    
+    public void Undo()
+    {
+        BaseNote.BeatData = OldNote.BeatData;
+    }
+    
+    public void Redo()
+    {
+        BaseNote.BeatData = NewNote.BeatData;
+    }
+}
+
 public class MirrorNote(Note note, Note newNote) : IOperation
 {
     public Note BaseNote { get; } = note;
     public Note OldNote { get; } = new(note);
     public Note NewNote { get; } = newNote;
-    public string Description => "Mirror Note";
     
     public void Undo()
     {

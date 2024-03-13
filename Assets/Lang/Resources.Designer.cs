@@ -195,6 +195,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add Gimmick.
+        /// </summary>
+        public static string Editor_AddGimmick {
+            get {
+                return ResourceManager.GetString("Editor_AddGimmick", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Bake Hold.
         /// </summary>
         public static string Editor_BakeHold {
@@ -227,6 +236,15 @@ namespace MercuryMapper.Assets.Lang {
         public static string Editor_DeselectAll {
             get {
                 return ResourceManager.GetString("Editor_DeselectAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit Gimmick.
+        /// </summary>
+        public static string Editor_EditGimmick {
+            get {
+                return ResourceManager.GetString("Editor_EditGimmick", resourceCulture);
             }
         }
         
@@ -393,6 +411,60 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Position - [Quick Edit].
+        /// </summary>
+        public static string Editor_QuickEditDecreasePosition {
+            get {
+                return ResourceManager.GetString("Editor_QuickEditDecreasePosition", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Size - [Quick Edit].
+        /// </summary>
+        public static string Editor_QuickEditDecreaseSize {
+            get {
+                return ResourceManager.GetString("Editor_QuickEditDecreaseSize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Timestamp - [Quick Edit].
+        /// </summary>
+        public static string Editor_QuickEditDecreaseTimestamp {
+            get {
+                return ResourceManager.GetString("Editor_QuickEditDecreaseTimestamp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Position + [Quick Edit].
+        /// </summary>
+        public static string Editor_QuickEditIncreasePosition {
+            get {
+                return ResourceManager.GetString("Editor_QuickEditIncreasePosition", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Size + [Quick Edit].
+        /// </summary>
+        public static string Editor_QuickEditIncreaseSize {
+            get {
+                return ResourceManager.GetString("Editor_QuickEditIncreaseSize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Timestamp + [Quick Edit].
+        /// </summary>
+        public static string Editor_QuickEditIncreaseTimestamp {
+            get {
+                return ResourceManager.GetString("Editor_QuickEditIncreaseTimestamp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Select All.
         /// </summary>
         public static string Editor_SelectAll {
@@ -498,6 +570,15 @@ namespace MercuryMapper.Assets.Lang {
         public static string Generic_SelectAudioPrompt {
             get {
                 return ResourceManager.GetString("Generic_SelectAudioPrompt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select File.
+        /// </summary>
+        public static string Generic_SelectFile {
+            get {
+                return ResourceManager.GetString("Generic_SelectFile", resourceCulture);
             }
         }
         
@@ -1218,6 +1299,15 @@ namespace MercuryMapper.Assets.Lang {
         public static string Settings_RevertToDefault {
             get {
                 return ResourceManager.GetString("Settings_RevertToDefault", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Are you sure you want to revert your Settings?.
+        /// </summary>
+        public static string Settings_RevertWarning {
+            get {
+                return ResourceManager.GetString("Settings_RevertWarning", resourceCulture);
             }
         }
         

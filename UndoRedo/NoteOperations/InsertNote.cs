@@ -9,7 +9,6 @@ public class InsertNote(Chart chart, List<Note> selected, Note note) : IOperatio
     public Chart Chart { get; } = chart;
     public Note Note { get; } = note;
     public List<Note> Selected { get; } = selected;
-    public string Description => "Insert Note";
     
     public void Undo()
     {
@@ -35,7 +34,6 @@ public class InsertHoldNote(Chart chart, List<Note> selected, Note note, Note la
     public Note Note { get; } = note;
     public Note LastPlacedNote { get; } = lastPlacedNote;
     public List<Note> Selected { get; } = selected;
-    public string Description => "Insert Note";
     
     public void Undo()
     {

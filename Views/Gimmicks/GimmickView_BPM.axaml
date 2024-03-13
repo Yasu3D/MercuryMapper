@@ -1,0 +1,32 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:fluent="using:FluentAvalonia.UI.Controls"
+             xmlns:lang="clr-namespace:MercuryMapper.Assets.Lang"
+             Width="300" Height="40"
+             mc:Ignorable="d" d:DesignWidth="300" d:DesignHeight="40"
+             x:Class="MercuryMapper.Views.Gimmicks.GimmickView_Bpm">
+    <UserControl.Styles>
+        <Style Selector="TextBlock">
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="10"/>
+        </Style>
+        
+        <Style Selector="TextBox">
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Height" Value="30"/>
+        </Style>
+        
+        <Style Selector="fluent|NumberBox">
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        </Style>
+    </UserControl.Styles>
+    
+    <Grid RowDefinitions="Auto"
+          ColumnDefinitions="Auto,*,*">
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="{x:Static lang:Resources.Gimmick_BpmChange}"/>
+        <fluent:NumberBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" Name="BpmNumberBox" Value="120"/>
+    </Grid>
+</UserControl>

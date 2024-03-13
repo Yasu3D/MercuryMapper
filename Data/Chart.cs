@@ -48,15 +48,19 @@ public class Chart
         Dictionary<int, Note> notesByIndex = new();
         Dictionary<int, int> nextReferencedIndex = new();
 
-        Clear();
-        readTags(merFile);
-        readChartElements(merFile);
-        getHoldReferences();
-        repairNotes();
+        lock (this)
+        {
+            Clear();
+            readTags(merFile);
+            readChartElements(merFile);
+            getHoldReferences();
+            repairNotes();
+            
+            GenerateTimeEvents();
+            GenerateTimeScales();
+        }
         
-        GenerateTimeEvents();
-        GenerateTimeScales();
-
+        
         IsSaved = true;
         return true;
         
@@ -350,75 +354,80 @@ public class Chart
     /// </summary>
     public void GenerateTimeScales()
     {
-        TimeScales.Clear();
-        
-        foreach (Gimmick gimmick in Gimmicks)
-            TimeScales.Add(CalculateTimeScaleData(gimmick.BeatData.MeasureDecimal));
-        
-        // I have no idea why this has to exist, but past me said so and it makes things work.
-        TimeScales.Add(CalculateTimeScaleData(float.PositiveInfinity));
-    }
-
-    /// <summary>
-    /// Creates data to quickly calculate scaled MeasureDecimal timestamps at a given measure.
-    /// </summary>
-    public TimeScaleData CalculateTimeScaleData(float measureDecimal)
-    {
-        float partialScaledMeasureDecimalShowHiSpeed = 0;
-        float partialScaledMeasureDecimal = 0;
-        float lastGimmickMeasureDecimal = 0;
-        float currentHiSpeedValue = 1;
-        float currentTimeSigValue = 1;
-        float currentBpmValue = 1;
-
-        var relevantGimmicks = Gimmicks.Where(x =>
-            x.BeatData.MeasureDecimal < measureDecimal &&
-            x.GimmickType is GimmickType.HiSpeedChange or GimmickType.StopStart or GimmickType.StopEnd or GimmickType.TimeSigChange or GimmickType.BpmChange);
-
-        // Take Last at 0 instead of First beca
+        // Take Last at 0 instead of First because apparently there's
+        // charts with multiple Bpm/TimeSig changes at Measure 0.
         float startBpm = Gimmicks.Last(x => x.GimmickType is GimmickType.BpmChange && x.BeatData.FullTick == 0).Bpm;
         float startTimeSigRatio = Gimmicks.Last(x => x.GimmickType is GimmickType.TimeSigChange && x.BeatData.FullTick == 0).TimeSig.Ratio;
 
-        foreach (Gimmick gimmick in relevantGimmicks)
+        TimeScales.Clear();
+        TimeScaleData lastData = new()
         {
-            float distance = gimmick.BeatData.MeasureDecimal - lastGimmickMeasureDecimal;
-            partialScaledMeasureDecimalShowHiSpeed += distance * currentHiSpeedValue * currentTimeSigValue * currentBpmValue - distance;
-            partialScaledMeasureDecimal += distance * currentTimeSigValue * currentBpmValue - distance;
-
-            lastGimmickMeasureDecimal = gimmick.BeatData.MeasureDecimal;
-
+            MeasureDecimal = 0,
+            ScaledMeasureDecimal = 0,
+            ScaledMeasureDecimalHiSpeed = 0,
+            HiSpeed = 1,
+            TimeSigRatio = 1,
+            BpmRatio = 1
+        };
+        
+        foreach (Gimmick gimmick in Gimmicks)
+        {
+            TimeScaleData data = calculateTimeScaleData(gimmick);
+            lastData = data;
+            
+            TimeScales.Add(data);
+        }
+        
+        TimeScales.Add(new()
+        {
+            MeasureDecimal = float.PositiveInfinity,
+            ScaledMeasureDecimal = float.PositiveInfinity,
+            ScaledMeasureDecimalHiSpeed = float.PositiveInfinity,
+            HiSpeed = lastData.HiSpeed,
+            TimeSigRatio = lastData.TimeSigRatio,
+            BpmRatio = lastData.BpmRatio
+        });
+        
+        return;
+        
+        // Creates data to quickly calculate scaled MeasureDecimal timestamps at a given measure.
+        TimeScaleData calculateTimeScaleData(Gimmick gimmick)
+        {
+            float? newBpm = null;
+            float? newTimeSig = null;
+            float? newHiSpeed = null;
+            
             switch (gimmick.GimmickType)
             {
                 case GimmickType.TimeSigChange:
-                    currentTimeSigValue = gimmick.TimeSig.Ratio / startTimeSigRatio;
+                    newTimeSig = gimmick.TimeSig.Ratio / startTimeSigRatio;
                     break;
                 case GimmickType.HiSpeedChange:
-                    currentHiSpeedValue = gimmick.HiSpeed;
+                    newHiSpeed = gimmick.HiSpeed;
                     break;
                 case GimmickType.StopStart:
-                    currentHiSpeedValue = 0.0001f;
+                    newHiSpeed = 0.0001f;
                     break;
                 case GimmickType.StopEnd:
-                    currentHiSpeedValue = Gimmicks.LastOrDefault(x => x.BeatData.FullTick < gimmick.BeatData.FullTick && x.GimmickType is GimmickType.HiSpeedChange)?.HiSpeed ?? 1;
+                    newHiSpeed = Gimmicks.LastOrDefault(x => x.BeatData.FullTick < gimmick.BeatData.FullTick && x.GimmickType is GimmickType.HiSpeedChange)?.HiSpeed ?? 1;
                     break;
                 case GimmickType.BpmChange:
-                    currentBpmValue = startBpm / gimmick.Bpm;
+                    newBpm = startBpm / gimmick.Bpm;
                     break;
             }
+            
+            return new()
+            {
+                MeasureDecimal = gimmick.BeatData.MeasureDecimal,
+                ScaledMeasureDecimal = lastData.ScaledMeasureDecimal + float.Abs(gimmick.BeatData.MeasureDecimal - lastData.MeasureDecimal) * (lastData.BpmRatio * lastData.TimeSigRatio),
+                ScaledMeasureDecimalHiSpeed = lastData.ScaledMeasureDecimalHiSpeed + float.Abs(gimmick.BeatData.MeasureDecimal - lastData.MeasureDecimal) * (lastData.BpmRatio * lastData.TimeSigRatio * lastData.HiSpeed),
+                BpmRatio = newBpm ?? lastData.BpmRatio,
+                TimeSigRatio = newTimeSig ?? lastData.TimeSigRatio,
+                HiSpeed = newHiSpeed ?? lastData.HiSpeed
+            };
         }
-
-        return new()
-        {
-            UnscaledMeasureDecimal = measureDecimal,
-            ScaledMeasureDecimalHiSpeed = partialScaledMeasureDecimalShowHiSpeed,
-            ScaledMeasureDecimal = partialScaledMeasureDecimal,
-            LastGimmickMeasureDecimal = lastGimmickMeasureDecimal,
-            HiSpeed = currentHiSpeedValue,
-            TimeSigRatio = currentTimeSigValue,
-            BpmRatio = currentBpmValue
-        };
     }
-
+    
     /// <summary>
     /// Finds nearest previous TimeScaleData via binary search and calculates ScaledMeasureDecimal off of it.
     /// </summary>
@@ -426,13 +435,10 @@ public class Chart
     {
         TimeScaleData? timeScaleData = BinarySearchTimeScales(measureDecimal);
         if (timeScaleData == null) return measureDecimal;
-
-        float distance = measureDecimal - timeScaleData.LastGimmickMeasureDecimal;
-        float scaledDistance = showHiSpeed
-            ? distance * timeScaleData.HiSpeed * timeScaleData.TimeSigRatio * timeScaleData.BpmRatio - distance
-            : distance * timeScaleData.TimeSigRatio * timeScaleData.BpmRatio - distance;
         
-        return measureDecimal + timeScaleData.ScaledMeasureDecimalHiSpeed + scaledDistance;
+        return showHiSpeed
+            ? timeScaleData.ScaledMeasureDecimalHiSpeed + (measureDecimal - timeScaleData.MeasureDecimal) * timeScaleData.HiSpeed * timeScaleData.TimeSigRatio * timeScaleData.BpmRatio
+            : timeScaleData.ScaledMeasureDecimal + (measureDecimal - timeScaleData.MeasureDecimal) * timeScaleData.TimeSigRatio * timeScaleData.BpmRatio;
     }
 
     /// <summary>
@@ -441,36 +447,60 @@ public class Chart
     /// </summary>
     public float GetUnscaledMeasureDecimal(float scaledMeasureDecimal, bool showHiSpeed)
     {
-        TimeScaleData? timeScaleData = BinarySearchTimeScales(scaledMeasureDecimal);
+        TimeScaleData? timeScaleData = BinarySearchTimeScalesScaled(scaledMeasureDecimal, showHiSpeed);
         if (timeScaleData == null) return scaledMeasureDecimal;
-
-        return (timeScaleData.LastGimmickMeasureDecimal * (timeScaleData.BpmRatio * timeScaleData.HiSpeed * timeScaleData.TimeSigRatio - 1) - timeScaleData.ScaledMeasureDecimalHiSpeed + scaledMeasureDecimal) / (timeScaleData.BpmRatio * timeScaleData.HiSpeed * timeScaleData.TimeSigRatio);
         
-        //(lastGimmickMD * (bpm * hispeed * timesig - 1) - timeScaleScaledMD + scaledMeasureDecimal) / (bpm * hispeed * timesig)
+        return showHiSpeed
+            ? (scaledMeasureDecimal - timeScaleData.ScaledMeasureDecimalHiSpeed + timeScaleData.MeasureDecimal * timeScaleData.HiSpeed * timeScaleData.TimeSigRatio * timeScaleData.BpmRatio) / (timeScaleData.HiSpeed * timeScaleData.TimeSigRatio * timeScaleData.BpmRatio)
+            : (scaledMeasureDecimal - timeScaleData.ScaledMeasureDecimal + timeScaleData.MeasureDecimal * timeScaleData.TimeSigRatio * timeScaleData.BpmRatio) / (timeScaleData.TimeSigRatio * timeScaleData.BpmRatio);
     }
     
     /// <summary>
     /// Finds nearest TimeScaleData via Binary Search.
     /// </summary>
-    public TimeScaleData? BinarySearchTimeScales(float measure)
+    public TimeScaleData? BinarySearchTimeScales(float measureDecimal)
     {
-        int left = 0;
-        int right = TimeScales.Count - 1;
+        int min = 0;
+        int max = TimeScales.Count - 1;
         TimeScaleData? result = null;
 
-        while (left <= right)
+        while (min <= max)
         {
-            int center = left + (right - left) / 2;
-
-            if (TimeScales[center].UnscaledMeasureDecimal <= measure)
+            int mid = (min + max) / 2;
+            if (TimeScales[mid].MeasureDecimal > measureDecimal)
             {
-                left = center + 1;
+                max = mid - 1;
             }
-                
             else
             {
-                result = TimeScales[center];
-                right = center - 1;
+                result = TimeScales[mid];
+                min = mid + 1;
+            }
+        }
+
+        return result;
+    }
+    
+    /// <summary>
+    /// Same as unscaled binary search, but searches with ScaledMeasureDecimal instead.
+    /// </summary>
+    public TimeScaleData? BinarySearchTimeScalesScaled(float scaledMeasureDecimal, bool showHiSpeed)
+    {
+        int min = 0;
+        int max = TimeScales.Count - 1;
+        TimeScaleData? result = null;
+
+        while (min <= max)
+        {
+            int mid = (min + max) / 2;
+            if ((showHiSpeed ? TimeScales[mid].ScaledMeasureDecimalHiSpeed : TimeScales[mid].ScaledMeasureDecimal) > scaledMeasureDecimal)
+            {
+                max = mid - 1;
+            }
+            else
+            {
+                result = TimeScales[mid];
+                min = mid + 1;
             }
         }
 

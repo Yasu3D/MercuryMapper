@@ -21,8 +21,6 @@ public class UndoRedoManager
         UndoStack.Push(operation);
         RedoStack.Clear();
         OperationHistoryChanged?.Invoke(this, EventArgs.Empty);
-        
-        Console.WriteLine($"Pushed {operation} {operation.Description}, UndoStack at {UndoStack.Count}");
     }
 
     public void InvokeAndPush(IOperation operation)

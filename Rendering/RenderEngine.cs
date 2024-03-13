@@ -29,7 +29,7 @@ public class RenderEngine(MainView mainView)
 
     private bool IsPlaying => mainView.AudioManager.CurrentSong is { IsPlaying: true };
     private float visibleDistanceMeasureDecimal;
-    private float CurrentMeasureDecimal => mainView.ChartEditor.CurrentMeasure;
+    private float CurrentMeasureDecimal => mainView.ChartEditor.CurrentMeasureDecimal;
     private float ScaledCurrentMeasureDecimal => Chart.GetScaledMeasureDecimal(CurrentMeasureDecimal, RenderConfig.ShowHiSpeed);
     private RenderConfig RenderConfig => mainView.UserConfig.RenderConfig;
     
@@ -85,19 +85,18 @@ public class RenderEngine(MainView mainView)
     
     // ________________
 
-    public Note? GetNoteAtPointer(Chart chart, SKPoint point)
+    public ChartElement? GetChartElementAtPointer(Chart chart, SKPoint point, bool includeGimmicks)
     {
         int clickPosition = MathExtensions.GetThetaNotePosition(point.X, point.Y);
         float clickRadius = (1 - MathExtensions.InversePerspective(point.Length)) * visibleDistanceMeasureDecimal;
-        float measureDecimal = CurrentMeasureDecimal + chart.GetUnscaledMeasureDecimal(clickRadius, RenderConfig.ShowHiSpeed);
+        float measureDecimal = chart.GetUnscaledMeasureDecimal(clickRadius + ScaledCurrentMeasureDecimal, RenderConfig.ShowHiSpeed);
         
         // Holy mother of LINQ
         List<Note> clickedNotes = chart.Notes
-            .Where(x => Math.Abs(x.BeatData.MeasureDecimal - measureDecimal) < 0.005f)
+            .Where(x => Math.Abs(x.BeatData.MeasureDecimal - measureDecimal) < 0.008f)
             .Select(note =>
             {
                 float center = MathExtensions.Modulo(note.Position + note.Size * 0.5f, 60);
-                float maxDistance = note.Size * 0.5f;
                 float distance = float.Min(float.Abs(center - clickPosition), 60 - float.Abs(center - clickPosition));
 
                 return new { Note = note, Distance = distance };
@@ -107,16 +106,16 @@ public class RenderEngine(MainView mainView)
             .Select(item => item.Note)
             .ToList();
 
-        Console.WriteLine($"Note HIT! Type {clickedNotes.MinBy(x => x.IsHold)?.NoteType}");
-        
-        return clickedNotes.MinBy(x => x.IsHold);
+        List<Gimmick> clickedGimmicks = chart.Gimmicks.Where(x => Math.Abs(x.BeatData.MeasureDecimal - measureDecimal) < 0.005f).ToList();
+
+        return includeGimmicks && clickedGimmicks.Count > 0 ? clickedGimmicks[0] : clickedNotes.MinBy(x => x.IsHold);
     }
     
     // ________________
     private float GetNoteScale(Chart chart, float measureDecimal)
     {
-        float note = chart.GetScaledMeasureDecimal(measureDecimal, RenderConfig.ShowHiSpeed);
-        float scale = 1 - (note - ScaledCurrentMeasureDecimal) / visibleDistanceMeasureDecimal;
+        float scaledMeasureDecimal = chart.GetScaledMeasureDecimal(measureDecimal, RenderConfig.ShowHiSpeed);
+        float scale = 1 - (scaledMeasureDecimal - ScaledCurrentMeasureDecimal) / visibleDistanceMeasureDecimal;
         return MathExtensions.Perspective(scale);
     }
 
@@ -553,7 +552,7 @@ public class RenderEngine(MainView mainView)
                 canvas.DrawArc(selectedData.Rect, selectedData.StartAngle, selectedData.SweepAngle, false, brushes.GetSelectionPen(canvasScale * selectedData.Scale));
             }
             
-            if (note == mainView.ChartEditor.HighlightedNote)
+            if (note == mainView.ChartEditor.HighlightedElement)
             {
                 ArcData selectedData = GetArc(chart, note);
                 canvas.DrawArc(selectedData.Rect, selectedData.StartAngle, selectedData.SweepAngle, false, brushes.GetHighlightPen(canvasScale * selectedData.Scale));
@@ -604,7 +603,7 @@ public class RenderEngine(MainView mainView)
                 canvas.DrawArc(selectedData.Rect, selectedData.StartAngle, selectedData.SweepAngle, false, brushes.GetSelectionPen(canvasScale * selectedData.Scale));
             }
 
-            if (note == mainView.ChartEditor.HighlightedNote)
+            if (note == mainView.ChartEditor.HighlightedElement)
             {
                 ArcData selectedData = GetArc(chart, note);
                 canvas.DrawArc(selectedData.Rect, selectedData.StartAngle, selectedData.SweepAngle, false, brushes.GetHighlightPen(canvasScale * selectedData.Scale));
@@ -633,7 +632,7 @@ public class RenderEngine(MainView mainView)
                 canvas.DrawArc(selectedData.Rect, selectedData.StartAngle, selectedData.SweepAngle, false, brushes.GetSelectionPen(canvasScale * selectedData.Scale));
             }
             
-            if (note == mainView.ChartEditor.HighlightedNote)
+            if (note == mainView.ChartEditor.HighlightedElement)
             {
                 ArcData selectedData = GetArc(chart, note);
                 canvas.DrawArc(selectedData.Rect, selectedData.StartAngle, selectedData.SweepAngle, false, brushes.GetHighlightPen(canvasScale * selectedData.Scale));
@@ -651,6 +650,11 @@ public class RenderEngine(MainView mainView)
         {
             ArcData data = GetArc(chart, gimmick);
             canvas.DrawOval(data.Rect, brushes.GetGimmickPen(gimmick, canvasScale * data.Scale));
+            
+            if (gimmick == mainView.ChartEditor.HighlightedElement)
+            {
+                canvas.DrawArc(data.Rect, data.StartAngle, data.SweepAngle, false, brushes.GetHighlightPen(canvasScale * data.Scale));
+            }
         }
     }
     

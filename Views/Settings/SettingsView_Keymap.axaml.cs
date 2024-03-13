@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -15,12 +14,13 @@ public partial class SettingsView_Keymap : UserControl
         
         this.mainView = mainView;
         SetKeybindTags();
+        mainView.KeybindEditor.CurrentSettingsView = this; // a little bit spaghetti but does the trick.
     }
 
     private readonly MainView mainView;
     private KeymapConfig Keymap => mainView.UserConfig.KeymapConfig;
 
-    private void SetKeybindTags()
+    public void SetKeybindTags()
     {
         foreach (TreeViewItem item in KeybindsTreeView.GetLogicalDescendants().OfType<TreeViewItem>())
         {
@@ -41,10 +41,6 @@ public partial class SettingsView_Keymap : UserControl
 
     private void OnKeyDown(object? sender, KeyEventArgs e)
     {
-        if (e.Key is Key.LeftAlt or Key.RightAlt or Key.LeftShift or Key.RightShift or Key.LeftCtrl or Key.RightCtrl or Key.Escape)
-            return;
-        
         mainView.KeybindEditor.OnKeyDown(e);
-        SetKeybindTags();
     }
 }
