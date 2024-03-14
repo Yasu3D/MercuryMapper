@@ -963,6 +963,13 @@ public class ChartEditor
                     NoteType.SlideCounterclockwiseBonus => NoteType.SlideClockwiseBonus,
                     NoteType.SlideCounterclockwiseRNote => NoteType.SlideClockwiseRNote,
                     _ => note.NoteType
+                },
+                MaskDirection = note.MaskDirection switch
+                {
+                    MaskDirection.Counterclockwise => MaskDirection.Clockwise,
+                    MaskDirection.Clockwise => MaskDirection.Counterclockwise,
+                    MaskDirection.Center => MaskDirection.Center,
+                    _ => MaskDirection.Center
                 }
             };
 

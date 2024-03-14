@@ -91,6 +91,7 @@ public class MirrorNote(Note note, Note newNote) : IOperation
         BaseNote.Position = OldNote.Position;
         BaseNote.Size = OldNote.Size;
         BaseNote.NoteType = OldNote.NoteType;
+        BaseNote.MaskDirection = OldNote.MaskDirection;
     }
     
     public void Redo()
@@ -98,5 +99,6 @@ public class MirrorNote(Note note, Note newNote) : IOperation
         BaseNote.Position = NewNote.Position;
         BaseNote.Size = NewNote.Size;
         BaseNote.NoteType = NewNote.NoteType;
+        BaseNote.MaskDirection = NewNote.MaskDirection;
     }
 }
