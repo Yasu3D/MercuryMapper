@@ -635,21 +635,24 @@ public class ChartEditor
             {
                 DeleteHoldNote holdOp = new(Chart, SelectedNotes, note);
                 holdOperationList.Add(holdOp);
-                UndoRedoManager.InvokeAndPush(holdOp);
-
-                // If deleting all but one segment, delete the last one too.
-                if (checkedHolds.Contains(note)) continue;
-
-                Console.WriteLine(note.References().Count());
                 
-                List<Note> unselectedReferences = note.References().Where(x => !SelectedNotes.Contains(x)).ToList();
-                if (unselectedReferences.Count == 1)
+                DeleteHoldNote? holdOp2 = null;
+                
+                // If deleting all but one segment, delete the last one too.
+                // The null check thingy is just to preserve order of operations.
+                if (!checkedHolds.Contains(note))
                 {
-                    DeleteHoldNote holdOp2 = new(Chart, SelectedNotes, unselectedReferences[0]);
-                    holdOperationList.Add(holdOp2);
-                    UndoRedoManager.InvokeAndPush(holdOp2);
+                    List<Note> unselectedReferences = note.References().Where(x => !SelectedNotes.Contains(x)).ToList();
+                    if (unselectedReferences.Count == 1)
+                    {
+                        holdOp2 = new(Chart, SelectedNotes, unselectedReferences[0]);
+                        holdOperationList.Add(holdOp2);
+                    }
+                    checkedHolds.AddRange(note.References());
                 }
-                checkedHolds.AddRange(note.References());
+                
+                UndoRedoManager.InvokeAndPush(holdOp);
+                if (holdOp2 != null) UndoRedoManager.InvokeAndPush(holdOp2);
             }
             else
             {
