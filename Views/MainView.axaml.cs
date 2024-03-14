@@ -46,7 +46,8 @@ public partial class MainView : UserControl
 
         KeyDownEvent.AddClassHandler<TopLevel>(OnKeyDown, RoutingStrategies.Tunnel, handledEventsToo: true);
         KeyUpEvent.AddClassHandler<TopLevel>(OnKeyUp, RoutingStrategies.Tunnel, handledEventsToo: true);
-        
+
+        VersionText.Text = AppVersion;
         ApplySettings();
         ToggleTypeRadio(false);
         ToggleInsertButton();
@@ -54,6 +55,7 @@ public partial class MainView : UserControl
     }
 
     public bool CanShutdown;
+    public const string AppVersion = "v0.0.1 [Dev]";
     
     public UserConfig UserConfig = new();
     public readonly KeybindEditor KeybindEditor;

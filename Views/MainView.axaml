@@ -17,7 +17,7 @@
                     <MenuItem.Header>
                         <Image Source="/Assets/AppIcon.ico" Width="20"/>
                     </MenuItem.Header>
-                    <TextBlock Name="VersionText" Text="WIP"/>
+                    <TextBlock Name="VersionText" Text="[Version]"/>
                 </MenuItem>
                 
                 <MenuItem Header="{x:Static lang:Resources.MenuHeader_File}" >
