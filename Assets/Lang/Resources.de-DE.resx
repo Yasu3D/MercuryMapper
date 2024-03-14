@@ -314,13 +314,13 @@ Möchten Sie eine Datei manuell auswählen?</value>
         <value>Löschen</value>
     </data>
     <data name="Editor_EditNoteProperties" xml:space="preserve">
-        <value>Note Bearbeiten [Eigenschaften]</value>
+        <value>Bearbeiten [Typ]</value>
     </data>
     <data name="Editor_EditNoteShape" xml:space="preserve">
-        <value>Note Bearbeiten [Form]</value>
+        <value>Bearbeiten [Form]</value>
     </data>
     <data name="Editor_EditNoteShapeProperties" xml:space="preserve">
-        <value>Note Bearbeiten [Beides]</value>
+        <value>Bearbeiten [Beides]</value>
     </data>
     <data name="Editor_NoteCaps" xml:space="preserve">
         <value>Noten Kappen</value>
@@ -407,7 +407,7 @@ Möchten Sie eine Datei manuell auswählen?</value>
         <value>Hervorgehobene Note Auswählen</value>
     </data>
     <data name="Editor_MirrorNote" xml:space="preserve">
-        <value>Note Spiegeln</value>
+        <value>Spiegeln</value>
     </data>
     <data name="Editor_BakeHold" xml:space="preserve">
         <value>Hold Note Vorberechnen</value>
@@ -501,5 +501,14 @@ Möchten Sie eine Datei manuell auswählen?</value>
     </data>
     <data name="Editor_MaskDirection" xml:space="preserve">
         <value>Masken-Richtung</value>
+    </data>
+    <data name="Editor_DeleteGimmick" xml:space="preserve">
+        <value>Gimmick Löschen</value>
+    </data>
+    <data name="Editor_DeleteSelection" xml:space="preserve">
+        <value>Auswahl Löschen</value>
+    </data>
+    <data name="Editor_MirrorAxis" xml:space="preserve">
+        <value>Spiegel-Achse</value>
     </data>
 </root>

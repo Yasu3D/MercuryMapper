@@ -32,7 +32,10 @@ public class RenderEngine(MainView mainView)
     private float CurrentMeasureDecimal => mainView.ChartEditor.CurrentMeasureDecimal;
     private float ScaledCurrentMeasureDecimal => Chart.GetScaledMeasureDecimal(CurrentMeasureDecimal, RenderConfig.ShowHiSpeed);
     private RenderConfig RenderConfig => mainView.UserConfig.RenderConfig;
-    
+
+    public bool IsHoveringOverMirrorAxis { get; set; }
+    public int MirrorAxis { get; set; } = 30;
+
     public void Render(SKCanvas canvas)
     {
         DrawBackground(canvas);
@@ -43,6 +46,7 @@ public class RenderEngine(MainView mainView)
         {
             DrawCursor(canvas, mainView.ChartEditor.CurrentNoteType, mainView.ChartEditor.Cursor.Position, mainView.ChartEditor.Cursor.Size);
             DrawAngleTicks(canvas);
+            if (IsHoveringOverMirrorAxis) DrawMirrorAxis(canvas, MirrorAxis);
         }
         
         DrawMeasureLines(canvas, Chart);
@@ -357,6 +361,15 @@ public class RenderEngine(MainView mainView)
     private void DrawCursor(SKCanvas canvas, NoteType noteType, int position, int size)
     {
         canvas.DrawArc(canvasRect, position * -6, size * -6, false, brushes.GetCursorPen(noteType, canvasScale));
+    }
+
+    private void DrawMirrorAxis(SKCanvas canvas, int axis)
+    {
+        int angle = -axis * 3;
+        SKPoint p0 = RenderMath.GetPointOnArc(canvasCenter, canvasMaxRadius, angle);
+        SKPoint p1 = RenderMath.GetPointOnArc(canvasCenter, canvasMaxRadius, angle + 180);
+        
+        canvas.DrawLine(p0, p1, brushes.AngleTickPen);
     }
     
     // ____ NOTES

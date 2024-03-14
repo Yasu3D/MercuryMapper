@@ -240,6 +240,24 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Delete Gimmick.
+        /// </summary>
+        public static string Editor_DeleteGimmick {
+            get {
+                return ResourceManager.GetString("Editor_DeleteGimmick", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete Selection.
+        /// </summary>
+        public static string Editor_DeleteSelection {
+            get {
+                return ResourceManager.GetString("Editor_DeleteSelection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Deselect All.
         /// </summary>
         public static string Editor_DeselectAll {
@@ -267,7 +285,7 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Edit Note [Properties].
+        ///   Looks up a localized string similar to Edit [Type].
         /// </summary>
         public static string Editor_EditNoteProperties {
             get {
@@ -276,7 +294,7 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Edit Note [Shape].
+        ///   Looks up a localized string similar to Edit [Shape].
         /// </summary>
         public static string Editor_EditNoteShape {
             get {
@@ -285,7 +303,7 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Edit Note [Both].
+        ///   Looks up a localized string similar to Edit [Both].
         /// </summary>
         public static string Editor_EditNoteShapeProperties {
             get {
@@ -438,7 +456,16 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Mirror Note.
+        ///   Looks up a localized string similar to Mirror Axis.
+        /// </summary>
+        public static string Editor_MirrorAxis {
+            get {
+                return ResourceManager.GetString("Editor_MirrorAxis", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mirror.
         /// </summary>
         public static string Editor_MirrorNote {
             get {

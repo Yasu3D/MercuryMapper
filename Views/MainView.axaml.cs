@@ -610,7 +610,7 @@ public partial class MainView : UserControl
         }
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorMirrorNote"])) 
         {
-            ChartEditor.MirrorSelection();
+            ChartEditor.MirrorSelection((int?)NumericMirrorAxis.Value ?? 30);
             e.Handled = true;
             return;
         }
@@ -1214,8 +1214,37 @@ public partial class MainView : UserControl
     }
 
     private void ButtonHighlightNext_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.HighlightNextElement();
+    
     private void ButtonHighlightPrev_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.HighlightPrevElement();
+    
     private void ButtonHighlightNearest_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.HighlightNearestElement();
+    
+    private void ButtonEditSelectionShape_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.EditSelection(true, false);
+    
+    private void ButtonEditSelectionProperties_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.EditSelection(false, true);
+    
+    private void ButtonEditSelectionFull_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.EditSelection(true, true);
+
+    private void ButtonMirrorSelection_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.MirrorSelection((int?)NumericMirrorAxis.Value ?? 30);
+    
+    private void ButtonDeleteSelection_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.DeleteSelection();
+
+    private void NumericMirrorAxis_OnValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
+    {
+        NumericMirrorAxis.Value ??= 30;
+        if (NumericMirrorAxis.Value > 59) NumericMirrorAxis.Value = 0;
+        if (NumericMirrorAxis.Value < 0) NumericMirrorAxis.Value = 59;
+
+        RenderEngine.MirrorAxis = (int)NumericMirrorAxis.Value;
+    }
+    
+    private void NumericMirrorAxis_OnPointerEntered(object? sender, PointerEventArgs e) => RenderEngine.IsHoveringOverMirrorAxis = true;
+    
+    private void NumericMirrorAxis_OnPointerExited(object? sender, PointerEventArgs e) => RenderEngine.IsHoveringOverMirrorAxis = false;
+    
+    private void ButtonEditGimmick_OnClick(object? sender, RoutedEventArgs e) {}
+    
+    private void ButtonDeleteGimmick_OnClick(object? sender, RoutedEventArgs e) {}
     
     // ________________ UI Dialogs & Misc
     

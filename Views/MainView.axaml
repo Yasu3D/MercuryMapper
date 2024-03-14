@@ -394,10 +394,32 @@
                 <Expander Header="{x:Static lang:Resources.Editor_ExpanderHeader_QuickSettings}">
                 </Expander>
             
-                <Expander Header="{x:Static lang:Resources.Editor_ExpanderHeader_ModifyNotes}">
+                <Expander IsExpanded="True" Header="{x:Static lang:Resources.Editor_ExpanderHeader_ModifyNotes}">
+                    <StackPanel>
+                        <Grid RowDefinitions="*,*" ColumnDefinitions="*,*">
+                            <Button Grid.Row="0" Grid.Column="0" HorizontalAlignment="Stretch" Margin="0,0,2,2" Click="ButtonEditSelectionShape_OnClick" Content="{x:Static lang:Resources.Editor_EditNoteShape}"/>
+                            <Button Grid.Row="0" Grid.Column="1" HorizontalAlignment="Stretch" Margin="2,0,0,2" Click="ButtonEditSelectionProperties_OnClick" Content="{x:Static lang:Resources.Editor_EditNoteProperties}"/>
+                            <Button Grid.Row="1" Grid.Column="0" HorizontalAlignment="Stretch" Margin="0,2,2,0" Click="ButtonEditSelectionFull_OnClick" Content="{x:Static lang:Resources.Editor_EditNoteShapeProperties}"/>
+                            <Button Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Margin="2,2,0,0" Click="ButtonDeleteSelection_OnClick" Content="{x:Static lang:Resources.Editor_DeleteSelection}" Foreground="Red"/>
+                        </Grid>
+                        
+                        <Separator/>
+                        
+                        <Grid RowDefinitions="*,*" ColumnDefinitions="*,*">
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="{x:Static lang:Resources.Editor_MirrorAxis}"/>
+                            <NumericUpDown Grid.Row="1" Grid.Column="0" Name="NumericMirrorAxis" Margin="0,0,2,0" Maximum="60" Minimum="-1" Increment="1" Value="30" ValueChanged="NumericMirrorAxis_OnValueChanged" PointerEntered="NumericMirrorAxis_OnPointerEntered" PointerExited="NumericMirrorAxis_OnPointerExited"/>
+                            <Button Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Margin="2,0,0,0" Click="ButtonMirrorSelection_OnClick" Content="{x:Static lang:Resources.Editor_MirrorNote}"/>
+                        </Grid>
+                    </StackPanel>
+                    
+                    
                 </Expander>
                 
-                <Expander Header="{x:Static lang:Resources.Editor_ExpanderHeader_ModifyGimmicks}">
+                <Expander IsExpanded="True" Header="{x:Static lang:Resources.Editor_ExpanderHeader_ModifyGimmicks}">
+                    <Grid RowDefinitions="*" ColumnDefinitions="*,*">
+                        <Button Grid.Column="0" HorizontalAlignment="Stretch" Margin="0,0,2,0" Click="ButtonEditGimmick_OnClick" Content="{x:Static lang:Resources.Editor_EditGimmick}"/>
+                        <Button Grid.Column="1" HorizontalAlignment="Stretch" Margin="2,0,0,0" Click="ButtonDeleteGimmick_OnClick" Content="{x:Static lang:Resources.Editor_DeleteGimmick}" Foreground="Red"/>
+                    </Grid>
                 </Expander>
             </StackPanel>
         </ScrollViewer>

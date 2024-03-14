@@ -639,7 +639,7 @@ public class ChartEditor
                 DeleteHoldNote? holdOp2 = null;
                 
                 // If deleting all but one segment, delete the last one too.
-                // The null check thingy is just to preserve order of operations.
+                // Creating holdOp2 early and null checking is just to preserve order of operations.
                 if (!checkedHolds.Contains(note))
                 {
                     List<Note> unselectedReferences = note.References().Where(x => !SelectedNotes.Contains(x)).ToList();

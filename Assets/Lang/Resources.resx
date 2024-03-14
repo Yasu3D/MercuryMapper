@@ -311,13 +311,13 @@ Would you like to manually select a file?</value>
         <value>Background [No Mask]</value>
     </data>
     <data name="Editor_EditNoteShapeProperties" xml:space="preserve">
-        <value>Edit Note [Both]</value>
+        <value>Edit [Both]</value>
     </data>
     <data name="Editor_EditNoteShape" xml:space="preserve">
-        <value>Edit Note [Shape]</value>
+        <value>Edit [Shape]</value>
     </data>
     <data name="Editor_EditNoteProperties" xml:space="preserve">
-        <value>Edit Note [Properties]</value>
+        <value>Edit [Type]</value>
     </data>
     <data name="Editor_Delete" xml:space="preserve">
         <value>Delete</value>
@@ -407,7 +407,7 @@ Would you like to manually select a file?</value>
         <value>Select Highlighted Note</value>
     </data>
     <data name="Editor_MirrorNote" xml:space="preserve">
-        <value>Mirror Note</value>
+        <value>Mirror</value>
     </data>
     <data name="Editor_BakeHold" xml:space="preserve">
         <value>Bake Hold</value>
@@ -501,5 +501,14 @@ Would you like to manually select a file?</value>
     </data>
     <data name="Editor_MaskDirection" xml:space="preserve">
         <value>Mask Direction</value>
+    </data>
+    <data name="Editor_DeleteGimmick" xml:space="preserve">
+        <value>Delete Gimmick</value>
+    </data>
+    <data name="Editor_DeleteSelection" xml:space="preserve">
+        <value>Delete Selection</value>
+    </data>
+    <data name="Editor_MirrorAxis" xml:space="preserve">
+        <value>Mirror Axis</value>
     </data>
 </root>
