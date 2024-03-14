@@ -511,4 +511,7 @@ Möchten Sie eine Datei manuell auswählen?</value>
     <data name="Editor_MirrorAxis" xml:space="preserve">
         <value>Spiegel-Achse</value>
     </data>
+    <data name="Editor_ChartInfo_ChartAudio" xml:space="preserve">
+        <value>Chart Audio</value>
+    </data>
 </root>

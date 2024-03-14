@@ -104,6 +104,8 @@ public class ChartEditor
             
             Chart.Notes.Add(startMask);
         }
+
+        mainView.SetChartInfo();
     }
 
     public void LoadChart(string path)
@@ -114,6 +116,7 @@ public class ChartEditor
         UndoRedoManager.Clear();
         
         Chart.LoadFile(path);
+        mainView.SetChartInfo();
     }
     
     public void UpdateCursorNoteType()

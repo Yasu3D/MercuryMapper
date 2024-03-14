@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -42,5 +43,17 @@ public partial class SettingsView_Keymap : UserControl
     private void OnKeyDown(object? sender, KeyEventArgs e)
     {
         mainView.KeybindEditor.OnKeyDown(e);
+    }
+
+    private void KeybindsTreeView_OnPointerPressed(object? sender, PointerPressedEventArgs e)
+    {
+        if (!e.GetCurrentPoint(this).Properties.IsMiddleButtonPressed) return;
+        
+        Control? item = (Control?)KeybindsTreeView.SelectedItem;
+        if (item == null || item.Classes.Contains("HideKeybind")) return;
+        string name = item.Name ?? "";
+
+        mainView.KeybindEditor.ResetKeybind(name);
+        Console.WriteLine(name);
     }
 }

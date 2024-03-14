@@ -7,7 +7,8 @@
              KeyDown="OnKeyDown"
              x:Class="MercuryMapper.Views.Settings.SettingsView_Keymap">
     <ScrollViewer Name="KeybindList">
-        <TreeView Margin="0,0,10,0" Name="KeybindsTreeView" Classes="KeybindList" DoubleTapped="KeybindsTreeView_OnDoubleTapped">
+        <StackPanel>
+            <TreeView Margin="0,0,10,0" Name="KeybindsTreeView" Classes="KeybindList" DoubleTapped="KeybindsTreeView_OnDoubleTapped" PointerPressed="KeybindsTreeView_OnPointerPressed">
             <TreeViewItem Header="{x:Static lang:Resources.MenuHeader_File}" Classes="HideKeybind" IsExpanded="True">
                 <TreeViewItem Name="FileNew" Header="{x:Static lang:Resources.Menu_New}"/>
                 <TreeViewItem Name="FileOpen" Header="{x:Static lang:Resources.Menu_Open}"/>
@@ -68,5 +69,6 @@
                 <TreeViewItem Name="RenderDecreaseNoteSpeed" Header="{x:Static lang:Resources.Settings_Keymap_DecreaseNoteSpeed}"/>
             </TreeViewItem>
         </TreeView>
+        </StackPanel>
     </ScrollViewer>
 </UserControl>

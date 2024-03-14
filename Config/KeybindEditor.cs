@@ -26,6 +26,14 @@ public class KeybindEditor(UserConfig config)
         CurrentSettingsView?.SetKeybindTags();
     }
 
+    public void ResetKeybind(string name)
+    {
+        // A little bit cursed but does the trick.
+        if (!userConfig.KeymapConfig.Keybinds.ContainsKey(name)) return;
+        userConfig.KeymapConfig.Keybinds[name] = new KeymapConfig().Keybinds[name];
+        StopRebinding();
+    }
+
     public void OnKeyDown(KeyEventArgs e)
     {
         if (!RebindingActive || EditedKeybind == null)

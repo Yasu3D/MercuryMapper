@@ -55,6 +55,7 @@ public class Chart
             readChartElements(merFile);
             getHoldReferences();
             repairNotes();
+            getStartTimeEvents();
             
             GenerateTimeEvents();
             GenerateTimeScales();
@@ -204,6 +205,12 @@ public class Chart
 
                 note.Size = int.Clamp(note.Size, 1, 60);
             }
+        }
+
+        void getStartTimeEvents()
+        {
+            StartBpm = Gimmicks.LastOrDefault(x => x.BeatData.FullTick == 0 && x.GimmickType is GimmickType.BpmChange);
+            StartTimeSig = Gimmicks.LastOrDefault(x => x.BeatData.FullTick == 0 && x.GimmickType is GimmickType.TimeSigChange);
         }
     }
 

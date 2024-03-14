@@ -222,6 +222,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Chart Audio.
+        /// </summary>
+        public static string Editor_ChartInfo_ChartAudio {
+            get {
+                return ResourceManager.GetString("Editor_ChartInfo_ChartAudio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Wiedergabegeschwindigkeit erhöhen.
         /// </summary>
         public static string Editor_DecreasePlaybackSpeed {

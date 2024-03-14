@@ -511,4 +511,7 @@ Would you like to manually select a file?</value>
     <data name="Editor_MirrorAxis" xml:space="preserve">
         <value>Mirror Axis</value>
     </data>
+    <data name="Editor_ChartInfo_ChartAudio" xml:space="preserve">
+        <value>Chart Audio</value>
+    </data>
 </root>

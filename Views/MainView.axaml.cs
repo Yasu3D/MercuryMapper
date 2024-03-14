@@ -350,6 +350,17 @@ public partial class MainView : UserControl
                 SelectionInfoSeparator2.IsVisible = true;
             }
         }
+
+    public void SetChartInfo()
+    {
+        ChartInfoAuthor.Text = ChartEditor.Chart.Author;
+        ChartInfoLevel.Value = (double)ChartEditor.Chart.Level;
+        ChartInfoClearThreshold.Value = (double)ChartEditor.Chart.ClearThreshold;
+        ChartInfoPreviewTime.Value = (double)ChartEditor.Chart.PreviewTime;
+        ChartInfoPreviewLength.Value = (double)ChartEditor.Chart.PreviewLength;
+        ChartInfoOffset.Value = (double)ChartEditor.Chart.Offset;
+        ChartInfoMovieOffset.Value = (double)ChartEditor.Chart.MovieOffset;
+    }
     
     // ________________ Input
     
@@ -617,6 +628,7 @@ public partial class MainView : UserControl
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorDelete"])) 
         {
             ChartEditor.DeleteSelection();
+            ChartEditor.DeleteGimmick();
             e.Handled = true;
             return;
         }
@@ -781,7 +793,7 @@ public partial class MainView : UserControl
         
         pointerState = PointerState.Pressed;
         
-        if (modifiers.HasFlag(KeyModifiers.Control))
+        if (modifiers.HasFlag(KeyModifiers.Shift))
         {
             // Selecting
             if ((Note?)RenderEngine.GetChartElementAtPointer(ChartEditor.Chart, point, false) is not { } note) return;
@@ -791,7 +803,7 @@ public partial class MainView : UserControl
             ChartEditor.SelectNote(note);
             ChartEditor.LastSelectedNote = note;
         }
-        else if (modifiers.HasFlag(KeyModifiers.Shift))
+        else if (modifiers.HasFlag(KeyModifiers.Control))
         {
             // Highlighting
             if (RenderEngine.GetChartElementAtPointer(ChartEditor.Chart, point, true) is not { } note) return;
@@ -1213,11 +1225,94 @@ public partial class MainView : UserControl
         AudioManager.CurrentSong.PlaybackSpeed = (int)SliderPlaybackSpeed.Value;
     }
 
-    private void ButtonHighlightNext_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.HighlightNextElement();
+    private async void ChartInfoSelectAudio_OnClick(object? sender, RoutedEventArgs e)
+    {
+        // prompt user to create new chart if no start time events exist -> no chart exists
+        if (ChartEditor.Chart.StartBpm == null || ChartEditor.Chart.StartTimeSig == null)
+        {
+            MenuItemNew_OnClick(sender, e);
+            return;
+        }
+        
+        IStorageFile? audioFile = await OpenAudioFilePicker();
+        if (audioFile == null) return;
+        if (!File.Exists(audioFile.Path.LocalPath))
+        {
+            ShowWarningMessage(Assets.Lang.Resources.Editor_NewChartInvalidAudio);
+            return;
+        }
+
+        ChartEditor.Chart.AudioFilePath = audioFile.Path.LocalPath;
+        
+        AudioManager.SetSong(ChartEditor.Chart.AudioFilePath, (float)(UserConfig.AudioConfig.MusicVolume * 0.01), (int)SliderPlaybackSpeed.Value);
+        SetSongPositionSliderMaximum();
+        RenderEngine.UpdateVisibleTime();
+    }
     
-    private void ButtonHighlightPrev_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.HighlightPrevElement();
+    private void ChartInfoAuthor_OnTextChanged(object? sender, TextChangedEventArgs e)
+    {
+        ChartEditor.Chart.Author = ChartInfoAuthor.Text ?? "";
+    }
     
-    private void ButtonHighlightNearest_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.HighlightNearestElement();
+    private void ChartInfoLevel_OnValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
+    {
+        ChartEditor.Chart.Level = (decimal)ChartInfoLevel.Value;
+    }
+    
+    private void ChartInfoClearThreshold_OnValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
+    {
+        ChartEditor.Chart.ClearThreshold = (decimal)ChartInfoClearThreshold.Value;
+    }
+    
+    private void ChartInfoPreviewTime_OnValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
+    {
+        ChartEditor.Chart.PreviewTime = (decimal)ChartInfoPreviewTime.Value;
+    }
+    
+    private void ChartInfoPreviewLength_OnValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
+    {
+        ChartEditor.Chart.PreviewLength = (decimal)ChartInfoPreviewLength.Value;
+    }
+    
+    private void ChartInfoOffset_OnValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
+    {
+        ChartEditor.Chart.Offset = (decimal)ChartInfoOffset.Value;
+    }
+    
+    private void ChartInfoMovieOffset_OnValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
+    {
+        ChartEditor.Chart.MovieOffset = (decimal)ChartInfoMovieOffset.Value;
+    }
+    
+    private void SelectionInfoHighlightNext_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.HighlightNextElement();
+    
+    private void SelectionInfoHighlightPrev_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.HighlightPrevElement();
+    
+    private void SelectionInfoHighlightNearest_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.HighlightNearestElement();
+    
+    private void QuickSettingsNoteSpeed_OnValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
+    {
+        UserConfig.RenderConfig.NoteSpeed = QuickSettingsNumericNoteSpeed.Value ?? 4.5m;
+        RenderEngine.UpdateVisibleTime();
+    }
+
+    private void QuickSettingsBeatDivision_OnValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
+    {
+        UserConfig.RenderConfig.BeatDivision = (int)(QuickSettingsNumericBeatDivision.Value ?? 4);
+        RenderEngine.UpdateVisibleTime();
+    }
+    
+    private void QuickSettingsSliderMusic_OnValueChanged(object? sender, RangeBaseValueChangedEventArgs e)
+    {
+        UserConfig.AudioConfig.MusicVolume = QuickSettingsSliderMusic.Value;
+        AudioManager.UpdateVolume();
+    }
+
+    private void QuickSettingsSliderHitsound_OnValueChanged(object? sender, RangeBaseValueChangedEventArgs e)
+    {
+        UserConfig.AudioConfig.HitsoundVolume = QuickSettingsSliderHitsound.Value;
+        AudioManager.UpdateVolume();
+    }
     
     private void ButtonEditSelectionShape_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.EditSelection(true, false);
     
@@ -1241,10 +1336,10 @@ public partial class MainView : UserControl
     private void NumericMirrorAxis_OnPointerEntered(object? sender, PointerEventArgs e) => RenderEngine.IsHoveringOverMirrorAxis = true;
     
     private void NumericMirrorAxis_OnPointerExited(object? sender, PointerEventArgs e) => RenderEngine.IsHoveringOverMirrorAxis = false;
-    
-    private void ButtonEditGimmick_OnClick(object? sender, RoutedEventArgs e) {}
-    
-    private void ButtonDeleteGimmick_OnClick(object? sender, RoutedEventArgs e) {}
+
+    private void ButtonEditGimmick_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.EditGimmick();
+
+    private void ButtonDeleteGimmick_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.DeleteGimmick();
     
     // ________________ UI Dialogs & Misc
     
@@ -1281,6 +1376,11 @@ public partial class MainView : UserControl
         RenderEngine.UpdateVisibleTime();
         AudioManager.LoadHitsoundSamples();
         AudioManager.UpdateVolume();
+
+        QuickSettingsNumericBeatDivision.Value = UserConfig.RenderConfig.BeatDivision;
+        QuickSettingsNumericNoteSpeed.Value = UserConfig.RenderConfig.NoteSpeed;
+        QuickSettingsSliderMusic.Value = UserConfig.AudioConfig.MusicVolume;
+        QuickSettingsSliderHitsound.Value = UserConfig.AudioConfig.HitsoundVolume;
         
         // I know some maniac is gonna change their refresh rate while playing a song.
         var interval = TimeSpan.FromSeconds(1.0 / UserConfig.RenderConfig.RefreshRate);

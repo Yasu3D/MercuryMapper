@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:lang="clr-namespace:MercuryMapper.Assets.Lang"
              xmlns:controls="clr-namespace:MercuryMapper.Controls"
+             xmlns:fluent="using:FluentAvalonia.UI.Controls"
              mc:Ignorable="d" d:DesignWidth="1300" d:DesignHeight="830"
              PropertyChanged="MainView_OnPropertyChanged"
              x:Class="MercuryMapper.Views.MainView">
@@ -337,10 +338,53 @@
         <!-- Action Drawer -->
         <ScrollViewer Grid.Column="2" Grid.Row="1" Grid.RowSpan="2" Name="RightPanel" Width="300" Background="{DynamicResource LightBrush}">
             <StackPanel>
-                <Expander Header="{x:Static lang:Resources.Editor_ExpanderHeader_ChartInfo}">
+                <Expander IsExpanded="True" Header="{x:Static lang:Resources.Editor_ExpanderHeader_ChartInfo}">
+                    <StackPanel>
+                        <UniformGrid Columns="2">
+                            <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Editor_ChartInfo_ChartAudio}" Margin="0,2,0,2"/>
+                            <Button Content="{x:Static lang:Resources.Generic_SelectFile}" Name="ChartInfoSelectAudio" Click="ChartInfoSelectAudio_OnClick" Width="130" Height="35" HorizontalAlignment="Right" Margin="0,2,0,2"/>
+                        </UniformGrid>
+                            
+                        <Separator/>
+                        
+                        <UniformGrid Columns="2">
+                            <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.ChartProperties_Author}" Margin="0,2,0,2"/>
+                            <TextBox Text="" Name="ChartInfoAuthor" TextChanged="ChartInfoAuthor_OnTextChanged" HorizontalAlignment="Right" Margin="0,2,0,2" Width="130"/>
+                        </UniformGrid>
+                        
+                        <Separator/>
+                        
+                        <UniformGrid Columns="2">
+                            <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.ChartProperties_Level}" Margin="0,2,0,2"/>
+                            <fluent:NumberBox Value="0" Name="ChartInfoLevel" ValueChanged="ChartInfoLevel_OnValueChanged" HorizontalAlignment="Right" Margin="0,2,0,2" Width="130"/>
+                            
+                            <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.ChartProperties_ClearThreshold}" Margin="0,2,0,2"/>
+                            <fluent:NumberBox Value="0" Name="ChartInfoClearThreshold" ValueChanged="ChartInfoClearThreshold_OnValueChanged" HorizontalAlignment="Right" Margin="0,2,0,2" Width="130"/>
+                        </UniformGrid>
+                        
+                        <Separator/>
+                        
+                        <UniformGrid Columns="2">
+                            <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.ChartProperties_PreviewTime}" Margin="0,2,0,2"/>
+                            <fluent:NumberBox Value="0" Name="ChartInfoPreviewTime" ValueChanged="ChartInfoPreviewTime_OnValueChanged" HorizontalAlignment="Right" Margin="0,2,0,2" Width="130"/>
+                            
+                            <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.ChartProperties_PreviewLength}" Margin="0,2,0,2"/>
+                            <fluent:NumberBox Value="10" Name="ChartInfoPreviewLength" ValueChanged="ChartInfoPreviewLength_OnValueChanged" HorizontalAlignment="Right" Margin="0,2,0,2" Width="130"/>
+                        </UniformGrid>
+                        
+                        <Separator/>
+                        
+                        <UniformGrid Columns="2">
+                            <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.ChartProperties_Offset}" Margin="0,2,0,2"/>
+                            <fluent:NumberBox Value="0" Name="ChartInfoOffset" ValueChanged="ChartInfoOffset_OnValueChanged" HorizontalAlignment="Right" Margin="0,2,0,2" Width="130"/>
+                            
+                            <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.ChartProperties_MovieOffset}" Margin="0,2,0,2"/>
+                            <fluent:NumberBox Value="0" Name="ChartInfoMovieOffset" ValueChanged="ChartInfoMovieOffset_OnValueChanged" HorizontalAlignment="Right" Margin="0,2,0,2" Width="130"/>
+                        </UniformGrid>
+                    </StackPanel>
                 </Expander>
                 
-                <Expander IsExpanded="True" Header="{x:Static lang:Resources.Editor_ExpanderHeader_SelectionInfo}">
+                <Expander Header="{x:Static lang:Resources.Editor_ExpanderHeader_SelectionInfo}">
                     <StackPanel>
                         <Grid RowDefinitions="*,Auto,*,Auto,*,Auto,*,Auto,*,*" ColumnDefinitions="*,*,*,1.2*">
                             <TextBlock Margin="5" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="{x:Static lang:Resources.Editor_SelectionInfo_SelectedNotes}" Name="SelectionInfoSelectedNotes"/>
@@ -349,9 +393,9 @@
                             <Separator Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4"/>
                             
                             <Grid Grid.Row="2" Grid.Column="0" ColumnSpan="4" RowDefinitions="*" ColumnDefinitions="*,*,*">
-                                <Button Grid.Column="0" HorizontalAlignment="Stretch" Margin="0,0,2,0" Click="ButtonHighlightPrev_OnClick" Content="{x:Static lang:Resources.Editor_HighlightPrev}"/>
-                                <Button Grid.Column="1" HorizontalAlignment="Stretch" Margin="2,0,2,0" Click="ButtonHighlightNearest_OnClick" Content="{x:Static lang:Resources.Editor_HighlightNearest}"/>
-                                <Button Grid.Column="2" HorizontalAlignment="Stretch" Margin="2,0,0,0" Click="ButtonHighlightNext_OnClick" Content="{x:Static lang:Resources.Editor_HighlightNext}"/>
+                                <Button Grid.Column="0" HorizontalAlignment="Stretch" Margin="0,0,2,0" Click="SelectionInfoHighlightPrev_OnClick" Content="{x:Static lang:Resources.Editor_HighlightPrev}"/>
+                                <Button Grid.Column="1" HorizontalAlignment="Stretch" Margin="2,0,2,0" Click="SelectionInfoHighlightNearest_OnClick" Content="{x:Static lang:Resources.Editor_HighlightNearest}"/>
+                                <Button Grid.Column="2" HorizontalAlignment="Stretch" Margin="2,0,0,0" Click="SelectionInfoHighlightNext_OnClick" Content="{x:Static lang:Resources.Editor_HighlightNext}"/>
                             </Grid>
                             
                             <Separator Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="4"/>
@@ -392,9 +436,32 @@
                 </Expander>
                 
                 <Expander Header="{x:Static lang:Resources.Editor_ExpanderHeader_QuickSettings}">
+                    <StackPanel>
+                        <UniformGrid Columns="2">
+                            <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_NoteSpeed}"/>
+                            <NumericUpDown Name="QuickSettingsNumericNoteSpeed" FormatString="N1" ParsingNumberStyle="Integer" 
+                                           Minimum="1" Maximum="6" Value="4.5" Increment="0.1" ValueChanged="QuickSettingsNoteSpeed_OnValueChanged"
+                                           HorizontalAlignment="Right" Width="80" Margin="5"/>
+                        
+                            <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_BeatDivision}"/>
+                            <NumericUpDown Name="QuickSettingsNumericBeatDivision" FormatString="N0" ParsingNumberStyle="Integer" 
+                                           Minimum="1" Maximum="128" Value="4" Increment="1" ValueChanged="QuickSettingsBeatDivision_OnValueChanged"
+                                           HorizontalAlignment="Right" Width="80" Margin="5"/>
+                        </UniformGrid>
+                        
+                        <Separator Margin="0,5,0,12"/>
+                        
+                        <TextBlock VerticalAlignment="Center" Margin="0,0,0,-7" Text="{x:Static lang:Resources.Settings_Audio_MusicVolume}"/>
+                        <Slider Classes="Compact" Margin="0,0,0,20" TickFrequency="5" TickPlacement="TopLeft" 
+                                Minimum="0" Maximum="100" Value="50" Name="QuickSettingsSliderMusic" ValueChanged="QuickSettingsSliderMusic_OnValueChanged"/>
+                
+                        <TextBlock VerticalAlignment="Center" Margin="0,0,0,-7" Text="{x:Static lang:Resources.Settings_Audio_HitsoundVolume}"/>
+                        <Slider Classes="Compact" Margin="0,0,0,20" TickFrequency="5" TickPlacement="TopLeft"
+                                Minimum="0" Maximum="100" Value="50" Name="QuickSettingsSliderHitsound" ValueChanged="QuickSettingsSliderHitsound_OnValueChanged"/>
+                    </StackPanel>
                 </Expander>
             
-                <Expander IsExpanded="True" Header="{x:Static lang:Resources.Editor_ExpanderHeader_ModifyNotes}">
+                <Expander Header="{x:Static lang:Resources.Editor_ExpanderHeader_ModifyNotes}">
                     <StackPanel>
                         <Grid RowDefinitions="*,*" ColumnDefinitions="*,*">
                             <Button Grid.Row="0" Grid.Column="0" HorizontalAlignment="Stretch" Margin="0,0,2,2" Click="ButtonEditSelectionShape_OnClick" Content="{x:Static lang:Resources.Editor_EditNoteShape}"/>
@@ -411,11 +478,9 @@
                             <Button Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Margin="2,0,0,0" Click="ButtonMirrorSelection_OnClick" Content="{x:Static lang:Resources.Editor_MirrorNote}"/>
                         </Grid>
                     </StackPanel>
-                    
-                    
                 </Expander>
                 
-                <Expander IsExpanded="True" Header="{x:Static lang:Resources.Editor_ExpanderHeader_ModifyGimmicks}">
+                <Expander Header="{x:Static lang:Resources.Editor_ExpanderHeader_ModifyGimmicks}">
                     <Grid RowDefinitions="*" ColumnDefinitions="*,*">
                         <Button Grid.Column="0" HorizontalAlignment="Stretch" Margin="0,0,2,0" Click="ButtonEditGimmick_OnClick" Content="{x:Static lang:Resources.Editor_EditGimmick}"/>
                         <Button Grid.Column="1" HorizontalAlignment="Stretch" Margin="2,0,0,0" Click="ButtonDeleteGimmick_OnClick" Content="{x:Static lang:Resources.Editor_DeleteGimmick}" Foreground="Red"/>
