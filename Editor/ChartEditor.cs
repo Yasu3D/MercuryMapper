@@ -669,77 +669,29 @@ public class ChartEditor
         Chart.IsSaved = false;
     }
     
-    // TODO: Fix code repetition maybe?
-    public void EditSelectionShape()
+    public void EditSelection(bool shape, bool properties)
     {
+        if (!shape && !properties) return;
+        
         if (SelectedNotes.Count == 0) return;
         
         List<IOperation> operationList = [];
         foreach (Note note in SelectedNotes)
         {
-            Note newNote = new(note)
-            {
-                Position = Cursor.Position,
-                Size = Cursor.Size
-            };
-
-            operationList.Add(new EditNoteShape(note, newNote));
-        }
-
-        if (operationList.Count == 0) return;
-        UndoRedoManager.InvokeAndPush(new CompositeOperation(operationList));
-        Chart.IsSaved = false;
-    }
-    
-    public void EditSelectionProperties()
-    {
-        if (SelectedNotes.Count == 0) return;
-        
-        // This should NEVER be done on a hold note.
-        // Maybe im just gonna ditch this entirely.
-        if (CurrentNoteType is NoteType.HoldStart or NoteType.HoldStartRNote or NoteType.HoldSegment or NoteType.HoldEnd) return;
-        
-        List<IOperation> operationList = [];
-        foreach (Note note in SelectedNotes)
-        {
-            if (note.IsHold) continue;
+            int newPosition = shape ? Cursor.Position : note.Position;
+            int newSize = shape ? Cursor.Size : note.Size;
+            NoteType newType = properties && !note.IsHold ? CurrentNoteType : note.NoteType;
+            MaskDirection newDirection = properties ? CurrentMaskDirection : note.MaskDirection;
             
             Note newNote = new(note)
             {
-                NoteType = CurrentNoteType,
-                MaskDirection = CurrentMaskDirection
+                Position = newPosition,
+                Size = newSize,
+                NoteType = newType,
+                MaskDirection = newDirection
             };
 
-            operationList.Add(new EditNoteProperties(note, newNote));
-        }
-
-        if (operationList.Count == 0) return;
-        UndoRedoManager.InvokeAndPush(new CompositeOperation(operationList));
-        Chart.IsSaved = false;
-    }
-    
-    public void EditSelectionFull()
-    {
-        if (SelectedNotes.Count == 0) return;
-
-        // This should NEVER be done on a hold note.
-        // Maybe im just gonna ditch this entirely.
-        if (CurrentNoteType is NoteType.HoldStart or NoteType.HoldStartRNote or NoteType.HoldSegment or NoteType.HoldEnd) return;
-
-        List<IOperation> operationList = [];
-        foreach (Note note in SelectedNotes)
-        {
-            if (note.IsHold) continue;
-            
-            Note newNote = new(note)
-            {
-                NoteType = CurrentNoteType,
-                MaskDirection = CurrentMaskDirection,
-                Position = Cursor.Position,
-                Size = Cursor.Size
-            };
-
-            operationList.Add(new EditNoteFull(note, newNote));
+            operationList.Add(new EditNote(note, newNote));
         }
 
         if (operationList.Count == 0) return;
@@ -760,7 +712,7 @@ public class ChartEditor
                 Size = int.Clamp(note.Size + delta, 4, 60)
             };
 
-            operationList.Add(new EditNoteShape(note, newNote));
+            operationList.Add(new EditNote(note, newNote));
         }
 
         if (operationList.Count == 0) return;
@@ -781,7 +733,7 @@ public class ChartEditor
                 Size = note.Size
             };
 
-            operationList.Add(new EditNoteShape(note, newNote));
+            operationList.Add(new EditNote(note, newNote));
         }
 
         if (operationList.Count == 0) return;
@@ -809,7 +761,7 @@ public class ChartEditor
             if (newNote.PrevReferencedNote != null && newNote.BeatData.FullTick <= newNote.PrevReferencedNote.BeatData.FullTick) return;
             if (newNote.NextReferencedNote != null && newNote.BeatData.FullTick >= newNote.NextReferencedNote.BeatData.FullTick) return;
 
-            operationList.Add(new EditNoteTimestamp(note, newNote));
+            operationList.Add(new EditNote(note, newNote));
         }
 
         if (operationList.Count == 0) return;

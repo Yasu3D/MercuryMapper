@@ -592,19 +592,19 @@ public partial class MainView : UserControl
         }
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorEditNoteShape"])) 
         {
-            ChartEditor.EditSelectionShape();
+            ChartEditor.EditSelection(true, false);
             e.Handled = true;
             return;
         }
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorEditNoteProperties"])) 
         {
-            ChartEditor.EditSelectionProperties();
+            ChartEditor.EditSelection(false, true);
             e.Handled = true;
             return;
         }
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorEditNoteShapeProperties"])) 
         {
-            ChartEditor.EditSelectionFull();
+            ChartEditor.EditSelection(true, true);
             e.Handled = true;
             return;
         }
