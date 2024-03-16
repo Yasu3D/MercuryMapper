@@ -353,6 +353,8 @@ public partial class MainView : UserControl
 
     public void SetChartInfo()
     {
+        ChartInfoAudioFilepath.Text = Path.GetFileName(ChartEditor.Chart.AudioFilePath);
+        
         ChartInfoAuthor.Text = ChartEditor.Chart.Author;
         ChartInfoLevel.Value = (double)ChartEditor.Chart.Level;
         ChartInfoClearThreshold.Value = (double)ChartEditor.Chart.ClearThreshold;
@@ -1361,14 +1363,17 @@ public partial class MainView : UserControl
         Dispatcher.UIThread.Post(async () =>
         {
             ContentDialogResult result = await dialog.ShowAsync();
-            if (result is ContentDialogResult.Primary) UserConfig = new();
+            if (result is ContentDialogResult.Primary)
+            {
+                UserConfig = new();
+                ApplySettings();
+            }
         });
-        
-        ApplySettings();
     }
     
     private void ApplySettings()
     {
+        Console.WriteLine("Applying settings");
         KeybindEditor.StopRebinding(); // Stop rebinding in case it was active.
         SetButtonColors(); // Update button colors if they were changed
         SetMenuItemInputGestureText(); // Update inputgesture text in case stuff was rebound

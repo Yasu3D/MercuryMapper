@@ -366,15 +366,15 @@ public class ChartEditor
         Chart.IsSaved = false;
     }
 
-    private void CopyToClipboard(List<Note> selected)
+    private void CopyToClipboard(List<Note> selectedNotes)
     {
-        if (selected.Count == 0) return;
+        if (selectedNotes.Count == 0) return;
 
         // Since you can only copy hold notes as a whole,
         // select every referenced note of a selected hold.
 
-        List<Note> tempSelected = [..selected]; // c# 8 syntax is.. a thing that exists. Looks cool I guess?
-        foreach (Note note in selected.Where(x => x.IsHold))
+        List<Note> tempSelected = [..selectedNotes]; // c# 8 syntax is.. a thing that exists. Looks cool I guess?
+        foreach (Note note in selectedNotes.Where(x => x.IsHold))
         {
             foreach (Note reference in note.References())
             {
@@ -613,8 +613,6 @@ public class ChartEditor
 
     public void DeleteSelection()
     {
-        if (SelectedNotes.Count == 0) return;
-        
         // So... this is more complicated than expected.
         // Bulk deleting hold notes requires each deletion to reference the state of the last,
         // otherwise hold note references get mangled.
@@ -632,7 +630,29 @@ public class ChartEditor
 
         List<Note> checkedHolds = [];
         
-        foreach (Note note in SelectedNotes.OrderByDescending(x => x.BeatData.FullTick))
+        foreach (Note selected in SelectedNotes.OrderByDescending(x => x.BeatData.FullTick))
+        {
+            addOperation(selected);
+        }
+
+        if (SelectedNotes.Count == 0 && HighlightedElement is Note highlighted)
+        {
+            addOperation(highlighted);
+        }
+
+        // Temporarily undo all hold operations, then add them to the operationList
+        foreach (DeleteHoldNote deleteHoldOp in holdOperationList)
+        {
+            UndoRedoManager.Undo();
+            operationList.Add(deleteHoldOp);
+        }
+        
+        if (operationList.Count == 0) return;
+        UndoRedoManager.InvokeAndPush(new CompositeOperation(operationList));
+        Chart.IsSaved = false;
+        return;
+
+        void addOperation(Note note)
         {
             if (note.IsHold)
             {
@@ -662,27 +682,29 @@ public class ChartEditor
                 operationList.Add(new DeleteNote(Chart, SelectedNotes, note));
             }
         }
-
-        // Temporarily undo all hold operations, then add them to the operationList
-        foreach (DeleteHoldNote deleteHoldOp in holdOperationList)
-        {
-            UndoRedoManager.Undo();
-            operationList.Add(deleteHoldOp);
-        }
-        
-        if (operationList.Count == 0) return;
-        UndoRedoManager.InvokeAndPush(new CompositeOperation(operationList));
-        Chart.IsSaved = false;
     }
     
     public void EditSelection(bool shape, bool properties)
     {
         if (!shape && !properties) return;
         
-        if (SelectedNotes.Count == 0) return;
-        
         List<IOperation> operationList = [];
-        foreach (Note note in SelectedNotes)
+        foreach (Note selected in SelectedNotes)
+        {
+            addOperation(selected);
+        }
+
+        if (SelectedNotes.Count == 0 && HighlightedElement is Note highlighted)
+        {
+            addOperation(highlighted);
+        }
+        
+        if (operationList.Count == 0) return;
+        UndoRedoManager.InvokeAndPush(new CompositeOperation(operationList));
+        Chart.IsSaved = false;
+        return;
+
+        void addOperation(Note note)
         {
             int newPosition = shape ? Cursor.Position : note.Position;
             int newSize = shape ? Cursor.Size : note.Size;
@@ -699,18 +721,27 @@ public class ChartEditor
 
             operationList.Add(new EditNote(note, newNote));
         }
-
-        if (operationList.Count == 0) return;
-        UndoRedoManager.InvokeAndPush(new CompositeOperation(operationList));
-        Chart.IsSaved = false;
     }
 
     public void QuickEditSize(int delta)
     {
-        if (SelectedNotes.Count == 0) return;
-
         List<IOperation> operationList = [];
-        foreach (Note note in SelectedNotes)
+        foreach (Note selected in SelectedNotes)
+        {
+            addOperation(selected);
+        }
+
+        if (SelectedNotes.Count == 0 && HighlightedElement is Note highlighted)
+        {
+            addOperation(highlighted);
+        }
+        
+        if (operationList.Count == 0) return;
+        UndoRedoManager.InvokeAndPush(new CompositeOperation(operationList));
+        Chart.IsSaved = false;
+        return;
+
+        void addOperation(Note note)
         {
             Note newNote = new(note)
             {
@@ -720,18 +751,27 @@ public class ChartEditor
 
             operationList.Add(new EditNote(note, newNote));
         }
-
-        if (operationList.Count == 0) return;
-        UndoRedoManager.InvokeAndPush(new CompositeOperation(operationList));
-        Chart.IsSaved = false;
     }
     
     public void QuickEditPosition(int delta)
     {
-        if (SelectedNotes.Count == 0) return;
-
         List<IOperation> operationList = [];
-        foreach (Note note in SelectedNotes)
+        foreach (Note selected in SelectedNotes)
+        {
+            addOperation(selected);
+        }
+        
+        if (SelectedNotes.Count == 0 && HighlightedElement is Note highlighted)
+        {
+            addOperation(highlighted);
+        }
+
+        if (operationList.Count == 0) return;
+        UndoRedoManager.InvokeAndPush(new CompositeOperation(operationList));
+        Chart.IsSaved = false;
+        return;
+
+        void addOperation(Note note)
         {
             Note newNote = new(note)
             {
@@ -741,38 +781,45 @@ public class ChartEditor
 
             operationList.Add(new EditNote(note, newNote));
         }
-
-        if (operationList.Count == 0) return;
-        UndoRedoManager.InvokeAndPush(new CompositeOperation(operationList));
-        Chart.IsSaved = false;
     }
     
     public void QuickEditTimestamp(int delta)
     {
-        if (SelectedNotes.Count == 0) return;
-
         float divisor = (1 / (float?)mainView.NumericBeatDivisor.Value ?? 0.0625f) * delta;
         
         List<IOperation> operationList = [];
-        IEnumerable<Note> selected = delta > 0 ? SelectedNotes.OrderBy(x => x.BeatData.FullTick) : SelectedNotes.OrderByDescending(x => x.BeatData.FullTick);
-        foreach (Note note in selected)
+
+        Note? endOfChart = Chart.Notes.FirstOrDefault(x => x.NoteType is NoteType.EndOfChart);
+        float endOfChartMeasureDecimal = endOfChart != null ? endOfChart.BeatData.MeasureDecimal : float.PositiveInfinity;
+        
+        IEnumerable<Note> selectedNotes = delta > 0 ? SelectedNotes.OrderBy(x => x.BeatData.FullTick) : SelectedNotes.OrderByDescending(x => x.BeatData.FullTick);
+        foreach (Note selected in selectedNotes)
         {
-            Note newNote = new(note)
-            {
-                BeatData = new(note.BeatData.MeasureDecimal + divisor)
-            };
-            
-            Console.WriteLine($"{note.BeatData.MeasureDecimal} {newNote.BeatData.MeasureDecimal}");
+            addOperation(selected);
+        }
 
-            if (newNote.PrevReferencedNote != null && newNote.BeatData.FullTick <= newNote.PrevReferencedNote.BeatData.FullTick) return;
-            if (newNote.NextReferencedNote != null && newNote.BeatData.FullTick >= newNote.NextReferencedNote.BeatData.FullTick) return;
-
-            operationList.Add(new EditNote(note, newNote));
+        if (SelectedNotes.Count == 0 && HighlightedElement is Note highlighted)
+        {
+            addOperation(highlighted);
         }
 
         if (operationList.Count == 0) return;
         UndoRedoManager.InvokeAndPush(new CompositeOperation(operationList));
         Chart.IsSaved = false;
+        return;
+
+        void addOperation(Note note)
+        {
+            Note newNote = new(note)
+            {
+                BeatData = new(float.Clamp(note.BeatData.MeasureDecimal + divisor, 0, endOfChartMeasureDecimal))
+            };
+            
+            if (newNote.PrevReferencedNote != null && newNote.BeatData.FullTick <= newNote.PrevReferencedNote.BeatData.FullTick) return;
+            if (newNote.NextReferencedNote != null && newNote.BeatData.FullTick >= newNote.NextReferencedNote.BeatData.FullTick) return;
+
+            operationList.Add(new EditNote(note, newNote));
+        }
     }
 
     public void EditGimmick()
@@ -907,7 +954,22 @@ public class ChartEditor
     public void MirrorSelection(int axis = 30)
     {
         List<IOperation> operationList = [];
-        foreach (Note note in SelectedNotes)
+        foreach (Note selected in SelectedNotes)
+        {
+            addOperation(selected);
+        }
+
+        if (SelectedNotes.Count == 0 && HighlightedElement is Note highlighted)
+        {
+            addOperation(highlighted);
+        }
+
+        if (operationList.Count == 0) return;
+        UndoRedoManager.InvokeAndPush(new CompositeOperation(operationList));
+        Chart.IsSaved = false;
+        return;
+
+        void addOperation(Note note)
         {
             Note newNote = new(note)
             {
@@ -933,24 +995,19 @@ public class ChartEditor
 
             operationList.Add(new MirrorNote(note, newNote));
         }
-
-        if (operationList.Count == 0) return;
-        UndoRedoManager.InvokeAndPush(new CompositeOperation(operationList));
-        Chart.IsSaved = false;
     }
 
     public void BakeHold()
     {
         List<IOperation> operationList = [];
-        foreach (Note note in SelectedNotes)
+        foreach (Note selected in SelectedNotes)
         {
-            if (note.NoteType is not (NoteType.HoldStart or NoteType.HoldStartRNote or NoteType.HoldSegment) || note.NextReferencedNote is null) continue;
+            addOperation(selected);
+        }
 
-            BakeHold bakeHold = interpolate(note, note.NextReferencedNote, note.NextReferencedNote.BeatData.MeasureDecimal - note.BeatData.MeasureDecimal);
-            if (bakeHold.Segments.Count != 0)
-            {
-                operationList.Add(bakeHold);
-            }
+        if (SelectedNotes.Count == 0 && HighlightedElement is Note highlighted)
+        {
+            addOperation(highlighted);
         }
 
         if (operationList.Count == 0) return;
@@ -958,6 +1015,17 @@ public class ChartEditor
         UndoRedoManager.InvokeAndPush(new CompositeOperation(operationList));
         Chart.IsSaved = false;
         return;
+
+        void addOperation(Note note)
+        {
+            if (note.NoteType is not (NoteType.HoldStart or NoteType.HoldStartRNote or NoteType.HoldSegment) || note.NextReferencedNote is null) return;
+
+            BakeHold bakeHold = interpolate(note, note.NextReferencedNote, note.NextReferencedNote.BeatData.MeasureDecimal - note.BeatData.MeasureDecimal);
+            if (bakeHold.Segments.Count != 0)
+            {
+                operationList.Add(bakeHold);
+            }
+        }
         
         BakeHold interpolate(Note start, Note end, float length)
         {

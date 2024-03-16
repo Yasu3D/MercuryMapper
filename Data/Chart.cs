@@ -61,7 +61,6 @@ public class Chart
             GenerateTimeScales();
         }
         
-        
         IsSaved = true;
         return true;
         

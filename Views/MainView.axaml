@@ -286,7 +286,7 @@
                             HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
                             Content="{x:Static lang:Resources.Editor_EditHold}"/>
                     <Button Name="ButtonEndHold" Click="ButtonEndHold_OnClick" Grid.Column="1"
-                            Height="45" CornerRadius="3" IsVisible="False"
+                            Height="45" CornerRadius="3" IsVisible="False" Foreground="Gold"
                             HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                             HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
                             Content="{x:Static lang:Resources.Editor_EndHold}"/>
@@ -344,6 +344,8 @@
                             <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Editor_ChartInfo_ChartAudio}" Margin="0,2,0,2"/>
                             <Button Content="{x:Static lang:Resources.Generic_SelectFile}" Name="ChartInfoSelectAudio" Click="ChartInfoSelectAudio_OnClick" Width="130" Height="35" HorizontalAlignment="Right" Margin="0,2,0,2"/>
                         </UniformGrid>
+                        
+                        <TextBlock Name="ChartInfoAudioFilepath" Text=""/>
                             
                         <Separator/>
                         
