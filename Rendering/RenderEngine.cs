@@ -102,10 +102,9 @@ public class RenderEngine(MainView mainView)
             {
                 float center = MathExtensions.Modulo(note.Position + note.Size * 0.5f, 60);
                 float distance = float.Min(float.Abs(center - clickPosition), 60 - float.Abs(center - clickPosition));
-
                 return new { Note = note, Distance = distance };
             })
-            .Where(item => item.Distance < item.Note.Size * 0.5f)
+            .Where(item => item.Distance <= item.Note.Size * 0.5f)
             .OrderBy(item => item.Distance)
             .Select(item => item.Note)
             .ToList();
