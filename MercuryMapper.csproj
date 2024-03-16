@@ -71,6 +71,10 @@
         <DependentUpon>SettingsView_Audio.axaml</DependentUpon>
         <SubType>Code</SubType>
       </Compile>
+      <Compile Update="Views\Gimmicks\GimmickView_Stop.axaml.cs">
+        <DependentUpon>GimmickView_Stop.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
     </ItemGroup>
 
 

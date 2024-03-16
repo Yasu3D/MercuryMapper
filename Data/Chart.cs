@@ -19,9 +19,11 @@ public class Chart
 
     public Gimmick? StartBpm { get; set; }
     public Gimmick? StartTimeSig { get; set; }
-
+    
+    public Note? EndOfChart => Notes.LastOrDefault(x => x.NoteType is NoteType.EndOfChart);
+    
     private List<Gimmick>? TimeEvents { get; set; }
-    private List<TimeScaleData> TimeScales { get; set; } = [];
+    private List<TimeScaleData> TimeScales { get; } = [];
 
     public string AudioFilePath { get; set; } = "";
     public decimal Level { get; set; }
@@ -262,7 +264,7 @@ public class Chart
 
             foreach (Gimmick gimmick in Gimmicks)
             {
-                streamWriter.Write($"{gimmick.BeatData.Measure,4:F0}{gimmick.BeatData.Tick,5:F0}{(int)gimmick.GimmickType,5:F0}");
+                streamWriter.Write($"{gimmick.BeatData.Measure,4:F0} {gimmick.BeatData.Tick,4:F0} {(int)gimmick.GimmickType,4:F0}");
                 switch (gimmick.GimmickType)
                 {
                     case GimmickType.BpmChange: streamWriter.WriteLine($" {gimmick.Bpm:F6}");
@@ -279,11 +281,11 @@ public class Chart
 
             foreach (Note note in Notes)
             {
-                streamWriter.Write($"{note.BeatData.Measure,4:F0}{note.BeatData.Tick,5:F0}{(int) note.GimmickType,5:F0}{(int) note.NoteType,5:F0}");
-                streamWriter.Write($"{Notes.IndexOf(note),5:F0}{note.Position,5:F0}{note.Size,5:F0}{Convert.ToInt32(note.RenderSegment, CultureInfo.InvariantCulture),5:F0}");
+                streamWriter.Write($"{note.BeatData.Measure,4:F0} {note.BeatData.Tick,4:F0} {(int) note.GimmickType,4:F0} {(int) note.NoteType,4:F0} ");
+                streamWriter.Write($"{Notes.IndexOf(note),4:F0} {note.Position,4:F0} {note.Size,4:F0} {Convert.ToInt32(note.RenderSegment, CultureInfo.InvariantCulture),4:F0}");
                 
-                if (note.IsMask) streamWriter.Write($"{(int)note.MaskDirection,5:F0}");
-                if (note.NextReferencedNote != null) streamWriter.Write($"{Notes.IndexOf(note.NextReferencedNote),5:F0}");
+                if (note.IsMask) streamWriter.Write($"{ (int)note.MaskDirection,4:F0}");
+                if (note.NextReferencedNote != null) streamWriter.Write($" {Notes.IndexOf(note.NextReferencedNote),4:F0}");
                 
                 streamWriter.WriteLine();
             }

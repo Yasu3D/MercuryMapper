@@ -393,6 +393,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Naheste Note Hervorheben.
+        /// </summary>
+        public static string Editor_HighlightNearestNote {
+            get {
+                return ResourceManager.GetString("Editor_HighlightNearestNote", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Nächste &gt;.
         /// </summary>
         public static string Editor_HighlightNext {

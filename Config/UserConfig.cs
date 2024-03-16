@@ -44,8 +44,6 @@ public class KeymapConfig
     /// Make keybind User-Rebindable:
     /// - Add a new TreeViewItem to SettingsView_Keymap.axaml
     /// - The Name and Dictionary Key *MUST* be identical.
-    /// - Set Tag of TreeViewItem in SettingsView_Keymap.SetTag() to:
-    ///   Manager.Keybinds["YourKeyHere"].ToString();
     /// </summary>
     
     public Dictionary<string, Keybind> Keybinds { get; set; } = new()
@@ -68,6 +66,7 @@ public class KeymapConfig
         ["EditorEditHold"] = new(Key.Enter, false, true, false),
         ["EditorHighlightNextNote"] = new(Key.W, false, true, false),
         ["EditorHighlightPrevNote"] = new(Key.S, false, true, false),
+        ["EditorHighlightNearestNote"] = new(Key.Q, false, true, false),
         ["EditorSelectHighlightedNote"] = new(Key.Space, false, true, false),
         ["EditorIncreasePlaybackSpeed"] = new(Key.Add),
         ["EditorDecreasePlaybackSpeed"] = new(Key.Subtract),

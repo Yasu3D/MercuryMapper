@@ -9,6 +9,8 @@
         <entry key="Styles/CustomMenuItem.axaml" value="MercuryMapper.csproj" />
         <entry key="Styles/ThemeColors.axaml" value="MercuryMapper.csproj" />
         <entry key="Views/Gimmicks/GimmickView_HiSpeee.axaml" value="MercuryMapper.csproj" />
+        <entry key="Views/Gimmicks/GimmickView_Reverse.axaml" value="MercuryMapper.csproj" />
+        <entry key="Views/Gimmicks/GimmickView_Stop.axaml" value="MercuryMapper.csproj" />
         <entry key="Views/Gimmicks/GimmickView_TimeSig.axaml" value="MercuryMapper.csproj" />
         <entry key="Views/Gimmicks/Gimmick_BPM.axaml" value="MercuryMapper.csproj" />
         <entry key="Views/Main/Main_ActionDrawer.axaml" value="MercuryMapper.csproj" />

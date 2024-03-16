@@ -30,6 +30,6 @@ public partial class MainWindow : Window
     {
         if (MainView.CanShutdown) return;
         e.Cancel = true;
-        Dispatcher.UIThread.Post(async () => MainView.MenuItemExit_OnClick(null, new()));
+        Dispatcher.UIThread.Post(() => MainView.MenuItemExit_OnClick(null, new()));
     }
 }

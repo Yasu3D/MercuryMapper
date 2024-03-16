@@ -256,12 +256,12 @@
                         Maximum="59" Minimum="0" Value="0" ValueChanged="SliderPosition_OnValueChanged" PointerWheelChanged="SliderNotePosition_OnPointerWheelChanged"/> 
                 <Slider Name="SliderNoteSize" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" 
                         Classes="Compact" Margin="5" IsSnapToTickEnabled="True" TickPlacement="TopLeft" TickFrequency="1"
-                        Maximum="60" Minimum="0" Value="15" ValueChanged="SliderSize_OnValueChanged" PointerWheelChanged="SliderNoteSize_OnPointerWheelChanged"/> 
+                        Maximum="60" Minimum="4" Value="15" ValueChanged="SliderSize_OnValueChanged" PointerWheelChanged="SliderNoteSize_OnPointerWheelChanged"/> 
                 
                 <NumericUpDown Name="NumericNotePosition" Grid.Row="1" Grid.Column="2" Width="30" 
                 Maximum="60" Minimum="-1" Increment="1" Value="0" ValueChanged="NumericPosition_OnValueChanged"/>
                 <NumericUpDown Name="NumericNoteSize" Grid.Row="3" Grid.Column="2" Width="30" 
-                Maximum="60" Minimum="1" Increment="1" Value="15" ValueChanged="NumericSize_OnValueChanged"/>
+                Maximum="60" Minimum="4" Increment="1" Value="15" ValueChanged="NumericSize_OnValueChanged"/>
 
                 <Separator Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3"/>
                 

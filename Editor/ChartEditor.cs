@@ -122,9 +122,11 @@ public class ChartEditor
     public void UpdateCursorNoteType()
     {
         // Reset Editor State
+        
         EndHold();
         mainView.SetHoldContextButton(EditorState);
         mainView.ToggleInsertButton();
+        mainView.SetMinNoteSize(CurrentNoteType);
         
         switch (CurrentNoteType)
         {
@@ -504,113 +506,300 @@ public class ChartEditor
     // ________________ ChartElement Operations
     public void InsertChartElement()
     {
+        if (Chart.StartBpm is null || Chart.StartTimeSig is null) return;
+        
         BeatData data = new(CurrentMeasureDecimal);
 
-        if (EditorState is ChartEditorState.InsertHold)
+        switch (EditorState)
         {
-            // Place Hold End
-            // Hold end's prevReferencedNote is LastPlacedNote
-            // LastPlacedNote's nextReferencedNote is Hold End
-            // If previous note is hold end, convert it to hold segment
-
-            if (LastPlacedHold is null || CurrentHoldStart is null) return;
-            if (data.FullTick <= CurrentHoldStart.BeatData.FullTick) return;
-            if (data.FullTick <= LastPlacedHold.BeatData.FullTick) return;
+            case ChartEditorState.InsertNote:
+            {
+                bool endOfChart = CurrentNoteType is NoteType.EndOfChart;
             
-            Note note = new()
-            {
-                BeatData = data,
-                GimmickType = GimmickType.None,
-                MaskDirection = CurrentMaskDirection,
-                NoteType = NoteType.HoldEnd,
-                Position = Cursor.Position,
-                Size = Cursor.Size,
-                PrevReferencedNote = LastPlacedHold
-            };
+                Note note = new()
+                {
+                    BeatData = data,
+                    GimmickType = GimmickType.None,
+                    MaskDirection = CurrentMaskDirection,
+                    NoteType = CurrentNoteType,
+                    Position = endOfChart ? 0 : Cursor.Position,
+                    Size = endOfChart ? 60 : Cursor.Size
+                };
 
-            LastPlacedHold.NextReferencedNote = note;
-            if (LastPlacedHold.NoteType is NoteType.HoldEnd)
-            {
-                LastPlacedHold.NoteType = NoteType.HoldSegment;
+                LastPlacedHold = note;
+                Chart.IsSaved = false;
+                UndoRedoManager.InvokeAndPush(new InsertNote(Chart, SelectedNotes, note));
+
+                if (note.NoteType is NoteType.HoldStart or NoteType.HoldStartRNote)
+                {
+                    StartHold();
+                    CurrentHoldStart = note;
+                }
+                break;
             }
-
-            UndoRedoManager.InvokeAndPush(new InsertHoldNote(Chart, SelectedNotes, note, LastPlacedHold));
-            Chart.IsSaved = false;
-            LastPlacedHold = note;
-            return;
-        }
-        
-        if (EditorState is ChartEditorState.InsertNote)
-        {
-            bool endOfChart = CurrentNoteType is NoteType.EndOfChart;
             
-            Note note = new()
+            case ChartEditorState.InsertHold:
             {
-                BeatData = data,
-                GimmickType = GimmickType.None,
-                MaskDirection = CurrentMaskDirection,
-                NoteType = CurrentNoteType,
-                Position = endOfChart ? 0 : Cursor.Position,
-                Size = endOfChart ? 60 : Cursor.Size
-            };
+                // Place Hold End
+                // Hold end's prevReferencedNote is LastPlacedNote
+                // LastPlacedNote's nextReferencedNote is Hold End
+                // If previous note is hold end, convert it to hold segment
 
-            LastPlacedHold = note;
-            Chart.IsSaved = false;
-            UndoRedoManager.InvokeAndPush(new InsertNote(Chart, SelectedNotes, note));
+                if (LastPlacedHold is null || CurrentHoldStart is null) return;
+                if (data.FullTick <= CurrentHoldStart.BeatData.FullTick) return;
+                if (data.FullTick <= LastPlacedHold.BeatData.FullTick) return;
+            
+                Note note = new()
+                {
+                    BeatData = data,
+                    GimmickType = GimmickType.None,
+                    MaskDirection = CurrentMaskDirection,
+                    NoteType = NoteType.HoldEnd,
+                    Position = Cursor.Position,
+                    Size = Cursor.Size,
+                    PrevReferencedNote = LastPlacedHold
+                };
 
-            if (note.NoteType is NoteType.HoldStart or NoteType.HoldStartRNote)
-            {
-                StartHold();
-                CurrentHoldStart = note;
+                LastPlacedHold.NextReferencedNote = note;
+                if (LastPlacedHold.NoteType is NoteType.HoldEnd)
+                {
+                    LastPlacedHold.NoteType = NoteType.HoldSegment;
+                }
+
+                UndoRedoManager.InvokeAndPush(new InsertHoldNote(Chart, SelectedNotes, note, LastPlacedHold));
+                Chart.IsSaved = false;
+                LastPlacedHold = note;
+                break;
             }
-            return;
-        }
-
-        if (EditorState is ChartEditorState.InsertGimmick)
-        {
-            
         }
     }
 
     public void InsertBpmChange(float bpm)
     {
-        Gimmick newGimmick = new()
+        if (Chart.StartBpm is null || Chart.StartTimeSig is null) return;
+        
+        Gimmick gimmick = new()
         {
             BeatData = new(CurrentMeasureDecimal),
             Bpm = bpm,
             GimmickType = GimmickType.BpmChange
         };
         
-        UndoRedoManager.InvokeAndPush(new InsertGimmick(Chart, newGimmick));
+        UndoRedoManager.InvokeAndPush(new InsertGimmick(Chart, gimmick));
         Chart.IsSaved = false;
     }
 
     public void InsertTimeSigChange(int upper, int lower)
     {
-        Gimmick newGimmick = new()
+        if (Chart.StartBpm is null || Chart.StartTimeSig is null) return;
+        
+        Gimmick gimmick = new()
         {
             BeatData = new(CurrentMeasureDecimal),
             TimeSig = new(upper, lower),
             GimmickType = GimmickType.TimeSigChange
         };
         
-        UndoRedoManager.InvokeAndPush(new InsertGimmick(Chart, newGimmick));
+        UndoRedoManager.InvokeAndPush(new InsertGimmick(Chart, gimmick));
         Chart.IsSaved = false;
     }
 
     public void InsertHiSpeedChange(float hiSpeed)
     {
-        Gimmick newGimmick = new()
+        if (Chart.StartBpm is null || Chart.StartTimeSig is null) return;
+        
+        Gimmick gimmick = new()
         {
             BeatData = new(CurrentMeasureDecimal),
             HiSpeed = hiSpeed,
             GimmickType = GimmickType.HiSpeedChange
         };
         
-        UndoRedoManager.InvokeAndPush(new InsertGimmick(Chart, newGimmick));
+        UndoRedoManager.InvokeAndPush(new InsertGimmick(Chart, gimmick));
         Chart.IsSaved = false;
     }
 
+    public void InsertStop(float start, float end)
+    {
+        if (Chart.StartBpm is null || Chart.StartTimeSig is null) return;
+
+        if (start > Chart.EndOfChart?.BeatData.MeasureDecimal 
+            || end > Chart.EndOfChart?.BeatData.MeasureDecimal) return;
+        
+        Gimmick startGimmick = new()
+        {
+            BeatData = new(start),
+            GimmickType = GimmickType.StopStart
+        };
+
+        Gimmick endGimmick = new()
+        {
+            BeatData = new(end),
+            GimmickType = GimmickType.StopEnd
+        };
+        
+        UndoRedoManager.InvokeAndPush(new CompositeOperation([new InsertGimmick(Chart, startGimmick), new InsertGimmick(Chart, endGimmick)]));
+        Chart.IsSaved = false;
+    }
+
+    public void InsertReverse(float effectStart, float effectEnd, float noteEnd)
+    {
+        if (Chart.StartBpm is null || Chart.StartTimeSig is null) return;
+        if (effectStart > Chart.EndOfChart?.BeatData.MeasureDecimal 
+            || effectEnd > Chart.EndOfChart?.BeatData.MeasureDecimal
+            || noteEnd > Chart.EndOfChart?.BeatData.MeasureDecimal) return;
+        
+        Gimmick effectStartGimmick = new()
+        {
+            BeatData = new(effectStart),
+            GimmickType = GimmickType.ReverseEffectStart
+        };
+
+        Gimmick effectEndGimmick = new()
+        {
+            BeatData = new(effectEnd),
+            GimmickType = GimmickType.ReverseEffectEnd
+        };
+        
+        Gimmick noteEndGimmick = new()
+        {
+            BeatData = new(noteEnd),
+            GimmickType = GimmickType.ReverseNoteEnd
+        };
+        
+        UndoRedoManager.InvokeAndPush(new CompositeOperation([new InsertGimmick(Chart, effectStartGimmick), new InsertGimmick(Chart, effectEndGimmick), new InsertGimmick(Chart, noteEndGimmick)]));
+        Chart.IsSaved = false;
+    }
+    
+    public void EditGimmick()
+    {
+        if (HighlightedElement is null or Note) return;
+        
+        if (HighlightedElement.GimmickType is GimmickType.BpmChange)
+        {
+            GimmickView_Bpm gimmickView = new();
+            ContentDialog dialog = new()
+            {
+                Content = gimmickView,
+                Title = Assets.Lang.Resources.Editor_EditGimmick,
+                CloseButtonText = Assets.Lang.Resources.Generic_Cancel,
+                PrimaryButtonText = Assets.Lang.Resources.Generic_Create
+            };
+        
+            Dispatcher.UIThread.Post(async () =>
+            {
+                ContentDialogResult result = await dialog.ShowAsync();
+                if (result is not ContentDialogResult.Primary) return;
+
+                Gimmick oldGimmick = (Gimmick)HighlightedElement;
+                Gimmick newGimmick = new(oldGimmick)
+                {
+                    Bpm = (float)gimmickView.BpmNumberBox.Value
+                };
+                
+                UndoRedoManager.InvokeAndPush(new EditGimmick(Chart, oldGimmick, newGimmick));
+            });
+        }
+        
+        if (HighlightedElement.GimmickType is GimmickType.TimeSigChange)
+        {
+            GimmickView_TimeSig gimmickView = new();
+            ContentDialog dialog = new()
+            {
+                Content = gimmickView,
+                Title = Assets.Lang.Resources.Editor_EditGimmick,
+                CloseButtonText = Assets.Lang.Resources.Generic_Cancel,
+                PrimaryButtonText = Assets.Lang.Resources.Generic_Create
+            };
+        
+            Dispatcher.UIThread.Post(async () =>
+            {
+                ContentDialogResult result = await dialog.ShowAsync();
+                if (result is not ContentDialogResult.Primary) return;
+
+                Gimmick oldGimmick = (Gimmick)HighlightedElement;
+                Gimmick newGimmick = new(oldGimmick)
+                {
+                    TimeSig = new((int)gimmickView.TimeSigUpperNumberBox.Value, (int)gimmickView.TimeSigLowerNumberBox.Value)
+                };
+                
+                UndoRedoManager.InvokeAndPush(new EditGimmick(Chart, oldGimmick, newGimmick));
+            });
+        }
+        
+        if (HighlightedElement.GimmickType is GimmickType.HiSpeedChange)
+        {
+            GimmickView_HiSpeed gimmickView = new();
+            ContentDialog dialog = new()
+            {
+                Content = gimmickView,
+                Title = Assets.Lang.Resources.Editor_EditGimmick,
+                CloseButtonText = Assets.Lang.Resources.Generic_Cancel,
+                PrimaryButtonText = Assets.Lang.Resources.Generic_Create
+            };
+        
+            Dispatcher.UIThread.Post(async () =>
+            {
+                ContentDialogResult result = await dialog.ShowAsync();
+                if (result is not ContentDialogResult.Primary) return;
+
+                Gimmick oldGimmick = (Gimmick)HighlightedElement;
+                Gimmick newGimmick = new(oldGimmick)
+                {
+                    HiSpeed = (float)gimmickView.HiSpeedNumberBox.Value
+                };
+                
+                UndoRedoManager.InvokeAndPush(new EditGimmick(Chart, oldGimmick, newGimmick));
+            });
+        }
+
+        Chart.IsSaved = false;
+    }
+
+    public void DeleteGimmick()
+    {
+        if (HighlightedElement is null or Note) return;
+
+        Gimmick gimmick = (Gimmick)HighlightedElement;
+        List<IOperation> operationList = [new DeleteGimmick(Chart, gimmick)];
+
+        switch (gimmick.GimmickType)
+        {
+            case GimmickType.StopStart:
+            {
+                operationList.Add(new DeleteGimmick(Chart, Chart.Gimmicks.First(x => x.BeatData.FullTick > gimmick.BeatData.FullTick && x.GimmickType is GimmickType.StopEnd)));
+                break;
+            }
+            case GimmickType.StopEnd:
+            {
+                operationList.Add(new DeleteGimmick(Chart, Chart.Gimmicks.Last(x => x.BeatData.FullTick < gimmick.BeatData.FullTick && x.GimmickType is GimmickType.StopStart)));
+                break;
+            }
+
+            case GimmickType.ReverseEffectStart:
+            {
+                operationList.Add(new DeleteGimmick(Chart, Chart.Gimmicks.First(x => x.BeatData.FullTick > gimmick.BeatData.FullTick && x.GimmickType is GimmickType.ReverseEffectEnd)));
+                operationList.Add(new DeleteGimmick(Chart, Chart.Gimmicks.First(x => x.BeatData.FullTick > gimmick.BeatData.FullTick && x.GimmickType is GimmickType.ReverseNoteEnd)));
+                break;
+            }
+            case GimmickType.ReverseEffectEnd:
+            {
+                operationList.Add(new DeleteGimmick(Chart, Chart.Gimmicks.Last(x => x.BeatData.FullTick < gimmick.BeatData.FullTick && x.GimmickType is GimmickType.ReverseEffectStart)));
+                operationList.Add(new DeleteGimmick(Chart, Chart.Gimmicks.First(x => x.BeatData.FullTick > gimmick.BeatData.FullTick && x.GimmickType is GimmickType.ReverseNoteEnd)));
+                break;
+            }
+            case GimmickType.ReverseNoteEnd:
+            {
+                operationList.Add(new DeleteGimmick(Chart, Chart.Gimmicks.Last(x => x.BeatData.FullTick < gimmick.BeatData.FullTick && x.GimmickType is GimmickType.ReverseEffectStart)));
+                operationList.Add(new DeleteGimmick(Chart, Chart.Gimmicks.Last(x => x.BeatData.FullTick < gimmick.BeatData.FullTick && x.GimmickType is GimmickType.ReverseEffectEnd)));
+                break;
+            }
+        }
+        
+        UndoRedoManager.InvokeAndPush(new CompositeOperation(operationList));
+        Chart.IsSaved = false;
+    }
+    
     public void DeleteSelection()
     {
         // So... this is more complicated than expected.
@@ -788,9 +977,8 @@ public class ChartEditor
         float divisor = (1 / (float?)mainView.NumericBeatDivisor.Value ?? 0.0625f) * delta;
         
         List<IOperation> operationList = [];
-
-        Note? endOfChart = Chart.Notes.FirstOrDefault(x => x.NoteType is NoteType.EndOfChart);
-        float endOfChartMeasureDecimal = endOfChart != null ? endOfChart.BeatData.MeasureDecimal : float.PositiveInfinity;
+        
+        float endOfChartMeasureDecimal = Chart.EndOfChart != null ? Chart.EndOfChart.BeatData.MeasureDecimal : float.PositiveInfinity;
         
         IEnumerable<Note> selectedNotes = delta > 0 ? SelectedNotes.OrderBy(x => x.BeatData.FullTick) : SelectedNotes.OrderByDescending(x => x.BeatData.FullTick);
         foreach (Note selected in selectedNotes)
@@ -798,9 +986,10 @@ public class ChartEditor
             addOperation(selected);
         }
 
-        if (SelectedNotes.Count == 0 && HighlightedElement is Note highlighted)
+        if (SelectedNotes.Count == 0)
         {
-            addOperation(highlighted);
+            if (HighlightedElement is Note highlighted)
+                addOperation(highlighted);
         }
 
         if (operationList.Count == 0) return;
@@ -820,135 +1009,6 @@ public class ChartEditor
 
             operationList.Add(new EditNote(note, newNote));
         }
-    }
-
-    public void EditGimmick()
-    {
-        if (HighlightedElement is null or Note) return;
-        
-        if (HighlightedElement.GimmickType is GimmickType.BpmChange)
-        {
-            GimmickView_Bpm gimmickView = new();
-            ContentDialog dialog = new()
-            {
-                Content = gimmickView,
-                Title = Assets.Lang.Resources.Editor_EditGimmick,
-                CloseButtonText = Assets.Lang.Resources.Generic_Cancel,
-                PrimaryButtonText = Assets.Lang.Resources.Generic_Create
-            };
-        
-            Dispatcher.UIThread.Post(async () =>
-            {
-                ContentDialogResult result = await dialog.ShowAsync();
-                if (result is not ContentDialogResult.Primary) return;
-
-                Gimmick oldGimmick = (Gimmick)HighlightedElement;
-                Gimmick newGimmick = new(oldGimmick)
-                {
-                    Bpm = (float)gimmickView.BpmNumberBox.Value
-                };
-                
-                UndoRedoManager.InvokeAndPush(new EditGimmick(Chart, oldGimmick, newGimmick));
-            });
-        }
-        
-        if (HighlightedElement.GimmickType is GimmickType.TimeSigChange)
-        {
-            GimmickView_TimeSig gimmickView = new();
-            ContentDialog dialog = new()
-            {
-                Content = gimmickView,
-                Title = Assets.Lang.Resources.Editor_EditGimmick,
-                CloseButtonText = Assets.Lang.Resources.Generic_Cancel,
-                PrimaryButtonText = Assets.Lang.Resources.Generic_Create
-            };
-        
-            Dispatcher.UIThread.Post(async () =>
-            {
-                ContentDialogResult result = await dialog.ShowAsync();
-                if (result is not ContentDialogResult.Primary) return;
-
-                Gimmick oldGimmick = (Gimmick)HighlightedElement;
-                Gimmick newGimmick = new(oldGimmick)
-                {
-                    TimeSig = new((int)gimmickView.TimeSigUpperNumberBox.Value, (int)gimmickView.TimeSigLowerNumberBox.Value)
-                };
-                
-                UndoRedoManager.InvokeAndPush(new EditGimmick(Chart, oldGimmick, newGimmick));
-            });
-        }
-        
-        if (HighlightedElement.GimmickType is GimmickType.HiSpeedChange)
-        {
-            GimmickView_HiSpeed gimmickView = new();
-            ContentDialog dialog = new()
-            {
-                Content = gimmickView,
-                Title = Assets.Lang.Resources.Editor_EditGimmick,
-                CloseButtonText = Assets.Lang.Resources.Generic_Cancel,
-                PrimaryButtonText = Assets.Lang.Resources.Generic_Create
-            };
-        
-            Dispatcher.UIThread.Post(async () =>
-            {
-                ContentDialogResult result = await dialog.ShowAsync();
-                if (result is not ContentDialogResult.Primary) return;
-
-                Gimmick oldGimmick = (Gimmick)HighlightedElement;
-                Gimmick newGimmick = new(oldGimmick)
-                {
-                    HiSpeed = (float)gimmickView.HiSpeedNumberBox.Value
-                };
-                
-                UndoRedoManager.InvokeAndPush(new EditGimmick(Chart, oldGimmick, newGimmick));
-            });
-        }
-
-        Chart.IsSaved = false;
-    }
-
-    public void DeleteGimmick()
-    {
-        if (HighlightedElement is null or Note) return;
-
-        Gimmick gimmick = (Gimmick)HighlightedElement;
-        List<IOperation> operationList = [new DeleteGimmick(Chart, gimmick)];
-
-        switch (gimmick.GimmickType)
-        {
-            case GimmickType.StopStart:
-            {
-                operationList.Add(new DeleteGimmick(Chart, Chart.Gimmicks.First(x => x.BeatData.FullTick > gimmick.BeatData.FullTick && x.GimmickType is GimmickType.StopEnd)));
-                break;
-            }
-            case GimmickType.StopEnd:
-            {
-                operationList.Add(new DeleteGimmick(Chart, Chart.Gimmicks.Last(x => x.BeatData.FullTick < gimmick.BeatData.FullTick && x.GimmickType is GimmickType.StopStart)));
-                break;
-            }
-
-            case GimmickType.ReverseEffectStart:
-            {
-                operationList.Add(new DeleteGimmick(Chart, Chart.Gimmicks.First(x => x.BeatData.FullTick > gimmick.BeatData.FullTick && x.GimmickType is GimmickType.ReverseEffectEnd)));
-                operationList.Add(new DeleteGimmick(Chart, Chart.Gimmicks.First(x => x.BeatData.FullTick > gimmick.BeatData.FullTick && x.GimmickType is GimmickType.ReverseNoteEnd)));
-                break;
-            }
-            case GimmickType.ReverseEffectEnd:
-            {
-                operationList.Add(new DeleteGimmick(Chart, Chart.Gimmicks.Last(x => x.BeatData.FullTick < gimmick.BeatData.FullTick && x.GimmickType is GimmickType.ReverseEffectStart)));
-                operationList.Add(new DeleteGimmick(Chart, Chart.Gimmicks.First(x => x.BeatData.FullTick > gimmick.BeatData.FullTick && x.GimmickType is GimmickType.ReverseNoteEnd)));
-                break;
-            }
-            case GimmickType.ReverseNoteEnd:
-            {
-                operationList.Add(new DeleteGimmick(Chart, Chart.Gimmicks.Last(x => x.BeatData.FullTick < gimmick.BeatData.FullTick && x.GimmickType is GimmickType.ReverseEffectStart)));
-                operationList.Add(new DeleteGimmick(Chart, Chart.Gimmicks.Last(x => x.BeatData.FullTick < gimmick.BeatData.FullTick && x.GimmickType is GimmickType.ReverseEffectEnd)));
-                break;
-            }
-        }
-        
-        UndoRedoManager.InvokeAndPush(new CompositeOperation(operationList));
-        Chart.IsSaved = false;
     }
     
     public void MirrorSelection(int axis = 30)
@@ -1036,9 +1096,13 @@ public class ChartEditor
 
             int distance0 = int.Abs(endPos0 - startPos0);
             int distance1 = int.Abs(endPos1 - startPos1);
-            distance0 = distance0 > 30 ? 60 - distance0 : distance0;
-            distance1 = distance1 > 30 ? 60 - distance1 : distance1;
-
+            
+            if (distance0 > 30 && distance1 > 30)
+            {
+                distance0 = 60 - distance0;
+                distance1 = 60 - distance1;   
+            }
+            
             int maxDistance = int.Max(distance0, distance1);
             float interval = 1 / (1 / length * maxDistance);
 

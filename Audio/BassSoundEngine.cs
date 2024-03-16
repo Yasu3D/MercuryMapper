@@ -16,9 +16,9 @@ public class BassSoundEngine
     {
         if (bassInitialized) return;
         
-        if (!Bass.Init(Flags: DeviceInitFlags.Latency)) throw new Exception("Couldn't initialize ManagedBass");
-        Bass.UpdatePeriod = 100; // TODO: Mess with these values maybe? 50 is definitely too low but maybe I can push it.
-        Bass.PlaybackBufferLength = 150; // ^
+        if (!Bass.Init(Flags: DeviceInitFlags.Latency)) throw new("Couldn't initialize ManagedBass");
+        Bass.UpdatePeriod = 100;
+        Bass.PlaybackBufferLength = 150;
         bassInitialized = true;
     }
 
@@ -32,7 +32,7 @@ public class BassSoundEngine
             decodingChannel = Bass.CreateStream(filepath, 0, 0, BassFlags.Decode);
         
         // explode if that failed too
-        if (decodingChannel == 0) throw new Exception($"Couldn't load selected audio file: {Bass.LastError}");
+        if (decodingChannel == 0) throw new($"Couldn't load selected audio file: {Bass.LastError}");
 
         int bassChannel = BassFx.TempoCreate(decodingChannel, BassFlags.FxFreeSource);
         if (bassChannel == 0)

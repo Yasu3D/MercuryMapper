@@ -153,8 +153,8 @@ public partial class MainView : UserControl
         ButtonEditHold.IsVisible = state is not ChartEditorState.InsertHold;
         ButtonEndHold.IsVisible = state is ChartEditorState.InsertHold;
 
-        ButtonEditHold.IsEnabled = state is not ChartEditorState.InsertGimmick;
-        ButtonEndHold.IsEnabled = state is not ChartEditorState.InsertGimmick;
+        ButtonEditHold.IsEnabled = state is ChartEditorState.InsertNote or ChartEditorState.InsertHold;
+        ButtonEndHold.IsEnabled = state is ChartEditorState.InsertNote or ChartEditorState.InsertHold;
     }
 
     public void SetSongPositionSliderMaximum()
@@ -363,6 +363,42 @@ public partial class MainView : UserControl
         ChartInfoOffset.Value = (double)ChartEditor.Chart.Offset;
         ChartInfoMovieOffset.Value = (double)ChartEditor.Chart.MovieOffset;
     }
+
+    public void SetMinNoteSize(NoteType type)
+    {
+        int minimum = type switch
+        {
+            NoteType.Touch => 4,
+            NoteType.TouchBonus => 5,
+            NoteType.SnapForward => 6,
+            NoteType.SnapBackward => 6,
+            NoteType.SlideClockwise => 5,
+            NoteType.SlideClockwiseBonus => 7,
+            NoteType.SlideCounterclockwise => 5,
+            NoteType.SlideCounterclockwiseBonus => 7,
+            NoteType.HoldStart => 2,
+            NoteType.HoldSegment => 1,
+            NoteType.HoldEnd => 1,
+            NoteType.MaskAdd => 1,
+            NoteType.MaskRemove => 1,
+            NoteType.EndOfChart => 60,
+            NoteType.Chain => 4,
+            NoteType.TouchRNote => 6,
+            NoteType.SnapForwardRNote => 8,
+            NoteType.SnapBackwardRNote => 8,
+            NoteType.SlideClockwiseRNote => 10,
+            NoteType.SlideCounterclockwiseRNote => 10,
+            NoteType.HoldStartRNote => 8,
+            NoteType.ChainRNote => 10,
+            _ => 5
+        };
+
+        SliderNoteSize.Minimum = minimum;
+        NumericNoteSize.Minimum = minimum;
+        ChartEditor.Cursor.MinSize = minimum;
+
+        SliderNoteSize.Value = double.Max(SliderNoteSize.Value, minimum);
+    }
     
     // ________________ Input
     
@@ -498,6 +534,12 @@ public partial class MainView : UserControl
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorHighlightPrevNote"]))
         {
             ChartEditor.HighlightPrevElement();
+            e.Handled = true;
+            return;
+        }
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorHighlightNearestNote"]))
+        {
+            ChartEditor.HighlightNearestElement();
             e.Handled = true;
             return;
         }
@@ -1093,10 +1135,48 @@ public partial class MainView : UserControl
         });
     }
 
-    private void ButtonGimmickStop_OnClick(object? sender, RoutedEventArgs e) { }
+    private void ButtonGimmickStop_OnClick(object? sender, RoutedEventArgs e)
+    {
+        GimmickView_Stop gimmickView = new((int)(NumericMeasure.Value ?? 0), (int)(NumericBeatValue.Value ?? 0), (int)(NumericBeatDivisor.Value ?? 16));
+        ContentDialog dialog = new()
+        {
+            Content = gimmickView,
+            Title = Assets.Lang.Resources.Editor_AddGimmick,
+            CloseButtonText = Assets.Lang.Resources.Generic_Cancel,
+            PrimaryButtonText = Assets.Lang.Resources.Generic_Create
+        };
+        
+        Dispatcher.UIThread.Post(async () =>
+        {
+            ContentDialogResult result = await dialog.ShowAsync();
+            if (result is not ContentDialogResult.Primary) return;
+            if (gimmickView.IsValueNull) return;
+            
+            ChartEditor.InsertStop(gimmickView.StartMeasureDecimal, gimmickView.EndMeasureDecimal);
+        });
+    }
 
-    private void ButtonGimmickReverse_OnClick(object? sender, RoutedEventArgs e) { }
-
+    private void ButtonGimmickReverse_OnClick(object? sender, RoutedEventArgs e)
+    {
+        GimmickView_Reverse gimmickView = new((int)(NumericMeasure.Value ?? 0), (int)(NumericBeatValue.Value ?? 0), (int)(NumericBeatDivisor.Value ?? 16));
+        ContentDialog dialog = new()
+        {
+            Content = gimmickView,
+            Title = Assets.Lang.Resources.Editor_AddGimmick,
+            CloseButtonText = Assets.Lang.Resources.Generic_Cancel,
+            PrimaryButtonText = Assets.Lang.Resources.Generic_Create
+        };
+        
+        Dispatcher.UIThread.Post(async () =>
+        {
+            ContentDialogResult result = await dialog.ShowAsync();
+            if (result is not ContentDialogResult.Primary) return;
+            if (gimmickView.IsValueNull) return;
+            
+            ChartEditor.InsertReverse(gimmickView.EffectStartMeasureDecimal, gimmickView.EffectEndMeasureDecimal, gimmickView.NoteEndMeasureDecimal);
+        });
+    }
+    
     private void ButtonInsert_OnClick(object? sender, RoutedEventArgs e)
     {
         ChartEditor.InsertChartElement();
@@ -1345,7 +1425,7 @@ public partial class MainView : UserControl
     
     // ________________ UI Dialogs & Misc
     
-    // TODO: SORT THIS SHIT!!!
+    // This should probably be sorted but I can't be arsed rn.
     private void OnSettingsClose(ContentDialog sender, ContentDialogButtonClickEventArgs args)
     {
         ApplySettings();
@@ -1599,18 +1679,17 @@ public partial class MainView : UserControl
 
         if (string.IsNullOrEmpty(filepath)) return false;
 
-        ChartEditor.Chart.WriteFile(filepath, ChartWriteType.Editor, true);
+        ChartEditor.Chart.WriteFile(filepath, ChartWriteType.Editor);
         ChartEditor.Chart.IsNew = false;
         return true;
     }
 
     public async Task ExportFile(ChartWriteType chartWriteType)
     {
-        string filepath = "";
         IStorageFile? file = await SaveChartFilePicker(chartWriteType);
 
         if (file == null) return;
-        filepath = file.Path.LocalPath;
+        string filepath = file.Path.LocalPath;
         
         if (string.IsNullOrEmpty(filepath)) return;
         ChartEditor.Chart.WriteFile(filepath, chartWriteType, false);

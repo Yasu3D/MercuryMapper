@@ -1,6 +1,4 @@
-using System.Collections.Generic;
 using MercuryMapper.Data;
-using MercuryMapper.Enums;
 
 namespace MercuryMapper.UndoRedo.NoteOperations;
 
@@ -41,6 +39,7 @@ public class EditGimmick(Chart chart, Gimmick gimmick, Gimmick newGimmick) : IOp
     {
         lock (Chart)
         {
+            BaseGimmick.BeatData = OldGimmick.BeatData;
             BaseGimmick.Bpm = OldGimmick.Bpm;
             BaseGimmick.TimeSig = OldGimmick.TimeSig;
             BaseGimmick.HiSpeed = OldGimmick.HiSpeed;
@@ -54,6 +53,7 @@ public class EditGimmick(Chart chart, Gimmick gimmick, Gimmick newGimmick) : IOp
     {
         lock (Chart)
         {
+            BaseGimmick.BeatData = NewGimmick.BeatData;
             BaseGimmick.Bpm = NewGimmick.Bpm;
             BaseGimmick.TimeSig = NewGimmick.TimeSig;
             BaseGimmick.HiSpeed = NewGimmick.HiSpeed;

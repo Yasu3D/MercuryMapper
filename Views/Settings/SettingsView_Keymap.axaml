@@ -34,6 +34,7 @@
                 <TreeViewItem Name="EditorEditHold" Header="{x:Static lang:Resources.Editor_EditHold}"/>
                 <TreeViewItem Name="EditorHighlightNextNote" Header="{x:Static lang:Resources.Editor_HighlightNextNote}"/>
                 <TreeViewItem Name="EditorHighlightPrevNote" Header="{x:Static lang:Resources.Editor_HighlightPrevNote}"/>
+                <TreeViewItem Name="EditorHighlightNearestNote" Header="{x:Static lang:Resources.Editor_HighlightNearestNote}"/>
                 <TreeViewItem Name="EditorSelectHighlightedNote" Header="{x:Static lang:Resources.Editor_SelectHighlightedNote}"/>
                 <TreeViewItem Name="EditorIncreasePlaybackSpeed" Header="{x:Static lang:Resources.Editor_IncreasePlaybackSpeed}"/>
                 <TreeViewItem Name="EditorDecreasePlaybackSpeed" Header="{x:Static lang:Resources.Editor_DecreasePlaybackSpeed}"/>
