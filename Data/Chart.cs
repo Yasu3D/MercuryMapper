@@ -254,8 +254,8 @@ public class Chart
             {
                 streamWriter.WriteLine("#MUSIC_SCORE_ID 0");
                 streamWriter.WriteLine("#MUSIC_SCORE_VERSION 0");
-                streamWriter.WriteLine("#GAME_VERSION ");
-                streamWriter.WriteLine($"#MUSIC_FILE_PATH {AudioFilePath}");
+                streamWriter.WriteLine("#GAME_VERSION");
+                streamWriter.WriteLine($"#MUSIC_FILE_PATH");
                 streamWriter.WriteLine($"#OFFSET {Offset.ToString("F6", CultureInfo.InvariantCulture)}");
                 streamWriter.WriteLine($"#MOVIEOFFSET {MovieOffset.ToString("F6", CultureInfo.InvariantCulture)}");
             }
@@ -284,7 +284,7 @@ public class Chart
                 streamWriter.Write($"{note.BeatData.Measure,4:F0} {note.BeatData.Tick,4:F0} {(int) note.GimmickType,4:F0} {(int) note.NoteType,4:F0} ");
                 streamWriter.Write($"{Notes.IndexOf(note),4:F0} {note.Position,4:F0} {note.Size,4:F0} {Convert.ToInt32(note.RenderSegment, CultureInfo.InvariantCulture),4:F0}");
                 
-                if (note.IsMask) streamWriter.Write($"{ (int)note.MaskDirection,4:F0}");
+                if (note.IsMask) streamWriter.Write($" {(int)note.MaskDirection,4:F0}");
                 if (note.NextReferencedNote != null) streamWriter.Write($" {Notes.IndexOf(note.NextReferencedNote),4:F0}");
                 
                 streamWriter.WriteLine();
