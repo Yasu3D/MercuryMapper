@@ -220,14 +220,17 @@ public partial class MainView : UserControl
             }
         }
         
-        BeatData data = ChartEditor.Chart.Timestamp2BeatData(AudioManager.CurrentSong.Position);
+        // Avoid imprecision from Timestamp2BeatData when paused.
+        // This was causing a lot of off-by-one errors on BeatData.Tick values. >:[
+        BeatData data = timeUpdateSource is TimeUpdateSource.Timer || NumericMeasure.Value is null || NumericBeatValue.Value is null || NumericBeatDivisor.Value is null
+            ? ChartEditor.Chart.Timestamp2BeatData(AudioManager.CurrentSong.Position)
+            : new((float)(NumericMeasure.Value + NumericBeatValue.Value / NumericBeatDivisor.Value));
         
         if (source is not TimeUpdateSource.Numeric && NumericBeatDivisor.Value != null)
         {
             // The + 0.002f is a hacky "fix". There's some weird rounding issue that has carried over from BAKKA,
             // most likely caused by ManagedBass or AvaloniaUI jank. If you increment NumericBeatValue up,
             // it's often not quite enough and it falls back to the value it was before.
-            
             NumericMeasure.Value = data.Measure;
             NumericBeatValue.Value = (int)((data.MeasureDecimal - data.Measure + 0.002f) * (float)NumericBeatDivisor.Value);
         }

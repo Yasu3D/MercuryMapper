@@ -528,6 +528,7 @@ public class Chart
 
     /// <summary>
     /// Convert a Timestamp [milliseconds] to BeatData
+    /// <b>WARNING! THIS LOSES A NON-NEGLIGIBLE AMOUNT OF DECIMAL PRECISION.</b>
     /// </summary>
     public BeatData Timestamp2BeatData(float time)
     {

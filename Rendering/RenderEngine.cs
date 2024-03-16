@@ -841,7 +841,7 @@ public class RenderEngine(MainView mainView)
 internal struct ArcData(SKRect rect, float scale, float startAngle, float sweepAngle)
 {
     public SKRect Rect = rect;
-    public float Scale = scale;
+    public readonly float Scale = scale;
     public float StartAngle = startAngle;
     public float SweepAngle = sweepAngle;
 }
