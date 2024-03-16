@@ -9,6 +9,9 @@
         <ApplicationIcon>Assets\AppIcon.ico</ApplicationIcon>
         <IsPackable>false</IsPackable>
         <Company>yasu3d</Company>
+        <AssemblyVersion>1.0.0</AssemblyVersion>
+        <FileVersion>1.0.0</FileVersion>
+        <SignAssembly>true</SignAssembly>
     </PropertyGroup>
 
 
