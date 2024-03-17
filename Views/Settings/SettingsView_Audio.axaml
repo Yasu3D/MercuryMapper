@@ -60,6 +60,13 @@
                 <TextBox Grid.Column="0" Grid.Row="9" Margin="0,0,0,10" Name="TextBoxRNote" TextChanged="RNote_TextChanged"/>
                 <Button Grid.Column="1" Grid.Row="9" Content="Pick File" HorizontalAlignment="Right" Margin="5,0,0,10" Click="RNote_OnClick"/>
             </Grid>
+            
+            <Separator/>
+            
+            <Grid RowDefinitions="*" ColumnDefinitions="*,*">
+                <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_Hitsound_RNote}"/>
+                <NumericUpDown Grid.Row="0" Grid.Column="1" Value="0" Name="HitsoundOffsetNumeric" Increment="0.1" ValueChanged="HitsoundOffsetNumeric_OnValueChanged"/>
+            </Grid>
         </StackPanel>
     </ScrollViewer>
 </UserControl>

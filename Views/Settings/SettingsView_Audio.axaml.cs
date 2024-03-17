@@ -19,6 +19,8 @@ public partial class SettingsView_Audio : UserControl
         this.mainView = mainView;
         SetPaths();
         SetSliders();
+
+        HitsoundOffsetNumeric.Value = (decimal)AudioConfig.HitsoundOffset;
     }
 
     private readonly MainView mainView;
@@ -154,5 +156,10 @@ public partial class SettingsView_Audio : UserControl
     {
         AudioConfig.RNoteVolume = SliderRNote.Value;
         mainView.AudioManager.UpdateVolume();
+    }
+
+    private void HitsoundOffsetNumeric_OnValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
+    {
+        AudioConfig.HitsoundOffset = (float)(e.NewValue ?? 0);
     }
 }

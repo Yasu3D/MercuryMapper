@@ -523,4 +523,7 @@ Would you like to manually select a file?</value>
     <data name="Editor_InsertHoldSegment" xml:space="preserve">
         <value>Insert Segment</value>
     </data>
+    <data name="Settings_Audio_HitsoundOffset" xml:space="preserve">
+        <value>Hitsound Offset</value>
+    </data>
 </root>

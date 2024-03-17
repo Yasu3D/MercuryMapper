@@ -1213,6 +1213,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Hitsound Offset.
+        /// </summary>
+        public static string Settings_Audio_HitsoundOffset {
+            get {
+                return ResourceManager.GetString("Settings_Audio_HitsoundOffset", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Hitsound Lautstärke.
         /// </summary>
         public static string Settings_Audio_HitsoundVolume {

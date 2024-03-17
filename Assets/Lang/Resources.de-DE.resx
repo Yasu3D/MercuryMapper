@@ -523,4 +523,7 @@ Möchten Sie eine Datei manuell auswählen?</value>
     <data name="Editor_InsertHoldSegment" xml:space="preserve">
         <value>Segment Einfügen</value>
     </data>
+    <data name="Settings_Audio_HitsoundOffset" xml:space="preserve">
+        <value>Hitsound Offset</value>
+    </data>
 </root>

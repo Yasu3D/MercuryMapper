@@ -51,6 +51,6 @@ public class BassSoundEngine
     public static float GetLatency()
     {
         bool hasBassInfo = Bass.GetInfo(out BassInfo bassInfo);
-        return hasBassInfo ? bassInfo.Latency * 0.001f : 0;
+        return hasBassInfo ? bassInfo.Latency : 0;
     }
 }

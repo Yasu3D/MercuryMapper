@@ -182,11 +182,10 @@ public partial class MainView : UserControl
     
     public void HitsoundTimer_Tick(object? sender, EventArgs e)
     {
-        if (AudioManager.HitsoundNoteIndex == -1) return;
+        if (AudioManager.HitsoundNoteIndex == -1 || AudioManager.CurrentSong is null) return;
         
-        float latency = BassSoundEngine.GetLatency();
-        float measure = ChartEditor.CurrentMeasureDecimal + latency;
-        
+        float measure = ChartEditor.Chart.Timestamp2MeasureDecimal(AudioManager.CurrentSong.Position + BassSoundEngine.GetLatency() + UserConfig.AudioConfig.HitsoundOffset);
+
         while (AudioManager.HitsoundNoteIndex < ChartEditor.Chart.Notes.Count
                && ChartEditor.Chart.Notes[AudioManager.HitsoundNoteIndex].BeatData.MeasureDecimal <= measure)
         {
