@@ -204,11 +204,11 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Hold Note Vorberechnen.
+        ///   Looks up a localized string similar to Hold Vorberechnen.
         /// </summary>
-        public static string Editor_BakeHold {
+        public static string Editor_BakeHoldNote {
             get {
-                return ResourceManager.GetString("Editor_BakeHold", resourceCulture);
+                return ResourceManager.GetString("Editor_BakeHoldNote", resourceCulture);
             }
         }
         
@@ -456,6 +456,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Segment Einfügen.
+        /// </summary>
+        public static string Editor_InsertHoldSegment {
+            get {
+                return ResourceManager.GetString("Editor_InsertHoldSegment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Masken-Richtung.
         /// </summary>
         public static string Editor_MaskDirection {
@@ -641,6 +650,15 @@ namespace MercuryMapper.Assets.Lang {
         public static string Editor_SelectHighlightedNote {
             get {
                 return ResourceManager.GetString("Editor_SelectHighlightedNote", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hold-Note Referenzen Auswählen.
+        /// </summary>
+        public static string Editor_SelectHoldReferences {
+            get {
+                return ResourceManager.GetString("Editor_SelectHoldReferences", resourceCulture);
             }
         }
         

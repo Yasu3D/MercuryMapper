@@ -42,7 +42,7 @@ public partial class MainView : UserControl
 
         var interval = TimeSpan.FromSeconds(1.0 / UserConfig.RenderConfig.RefreshRate);
         UpdateTimer = new(interval, DispatcherPriority.Background, UpdateTimer_Tick) { IsEnabled = false };
-        HitsoundTimer = new(TimeSpan.FromMilliseconds(5), DispatcherPriority.Background, HitsoundTimer_Tick) { IsEnabled = false };
+        HitsoundTimer = new(TimeSpan.FromMilliseconds(1), DispatcherPriority.Background, HitsoundTimer_Tick) { IsEnabled = false };
 
         KeyDownEvent.AddClassHandler<TopLevel>(OnKeyDown, RoutingStrategies.Tunnel, handledEventsToo: true);
         KeyUpEvent.AddClassHandler<TopLevel>(OnKeyUp, RoutingStrategies.Tunnel, handledEventsToo: true);
@@ -182,6 +182,8 @@ public partial class MainView : UserControl
     
     public void HitsoundTimer_Tick(object? sender, EventArgs e)
     {
+        if (AudioManager.HitsoundNoteIndex == -1) return;
+        
         float latency = BassSoundEngine.GetLatency();
         float measure = ChartEditor.CurrentMeasureDecimal + latency;
         
@@ -222,7 +224,7 @@ public partial class MainView : UserControl
         
         // Avoid imprecision from Timestamp2BeatData when paused.
         // This was causing a lot of off-by-one errors on BeatData.Tick values. >:[
-        BeatData data = timeUpdateSource is TimeUpdateSource.Timer || NumericMeasure.Value is null || NumericBeatValue.Value is null || NumericBeatDivisor.Value is null
+        BeatData data = timeUpdateSource is TimeUpdateSource.Timer or TimeUpdateSource.Slider || NumericMeasure.Value is null || NumericBeatValue.Value is null || NumericBeatDivisor.Value is null
             ? ChartEditor.Chart.Timestamp2BeatData(AudioManager.CurrentSong.Position)
             : new((float)(NumericMeasure.Value + NumericBeatValue.Value / NumericBeatDivisor.Value));
         
@@ -495,7 +497,7 @@ public partial class MainView : UserControl
         {
             if (!ButtonInsert.IsEnabled) return;
             
-            ChartEditor.InsertChartElement();
+            ChartEditor.InsertNote();
             e.Handled = true;
             return;
         }
@@ -529,6 +531,18 @@ public partial class MainView : UserControl
             e.Handled = true;
             return;
         }
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorBakeHold"]))
+        {
+            ChartEditor.BakeHold();
+            e.Handled = true;
+            return;
+        }
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorInsertHoldSegment"]))
+        {
+            ChartEditor.InsertHoldSegment();
+            e.Handled = true;
+            return;
+        }
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorHighlightNextNote"]))
         {
             ChartEditor.HighlightNextElement();
@@ -550,6 +564,12 @@ public partial class MainView : UserControl
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorSelectHighlightedNote"]))
         {
             ChartEditor.SelectHighlightedNote();
+            e.Handled = true;
+            return;
+        }
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorSelectHoldReferences"]))
+        {
+            ChartEditor.SelectHoldReferences();
             e.Handled = true;
             return;
         }
@@ -680,12 +700,6 @@ public partial class MainView : UserControl
             e.Handled = true;
             return;
         }
-        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorBakeHold"]))
-        {
-            ChartEditor.BakeHold();
-            e.Handled = true;
-            return;
-        }
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorQuickEditIncreaseSize"]))
         {
             ChartEditor.QuickEditSize(1);
@@ -722,6 +736,7 @@ public partial class MainView : UserControl
             e.Handled = true;
             return;
         }
+        
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["RenderIncreaseNoteSpeed"]))
         {
             UserConfig.RenderConfig.NoteSpeed = decimal.Min(UserConfig.RenderConfig.NoteSpeed + 0.1m, 6);
@@ -1183,7 +1198,7 @@ public partial class MainView : UserControl
     
     private void ButtonInsert_OnClick(object? sender, RoutedEventArgs e)
     {
-        ChartEditor.InsertChartElement();
+        ChartEditor.InsertNote();
     }
 
     private void ButtonEditHold_OnClick(object? sender, RoutedEventArgs e)
@@ -1410,6 +1425,10 @@ public partial class MainView : UserControl
     
     private void ButtonDeleteSelection_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.DeleteSelection();
 
+    private void ButtonBakeHold_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.BakeHold();
+
+    private void ButtonInsertHoldSegment_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.InsertHoldSegment();
+    
     private void NumericMirrorAxis_OnValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
     {
         NumericMirrorAxis.Value ??= 30;
@@ -1510,7 +1529,7 @@ public partial class MainView : UserControl
         IconStop.IsVisible = play;
         SliderSongPosition.IsEnabled = !play;
 
-        AudioManager.HitsoundNoteIndex = int.Max(0, ChartEditor.Chart.Notes.FindIndex(x => x.BeatData.MeasureDecimal >= ChartEditor.CurrentMeasureDecimal));
+        AudioManager.HitsoundNoteIndex = ChartEditor.Chart.Notes.FindIndex(x => x.BeatData.MeasureDecimal >= ChartEditor.CurrentMeasureDecimal);
     }
     
     private async Task<bool> PromptSave()
@@ -1671,9 +1690,9 @@ public partial class MainView : UserControl
     
     public async Task<bool> SaveFile(bool openFilePicker)
     {
-        string filepath = "";
+        string filepath = ChartEditor.Chart.FilePath;
         
-        if (openFilePicker)
+        if (openFilePicker || string.IsNullOrEmpty(filepath))
         {
             IStorageFile? file = await SaveChartFilePicker(ChartWriteType.Editor);
 

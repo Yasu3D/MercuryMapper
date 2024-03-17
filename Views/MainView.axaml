@@ -269,9 +269,9 @@
                            Margin="5,5,0,0" Text="{x:Static lang:Resources.Editor_Measure}"/>
                 
                 <Grid Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3" ColumnDefinitions="*,Auto, Auto" Margin="0,5">
-                    <NumericUpDown Grid.Column="0" Name="NumericMeasure" ValueChanged="NumericMeasure_OnValueChanged" Minimum="0" Maximum="9999" Value="0" Increment="1" Margin="0,0,5,0"/>
-                    <NumericUpDown Grid.Column="1" Name="NumericBeatValue" ValueChanged="NumericBeatValue_OnValueChanged" Minimum="0" Maximum="1920" Value="0" Increment="1" Margin="0,0,5,0" Width="60"/>
-                    <NumericUpDown Grid.Column="2" Name="NumericBeatDivisor" ValueChanged="NumericBeatDivisor_OnValueChanged" Minimum="1" Maximum="1920" Value="16" Increment="1" Width="60"/>
+                    <NumericUpDown Grid.Column="0" Name="NumericMeasure" ValueChanged="NumericMeasure_OnValueChanged" Minimum="0" Maximum="9999" Value="0" Increment="1" FormatString="N0" Margin="0,0,5,0"/>
+                    <NumericUpDown Grid.Column="1" Name="NumericBeatValue" ValueChanged="NumericBeatValue_OnValueChanged" Minimum="0" Maximum="1920" Value="0" Increment="1" FormatString="N0" Margin="0,0,5,0" Width="60"/>
+                    <NumericUpDown Grid.Column="2" Name="NumericBeatDivisor" ValueChanged="NumericBeatDivisor_OnValueChanged" Minimum="1" Maximum="1920" Value="16" Increment="1" FormatString="N0" Width="60"/>
                 </Grid>
                 
                 <Grid Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="3" ColumnDefinitions="2*,*">
@@ -478,6 +478,13 @@
                             <TextBlock Grid.Row="0" Grid.Column="0" Text="{x:Static lang:Resources.Editor_MirrorAxis}"/>
                             <NumericUpDown Grid.Row="1" Grid.Column="0" Name="NumericMirrorAxis" Margin="0,0,2,0" Maximum="60" Minimum="-1" Increment="1" Value="30" ValueChanged="NumericMirrorAxis_OnValueChanged" PointerEntered="NumericMirrorAxis_OnPointerEntered" PointerExited="NumericMirrorAxis_OnPointerExited"/>
                             <Button Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Margin="2,0,0,0" Click="ButtonMirrorSelection_OnClick" Content="{x:Static lang:Resources.Editor_MirrorNote}"/>
+                        </Grid>
+                        
+                        <Separator/>
+                        
+                        <Grid RowDefinitions="*" ColumnDefinitions="*,*">
+                            <Button Grid.Row="0" Grid.Column="0" HorizontalAlignment="Stretch" Margin="0,0,2,2" Click="ButtonBakeHold_OnClick" Content="{x:Static lang:Resources.Editor_BakeHoldNote}"/>
+                            <Button Grid.Row="0" Grid.Column="1" HorizontalAlignment="Stretch" Margin="2,0,0,2" Click="ButtonInsertHoldSegment_OnClick" Content="{x:Static lang:Resources.Editor_InsertHoldSegment}"/>
                         </Grid>
                     </StackPanel>
                 </Expander>

@@ -409,8 +409,8 @@ Möchten Sie eine Datei manuell auswählen?</value>
     <data name="Editor_MirrorNote" xml:space="preserve">
         <value>Spiegeln</value>
     </data>
-    <data name="Editor_BakeHold" xml:space="preserve">
-        <value>Hold Note Vorberechnen</value>
+    <data name="Editor_BakeHoldNote" xml:space="preserve">
+        <value>Hold Vorberechnen</value>
     </data>
     <data name="Settings_RevertToDefault" xml:space="preserve">
         <value>Auf Standard-Einstellungen zurücksetzen</value>
@@ -516,5 +516,11 @@ Möchten Sie eine Datei manuell auswählen?</value>
     </data>
     <data name="Editor_HighlightNearestNote" xml:space="preserve">
         <value>Naheste Note Hervorheben</value>
+    </data>
+    <data name="Editor_SelectHoldReferences" xml:space="preserve">
+        <value>Hold-Note Referenzen Auswählen</value>
+    </data>
+    <data name="Editor_InsertHoldSegment" xml:space="preserve">
+        <value>Segment Einfügen</value>
     </data>
 </root>

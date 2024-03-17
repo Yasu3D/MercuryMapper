@@ -68,3 +68,41 @@ public class InsertHoldNote(Chart chart, List<Note> selected, Note note, Note la
         }
     }
 }
+
+public class InsertHoldSegment(Chart chart, List<Note> selected, Note note, Note highlighted) : IOperation
+{
+    public Chart Chart { get; } = chart;
+    public Note Note { get; } = note;
+    public Note Highlighted { get; } = highlighted;
+    public Note Previous { get; } = highlighted.PrevReferencedNote!;
+    public List<Note> Selected { get; } = selected;
+    
+    public void Undo()
+    {
+        lock (Chart)
+        {
+            Highlighted.PrevReferencedNote = Previous;
+            Previous.NextReferencedNote = Highlighted;
+
+            Note.PrevReferencedNote = null;
+            Note.NextReferencedNote = null;
+            
+            Chart.Notes.Remove(Note);
+            Selected.Remove(Note);
+        }
+    }
+
+    public void Redo()
+    {
+        lock (Chart)
+        {
+            Chart.Notes.Add(Note);
+            
+            Previous.NextReferencedNote = Note;
+            Highlighted.PrevReferencedNote = Note;
+
+            Note.PrevReferencedNote = Previous;
+            Note.NextReferencedNote = Highlighted;
+        }
+    }
+}

@@ -462,6 +462,19 @@ public class ChartEditor
         
         mainView.SetSelectionInfo();
     }
+
+    public void SelectHoldReferences()
+    {
+        List<Note> tempSelected = SelectedNotes.Where(x => x.IsHold).ToList(); // c# 8 syntax is.. a thing that exists. Looks cool I guess?
+        foreach (Note note in tempSelected)
+        {
+            foreach (Note reference in note.References())
+            {
+                if (SelectedNotes.Contains(reference)) continue;
+                SelectedNotes.Add(reference);
+            }
+        }
+    }
     
     // ________________ Highlighting
     public void HighlightElement(ChartElement? element)
@@ -504,7 +517,7 @@ public class ChartEditor
     }
     
     // ________________ ChartElement Operations
-    public void InsertChartElement()
+    public void InsertNote()
     {
         if (Chart.StartBpm is null || Chart.StartTimeSig is null) return;
         
@@ -854,7 +867,10 @@ public class ChartEditor
                 // Creating holdOp2 early and null checking is just to preserve order of operations.
                 if (!checkedHolds.Contains(note))
                 {
-                    List<Note> unselectedReferences = note.References().Where(x => !SelectedNotes.Contains(x)).ToList();
+                    List<Note> unselectedReferences = SelectedNotes.Count != 0
+                        ? note.References().Where(x => !SelectedNotes.Contains(x)).ToList()
+                        : note.References().Where(x => x != HighlightedElement).ToList();
+                    
                     if (unselectedReferences.Count == 1)
                     {
                         holdOp2 = new(Chart, SelectedNotes, unselectedReferences[0]);
@@ -964,7 +980,7 @@ public class ChartEditor
         {
             Note newNote = new(note)
             {
-                Position = int.Clamp(note.Position + delta, 4, 60),
+                Position = MathExtensions.Modulo(note.Position + delta, 60),
                 Size = note.Size
             };
 
@@ -1143,6 +1159,31 @@ public class ChartEditor
 
             return new(Chart, SelectedNotes, segments, start, end);
         }
+    }
+
+    public void InsertHoldSegment()
+    {
+        if (HighlightedElement is not Note highlighted) return;
+        if (highlighted.NoteType is not (NoteType.HoldSegment or NoteType.HoldEnd)) return;
+        if (highlighted.PrevReferencedNote is null) return;
+
+        BeatData data = new(CurrentMeasureDecimal);
+        
+        // Current timestamp not between selected and last note
+        if ( data.FullTick < highlighted.PrevReferencedNote.BeatData.FullTick 
+             || data.FullTick > highlighted.BeatData.FullTick) return;
+
+        Note note = new()
+        {
+            BeatData = data,
+            GimmickType = GimmickType.None,
+            MaskDirection = CurrentMaskDirection,
+            NoteType = NoteType.HoldSegment,
+            Position = Cursor.Position,
+            Size = Cursor.Size
+        };
+        
+        UndoRedoManager.InvokeAndPush(new InsertHoldSegment(Chart, SelectedNotes, note, highlighted));
     }
     
     public void StartHold()

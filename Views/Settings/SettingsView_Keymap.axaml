@@ -32,10 +32,13 @@
                 <TreeViewItem Name="EditorDeselectAll" Header="{x:Static lang:Resources.Editor_DeselectAll}"/>
                 <TreeViewItem Name="EditorEndHold" Header="{x:Static lang:Resources.Editor_EndHold}"/>
                 <TreeViewItem Name="EditorEditHold" Header="{x:Static lang:Resources.Editor_EditHold}"/>
+                <TreeViewItem Name="EditorBakeHold" Header="{x:Static lang:Resources.Editor_BakeHoldNote}"/>
+                <TreeViewItem Name="EditorInsertHoldSegment" Header="{x:Static lang:Resources.Editor_InsertHoldSegment}"/>
                 <TreeViewItem Name="EditorHighlightNextNote" Header="{x:Static lang:Resources.Editor_HighlightNextNote}"/>
                 <TreeViewItem Name="EditorHighlightPrevNote" Header="{x:Static lang:Resources.Editor_HighlightPrevNote}"/>
                 <TreeViewItem Name="EditorHighlightNearestNote" Header="{x:Static lang:Resources.Editor_HighlightNearestNote}"/>
                 <TreeViewItem Name="EditorSelectHighlightedNote" Header="{x:Static lang:Resources.Editor_SelectHighlightedNote}"/>
+                <TreeViewItem Name="EditorSelectHoldReferences" Header="{x:Static lang:Resources.Editor_SelectAll}"/>
                 <TreeViewItem Name="EditorIncreasePlaybackSpeed" Header="{x:Static lang:Resources.Editor_IncreasePlaybackSpeed}"/>
                 <TreeViewItem Name="EditorDecreasePlaybackSpeed" Header="{x:Static lang:Resources.Editor_DecreasePlaybackSpeed}"/>
                 <TreeViewItem Name="EditorNoteTypeTouch" Header="{x:Static lang:Resources.Note_Touch}"/>
@@ -56,7 +59,6 @@
                 <TreeViewItem Name="EditorEditNoteShapeProperties" Header="{x:Static lang:Resources.Editor_EditNoteShapeProperties}"/>
                 <TreeViewItem Name="EditorMirrorNote" Header="{x:Static lang:Resources.Editor_MirrorNote}"/>
                 <TreeViewItem Name="EditorDelete" Header="{x:Static lang:Resources.Editor_Delete}"/>
-                <TreeViewItem Name="EditorBakeHold" Header="{x:Static lang:Resources.Editor_BakeHold}"/>
                 <TreeViewItem Name="EditorQuickEditIncreaseSize" Header="{x:Static lang:Resources.Editor_QuickEditIncreaseSize}"/>
                 <TreeViewItem Name="EditorQuickEditDecreaseSize" Header="{x:Static lang:Resources.Editor_QuickEditDecreaseSize}"/>
                 <TreeViewItem Name="EditorQuickEditIncreasePosition" Header="{x:Static lang:Resources.Editor_QuickEditIncreasePosition}"/>

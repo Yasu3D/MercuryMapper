@@ -25,6 +25,8 @@ public class Chart
     private List<Gimmick>? TimeEvents { get; set; }
     private List<TimeScaleData> TimeScales { get; } = [];
 
+    public string FilePath { get; set; } = "";
+
     public string AudioFilePath { get; set; } = "";
     public decimal Level { get; set; }
     public decimal ClearThreshold { get; set; } = 0.83m;
@@ -53,6 +55,9 @@ public class Chart
         lock (this)
         {
             Clear();
+
+            FilePath = filepath;
+            
             readTags(merFile);
             readChartElements(merFile);
             getHoldReferences();
@@ -64,6 +69,7 @@ public class Chart
         }
         
         IsSaved = true;
+        IsNew = false;
         return true;
         
         void readTags(List<string> lines)

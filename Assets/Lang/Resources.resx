@@ -409,7 +409,7 @@ Would you like to manually select a file?</value>
     <data name="Editor_MirrorNote" xml:space="preserve">
         <value>Mirror</value>
     </data>
-    <data name="Editor_BakeHold" xml:space="preserve">
+    <data name="Editor_BakeHoldNote" xml:space="preserve">
         <value>Bake Hold</value>
     </data>
     <data name="Settings_RevertToDefault" xml:space="preserve">
@@ -516,5 +516,11 @@ Would you like to manually select a file?</value>
     </data>
     <data name="Editor_HighlightNearestNote" xml:space="preserve">
         <value>Highlight Nearest Note</value>
+    </data>
+    <data name="Editor_SelectHoldReferences" xml:space="preserve">
+        <value>Select Hold Note References</value>
+    </data>
+    <data name="Editor_InsertHoldSegment" xml:space="preserve">
+        <value>Insert Segment</value>
     </data>
 </root>
