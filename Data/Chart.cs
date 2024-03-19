@@ -113,7 +113,7 @@ public class Chart
 
             static string? getTag(string input, string tag)
             {
-                return input.Contains(tag) ? input.Substring(input.IndexOf(tag, StringComparison.Ordinal) + tag.Length) : null;
+                return input.Contains(tag) ? input[(input.IndexOf(tag, StringComparison.Ordinal) + tag.Length)..].TrimStart() : null;
             }
         }
 
