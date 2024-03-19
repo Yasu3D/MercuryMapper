@@ -15,6 +15,11 @@ public partial class MainWindow : Window
         InitializeComponent();
         
         AddHandler(DragDrop.DropEvent, Window_Drop);
+
+        PointerPressed += (_, _) =>
+        {
+            Focus();
+        };
     }
     
     private void Window_Drop(object? sender, DragEventArgs e)
