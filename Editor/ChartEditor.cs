@@ -990,13 +990,15 @@ public class ChartEditor
     
     public void QuickEditTimestamp(int delta)
     {
+        // This has the same issue as DeleteSelection() where holds get messed up because operations need to be done in-order.
+        
         float divisor = (1 / (float?)mainView.NumericBeatDivisor.Value ?? 0.0625f) * delta;
         
         List<IOperation> operationList = [];
         
         float endOfChartMeasureDecimal = Chart.EndOfChart != null ? Chart.EndOfChart.BeatData.MeasureDecimal : float.PositiveInfinity;
         
-        IEnumerable<Note> selectedNotes = delta > 0 ? SelectedNotes.OrderBy(x => x.BeatData.FullTick) : SelectedNotes.OrderByDescending(x => x.BeatData.FullTick);
+        IEnumerable<Note> selectedNotes = delta < 0 ? SelectedNotes.OrderBy(x => x.BeatData.FullTick) : SelectedNotes.OrderByDescending(x => x.BeatData.FullTick);
         foreach (Note selected in selectedNotes)
         {
             addOperation(selected);
@@ -1009,6 +1011,12 @@ public class ChartEditor
         }
 
         if (operationList.Count == 0) return;
+        
+        foreach (IOperation op in operationList)
+        {
+            UndoRedoManager.Undo();
+        }
+        
         UndoRedoManager.InvokeAndPush(new CompositeOperation(operationList));
         Chart.IsSaved = false;
         return;
@@ -1023,7 +1031,10 @@ public class ChartEditor
             if (newNote.PrevReferencedNote != null && newNote.BeatData.FullTick <= newNote.PrevReferencedNote.BeatData.FullTick) return;
             if (newNote.NextReferencedNote != null && newNote.BeatData.FullTick >= newNote.NextReferencedNote.BeatData.FullTick) return;
 
-            operationList.Add(new EditNote(note, newNote));
+            EditNote edit = new(note, newNote);
+            
+            operationList.Add(edit);
+            UndoRedoManager.InvokeAndPush(edit);
         }
     }
     
