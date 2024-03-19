@@ -4,6 +4,7 @@
     <option name="locations">
       <list>
         <option value="$PROJECT_DIR$/bin/Release/net8.0/win-x86/publish" />
+        <option value="$PROJECT_DIR$/bin/Publish" />
       </list>
     </option>
   </component>
