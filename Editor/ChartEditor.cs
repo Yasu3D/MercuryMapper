@@ -1145,7 +1145,7 @@ public class ChartEditor
                     NoteType = NoteType.HoldSegment,
                     Position = MathExtensions.Modulo(newPos0, 60),
                     Size = MathExtensions.Modulo(newPos1 - newPos0, 60),
-                    RenderSegment = true,
+                    RenderSegment = false,
                     PrevReferencedNote = lastNote,
                     NextReferencedNote = end
                 };

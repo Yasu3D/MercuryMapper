@@ -147,8 +147,8 @@ public class Note : ChartElement
     public NoteType NoteType { get; set; } = NoteType.Touch;
     public int Position { get; set; }
     public int Size { get; set; }
-    
-    public bool RenderSegment { get; set; }
+
+    public bool RenderSegment { get; set; } = true;
     public MaskDirection MaskDirection { get; set; }
     public Note? NextReferencedNote { get; set; }
     public Note? PrevReferencedNote { get; set; }
