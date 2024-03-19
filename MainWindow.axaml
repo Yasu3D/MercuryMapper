@@ -9,6 +9,7 @@
         Background="{DynamicResource DarkBrush}"
         WindowStartupLocation="CenterScreen"
         ExtendClientAreaToDecorationsHint="True"
+        Focusable="True"
         DragDrop.AllowDrop="True"
         Title="MercuryMapper"
         Closing="Window_OnClosing"
