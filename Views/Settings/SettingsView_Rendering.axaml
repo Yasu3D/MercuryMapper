@@ -23,7 +23,7 @@
                                HorizontalAlignment="Right" Width="80" Margin="5"/>
                 
                 <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_NoteSpeed}"/>
-                <NumericUpDown Name="NumericNoteSpeed" FormatString="N1" ParsingNumberStyle="Integer" 
+                <NumericUpDown Name="NumericNoteSpeed" FormatString="N1" ParsingNumberStyle="Number" 
                                Minimum="1" Maximum="6" Value="4.5" Increment="0.1" ValueChanged="NoteSpeed_OnValueChanged"
                                HorizontalAlignment="Right" Width="80" Margin="5"/>
                 <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_GuideLineType}"/>
