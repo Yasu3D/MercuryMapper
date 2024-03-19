@@ -90,4 +90,23 @@
       <None Remove="Assets\Inter.ttf" />
       <AvaloniaResource Include="Assets\Inter.ttf" />
     </ItemGroup>
+
+
+    <ItemGroup>
+      <None Remove="lib\win-x64\bass.dll" />
+      <ContentWithTargetPath Include="lib\win-x64\bass.dll">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <TargetPath>bass.dll</TargetPath>
+      </ContentWithTargetPath>
+      <None Remove="lib\win-x64\bass_fx.dll" />
+      <ContentWithTargetPath Include="lib\win-x64\bass_fx.dll">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <TargetPath>bass_fx.dll</TargetPath>
+      </ContentWithTargetPath>
+      <None Remove="lib\win-x64\bassflac.dll" />
+      <ContentWithTargetPath Include="lib\win-x64\bassflac.dll">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <TargetPath>bassflac.dll</TargetPath>
+      </ContentWithTargetPath>
+    </ItemGroup>
 </Project>
