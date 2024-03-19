@@ -912,7 +912,7 @@ public partial class MainView : UserControl
     
     private async void MenuItemNew_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (await PromptSave()) return;
+        if (!await PromptSave()) return;
 
         NewChartView newChartView = new(this);
         ContentDialog dialog = new()
@@ -965,7 +965,7 @@ public partial class MainView : UserControl
 
     private async void MenuItemOpen_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (await PromptSave()) return;
+        if (!await PromptSave()) return;
         
         // Get .mer file
         IStorageFile? file = await OpenChartFilePicker();
@@ -1013,7 +1013,10 @@ public partial class MainView : UserControl
 
     public async void MenuItemExit_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (await PromptSave()) return;
+        bool save = await PromptSave();
+        Console.WriteLine($"{save}  // {ChartEditor.Chart.IsNew} {ChartEditor.Chart.IsSaved}");
+        if (!save) return;
+
         CanShutdown = true;
         (Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.Shutdown();
     }
@@ -1531,17 +1534,20 @@ public partial class MainView : UserControl
         AudioManager.HitsoundNoteIndex = ChartEditor.Chart.Notes.FindIndex(x => x.BeatData.MeasureDecimal >= ChartEditor.CurrentMeasureDecimal);
     }
     
+    /// <summary>
+    /// Prompts the user to save their work.
+    /// </summary>
+    /// <returns>True if file is saved.</returns>
     private async Task<bool> PromptSave()
     {
-        if (ChartEditor.Chart.IsSaved) return false;
+        if (ChartEditor.Chart.IsSaved) return true;
 
         ContentDialogResult result = await showSavePrompt();
 
         return result switch
         {
-            ContentDialogResult.None => true,
-            ContentDialogResult.Primary when await SaveFile(true) => true,
-            ContentDialogResult.Secondary => false,
+            ContentDialogResult.Primary => await SaveFile(true),
+            ContentDialogResult.Secondary => true,
             _ => false
         };
 
