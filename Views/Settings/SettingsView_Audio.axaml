@@ -64,7 +64,7 @@
             <Separator/>
             
             <Grid RowDefinitions="*" ColumnDefinitions="*,*">
-                <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_Hitsound_RNote}"/>
+                <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_Audio_HitsoundOffset}"/>
                 <NumericUpDown Grid.Row="0" Grid.Column="1" Value="0" Name="HitsoundOffsetNumeric" Increment="0.1" ValueChanged="HitsoundOffsetNumeric_OnValueChanged"/>
             </Grid>
         </StackPanel>
