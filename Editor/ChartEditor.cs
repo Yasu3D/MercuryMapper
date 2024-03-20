@@ -1080,7 +1080,7 @@ public class ChartEditor
                 }
             };
 
-            operationList.Add(new MirrorNote(note, newNote));
+            operationList.Add(new EditNote(note, newNote));
         }
     }
 
@@ -1227,5 +1227,91 @@ public class ChartEditor
         StartHold();
         LastPlacedHold = (Note)HighlightedElement;
         CurrentHoldStart = ((Note)HighlightedElement).FirstReference();
+    }
+
+    public void ShiftChart(int ticks)
+    {
+        if (Chart.Notes.Count == 0 && Chart.Gimmicks.Count == 0) return;
+        if (ticks == 0) return;
+        
+        List<IOperation> operationList = [];
+        foreach (Note note in Chart.Notes)
+        {
+            addOperationNote(note);
+        }
+
+        foreach (Gimmick gimmick in Chart.Gimmicks)
+        {
+            if (gimmick == Chart.StartBpm || gimmick == Chart.StartTimeSig) continue;
+            addOperationGimmick(gimmick);
+        }
+
+        if (operationList.Count == 0) return;
+        UndoRedoManager.InvokeAndPush(new CompositeOperation(operationList));
+        Chart.IsSaved = false;
+        return;
+        
+        void addOperationNote(Note note)
+        {
+            Note newNote = new(note)
+            {
+                BeatData = new(note.BeatData.FullTick + ticks)
+            };
+
+            operationList.Add(new EditNote(note, newNote));
+        }
+
+        void addOperationGimmick(Gimmick gimmick)
+        {
+            Gimmick newGimmick = new(gimmick)
+            {
+                BeatData = new(gimmick.BeatData.FullTick + ticks)
+            };
+
+            operationList.Add(new EditGimmick(Chart, gimmick, newGimmick));
+        }
+    }
+
+    public void MirrorChart(int axis = 30)
+    {
+        if (Chart.Notes.Count == 0 && Chart.Gimmicks.Count == 0) return;
+        
+        List<IOperation> operationList = [];
+        foreach (Note note in Chart.Notes)
+        {
+            addOperation(note);
+        }
+
+        if (operationList.Count == 0) return;
+        UndoRedoManager.InvokeAndPush(new CompositeOperation(operationList));
+        Chart.IsSaved = false;
+        return;
+
+        void addOperation(Note note)
+        {
+            Note newNote = new(note)
+            {
+                Position = MathExtensions.Modulo(axis - note.Size - note.Position, 60),
+                NoteType = note.NoteType switch
+                {
+                    NoteType.SlideClockwise => NoteType.SlideCounterclockwise,
+                    NoteType.SlideClockwiseBonus => NoteType.SlideCounterclockwiseBonus,
+                    NoteType.SlideClockwiseRNote => NoteType.SlideCounterclockwiseRNote,
+                    NoteType.SlideCounterclockwise => NoteType.SlideClockwise,
+                    NoteType.SlideCounterclockwiseBonus => NoteType.SlideClockwiseBonus,
+                    NoteType.SlideCounterclockwiseRNote => NoteType.SlideClockwiseRNote,
+                    _ => note.NoteType
+                },
+                MaskDirection = note.MaskDirection switch
+                {
+                    MaskDirection.Counterclockwise => MaskDirection.Clockwise,
+                    MaskDirection.Clockwise => MaskDirection.Counterclockwise,
+                    MaskDirection.Center => MaskDirection.Center,
+                    _ => MaskDirection.Center
+                }
+            };
+
+            operationList.Add(new EditNote(note, newNote));
+        }
     }
 }

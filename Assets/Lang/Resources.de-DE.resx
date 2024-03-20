@@ -526,4 +526,16 @@ Möchten Sie eine Datei manuell auswählen?</value>
     <data name="Settings_Audio_HitsoundOffset" xml:space="preserve">
         <value>Hitsound Offset</value>
     </data>
+    <data name="MenuHeader_Tools" xml:space="preserve">
+        <value>Werkzeuge</value>
+    </data>
+    <data name="Menu_MirrorChart" xml:space="preserve">
+        <value>Chart Spiegeln</value>
+    </data>
+    <data name="Menu_ShiftChart" xml:space="preserve">
+        <value>Chart Verschieben</value>
+    </data>
+    <data name="Tools_ShiftBy" xml:space="preserve">
+        <value>Verschieben um</value>
+    </data>
 </root>

@@ -13,7 +13,6 @@ public class BeatData
     
     public readonly float MeasureDecimal;
     
-
     public BeatData(int measure, int tick)
     {
         Measure = measure;
@@ -33,6 +32,13 @@ public class BeatData
         Measure = (int)measureDecimal;
         Tick = (int)MathF.Round((measureDecimal - Measure) * 1920);
         MeasureDecimal = measureDecimal;
+    }
+    
+    public BeatData(int fullTick)
+    {
+        Measure = fullTick / 1920;
+        Tick = fullTick - Measure * 1920;
+        MeasureDecimal = GetMeasureDecimal(Measure, Tick);
     }
 
     public BeatData(BeatData data)
@@ -54,18 +60,6 @@ public class BeatData
     {
         return measure + beat / 1920f;
     }
-}
-
-public class TimeScaleDataLEGACY
-{
-    public float UnscaledMeasureDecimal { get; set; }
-    public float ScaledMeasureDecimal { get; set; }
-    public float ScaledMeasureDecimalHiSpeed { get; set; }
-    public float LastGimmickMeasureDecimal { get; set; }
-
-    public float HiSpeed { get; set; }
-    public float TimeSigRatio { get; set; }
-    public float BpmRatio { get; set; }
 }
 
 public class TimeScaleData

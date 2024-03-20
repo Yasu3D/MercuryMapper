@@ -961,6 +961,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Mirror Chart.
+        /// </summary>
+        public static string Menu_MirrorChart {
+            get {
+                return ResourceManager.GetString("Menu_MirrorChart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to New.
         /// </summary>
         public static string Menu_New {
@@ -1024,6 +1033,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Shift Chart.
+        /// </summary>
+        public static string Menu_ShiftChart {
+            get {
+                return ResourceManager.GetString("Menu_ShiftChart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Undo.
         /// </summary>
         public static string Menu_Undo {
@@ -1056,6 +1074,15 @@ namespace MercuryMapper.Assets.Lang {
         public static string MenuHeader_Select {
             get {
                 return ResourceManager.GetString("MenuHeader_Select", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tools.
+        /// </summary>
+        public static string MenuHeader_Tools {
+            get {
+                return ResourceManager.GetString("MenuHeader_Tools", resourceCulture);
             }
         }
         
@@ -1578,6 +1605,15 @@ namespace MercuryMapper.Assets.Lang {
         public static string Settings_ShowSpeedChanges {
             get {
                 return ResourceManager.GetString("Settings_ShowSpeedChanges", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shift by.
+        /// </summary>
+        public static string Tools_ShiftBy {
+            get {
+                return ResourceManager.GetString("Tools_ShiftBy", resourceCulture);
             }
         }
     }

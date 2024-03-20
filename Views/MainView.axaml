@@ -73,19 +73,12 @@
                               Click="MenuItemPaste_OnClick"/>
                 </MenuItem>
                 
-                <!-- <MenuItem Header="{x:Static lang:Resources.MenuHeader_Select}">
-                    <MenuItem Header="{DynamicResource L.SelectHighlightedNote}"
-                              InputGesture="Shift+S" />
-                    <MenuItem Header="{DynamicResource L.DeselectNotes}"
-                              InputGesture="Shift+D" />
-                </MenuItem> -->
-                
-                <!--<MenuItem Header="{DynamicResource L.ViewMenuItem}">
+                <MenuItem Header="{x:Static lang:Resources.MenuHeader_Tools}">
+                    <MenuItem Header="{x:Static lang:Resources.Menu_MirrorChart}" Name="MenuItemMirrorChart"
+                              Click="MenuItemMirrorChart_OnClick"/>
+                    <MenuItem Header="{x:Static lang:Resources.Menu_ShiftChart}" Name="MenuItemShiftChart"
+                              Click="MenuItemShiftChart_OnClick"/>
                 </MenuItem>
-                
-                <MenuItem Header="{DynamicResource L.ChartMenuItem}">
-                    <MenuItem Header="{DynamicResource L.InitialChartSettingsMenuOption}"/> 
-                </MenuItem> -->
             </Menu>
             <Panel Grid.Column="1" Background="{DynamicResource TitleBar}" IsHitTestVisible="False"/>
         </Grid>

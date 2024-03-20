@@ -526,4 +526,16 @@ Would you like to manually select a file?</value>
     <data name="Settings_Audio_HitsoundOffset" xml:space="preserve">
         <value>Hitsound Offset</value>
     </data>
+    <data name="MenuHeader_Tools" xml:space="preserve">
+        <value>Tools</value>
+    </data>
+    <data name="Menu_ShiftChart" xml:space="preserve">
+        <value>Shift Chart</value>
+    </data>
+    <data name="Menu_MirrorChart" xml:space="preserve">
+        <value>Mirror Chart</value>
+    </data>
+    <data name="Tools_ShiftBy" xml:space="preserve">
+        <value>Shift by</value>
+    </data>
 </root>

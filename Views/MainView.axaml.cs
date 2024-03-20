@@ -22,6 +22,7 @@ using MercuryMapper.Enums;
 using MercuryMapper.Rendering;
 using MercuryMapper.Utils;
 using MercuryMapper.Views.Gimmicks;
+using MercuryMapper.Views.Tools;
 using SkiaSharp;
 using Tomlyn;
 
@@ -55,7 +56,7 @@ public partial class MainView : UserControl
     }
 
     public bool CanShutdown;
-    public const string AppVersion = "v1.0.0";
+    public const string AppVersion = "v1.0.1";
     
     public UserConfig UserConfig = new();
     public readonly KeybindEditor KeybindEditor;
@@ -1030,6 +1031,28 @@ public partial class MainView : UserControl
 
     private void MenuItemPaste_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.Paste();
 
+    private void MenuItemMirrorChart_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.MirrorChart((int?)NumericMirrorAxis.Value ?? 30);
+
+    private void MenuItemShiftChart_OnClick(object? sender, RoutedEventArgs e)
+    {
+        ToolsView_ShiftChart shiftView = new();
+        ContentDialog dialog = new()
+        {
+            Content = shiftView,
+            Title = Assets.Lang.Resources.Editor_AddGimmick,
+            CloseButtonText = Assets.Lang.Resources.Generic_Cancel,
+            PrimaryButtonText = Assets.Lang.Resources.Generic_Ok
+        };
+        
+        Dispatcher.UIThread.Post(async () =>
+        {
+            ContentDialogResult result = await dialog.ShowAsync();
+            if (result is not ContentDialogResult.Primary) return;
+            
+            ChartEditor.ShiftChart(shiftView.Ticks);
+        });
+    }
+    
     private void RadioNoteType_IsCheckedChanged(object? sender, RoutedEventArgs e)
     {
         if (RadioNoteMaskAdd?.IsChecked == null || RadioNoteMaskRemove?.IsChecked == null) return;
