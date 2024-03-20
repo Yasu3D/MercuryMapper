@@ -159,5 +159,5 @@ public class AudioConfig
     public string BonusHitsoundPath { get; set; } = "";
     public string RNoteHitsoundPath { get; set; } = "";
     
-    public float HitsoundOffset { get; set; } = 0;
+    public float HitsoundOffset { get; set; } = 25;
 }
