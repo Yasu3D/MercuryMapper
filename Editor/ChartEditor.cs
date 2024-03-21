@@ -463,6 +463,8 @@ public class ChartEditor
         {
             SelectedNotes.Clear();
         }
+
+        HighlightedElement = null;
         
         mainView.SetSelectionInfo();
     }
