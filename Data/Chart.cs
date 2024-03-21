@@ -82,7 +82,7 @@ public class Chart
                 if (musicFilePath != null) AudioFilePath = musicFilePath;
 
                 string? level = getTag(line, "#LEVEL") ?? getTag(line, "#EDITOR_LEVEL");
-                if (level != null) Level = Convert.ToDecimal(level);
+                if (level != null) Level = Convert.ToDecimal(level, CultureInfo.InvariantCulture);
 
                 string? clearThreshold = getTag(line, "#CLEAR_THRESHOLD") ?? getTag(line, "#EDITOR_CLEAR_THRESHOLD");
                 if (clearThreshold != null) ClearThreshold = Convert.ToDecimal(clearThreshold, CultureInfo.InvariantCulture);
@@ -273,9 +273,9 @@ public class Chart
                 streamWriter.Write($"{gimmick.BeatData.Measure,4:F0} {gimmick.BeatData.Tick,4:F0} {(int)gimmick.GimmickType,4:F0}");
                 switch (gimmick.GimmickType)
                 {
-                    case GimmickType.BpmChange: streamWriter.WriteLine($" {gimmick.Bpm:F6}");
+                    case GimmickType.BpmChange: streamWriter.WriteLine($" {gimmick.Bpm.ToString("F6", CultureInfo.InvariantCulture)}");
                         break;
-                    case GimmickType.HiSpeedChange: streamWriter.WriteLine($" {gimmick.HiSpeed:F6}");
+                    case GimmickType.HiSpeedChange: streamWriter.WriteLine($" {gimmick.HiSpeed.ToString("F6", CultureInfo.InvariantCulture)}");
                         break;
                     case GimmickType.TimeSigChange: streamWriter.WriteLine($"{gimmick.TimeSig.Upper,5:F0}{gimmick.TimeSig.Lower,5:F0}");
                         break;
