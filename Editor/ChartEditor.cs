@@ -885,7 +885,7 @@ public class ChartEditor
                     }
                 }
                 
-                DeleteHoldNote holdOp = new(Chart, this, SelectedNotes, note, newLastPlacedHold);
+                DeleteHoldNote holdOp = new(Chart, this, SelectedNotes, note, newLastPlacedHold, EditorState is not ChartEditorState.InsertHold);
                 holdOperationList.Add(holdOp);
                 
                 DeleteHoldNote? holdOp2 = null;
@@ -900,7 +900,7 @@ public class ChartEditor
                     
                     if (unselectedReferences.Count == 1)
                     {
-                        holdOp2 = new(Chart, this, SelectedNotes, unselectedReferences[0], newLastPlacedHold);
+                        holdOp2 = new(Chart, this, SelectedNotes, unselectedReferences[0], newLastPlacedHold, EditorState is not ChartEditorState.InsertHold);
                         holdOperationList.Add(holdOp2);
                     }
                     checkedHolds.AddRange(note.References());

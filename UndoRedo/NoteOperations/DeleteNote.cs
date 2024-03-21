@@ -29,7 +29,7 @@ public class DeleteNote(Chart chart, List<Note> selected, Note note) : IOperatio
     }
 }
 
-public class DeleteHoldNote(Chart chart, ChartEditor editor, List<Note> selected, Note note, Note? newLastPlacedHold) : IOperation
+public class DeleteHoldNote(Chart chart, ChartEditor editor, List<Note> selected, Note note, Note? newLastPlacedHold, bool endHold) : IOperation
 {
     public Chart Chart { get; } = chart;
     public Note Note { get; } = note;
@@ -69,6 +69,7 @@ public class DeleteHoldNote(Chart chart, ChartEditor editor, List<Note> selected
         }
 
         editor.LastPlacedHold = Note;
+        if (endHold) editor.StartHold();
     }
     
     public void Redo()
@@ -101,5 +102,6 @@ public class DeleteHoldNote(Chart chart, ChartEditor editor, List<Note> selected
         }
 
         editor.LastPlacedHold = NewLastPlacedHold;
+        if (endHold) editor.EndHold();
     }
 }
