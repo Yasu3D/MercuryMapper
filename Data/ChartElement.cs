@@ -222,6 +222,36 @@ public class Note : ChartElement
         is NoteType.MaskAdd
         or NoteType.MaskRemove;
 
+    public static int MinSize(NoteType type)
+    {
+        return type switch
+        {
+            NoteType.Touch => 4,
+            NoteType.TouchBonus => 5,
+            NoteType.SnapForward => 6,
+            NoteType.SnapBackward => 6,
+            NoteType.SlideClockwise => 5,
+            NoteType.SlideClockwiseBonus => 7,
+            NoteType.SlideCounterclockwise => 5,
+            NoteType.SlideCounterclockwiseBonus => 7,
+            NoteType.HoldStart => 2,
+            NoteType.HoldSegment => 1,
+            NoteType.HoldEnd => 1,
+            NoteType.MaskAdd => 1,
+            NoteType.MaskRemove => 1,
+            NoteType.EndOfChart => 60,
+            NoteType.Chain => 4,
+            NoteType.TouchRNote => 6,
+            NoteType.SnapForwardRNote => 8,
+            NoteType.SnapBackwardRNote => 8,
+            NoteType.SlideClockwiseRNote => 10,
+            NoteType.SlideCounterclockwiseRNote => 10,
+            NoteType.HoldStartRNote => 8,
+            NoteType.ChainRNote => 10,
+            _ => 5
+        };
+    }
+
     public IEnumerable<Note> References()
     {
         List<Note> refs = [this];

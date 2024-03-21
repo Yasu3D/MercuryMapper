@@ -371,33 +371,7 @@ public partial class MainView : UserControl
 
     public void SetMinNoteSize(NoteType type)
     {
-        int minimum = type switch
-        {
-            NoteType.Touch => 4,
-            NoteType.TouchBonus => 5,
-            NoteType.SnapForward => 6,
-            NoteType.SnapBackward => 6,
-            NoteType.SlideClockwise => 5,
-            NoteType.SlideClockwiseBonus => 7,
-            NoteType.SlideCounterclockwise => 5,
-            NoteType.SlideCounterclockwiseBonus => 7,
-            NoteType.HoldStart => 2,
-            NoteType.HoldSegment => 1,
-            NoteType.HoldEnd => 1,
-            NoteType.MaskAdd => 1,
-            NoteType.MaskRemove => 1,
-            NoteType.EndOfChart => 60,
-            NoteType.Chain => 4,
-            NoteType.TouchRNote => 6,
-            NoteType.SnapForwardRNote => 8,
-            NoteType.SnapBackwardRNote => 8,
-            NoteType.SlideClockwiseRNote => 10,
-            NoteType.SlideCounterclockwiseRNote => 10,
-            NoteType.HoldStartRNote => 8,
-            NoteType.ChainRNote => 10,
-            _ => 5
-        };
-
+        int minimum = Note.MinSize(type);
         SliderNoteSize.Minimum = minimum;
         NumericNoteSize.Minimum = minimum;
         ChartEditor.Cursor.MinSize = minimum;
@@ -767,16 +741,23 @@ public partial class MainView : UserControl
     
     private void Canvas_OnPointerWheelChanged(object? sender, PointerWheelEventArgs e)
     {
-        int direction = double.Sign(e.Delta.Y);
-        
-        // Unused at the moment - Reserved for cursor depth
+        int delta = double.Sign(e.Delta.Y);
+        PointerPoint p = e.GetCurrentPoint(Canvas);
+
+        if (p.Properties.IsRightButtonPressed)
+        {
+            ChartEditor.Cursor.IncrementSize(delta);
+            return;
+        }
+
+        // Unused at the moment - used to be cursor depth
         if (e.KeyModifiers.HasFlag(KeyModifiers.Control)) { }
         
         // Shift Beat Divisor
         else if (e.KeyModifiers.HasFlag(KeyModifiers.Shift))
         {
             decimal value = NumericBeatDivisor.Value ?? 16;
-            NumericBeatDivisor.Value = Math.Clamp(value + direction, NumericBeatDivisor.Minimum, NumericBeatDivisor.Maximum);
+            NumericBeatDivisor.Value = Math.Clamp(value + delta, NumericBeatDivisor.Minimum, NumericBeatDivisor.Maximum);
         }
         
         // Double/Halve Beat Divisor
@@ -784,7 +765,7 @@ public partial class MainView : UserControl
         {
             decimal value = NumericBeatDivisor.Value ?? 16;
             
-            if (direction > 0)
+            if (delta > 0)
             {
                 NumericBeatDivisor.Value = Math.Min(value * 2, 1920);
             }
@@ -804,9 +785,9 @@ public partial class MainView : UserControl
         {
             if (AudioManager.CurrentSong == null || AudioManager.CurrentSong.IsPlaying) return;
             // I know some gremlin would try this.
-            if (NumericMeasure.Value >= NumericMeasure.Maximum && NumericBeatValue.Value >= NumericBeatDivisor.Value - 1 && direction > 0) return;
+            if (NumericMeasure.Value >= NumericMeasure.Maximum && NumericBeatValue.Value >= NumericBeatDivisor.Value - 1 && delta > 0) return;
             
-            NumericBeatValue.Value += direction;
+            NumericBeatValue.Value += delta;
         }
     }
     
@@ -816,25 +797,32 @@ public partial class MainView : UserControl
 
         PointerPoint p = e.GetCurrentPoint(Canvas);
         
-        if (e.KeyModifiers.HasFlag(KeyModifiers.Control) || e.KeyModifiers.HasFlag(KeyModifiers.Shift))
+        if (p.Properties is { IsLeftButtonPressed: true, IsRightButtonPressed: false })
         {
-            OnClick(p, e.KeyModifiers, true);
-            return;
+            if (e.KeyModifiers.HasFlag(KeyModifiers.Control) || e.KeyModifiers.HasFlag(KeyModifiers.Shift))
+            {
+                OnLeftClick(p, e.KeyModifiers, true);
+                return;
+            }
+        
+            float x = (float)(p.Position.X - Canvas.Width * 0.5);
+            float y = (float)(p.Position.Y - Canvas.Height * 0.5);
+            int theta = MathExtensions.GetThetaNotePosition(x, y);
+        
+            ChartEditor.Cursor.Drag(theta);
+            NumericNotePosition.Value = ChartEditor.Cursor.Position;
+            NumericNoteSize.Value = ChartEditor.Cursor.Size;
         }
-        
-        float x = (float)(p.Position.X - Canvas.Width * 0.5);
-        float y = (float)(p.Position.Y - Canvas.Height * 0.5);
-        int theta = MathExtensions.GetThetaNotePosition(x, y);
-        
-        ChartEditor.Cursor.Drag(theta);
-        NumericNotePosition.Value = ChartEditor.Cursor.Position;
-        NumericNoteSize.Value = ChartEditor.Cursor.Size;
     }
 
     private void Canvas_OnPointerPressed(object? sender, PointerPressedEventArgs e)
     {
         PointerPoint p = e.GetCurrentPoint(Canvas);
-        OnClick(p, e.KeyModifiers, false);
+
+        if (p.Properties.IsLeftButtonPressed)
+        {
+            OnLeftClick(p, e.KeyModifiers, false);
+        }
     }
     
     private void Canvas_OnPointerReleased(object? sender, PointerReleasedEventArgs e)
@@ -843,7 +831,7 @@ public partial class MainView : UserControl
         ChartEditor.LastSelectedNote = null;
     }
     
-    private void OnClick(PointerPoint p, KeyModifiers modifiers, bool pointerMoved)
+    private void OnLeftClick(PointerPoint p, KeyModifiers modifiers, bool pointerMoved)
     {
         SKPoint point = new((float)p.Position.X, (float)p.Position.Y);
         point.X -= (float)Canvas.Width * 0.5f;

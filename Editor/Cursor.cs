@@ -167,4 +167,9 @@ public class Cursor
             }
         }
     }
+
+    public void IncrementSize(int delta)
+    {
+        Size = int.Clamp(Size + delta, MinSize, MaxSize);
+    }
 }

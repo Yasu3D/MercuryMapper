@@ -125,13 +125,6 @@ public class ChartEditor
     
     public void UpdateCursorNoteType()
     {
-        // Reset Editor State
-        
-        EndHold();
-        mainView.SetHoldContextButton(EditorState);
-        mainView.ToggleInsertButton();
-        mainView.SetMinNoteSize(CurrentNoteType);
-        
         switch (CurrentNoteType)
         {
             case NoteType.Touch:
@@ -260,6 +253,12 @@ public class ChartEditor
             
             default: return;
         }
+        
+        // Reset Editor State
+        EndHold();
+        mainView.SetHoldContextButton(EditorState);
+        mainView.ToggleInsertButton();
+        mainView.SetMinNoteSize(CurrentNoteType);
     }
 
     // ________________ Edit Menu
@@ -946,7 +945,7 @@ public class ChartEditor
             Note newNote = new(note)
             {
                 Position = newPosition,
-                Size = newSize,
+                Size = int.Max(newSize, Note.MinSize(newType)),
                 NoteType = newType,
                 MaskDirection = newDirection
             };
@@ -978,7 +977,7 @@ public class ChartEditor
             Note newNote = new(note)
             {
                 Position = note.Position,
-                Size = int.Clamp(note.Size + delta, 4, 60)
+                Size = int.Clamp(note.Size + delta, Note.MinSize(note.NoteType), 60)
             };
 
             operationList.Add(new EditNote(note, newNote));
