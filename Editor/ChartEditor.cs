@@ -56,8 +56,10 @@ public class ChartEditor
     {
         LastSelectedNote = null;
         LastPlacedHold = null;
+        HighlightedElement = null;
         EndHold();
         UndoRedoManager.Clear();
+        SelectedNotes.Clear();
         
         Chart = new()
         {
@@ -112,8 +114,10 @@ public class ChartEditor
     {
         LastSelectedNote = null;
         LastPlacedHold = null;
+        HighlightedElement = null;
         EndHold();
         UndoRedoManager.Clear();
+        SelectedNotes.Clear();
         
         Chart.LoadFile(path);
         mainView.SetChartInfo();
@@ -831,6 +835,7 @@ public class ChartEditor
         }
 
         List<Note> checkedHolds = [];
+        List<Note> checkedCurrentHolds = [];
         
         foreach (Note selected in SelectedNotes.OrderByDescending(x => x.BeatData.FullTick))
         {
@@ -840,6 +845,7 @@ public class ChartEditor
         if (SelectedNotes.Count == 0 && HighlightedElement is Note highlighted)
         {
             addOperation(highlighted);
+            HighlightedElement = Chart.Notes.LastOrDefault(x => x.BeatData.FullTick <= highlighted.BeatData.FullTick && x != highlighted);
         }
 
         // Temporarily undo all hold operations, then add them to the operationList
@@ -858,7 +864,26 @@ public class ChartEditor
         {
             if (note.IsHold)
             {
-                DeleteHoldNote holdOp = new(Chart, SelectedNotes, note);
+                Note? newLastPlacedHold = null;
+                
+                if (LastPlacedHold != null && EditorState is ChartEditorState.InsertHold)
+                {
+                    // If user is currently inserting a hold and trying to delete all segments (or all but one) of the hold they're currently deleting, then end hold.
+                    if (!checkedCurrentHolds.Contains(note))
+                    {
+                        List<Note> unselectedCurrentReferences = LastPlacedHold.References().Where(x => !SelectedNotes.Contains(x)).ToList();
+                        if (unselectedCurrentReferences.Count <= 1) EndHold();
+                        checkedCurrentHolds.AddRange(LastPlacedHold.References());
+                    }
+                    
+                    // Update LastPlacedHold to previous if it's being deleted.
+                    if (LastPlacedHold == note)
+                    {
+                        newLastPlacedHold = note.PrevReferencedNote;
+                    }
+                }
+                
+                DeleteHoldNote holdOp = new(Chart, this, SelectedNotes, note, newLastPlacedHold);
                 holdOperationList.Add(holdOp);
                 
                 DeleteHoldNote? holdOp2 = null;
@@ -873,7 +898,7 @@ public class ChartEditor
                     
                     if (unselectedReferences.Count == 1)
                     {
-                        holdOp2 = new(Chart, SelectedNotes, unselectedReferences[0]);
+                        holdOp2 = new(Chart, this, SelectedNotes, unselectedReferences[0], newLastPlacedHold);
                         holdOperationList.Add(holdOp2);
                     }
                     checkedHolds.AddRange(note.References());

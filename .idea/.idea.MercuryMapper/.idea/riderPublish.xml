@@ -5,6 +5,10 @@
       <list>
         <option value="$PROJECT_DIR$/bin/Release/net8.0/win-x86/publish" />
         <option value="$PROJECT_DIR$/bin/Publish" />
+        <option value="$PROJECT_DIR$/bin/Publish/MercuryMapper-OSX-arm64" />
+        <option value="$PROJECT_DIR$/bin/Publish/MercuryMapper-Linux-x64" />
+        <option value="$PROJECT_DIR$/bin/Publish/MercuryMapper-OSX-x64" />
+        <option value="$PROJECT_DIR$/bin/Publish/MercuryMapper-Win-Portable" />
       </list>
     </option>
   </component>

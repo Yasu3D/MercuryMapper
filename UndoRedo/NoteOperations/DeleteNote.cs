@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using MercuryMapper.Data;
+using MercuryMapper.Editor;
 using MercuryMapper.Enums;
 
 namespace MercuryMapper.UndoRedo.NoteOperations;
@@ -28,12 +29,13 @@ public class DeleteNote(Chart chart, List<Note> selected, Note note) : IOperatio
     }
 }
 
-public class DeleteHoldNote(Chart chart, List<Note> selected, Note note) : IOperation
+public class DeleteHoldNote(Chart chart, ChartEditor editor, List<Note> selected, Note note, Note? newLastPlacedHold) : IOperation
 {
     public Chart Chart { get; } = chart;
     public Note Note { get; } = note;
     public Note? NextNote { get; } = note.NextReferencedNote;
     public Note? PrevNote { get; } = note.PrevReferencedNote;
+    public Note? NewLastPlacedHold { get; } = newLastPlacedHold;
     public NoteType NextNoteType { get; } = note.NextReferencedNote?.NoteType ?? NoteType.Touch;
     public NoteType PrevNoteType { get; } = note.PrevReferencedNote?.NoteType ?? NoteType.Touch;
     public List<Note> Selected { get; } = selected;
@@ -65,6 +67,8 @@ public class DeleteHoldNote(Chart chart, List<Note> selected, Note note) : IOper
         {
             Chart.Notes.Add(Note);
         }
+
+        editor.LastPlacedHold = Note;
     }
     
     public void Redo()
@@ -95,5 +99,7 @@ public class DeleteHoldNote(Chart chart, List<Note> selected, Note note) : IOper
             Chart.Notes.Remove(Note);
             Selected.Remove(Note);
         }
+
+        editor.LastPlacedHold = NewLastPlacedHold;
     }
 }
