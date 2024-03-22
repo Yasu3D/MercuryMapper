@@ -270,8 +270,7 @@ public class ChartEditor
         // Update LastPlacedHold
         if (operation is InsertHoldNote insertHoldOperation)
         {
-            LastPlacedHold = insertHoldOperation.LastPlacedNote;
-            if (EditorState is not ChartEditorState.InsertHold) StartHold();
+            StartHold(insertHoldOperation.LastPlacedNote);
         }
 
         if (operation is InsertNote insertNoteOperation)
@@ -291,8 +290,7 @@ public class ChartEditor
                 if (note is not { IsHold: true, NextReferencedNote: null, PrevReferencedNote: null } || !UndoRedoManager.CanUndo) continue; 
                 
                 IOperation op = UndoRedoManager.PeekUndo;
-                if (op is InsertHoldNote) return;
-                UndoRedoManager.Undo();
+                if (op is not InsertHoldNote) UndoRedoManager.Undo();
                 return;
             }
         }
@@ -310,10 +308,16 @@ public class ChartEditor
         }
         
         // Update CurrentHoldStart + Start Hold
-        if (operation is InsertNote { Note.NoteType: NoteType.HoldStart or NoteType.HoldStartRNote } insertNoteOperation)
+        if (operation is InsertNote insertNoteOperation)
         {
-            CurrentHoldStart = insertNoteOperation.Note;
-            StartHold();
+            if (insertNoteOperation.Note.NoteType is NoteType.HoldStart or NoteType.HoldStartRNote)
+            {
+                StartHold(insertNoteOperation.Note);
+            }
+            else
+            {
+                EndHold();
+            }
         }
         
         if (operation is DeleteHoldNote)
@@ -543,15 +547,13 @@ public class ChartEditor
                     Position = endOfChart ? 0 : Cursor.Position,
                     Size = endOfChart ? 60 : Cursor.Size
                 };
-
-                LastPlacedHold = note;
+                
                 Chart.IsSaved = false;
                 UndoRedoManager.InvokeAndPush(new InsertNote(Chart, SelectedNotes, note));
 
                 if (note.NoteType is NoteType.HoldStart or NoteType.HoldStartRNote)
                 {
-                    StartHold();
-                    CurrentHoldStart = note;
+                    StartHold(note);
                 }
                 break;
             }
@@ -884,7 +886,7 @@ public class ChartEditor
                     }
                 }
                 
-                DeleteHoldNote holdOp = new(Chart, this, SelectedNotes, note, newLastPlacedHold, EditorState is not ChartEditorState.InsertHold);
+                DeleteHoldNote holdOp = new(Chart, this, SelectedNotes, note, newLastPlacedHold);
                 holdOperationList.Add(holdOp);
                 
                 DeleteHoldNote? holdOp2 = null;
@@ -899,7 +901,7 @@ public class ChartEditor
                     
                     if (unselectedReferences.Count == 1)
                     {
-                        holdOp2 = new(Chart, this, SelectedNotes, unselectedReferences[0], newLastPlacedHold, EditorState is not ChartEditorState.InsertHold);
+                        holdOp2 = new(Chart, this, SelectedNotes, unselectedReferences[0], newLastPlacedHold);
                         holdOperationList.Add(holdOp2);
                     }
                     checkedHolds.AddRange(note.References());
@@ -1223,11 +1225,22 @@ public class ChartEditor
         UndoRedoManager.InvokeAndPush(new InsertHoldSegment(Chart, SelectedNotes, note, highlighted));
     }
     
-    public void StartHold()
+    public void EditHold()
+    {
+        if (HighlightedElement is null or Gimmick) return;
+        if (((Note)HighlightedElement).NoteType is not NoteType.HoldEnd) return;
+        StartHold((Note)HighlightedElement);
+    }
+    
+    public void StartHold(Note lastPlacedHold)
     {
         EditorState = ChartEditorState.InsertHold;
         mainView.SetHoldContextButton(EditorState);
+        mainView.ToggleInsertButton();
         CurrentNoteType = NoteType.HoldEnd;
+        
+        LastPlacedHold = lastPlacedHold;
+        CurrentHoldStart = lastPlacedHold.FirstReference();
     }
     
     public void EndHold()
@@ -1236,6 +1249,7 @@ public class ChartEditor
         
         EditorState = ChartEditorState.InsertNote;
         mainView.SetHoldContextButton(EditorState);
+        mainView.ToggleInsertButton();
         CurrentNoteType = NoteType.HoldStart;
 
         if (LastPlacedHold?.NoteType is not NoteType.HoldStart) return;
@@ -1246,15 +1260,6 @@ public class ChartEditor
         }
     }
     
-    public void EditHold()
-    {
-        if (HighlightedElement is null or Gimmick) return;
-        if (((Note)HighlightedElement).NoteType is not NoteType.HoldEnd) return;
-        StartHold();
-        LastPlacedHold = (Note)HighlightedElement;
-        CurrentHoldStart = ((Note)HighlightedElement).FirstReference();
-    }
-
     public void ShiftChart(int ticks)
     {
         if (Chart.Notes.Count == 0 && Chart.Gimmicks.Count == 0) return;
