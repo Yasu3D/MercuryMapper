@@ -304,7 +304,7 @@ public class ChartEditor
         // Update LastPlacedHold
         if (operation is InsertHoldNote insertHoldOperation)
         {
-            LastPlacedHold = insertHoldOperation.Note;
+            StartHold(insertHoldOperation.Note);
         }
         
         // Update CurrentHoldStart + Start Hold
