@@ -70,7 +70,7 @@ public class KeymapConfig
         ["EditorHighlightPrevNote"] = new(Key.S, false, true, false),
         ["EditorHighlightNearestNote"] = new(Key.Q, false, true, false),
         ["EditorSelectHighlightedNote"] = new(Key.Space, false, true, false),
-        ["EditorSelectHoldReferences"] = new(Key.Enter, false, true, false),
+        ["EditorSelectHoldReferences"] = new(Key.R, false, true, false),
         ["EditorIncreasePlaybackSpeed"] = new(Key.Add),
         ["EditorDecreasePlaybackSpeed"] = new(Key.Subtract),
         ["EditorNoteTypeTouch"] = new(Key.D1),
