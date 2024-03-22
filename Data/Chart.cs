@@ -78,8 +78,8 @@ public class Chart
             {
                 string line = lines[readerIndex];
 
-                string? musicFilePath = getTag(line, "#MUSIC_FILE_PATH") ?? getTag(line, "#EDITOR_AUDIO") ?? getTag(line, "#AUDIO");
-                if (musicFilePath != null) AudioFilePath = musicFilePath;
+                string? audioFilePath = getTag(line, "#MUSIC_FILE_PATH") ?? getTag(line, "#EDITOR_AUDIO") ?? getTag(line, "#AUDIO");
+                if (audioFilePath != null) AudioFilePath = Path.Combine(Path.GetDirectoryName(filepath) ?? "", audioFilePath);
 
                 string? level = getTag(line, "#LEVEL") ?? getTag(line, "#EDITOR_LEVEL");
                 if (level != null) Level = Convert.ToDecimal(level, CultureInfo.InvariantCulture);
@@ -234,7 +234,7 @@ public class Chart
 
             if (writeType is ChartWriteType.Editor)
             {
-                streamWriter.WriteLine($"#EDITOR_AUDIO {AudioFilePath}");
+                streamWriter.WriteLine($"#EDITOR_AUDIO {Path.GetFileName(AudioFilePath)}");
                 streamWriter.WriteLine($"#EDITOR_LEVEL {Level.ToString("F6", CultureInfo.InvariantCulture)}");
                 streamWriter.WriteLine($"#EDITOR_CLEAR_THRESHOLD {ClearThreshold.ToString("F6", CultureInfo.InvariantCulture)}");
                 streamWriter.WriteLine($"#EDITOR_AUTHOR {Author}");
@@ -247,7 +247,7 @@ public class Chart
             if (writeType is ChartWriteType.Saturn)
             {
                 streamWriter.WriteLine($"#LEVEL {Level.ToString("F6", CultureInfo.InvariantCulture)}");
-                streamWriter.WriteLine($"#AUDIO {AudioFilePath}");
+                streamWriter.WriteLine($"#AUDIO {Path.GetFileName(AudioFilePath)}");
                 streamWriter.WriteLine($"#CLEAR_THRESHOLD {ClearThreshold.ToString("F6", CultureInfo.InvariantCulture)}");
                 streamWriter.WriteLine($"#AUTHOR {Author}");
                 streamWriter.WriteLine($"#PREVIEW_TIME {PreviewTime.ToString("F6", CultureInfo.InvariantCulture)}");
