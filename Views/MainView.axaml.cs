@@ -1718,6 +1718,7 @@ public partial class MainView : UserControl
         if (string.IsNullOrEmpty(filepath)) return false;
 
         ChartEditor.Chart.WriteFile(filepath, ChartWriteType.Editor);
+        ChartEditor.Chart.FilePath = filepath;
         ChartEditor.Chart.IsNew = false;
         return true;
     }
