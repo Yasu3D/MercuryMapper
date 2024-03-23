@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using MercuryMapper.Enums;
+using MercuryMapper.Utils;
 
 namespace MercuryMapper.Data;
 
@@ -15,15 +16,9 @@ public class BeatData
     
     public BeatData(int measure, int tick)
     {
-        Measure = measure;
-        
-        while (tick >= 1920)
-        {
-            Measure++;
-            tick -= 1920;
-        }
-        
-        Tick = tick;
+        // integer division, floors to 0 if tick < 1920.
+        Measure = measure + tick / 1920;
+        Tick = MathExtensions.Modulo(tick, 1920);
         MeasureDecimal = GetMeasureDecimal(measure, tick);
     }
 
@@ -43,22 +38,15 @@ public class BeatData
 
     public BeatData(BeatData data)
     {
-        Measure = data.Measure;
-
-        int beat = data.Tick;
-        while (beat >= 1920)
-        {
-            Measure++;
-            beat -= 1920;
-        }
-        
-        Tick = beat;
+        // integer division, floors to 0 if tick < 1920.
+        Measure = data.Measure + data.Tick / 1920;
+        Tick = MathExtensions.Modulo(data.Tick, 1920);
         MeasureDecimal = GetMeasureDecimal(Measure, Tick);
     }
 
-    public static float GetMeasureDecimal(int measure, int beat)
+    public static float GetMeasureDecimal(int measure, int tick)
     {
-        return measure + beat / 1920f;
+        return measure + tick / 1920.0f;
     }
 }
 
