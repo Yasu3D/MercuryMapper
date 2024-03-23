@@ -91,10 +91,10 @@ public class Chart
                 if (author != null) Author = author;
                 
                 string? previewTime = getTag(line, "#PREVIEW_TIME") ?? getTag(line, "#EDITOR_PREVIEW_TIME");
-                if (clearThreshold != null) PreviewTime = Convert.ToDecimal(previewTime, CultureInfo.InvariantCulture);
+                if (previewTime != null) PreviewTime = Convert.ToDecimal(previewTime, CultureInfo.InvariantCulture);
                 
                 string? previewLength = getTag(line, "#PREVIEW_LENGTH") ?? getTag(line, "#EDITOR_PREVIEW_LENGTH");
-                if (clearThreshold != null) PreviewLength = Convert.ToDecimal(previewLength, CultureInfo.InvariantCulture);
+                if (previewLength != null) PreviewLength = Convert.ToDecimal(previewLength, CultureInfo.InvariantCulture);
                 
                 string? offset = getTag(line, "#OFFSET") ?? getTag(line, "EDITOR_OFFSET");
                 if (offset != null) Offset = Convert.ToDecimal(offset, CultureInfo.InvariantCulture);

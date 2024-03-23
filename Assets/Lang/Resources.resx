@@ -538,4 +538,7 @@ Would you like to manually select a file?</value>
     <data name="Tools_ShiftBy" xml:space="preserve">
         <value>Shift by</value>
     </data>
+    <data name="ChartProperties_PlayPreview" xml:space="preserve">
+        <value>Play Preview</value>
+    </data>
 </root>

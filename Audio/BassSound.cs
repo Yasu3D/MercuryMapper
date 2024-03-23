@@ -56,6 +56,9 @@ public class BassSound
         }
     }
 
+    /// <summary>
+    /// Song position in milliseconds.
+    /// </summary>
     public uint Position
     {
         get => isPlaying ? GetPosition() : position;

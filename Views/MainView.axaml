@@ -323,7 +323,12 @@
                         Minimum="10" Maximum="200" Value="100" ValueChanged="SliderPlaybackSpeed_OnValueChanged"
                         TickPlacement="TopLeft" Ticks="0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200" IsSnapToTickEnabled="True"/>
                 
-                <TextBlock Grid.Row="1" Grid.Column="1" Text="100%" VerticalAlignment="Bottom" Name="TextBlockPlaybackSpeed"/>
+                <TextBlock Grid.Row="1" Grid.Column="1" Text="100%" VerticalAlignment="Center" Margin="0,7,0,0" Name="TextBlockPlaybackSpeed"/>
+                
+                <Grid Grid.Row="1" Grid.Column="2" RowDefinitions="*,*" HorizontalAlignment="Right" Margin="0,0,20,0">
+                    <TextBlock Grid.Row="0" Name="TimestampDetailed" Text="00:00:00.000" HorizontalAlignment="Right"/>
+                    <TextBlock Grid.Row="1" Name="TimestampSeconds" Text="0.000" HorizontalAlignment="Right"/>
+                </Grid>
             </Grid>
             
         </Grid>
@@ -366,6 +371,8 @@
                             <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.ChartProperties_PreviewLength}" Margin="0,2,0,2"/>
                             <fluent:NumberBox Value="10" Name="ChartInfoPreviewLength" ValueChanged="ChartInfoPreviewLength_OnValueChanged" HorizontalAlignment="Right" Margin="0,2,0,2" Width="130"/>
                         </UniformGrid>
+                        
+                        <Button Content="{x:Static lang:Resources.ChartProperties_PlayPreview}" HorizontalAlignment="Stretch" Name="ChartInfoPlayPreview" Margin="0,2,0,0" Click="ChartInfoPlayPreview_OnClick"/>
                         
                         <Separator/>
                         

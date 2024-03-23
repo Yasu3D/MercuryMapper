@@ -159,6 +159,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Vorschau Abspielen.
+        /// </summary>
+        public static string ChartProperties_PlayPreview {
+            get {
+                return ResourceManager.GetString("ChartProperties_PlayPreview", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Vorschau Länge.
         /// </summary>
         public static string ChartProperties_PreviewLength {

@@ -81,6 +81,8 @@ public partial class MainView : UserControl
         Released,
         Pressed
     }
+
+    private bool isPlayingPreview;
     
     // ________________ Setup & UI Updates
 
@@ -242,6 +244,8 @@ public partial class MainView : UserControl
         }
         
         ChartEditor.CurrentMeasureDecimal = data.MeasureDecimal;
+        TimestampDetailed.Text = TimeSpan.FromMilliseconds(AudioManager.CurrentSong.Position).ToString(@"hh\:mm\:ss\.fff");
+        TimestampSeconds.Text = $"{AudioManager.CurrentSong.Position * 0.001f:F3}";
         ToggleInsertButton();
         
         timeUpdateSource = TimeUpdateSource.None;
@@ -1387,6 +1391,21 @@ public partial class MainView : UserControl
         ChartEditor.Chart.PreviewLength = (decimal)ChartInfoPreviewLength.Value;
     }
     
+    private async void ChartInfoPlayPreview_OnClick(object? sender, RoutedEventArgs e)
+    {
+        if (ChartEditor.Chart.PreviewLength == 0 || AudioManager.CurrentSong == null) return;
+        
+        AudioManager.CurrentSong.Position = (uint)(ChartEditor.Chart.PreviewTime * 1000);
+        UpdateTime(TimeUpdateSource.Timer);
+        SetPlayState(true);
+        isPlayingPreview = true;
+        
+        await Task.Delay((int)(ChartEditor.Chart.PreviewLength * 1000));
+        
+        if (isPlayingPreview) SetPlayState(false);
+        isPlayingPreview = false;
+    }
+    
     private void ChartInfoOffset_OnValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
     {
         ChartEditor.Chart.Offset = (decimal)ChartInfoOffset.Value;
@@ -1532,6 +1551,7 @@ public partial class MainView : UserControl
             return;
         }
 
+        isPlayingPreview = false;
         AudioManager.CurrentSong.Volume = (float)(UserConfig.AudioConfig.MusicVolume * 0.01);
         AudioManager.CurrentSong.IsPlaying = play;
         UpdateTimer.IsEnabled = play;
