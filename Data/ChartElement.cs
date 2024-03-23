@@ -135,6 +135,8 @@ public class Note : ChartElement
     public Note? NextReferencedNote { get; set; }
     public Note? PrevReferencedNote { get; set; }
 
+    public int ParsedIndex { get; set; }
+
     public Note() { }
 
     public Note(BeatData beatData)
@@ -154,7 +156,7 @@ public class Note : ChartElement
         PrevReferencedNote = note.PrevReferencedNote;
     }
 
-    public Note(int measure, int tick, int noteTypeId, int position, int size, bool renderSegment)
+    public Note(int measure, int tick, int noteTypeId, int noteIndex, int position, int size, bool renderSegment)
     {
         BeatData = new(measure, tick);
         GimmickType = GimmickType.None;
@@ -162,6 +164,8 @@ public class Note : ChartElement
         Position = position;
         Size = size;
         RenderSegment = renderSegment;
+
+        ParsedIndex = noteIndex;
     }
     
     public bool IsHold => NoteType

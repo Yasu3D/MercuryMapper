@@ -142,7 +142,7 @@ public class Chart
                     int size = Convert.ToInt32(parsed[6]);
                     bool renderSegment = Convert.ToBoolean(Convert.ToInt32(parsed[7]));
 
-                    Note tempNote = new Note(measure, tick, noteTypeId, position, size, renderSegment);
+                    Note tempNote = new Note(measure, tick, noteTypeId, noteIndex, position, size, renderSegment);
                     
                     // hold start & segments
                     if (noteTypeId is 9 or 10 or 25 && parsed.Length >= 9)
@@ -193,13 +193,13 @@ public class Chart
 
         void getHoldReferences()
         {
-            for (int i = 0; i < Notes.Count; i++)
+            foreach (Note note in Notes)
             {
-                if (!nextReferencedIndex.ContainsKey(i)) continue;
-                if (!notesByIndex.TryGetValue(nextReferencedIndex[i], out Note? referencedNote)) continue;
-
-                Notes[i].NextReferencedNote = referencedNote;
-                referencedNote.PrevReferencedNote = Notes[i];
+                if (!nextReferencedIndex.ContainsKey(note.ParsedIndex)) continue;
+                if (!notesByIndex.TryGetValue(nextReferencedIndex[note.ParsedIndex], out Note? referencedNote)) continue;
+                
+                note.NextReferencedNote = referencedNote;
+                referencedNote.PrevReferencedNote = note;
             }
         }
 
