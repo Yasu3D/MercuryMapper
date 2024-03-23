@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
@@ -56,8 +57,8 @@ public partial class MainView : UserControl
     }
 
     public bool CanShutdown;
-    public const string AppVersion = "v1.0.5";
-    
+    public static readonly string AppVersion = $"v{Assembly.GetExecutingAssembly().GetName().Version}";
+
     public UserConfig UserConfig = new();
     public readonly KeybindEditor KeybindEditor;
     public readonly ChartEditor ChartEditor;
