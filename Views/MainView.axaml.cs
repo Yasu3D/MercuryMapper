@@ -56,7 +56,7 @@ public partial class MainView : UserControl
     }
 
     public bool CanShutdown;
-    public const string AppVersion = "v1.0.5";
+    public const string AppVersion = "v1.0.6";
     
     public UserConfig UserConfig = new();
     public readonly KeybindEditor KeybindEditor;
@@ -510,7 +510,7 @@ public partial class MainView : UserControl
         }
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorBakeHold"]))
         {
-            ChartEditor.BakeHold();
+            ChartEditor.BakeHold((MathExtensions.HoldEaseType)HoldEaseComboBox.SelectedIndex);
             e.Handled = true;
             return;
         }
@@ -1456,7 +1456,7 @@ public partial class MainView : UserControl
     
     private void ButtonDeleteSelection_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.DeleteSelection();
 
-    private void ButtonBakeHold_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.BakeHold();
+    private void ButtonBakeHold_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.BakeHold((MathExtensions.HoldEaseType)HoldEaseComboBox.SelectedIndex);
 
     private void ButtonInsertHoldSegment_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.InsertHoldSegment();
     

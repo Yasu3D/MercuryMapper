@@ -79,4 +79,24 @@ public static class MathExtensions
         }
         return x | y;
     }
+
+    public enum HoldEaseType
+    {
+        Linear = 0,
+        Smooth = 1,
+        Sharp = 2
+    }
+
+    public static float HoldBakeEase(float x, HoldEaseType type)
+    {
+        const float a = 0.44f;
+        
+        return type switch
+        {
+            HoldEaseType.Linear => x,
+            HoldEaseType.Smooth => float.Asin(x * float.Sin(float.Pi * a)) / (float.Pi * a),
+            HoldEaseType.Sharp => -(x / (4f * x - 5f)),
+            _ => x
+        };
+    }
 }

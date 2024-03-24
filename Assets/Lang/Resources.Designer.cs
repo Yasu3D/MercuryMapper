@@ -447,6 +447,42 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Linear.
+        /// </summary>
+        public static string Editor_HoldEase_Linear {
+            get {
+                return ResourceManager.GetString("Editor_HoldEase_Linear", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sharp.
+        /// </summary>
+        public static string Editor_HoldEase_Sharp {
+            get {
+                return ResourceManager.GetString("Editor_HoldEase_Sharp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Smooth.
+        /// </summary>
+        public static string Editor_HoldEase_Smooth {
+            get {
+                return ResourceManager.GetString("Editor_HoldEase_Smooth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hold Ease.
+        /// </summary>
+        public static string Editor_HoldEaseHeader {
+            get {
+                return ResourceManager.GetString("Editor_HoldEaseHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Decrease Playback Speed.
         /// </summary>
         public static string Editor_IncreasePlaybackSpeed {

@@ -541,4 +541,16 @@ Would you like to manually select a file?</value>
     <data name="ChartProperties_PlayPreview" xml:space="preserve">
         <value>Play Preview</value>
     </data>
+    <data name="Editor_HoldEase_Linear" xml:space="preserve">
+        <value>Linear</value>
+    </data>
+    <data name="Editor_HoldEase_Smooth" xml:space="preserve">
+        <value>Smooth</value>
+    </data>
+    <data name="Editor_HoldEase_Sharp" xml:space="preserve">
+        <value>Sharp</value>
+    </data>
+    <data name="Editor_HoldEaseHeader" xml:space="preserve">
+        <value>Hold Ease</value>
+    </data>
 </root>

@@ -482,9 +482,15 @@
                         
                         <Separator/>
                         
-                        <Grid RowDefinitions="*" ColumnDefinitions="*,*">
-                            <Button Grid.Row="0" Grid.Column="0" HorizontalAlignment="Stretch" Margin="0,0,2,2" Click="ButtonBakeHold_OnClick" Content="{x:Static lang:Resources.Editor_BakeHoldNote}"/>
-                            <Button Grid.Row="0" Grid.Column="1" HorizontalAlignment="Stretch" Margin="2,0,0,2" Click="ButtonInsertHoldSegment_OnClick" Content="{x:Static lang:Resources.Editor_InsertHoldSegment}"/>
+                        <Grid RowDefinitions="*,*,*" ColumnDefinitions="*,*">
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="{x:Static lang:Resources.Editor_HoldEaseHeader}"/>
+                            <ComboBox Grid.Row="1" Grid.Column="0" Name="HoldEaseComboBox" HorizontalAlignment="Stretch" Margin="0,0,2,0" SelectedIndex="0">
+                                <ComboBoxItem Content="{x:Static lang:Resources.Editor_HoldEase_Linear}"/>
+                                <ComboBoxItem Content="{x:Static lang:Resources.Editor_HoldEase_Smooth}"/>
+                                <ComboBoxItem Content="{x:Static lang:Resources.Editor_HoldEase_Sharp}"/>
+                            </ComboBox>
+                            <Button Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Margin="2,0,0,2" Click="ButtonBakeHold_OnClick" Content="{x:Static lang:Resources.Editor_BakeHoldNote}"/>
+                            <Button Grid.Row="2" Grid.Column="1" HorizontalAlignment="Stretch" Margin="2,2,0,0" Click="ButtonInsertHoldSegment_OnClick" Content="{x:Static lang:Resources.Editor_InsertHoldSegment}"/>
                         </Grid>
                     </StackPanel>
                 </Expander>

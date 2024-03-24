@@ -1112,7 +1112,7 @@ public class ChartEditor
         }
     }
 
-    public void BakeHold()
+    public void BakeHold(MathExtensions.HoldEaseType easeType)
     {
         List<IOperation> operationList = [];
         foreach (Note selected in SelectedNotes)
@@ -1135,14 +1135,14 @@ public class ChartEditor
         {
             if (note.NoteType is not (NoteType.HoldStart or NoteType.HoldStartRNote or NoteType.HoldSegment) || note.NextReferencedNote is null) return;
 
-            BakeHold bakeHold = interpolate(note, note.NextReferencedNote, note.NextReferencedNote.BeatData.MeasureDecimal - note.BeatData.MeasureDecimal);
+            BakeHold bakeHold = interpolate(note, note.NextReferencedNote);
             if (bakeHold.Segments.Count != 0)
             {
                 operationList.Add(bakeHold);
             }
         }
         
-        BakeHold interpolate(Note start, Note end, float length)
+        BakeHold interpolate(Note start, Note end)
         {
             int startPos0 = start.Position;
             int startPos1 = start.Position + start.Size;
@@ -1159,32 +1159,36 @@ public class ChartEditor
             }
             
             int maxDistance = int.Max(distance0, distance1);
-            float interval = 1 / (1 / length * maxDistance);
+            float interval = 1.0f / maxDistance;
 
-            var lastNote = start;
+            Note lastNote = start;
             List<Note> segments = [];
 
             bool lerpShort = int.Abs(start.Position - end.Position) > 30;
 
-            for (float i = start.BeatData.MeasureDecimal + interval; i < end.BeatData.MeasureDecimal; i += interval)
+            for (float i = interval; i < 1; i += interval)
             {
+                float scaled = MathExtensions.HoldBakeEase(i, easeType);
+                BeatData data = new(MathExtensions.Lerp(start.BeatData.MeasureDecimal, end.BeatData.MeasureDecimal, scaled));
+                
                 // avoid decimal/floating point errors that would
                 // otherwise cause two segments on the same beat
                 // if i is just *barely* less than endNote.Measure
-                BeatData iData = new(i);
-                if (iData.FullTick == end.BeatData.FullTick) break;
-
-                float time = (i - start.BeatData.MeasureDecimal) / (end.BeatData.MeasureDecimal - start.BeatData.MeasureDecimal);
-                int newPos0 = (int)Math.Round(MathExtensions.ShortLerp(lerpShort, startPos0, endPos0, time));
-                int newPos1 = (int)Math.Round(MathExtensions.ShortLerp(lerpShort, startPos1, endPos1, time));
+                if (data.FullTick == end.BeatData.FullTick) break;
+                
+                // skip if FullTick is the same as previous note.
+                if (data.FullTick == lastNote.BeatData.FullTick) continue;
+                
+                int newPos0 = (int)Math.Round(MathExtensions.ShortLerp(lerpShort, startPos0, endPos0, i));
+                int newPos1 = (int)Math.Round(MathExtensions.ShortLerp(lerpShort, startPos1, endPos1, i));
 
                 var newNote = new Note()
                 {
-                    BeatData = iData,
+                    BeatData = data,
                     NoteType = NoteType.HoldSegment,
                     Position = MathExtensions.Modulo(newPos0, 60),
                     Size = MathExtensions.Modulo(newPos1 - newPos0, 60),
-                    RenderSegment = false,
+                    RenderSegment = easeType != MathExtensions.HoldEaseType.Linear,
                     PrevReferencedNote = lastNote,
                     NextReferencedNote = end
                 };
