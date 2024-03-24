@@ -57,7 +57,7 @@ public class ChartEditor
         LastSelectedNote = null;
         LastPlacedHold = null;
         HighlightedElement = null;
-        EndHold();
+        EndHold(true);
         UndoRedoManager.Clear();
         SelectedNotes.Clear();
         
@@ -115,7 +115,7 @@ public class ChartEditor
         LastSelectedNote = null;
         LastPlacedHold = null;
         HighlightedElement = null;
-        EndHold();
+        EndHold(true);
         UndoRedoManager.Clear();
         SelectedNotes.Clear();
         
@@ -255,7 +255,7 @@ public class ChartEditor
         }
         
         // Reset Editor State
-        EndHold();
+        EndHold(false);
         mainView.SetHoldContextButton(EditorState);
         mainView.ToggleInsertButton();
         mainView.SetMinNoteSize(CurrentNoteType);
@@ -279,7 +279,7 @@ public class ChartEditor
             if (insertNoteOperation.Note.NoteType is NoteType.HoldStart or NoteType.HoldStartRNote && EditorState is ChartEditorState.InsertHold)
             {
                 CurrentHoldStart = null;
-                EndHold();
+                EndHold(true);
             }
         }
 
@@ -316,7 +316,7 @@ public class ChartEditor
             }
             else
             {
-                EndHold();
+                EndHold(true);
             }
         }
         
@@ -834,7 +834,7 @@ public class ChartEditor
         
         if (EditorState is ChartEditorState.InsertHold && CurrentHoldStart != null && SelectedNotes.Contains(CurrentHoldStart))
         {
-            EndHold();
+            EndHold(true);
         }
 
         List<Note> checkedHolds = [];
@@ -875,7 +875,7 @@ public class ChartEditor
                     if (!checkedCurrentHolds.Contains(note))
                     {
                         List<Note> unselectedCurrentReferences = LastPlacedHold.References().Where(x => !SelectedNotes.Contains(x)).ToList();
-                        if (unselectedCurrentReferences.Count <= 1) EndHold();
+                        if (unselectedCurrentReferences.Count <= 1) EndHold(true);
                         checkedCurrentHolds.AddRange(LastPlacedHold.References());
                     }
                     
@@ -1247,14 +1247,14 @@ public class ChartEditor
         CurrentHoldStart = lastPlacedHold.FirstReference();
     }
     
-    public void EndHold()
+    public void EndHold(bool setNoteType)
     {
         if (EditorState is not ChartEditorState.InsertHold) return;
         
         EditorState = ChartEditorState.InsertNote;
         mainView.SetHoldContextButton(EditorState);
         mainView.ToggleInsertButton();
-        CurrentNoteType = CurrentBonusType is BonusType.None ? NoteType.HoldStart : NoteType.HoldStartRNote;
+        if (setNoteType) CurrentNoteType = CurrentBonusType is BonusType.None ? NoteType.HoldStart : NoteType.HoldStartRNote;
 
         if (LastPlacedHold?.NoteType is NoteType.HoldStart or NoteType.HoldStartRNote)
         {

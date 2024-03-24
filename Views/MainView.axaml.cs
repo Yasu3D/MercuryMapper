@@ -498,7 +498,7 @@ public partial class MainView : UserControl
         }
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorEndHold"]))
         {
-            ChartEditor.EndHold();
+            ChartEditor.EndHold(true);
             e.Handled = true;
             return;
         }
@@ -1222,10 +1222,7 @@ public partial class MainView : UserControl
         ChartEditor.EditHold();
     }
 
-    private void ButtonEndHold_OnClick(object? sender, RoutedEventArgs e)
-    {
-        ChartEditor.EndHold();
-    }
+    private void ButtonEndHold_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.EndHold(true);
     
     private void SliderPosition_OnValueChanged(object? sender, RangeBaseValueChangedEventArgs e) => Position_OnValueChanged(true);
     private void SliderNotePosition_OnPointerWheelChanged(object? sender, PointerWheelEventArgs e)
