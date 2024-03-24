@@ -737,7 +737,7 @@ public class RenderEngine(MainView mainView)
                 SKPoint p5 = RenderMath.GetPointOnArc(canvasCenter, snapRowOffset + radius * (snapRadiusOffset - snapArrowLength * arrowDirection), i);
                 SKPoint p6 = RenderMath.GetPointOnArc(canvasCenter, snapRowOffset + radius * snapRadiusOffset, i - snapArrowWidth);
 
-                var path = new SKPath();
+                SKPath path = new SKPath();
                 path.MoveTo(p1);
                 path.LineTo(p2);
                 path.LineTo(p3);
@@ -816,7 +816,7 @@ public class RenderEngine(MainView mainView)
                     p6 = RenderMath.GetPointOnArc(canvasCenter, radiusOutside0, maxAngle - float.Clamp(startAngle,                                             maxAngle, minAngle) + minAngle);
                 }
                 
-                var path = new SKPath();   
+                SKPath path = new SKPath();   
                 path.MoveTo(p1);   
                 path.LineTo(p2);   
                 path.LineTo(p3);   

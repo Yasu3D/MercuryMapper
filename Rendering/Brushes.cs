@@ -200,7 +200,7 @@ public class Brushes(UserConfig userConfig)
     {
         SKColor gradientColor = SKColor.Parse(colors["ColorGuideLines"]).WithAlpha(0x20);
         SKColor[] gradient = [gradientColor, SKColors.Transparent];
-        var shader = SKShader.CreateLinearGradient(startPoint, endPoint, gradient, SKShaderTileMode.Clamp);
+        SKShader? shader = SKShader.CreateLinearGradient(startPoint, endPoint, gradient, SKShaderTileMode.Clamp);
         guideLinePen.Shader = shader;
         return guideLinePen;
     }
@@ -410,10 +410,10 @@ public class Brushes(UserConfig userConfig)
             SKShader tunnelShader = SKShader.CreateRadialGradient(center, radius, tunnelGradient, SKShaderTileMode.Clamp);
             TunnelFill.Shader = tunnelShader;
             
-            var holdColor0 = SKColor.Parse(colors["ColorNoteHoldSurfaceFar"]);
-            var holdColor1 = SKColor.Parse(colors["ColorNoteHoldSurfaceNear"]);
+            SKColor holdColor0 = SKColor.Parse(colors["ColorNoteHoldSurfaceFar"]);
+            SKColor holdColor1 = SKColor.Parse(colors["ColorNoteHoldSurfaceNear"]);
             SKColor[] holdColors = [holdColor0, holdColor1];
-            var holdShader = SKShader.CreateRadialGradient(center, radius, holdColors, SKShaderTileMode.Clamp);
+            SKShader? holdShader = SKShader.CreateRadialGradient(center, radius, holdColors, SKShaderTileMode.Clamp);
             HoldFill.Shader = holdShader;
         }
     }

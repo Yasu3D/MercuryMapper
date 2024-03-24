@@ -41,7 +41,7 @@ public partial class MainView : UserControl
         AudioManager = new(this);
         RenderEngine = new(this);
 
-        var interval = TimeSpan.FromSeconds(1.0 / UserConfig.RenderConfig.RefreshRate);
+        TimeSpan interval = TimeSpan.FromSeconds(1.0 / UserConfig.RenderConfig.RefreshRate);
         UpdateTimer = new(interval, DispatcherPriority.Background, UpdateTimer_Tick) { IsEnabled = false };
         HitsoundTimer = new(TimeSpan.FromMilliseconds(1), DispatcherPriority.Background, HitsoundTimer_Tick) { IsEnabled = false };
 
@@ -1528,7 +1528,7 @@ public partial class MainView : UserControl
         QuickSettingsSliderHitsound.Value = UserConfig.AudioConfig.HitsoundVolume;
         
         // I know some maniac is gonna change their refresh rate while playing a song.
-        var interval = TimeSpan.FromSeconds(1.0 / UserConfig.RenderConfig.RefreshRate);
+        TimeSpan interval = TimeSpan.FromSeconds(1.0 / UserConfig.RenderConfig.RefreshRate);
         UpdateTimer = new(interval, DispatcherPriority.Background, UpdateTimer_Tick) { IsEnabled = AudioManager.CurrentSong?.IsPlaying ?? false };
         
         File.WriteAllText("UserConfig.toml", Toml.FromModel(UserConfig));
@@ -1634,7 +1634,7 @@ public partial class MainView : UserControl
     
     public async Task<IStorageFile?> OpenAudioFilePicker()
     {
-        var result = await GetStorageProvider().OpenFilePickerAsync(new()
+        IReadOnlyList<IStorageFile> result = await GetStorageProvider().OpenFilePickerAsync(new()
         {
             AllowMultiple = false,
             FileTypeFilter = new List<FilePickerFileType>
@@ -1652,7 +1652,7 @@ public partial class MainView : UserControl
     
     private async Task<IStorageFile?> OpenChartFilePicker()
     {
-        var result = await GetStorageProvider().OpenFilePickerAsync(new()
+        IReadOnlyList<IStorageFile> result = await GetStorageProvider().OpenFilePickerAsync(new()
         {
             AllowMultiple = false,
             FileTypeFilter = new List<FilePickerFileType>

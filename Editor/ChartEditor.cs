@@ -1182,7 +1182,7 @@ public class ChartEditor
                 int newPos0 = (int)Math.Round(MathExtensions.ShortLerp(lerpShort, startPos0, endPos0, i));
                 int newPos1 = (int)Math.Round(MathExtensions.ShortLerp(lerpShort, startPos1, endPos1, i));
 
-                var newNote = new Note()
+                Note newNote = new Note()
                 {
                     BeatData = data,
                     NoteType = NoteType.HoldSegment,

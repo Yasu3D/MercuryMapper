@@ -49,10 +49,10 @@ public class SkiaCanvas : UserControl
 
         public void Render(ImmediateDrawingContext context)
         {
-            var leaseFeature = context.TryGetFeature<ISkiaSharpApiLeaseFeature>();
+            ISkiaSharpApiLeaseFeature? leaseFeature = context.TryGetFeature<ISkiaSharpApiLeaseFeature>();
             if (leaseFeature == null) return;
-            using var lease = leaseFeature.Lease();
-            var canvas = lease.SkCanvas;
+            using ISkiaSharpApiLease lease = leaseFeature.Lease();
+            SKCanvas canvas = lease.SkCanvas;
             renderFunc.Invoke(canvas);
         }
     }

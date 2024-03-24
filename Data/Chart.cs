@@ -45,7 +45,7 @@ public class Chart
         
         Stream stream = File.OpenRead(filepath);
 
-        var merFile = ReadLines(stream);
+        List<string> merFile = ReadLines(stream);
         if (merFile.Count == 0) return false;
 
         int readerIndex = 0;
@@ -324,8 +324,8 @@ public class Chart
     public void GenerateTimeEvents()
     {
         Gimmicks = Gimmicks.OrderBy(x => x.BeatData.MeasureDecimal).ToList();
-        var timeSigChange = Gimmicks.FirstOrDefault(x => x is { GimmickType: GimmickType.TimeSigChange, BeatData.FullTick: 0 });
-        var bpmChange = Gimmicks.FirstOrDefault(x => x is { GimmickType: GimmickType.BpmChange, BeatData.FullTick: 0 });
+        Gimmick? timeSigChange = Gimmicks.FirstOrDefault(x => x is { GimmickType: GimmickType.TimeSigChange, BeatData.FullTick: 0 });
+        Gimmick? bpmChange = Gimmicks.FirstOrDefault(x => x is { GimmickType: GimmickType.BpmChange, BeatData.FullTick: 0 });
         if (timeSigChange == null || bpmChange == null) return;
         
         float lastBpm = bpmChange.Bpm;
