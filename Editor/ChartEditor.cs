@@ -1256,11 +1256,9 @@ public class ChartEditor
         mainView.ToggleInsertButton();
         CurrentNoteType = CurrentBonusType is BonusType.None ? NoteType.HoldStart : NoteType.HoldStartRNote;
 
-        if (LastPlacedHold?.NoteType is not NoteType.HoldStart) return;
-        
-        lock (Chart)
+        if (LastPlacedHold?.NoteType is NoteType.HoldStart or NoteType.HoldStartRNote)
         {
-            Chart.Notes.Remove(LastPlacedHold);
+            lock (Chart) Chart.Notes.Remove(LastPlacedHold);
         }
     }
     
