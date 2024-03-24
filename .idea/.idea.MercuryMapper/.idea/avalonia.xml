@@ -22,6 +22,7 @@
         <entry key="Views/NewChartView.axaml" value="MercuryMapper.csproj" />
         <entry key="Views/Settings/SettingsView_Audio.axaml" value="MercuryMapper.csproj" />
         <entry key="Views/Settings/SettingsView_Colors.axaml" value="MercuryMapper.csproj" />
+        <entry key="Views/Settings/SettingsView_Editor.axaml" value="MercuryMapper.csproj" />
         <entry key="Views/Settings/SettingsView_Gimmicks.axaml" value="MercuryMapper.csproj" />
         <entry key="Views/Settings/SettingsView_Keymap.axaml" value="MercuryMapper.csproj" />
         <entry key="Views/Settings/SettingsView_Rendering.axaml" value="MercuryMapper.csproj" />

@@ -25,6 +25,7 @@ public partial class SettingsView : UserControl
             "TreeViewRendering" => new SettingsView_Rendering(mainView),
             "TreeViewKeymap" => new SettingsView_Keymap(mainView),
             "TreeViewAudio" => new SettingsView_Audio(mainView),
+            "TreeViewEditor" => new SettingsView_Editor(mainView),
             _ => null
         };
         

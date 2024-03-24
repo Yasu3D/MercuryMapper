@@ -43,6 +43,11 @@ public static class MathExtensions
         return Lerp(a, b, t);
     }
 
+    public static float RoundToInterval(float x, float interval)
+    {
+        return float.Round(x / interval) * interval;
+    }
+    
     public static float Perspective(float x)
     {
         // Huge thanks to CG505 for figuring out the perspective math:

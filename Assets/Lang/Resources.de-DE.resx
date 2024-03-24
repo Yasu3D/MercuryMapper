@@ -553,4 +553,7 @@ Möchten Sie eine Datei manuell auswählen?</value>
     <data name="Editor_HoldEaseHeader" xml:space="preserve">
         <value>Hold Kurve</value>
     </data>
+    <data name="Settings_Editor_QuantizeOnPause" xml:space="preserve">
+        <value>Quantisieren bei Pause</value>
+    </data>
 </root>

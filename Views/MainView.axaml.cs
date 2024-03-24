@@ -72,7 +72,8 @@ public partial class MainView : UserControl
         None,
         Slider,
         Numeric,
-        Timer
+        Timer,
+        MeasureDecimal
     }
 
     private PointerState pointerState = PointerState.Released;
@@ -207,6 +208,7 @@ public partial class MainView : UserControl
         if (AudioManager.CurrentSong == null) return;
         timeUpdateSource = source;
         
+        // Update Audio Position
         if (source is not TimeUpdateSource.Timer && !AudioManager.CurrentSong.IsPlaying)
         {
             if (source is TimeUpdateSource.Slider)
@@ -221,6 +223,11 @@ public partial class MainView : UserControl
                 float measureDecimal = (float)(NumericMeasure.Value + NumericBeatValue.Value / NumericBeatDivisor.Value);
                 AudioManager.CurrentSong.Position = (uint)ChartEditor.Chart.BeatData2Timestamp(new(measureDecimal));
             }
+
+            if (source is TimeUpdateSource.MeasureDecimal)
+            {
+                AudioManager.CurrentSong.Position = (uint)ChartEditor.Chart.MeasureDecimal2Timestamp(ChartEditor.CurrentMeasureDecimal);
+            }
         }
         
         // Avoid imprecision from Timestamp2BeatData when paused.
@@ -229,6 +236,7 @@ public partial class MainView : UserControl
             ? ChartEditor.Chart.Timestamp2BeatData(AudioManager.CurrentSong.Position)
             : new((float)(NumericMeasure.Value + NumericBeatValue.Value / NumericBeatDivisor.Value));
         
+        // Update Numeric
         if (source is not TimeUpdateSource.Numeric && NumericBeatDivisor.Value != null)
         {
             // The + 0.002f is a hacky "fix". There's some weird rounding issue that has carried over from BAKKA,
@@ -238,6 +246,7 @@ public partial class MainView : UserControl
             NumericBeatValue.Value = (int)((data.MeasureDecimal - data.Measure + 0.002f) * (float)NumericBeatDivisor.Value);
         }
 
+        // Update Slider
         if (source is not TimeUpdateSource.Slider)
         {
             SliderSongPosition.Value = (int)AudioManager.CurrentSong.Position;
@@ -1547,7 +1556,7 @@ public partial class MainView : UserControl
             IconStop.IsVisible = false;
             return;
         }
-
+        
         isPlayingPreview = false;
         AudioManager.CurrentSong.Volume = (float)(UserConfig.AudioConfig.MusicVolume * 0.01);
         AudioManager.CurrentSong.IsPlaying = play;
@@ -1557,6 +1566,12 @@ public partial class MainView : UserControl
         IconPlay.IsVisible = !play;
         IconStop.IsVisible = play;
         SliderSongPosition.IsEnabled = !play;
+
+        if (!play && UserConfig.EditorConfig.QuantizeOnPause)
+        {
+            ChartEditor.CurrentMeasureDecimal = MathExtensions.RoundToInterval(ChartEditor.CurrentMeasureDecimal, 1 / (float)(NumericBeatDivisor.Value ?? 16));
+            UpdateTime(TimeUpdateSource.MeasureDecimal);
+        }
 
         AudioManager.HitsoundNoteIndex = ChartEditor.Chart.Notes.FindIndex(x => x.BeatData.MeasureDecimal >= ChartEditor.CurrentMeasureDecimal);
     }

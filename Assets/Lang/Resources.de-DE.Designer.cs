@@ -1411,6 +1411,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Quantisieren bei Pause.
+        /// </summary>
+        public static string Settings_Editor_QuantizeOnPause {
+            get {
+                return ResourceManager.GetString("Settings_Editor_QuantizeOnPause", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Leitlinien-Typ.
         /// </summary>
         public static string Settings_GuideLineType {

@@ -10,6 +10,7 @@ public class UserConfig
     public KeymapConfig KeymapConfig { get; set; } = new();
     public ColorConfig ColorConfig { get; set; } = new();
     public AudioConfig AudioConfig { get; set; } = new();
+    public EditorConfig EditorConfig { get; set; } = new();
 }
 
 public class RenderConfig
@@ -160,4 +161,9 @@ public class AudioConfig
     public string RNoteHitsoundPath { get; set; } = "";
     
     public float HitsoundOffset { get; set; } = 25;
+}
+
+public class EditorConfig
+{
+    public bool QuantizeOnPause { get; set; }
 }
