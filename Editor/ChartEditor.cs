@@ -1254,7 +1254,7 @@ public class ChartEditor
         EditorState = ChartEditorState.InsertNote;
         mainView.SetHoldContextButton(EditorState);
         mainView.ToggleInsertButton();
-        CurrentNoteType = NoteType.HoldStart;
+        CurrentNoteType = CurrentBonusType is BonusType.None ? NoteType.HoldStart : NoteType.HoldStartRNote;
 
         if (LastPlacedHold?.NoteType is not NoteType.HoldStart) return;
         
