@@ -53,6 +53,7 @@ public partial class MainView : UserControl
         ToggleTypeRadio(false);
         ToggleInsertButton();
         SetSelectionInfo();
+        SetQuickSettings();
     }
 
     public bool CanShutdown;
@@ -382,6 +383,14 @@ public partial class MainView : UserControl
         ChartInfoMovieOffset.Value = (double)ChartEditor.Chart.MovieOffset;
     }
 
+    public void SetQuickSettings()
+    {
+        QuickSettingsSliderHitsound.Value = UserConfig.AudioConfig.HitsoundVolume;
+        QuickSettingsSliderMusic.Value = UserConfig.AudioConfig.MusicVolume;
+        QuickSettingsNumericBeatDivision.Value = UserConfig.RenderConfig.BeatDivision;
+        QuickSettingsNumericNoteSpeed.Value = UserConfig.RenderConfig.NoteSpeed;
+    }
+    
     public void SetMinNoteSize(NoteType type)
     {
         int minimum = Note.MinSize(type);
@@ -728,6 +737,7 @@ public partial class MainView : UserControl
             UserConfig.RenderConfig.NoteSpeed = decimal.Min(UserConfig.RenderConfig.NoteSpeed + 0.1m, 6);
             File.WriteAllText("UserConfig.toml", Toml.FromModel(UserConfig));
             RenderEngine.UpdateVisibleTime();
+            SetQuickSettings();
             
             e.Handled = true;
             return;
@@ -737,6 +747,7 @@ public partial class MainView : UserControl
             UserConfig.RenderConfig.NoteSpeed = decimal.Max(UserConfig.RenderConfig.NoteSpeed - 0.1m, 1);
             File.WriteAllText("UserConfig.toml", Toml.FromModel(UserConfig));
             RenderEngine.UpdateVisibleTime();
+            SetQuickSettings();
             
             e.Handled = true;
             return;
@@ -1527,15 +1538,11 @@ public partial class MainView : UserControl
         KeybindEditor.StopRebinding(); // Stop rebinding in case it was active.
         SetButtonColors(); // Update button colors if they were changed
         SetMenuItemInputGestureText(); // Update inputgesture text in case stuff was rebound
+        SetQuickSettings();
         RenderEngine.UpdateBrushes();
         RenderEngine.UpdateVisibleTime();
         AudioManager.LoadHitsoundSamples();
         AudioManager.UpdateVolume();
-
-        QuickSettingsNumericBeatDivision.Value = UserConfig.RenderConfig.BeatDivision;
-        QuickSettingsNumericNoteSpeed.Value = UserConfig.RenderConfig.NoteSpeed;
-        QuickSettingsSliderMusic.Value = UserConfig.AudioConfig.MusicVolume;
-        QuickSettingsSliderHitsound.Value = UserConfig.AudioConfig.HitsoundVolume;
         
         // I know some maniac is gonna change their refresh rate while playing a song.
         TimeSpan interval = TimeSpan.FromSeconds(1.0 / UserConfig.RenderConfig.RefreshRate);
