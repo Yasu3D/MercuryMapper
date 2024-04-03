@@ -140,9 +140,9 @@ public class Chart
                     int noteIndex = Convert.ToInt32(parsed[4]);
                     int position = Convert.ToInt32(parsed[5]);
                     int size = Convert.ToInt32(parsed[6]);
-                    bool renderSegment = Convert.ToBoolean(Convert.ToInt32(parsed[7]));
+                    bool renderSegment = noteTypeId != 10 || Convert.ToBoolean(Convert.ToInt32(parsed[7])); // Set to true by default if note is not a hold segment.
 
-                    Note tempNote = new Note(measure, tick, noteTypeId, noteIndex, position, size, renderSegment);
+                    Note tempNote = new(measure, tick, noteTypeId, noteIndex, position, size, renderSegment);
                     
                     // hold start & segments
                     if (noteTypeId is 9 or 10 or 25 && parsed.Length >= 9)
