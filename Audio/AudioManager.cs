@@ -26,18 +26,18 @@ public class AudioManager(MainView mainView)
     private BassSample? bonusHitsoundSample;
     private BassSample? rNoteHitsoundSample;
 
-    public int HitsoundNoteIndex { get; set; } = 0;
+    public int HitsoundNoteIndex { get; set; }
 
     public void ResetSong()
     {
         if (CurrentSong == null) return;
-        if (CurrentSong.IsPlaying) mainView.SetPlayState(false);
+        if (CurrentSong.IsPlaying) mainView.SetPlayState(MainView.PlayerState.Paused);
         CurrentSong.Position = 0;
     }
     
     public void SetSong(string filepath, float volume, int tempo)
     {
-        if (CurrentSong is { IsPlaying: true }) mainView.SetPlayState(false);
+        if (CurrentSong is { IsPlaying: true }) mainView.SetPlayState(MainView.PlayerState.Paused);
         
         CurrentSong = BassSoundEngine.GetSound(filepath, false, true);
         if (CurrentSong == null) return;

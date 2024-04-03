@@ -84,7 +84,14 @@ public partial class MainView : UserControl
         Pressed
     }
 
-    private bool isPlayingPreview;
+    private PlayerState playerState = PlayerState.Paused;
+
+    public enum PlayerState
+    {
+        Paused,
+        Playing,
+        Preview
+    }
     
     // ________________ Setup & UI Updates
 
@@ -176,8 +183,14 @@ public partial class MainView : UserControl
         
         if (AudioManager.CurrentSong.Position >= AudioManager.CurrentSong.Length && AudioManager.CurrentSong.IsPlaying)
         {
-            SetPlayState(false);
+            SetPlayState(PlayerState.Paused);
             AudioManager.CurrentSong.Position = 0;
+        }
+
+        if (playerState is PlayerState.Preview && AudioManager.CurrentSong.Position >= (int)((ChartEditor.Chart.PreviewTime + ChartEditor.Chart.PreviewLength) * 1000))
+        {
+            SetPlayState(PlayerState.Paused);
+            AudioManager.CurrentSong.Position = (uint)(ChartEditor.Chart.PreviewTime * 1000);
         }
         
         if (timeUpdateSource == TimeUpdateSource.None)
@@ -1354,7 +1367,7 @@ public partial class MainView : UserControl
     private void ButtonPlay_OnClick(object? sender, RoutedEventArgs e)
     {
         if (AudioManager.CurrentSong == null) return;
-        SetPlayState(!AudioManager.CurrentSong.IsPlaying);
+        SetPlayState(AudioManager.CurrentSong.IsPlaying ? PlayerState.Paused : PlayerState.Playing);
     }
     
     private void SliderSongPosition_OnValueChanged(object? sender, RangeBaseValueChangedEventArgs e)
@@ -1420,19 +1433,13 @@ public partial class MainView : UserControl
         ChartEditor.Chart.PreviewLength = (decimal)ChartInfoPreviewLength.Value;
     }
     
-    private async void ChartInfoPlayPreview_OnClick(object? sender, RoutedEventArgs e)
+    private void ChartInfoPlayPreview_OnClick(object? sender, RoutedEventArgs e)
     {
         if (ChartEditor.Chart.PreviewLength == 0 || AudioManager.CurrentSong == null) return;
         
         AudioManager.CurrentSong.Position = (uint)(ChartEditor.Chart.PreviewTime * 1000);
         UpdateTime(TimeUpdateSource.Timer);
-        SetPlayState(true);
-        isPlayingPreview = true;
-        
-        await Task.Delay((int)(ChartEditor.Chart.PreviewLength * 1000));
-        
-        if (isPlayingPreview) SetPlayState(false);
-        isPlayingPreview = false;
+        SetPlayState(PlayerState.Preview);
     }
     
     private void ChartInfoOffset_OnValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
@@ -1575,7 +1582,7 @@ public partial class MainView : UserControl
         dialog.ShowAsync();
     }
     
-    public void SetPlayState(bool play)
+    public void SetPlayState(PlayerState state)
     {
         if (AudioManager.CurrentSong == null)
         {
@@ -1585,18 +1592,20 @@ public partial class MainView : UserControl
             IconStop.IsVisible = false;
             return;
         }
-        
-        isPlayingPreview = false;
-        AudioManager.CurrentSong.Volume = (float)(UserConfig.AudioConfig.MusicVolume * 0.01);
-        AudioManager.CurrentSong.IsPlaying = play;
-        UpdateTimer.IsEnabled = play;
-        HitsoundTimer.IsEnabled = play;
-        
-        IconPlay.IsVisible = !play;
-        IconStop.IsVisible = play;
-        SliderSongPosition.IsEnabled = !play;
 
-        if (!play && UserConfig.EditorConfig.QuantizeOnPause)
+        playerState = state;
+        bool playing = state is not PlayerState.Paused;
+        
+        AudioManager.CurrentSong.Volume = (float)(UserConfig.AudioConfig.MusicVolume * 0.01);
+        AudioManager.CurrentSong.IsPlaying = playing;
+        UpdateTimer.IsEnabled = playing;
+        HitsoundTimer.IsEnabled = playing;
+        
+        IconPlay.IsVisible = !playing;
+        IconStop.IsVisible = playing;
+        SliderSongPosition.IsEnabled = !playing;
+
+        if (!playing && UserConfig.EditorConfig.QuantizeOnPause)
         {
             ChartEditor.CurrentMeasureDecimal = MathExtensions.RoundToInterval(ChartEditor.CurrentMeasureDecimal, 1 / (float)(NumericBeatDivisor.Value ?? 16));
             UpdateTime(TimeUpdateSource.MeasureDecimal);
