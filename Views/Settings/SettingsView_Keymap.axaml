@@ -65,6 +65,8 @@
                 <TreeViewItem Name="EditorQuickEditDecreasePosition" Header="{x:Static lang:Resources.Editor_QuickEditDecreasePosition}"/>
                 <TreeViewItem Name="EditorQuickEditIncreaseTimestamp" Header="{x:Static lang:Resources.Editor_QuickEditIncreaseTimestamp}"/>
                 <TreeViewItem Name="EditorQuickEditDecreaseTimestamp" Header="{x:Static lang:Resources.Editor_QuickEditDecreaseTimestamp}"/>
+                <TreeViewItem Name="EditorSetRenderTrue" Header="{x:Static lang:Resources.Editor_SetRenderTrue}"/>
+                <TreeViewItem Name="EditorSetRenderFalse" Header="{x:Static lang:Resources.Editor_SetRenderFalse}"/>
             </TreeViewItem>
             
             <TreeViewItem Header="{x:Static lang:Resources.Settings_Header_Rendering}" Classes="HideKeybind">

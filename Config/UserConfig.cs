@@ -92,6 +92,8 @@ public class KeymapConfig
         ["EditorEditNoteShapeProperties"] = new(Key.E, true, true, false),
         ["EditorMirrorNote"] = new(Key.M, false, true, false),
         ["EditorDelete"] = new(Key.Delete),
+        ["EditorSetRenderTrue"] = new(Key.V),
+        ["EditorSetRenderFalse"] = new(Key.V, false, false, true),
         ["EditorQuickEditIncreaseSize"] = new(Key.Up, false, true, false),
         ["EditorQuickEditDecreaseSize"] = new(Key.Down, false, true, false),
         ["EditorQuickEditIncreasePosition"] = new(Key.Right, false, true, false),

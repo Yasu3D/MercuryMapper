@@ -731,6 +731,18 @@ public partial class MainView : UserControl
             e.Handled = true;
             return;
         }
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorSetRenderTrue"]))
+        {
+            ChartEditor.SetSelectionRenderFlag(true);
+            e.Handled = true;
+            return;
+        }
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorSetRenderFalse"]))
+        {
+            ChartEditor.SetSelectionRenderFlag(false);
+            e.Handled = true;
+            return;
+        }
         
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["RenderIncreaseNoteSpeed"]))
         {
