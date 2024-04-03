@@ -544,11 +544,11 @@ Would you like to manually select a file?</value>
     <data name="Editor_HoldEase_Linear" xml:space="preserve">
         <value>Linear</value>
     </data>
-    <data name="Editor_HoldEase_Smooth" xml:space="preserve">
-        <value>Smooth</value>
+    <data name="Editor_HoldEase_SmoothOut" xml:space="preserve">
+        <value>Smooth Out</value>
     </data>
-    <data name="Editor_HoldEase_Sharp" xml:space="preserve">
-        <value>Sharp</value>
+    <data name="Editor_HoldEase_SharpOut" xml:space="preserve">
+        <value>Sharp Out</value>
     </data>
     <data name="Editor_HoldEaseHeader" xml:space="preserve">
         <value>Hold Ease</value>
@@ -564,5 +564,23 @@ Would you like to manually select a file?</value>
     </data>
     <data name="Note_HoldSegmentNoRender" xml:space="preserve">
         <value>Hold Segment [No Render]</value>
+    </data>
+    <data name="Editor_HoldEase_SineIn" xml:space="preserve">
+        <value>Sine In</value>
+    </data>
+    <data name="Editor_HoldEase_SharpIn" xml:space="preserve">
+        <value>Sharp In</value>
+    </data>
+    <data name="Editor_HoldEase_SineOut" xml:space="preserve">
+        <value>Sine Out</value>
+    </data>
+    <data name="Editor_HoldEase_SmoothIn" xml:space="preserve">
+        <value>Smooth In</value>
+    </data>
+    <data name="Editor_HoldEase_QuadIn" xml:space="preserve">
+        <value>Quad In</value>
+    </data>
+    <data name="Editor_HoldEase_QuadOut" xml:space="preserve">
+        <value>Quad Out</value>
     </data>
 </root>

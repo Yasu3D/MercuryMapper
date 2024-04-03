@@ -88,8 +88,14 @@ public static class MathExtensions
     public enum HoldEaseType
     {
         Linear = 0,
-        Smooth = 1,
-        Sharp = 2
+        SmoothIn = 1,
+        SmoothOut = 2,
+        SharpIn = 3,
+        SharpOut = 4,
+        SineIn = 5,
+        SineOut = 6,
+        QuadIn = 7,
+        QuadOut = 8
     }
 
     public static float HoldBakeEase(float x, HoldEaseType type)
@@ -99,8 +105,14 @@ public static class MathExtensions
         return type switch
         {
             HoldEaseType.Linear => x,
-            HoldEaseType.Smooth => float.Asin(x * float.Sin(float.Pi * a)) / (float.Pi * a),
-            HoldEaseType.Sharp => -(x / (4f * x - 5f)),
+            HoldEaseType.SmoothIn => float.Sin(x * float.Pi * a) / float.Sin(float.Pi * a),
+            HoldEaseType.SmoothOut => float.Asin(x * float.Sin(float.Pi * a)) / (float.Pi * a),
+            HoldEaseType.SharpIn => 5f * x / (4f * x + 1),
+            HoldEaseType.SharpOut => -(x / (4f * x - 5f)),
+            HoldEaseType.SineIn => 1 - float.Cos(x * float.Pi * 0.5f),
+            HoldEaseType.SineOut => float.Sin(x * float.Pi * 0.5f),
+            HoldEaseType.QuadIn => x * x,
+            HoldEaseType.QuadOut => 1 - (1 - x) * (1 - x),
             _ => x
         };
     }

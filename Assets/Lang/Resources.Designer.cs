@@ -456,20 +456,74 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Sharp.
+        ///   Looks up a localized string similar to Quad In.
         /// </summary>
-        public static string Editor_HoldEase_Sharp {
+        public static string Editor_HoldEase_QuadIn {
             get {
-                return ResourceManager.GetString("Editor_HoldEase_Sharp", resourceCulture);
+                return ResourceManager.GetString("Editor_HoldEase_QuadIn", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Smooth.
+        ///   Looks up a localized string similar to Quad Out.
         /// </summary>
-        public static string Editor_HoldEase_Smooth {
+        public static string Editor_HoldEase_QuadOut {
             get {
-                return ResourceManager.GetString("Editor_HoldEase_Smooth", resourceCulture);
+                return ResourceManager.GetString("Editor_HoldEase_QuadOut", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sharp In.
+        /// </summary>
+        public static string Editor_HoldEase_SharpIn {
+            get {
+                return ResourceManager.GetString("Editor_HoldEase_SharpIn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sharp Out.
+        /// </summary>
+        public static string Editor_HoldEase_SharpOut {
+            get {
+                return ResourceManager.GetString("Editor_HoldEase_SharpOut", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sine In.
+        /// </summary>
+        public static string Editor_HoldEase_SineIn {
+            get {
+                return ResourceManager.GetString("Editor_HoldEase_SineIn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sine Out.
+        /// </summary>
+        public static string Editor_HoldEase_SineOut {
+            get {
+                return ResourceManager.GetString("Editor_HoldEase_SineOut", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Smooth In.
+        /// </summary>
+        public static string Editor_HoldEase_SmoothIn {
+            get {
+                return ResourceManager.GetString("Editor_HoldEase_SmoothIn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Smooth Out.
+        /// </summary>
+        public static string Editor_HoldEase_SmoothOut {
+            get {
+                return ResourceManager.GetString("Editor_HoldEase_SmoothOut", resourceCulture);
             }
         }
         

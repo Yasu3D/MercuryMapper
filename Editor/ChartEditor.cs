@@ -1212,13 +1212,15 @@ public class ChartEditor
                 int newPos0 = (int)Math.Round(MathExtensions.ShortLerp(lerpShort, startPos0, endPos0, i));
                 int newPos1 = (int)Math.Round(MathExtensions.ShortLerp(lerpShort, startPos1, endPos1, i));
 
-                Note newNote = new Note()
+                bool shortInterval = data.FullTick - lastNote.BeatData.FullTick <= 30;
+                
+                Note newNote = new()
                 {
                     BeatData = data,
                     NoteType = NoteType.HoldSegment,
                     Position = MathExtensions.Modulo(newPos0, 60),
                     Size = MathExtensions.Modulo(newPos1 - newPos0, 60),
-                    RenderSegment = easeType != MathExtensions.HoldEaseType.Linear,
+                    RenderSegment = easeType != MathExtensions.HoldEaseType.Linear || shortInterval,
                     PrevReferencedNote = lastNote,
                     NextReferencedNote = end
                 };
