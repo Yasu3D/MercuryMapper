@@ -38,6 +38,7 @@ public class Brushes(UserConfig userConfig)
     private SKColor colorNoteSnapBackward;
     private SKColor colorNoteHoldStart;
     private SKColor colorNoteHoldSegment;
+    private SKColor colorNoteHoldSegmentNoRender;
     private SKColor colorNoteMaskAdd;
     private SKColor colorNoteMaskRemove;
     private SKColor colorNoteEndOfChart;
@@ -208,7 +209,7 @@ public class Brushes(UserConfig userConfig)
     public SKPaint GetNotePen(Note note, float scale)
     {
         notePen.StrokeWidth = NoteWidthMultiplier * scale;
-        notePen.Color = NoteType2Color(note.NoteType);
+        notePen.Color = NoteType2Color(note.NoteType, note.RenderSegment);
         return notePen;
     }
 
@@ -285,7 +286,7 @@ public class Brushes(UserConfig userConfig)
     }
     
     // ________ Other
-    private SKColor NoteType2Color(NoteType type)
+    private SKColor NoteType2Color(NoteType type, bool render = true)
     {
         return type switch
         {
@@ -306,8 +307,8 @@ public class Brushes(UserConfig userConfig)
                 or NoteType.ChainRNote => colorNoteChain,
             NoteType.HoldStart 
                 or NoteType.HoldStartRNote => colorNoteHoldStart,
-            NoteType.HoldSegment
-                or NoteType.HoldEnd => colorNoteHoldSegment,
+            NoteType.HoldSegment => render ? colorNoteHoldSegment : colorNoteHoldSegmentNoRender,
+            NoteType.HoldEnd => colorNoteHoldSegment,
             NoteType.MaskAdd => colorNoteMaskAdd,
             NoteType.MaskRemove => colorNoteMaskRemove,
             NoteType.EndOfChart => colorNoteEndOfChart,
@@ -349,6 +350,7 @@ public class Brushes(UserConfig userConfig)
             colorNoteSnapBackward = SKColor.Parse(colors["ColorNoteSnapBackward"]);
             colorNoteHoldStart = SKColor.Parse(colors["ColorNoteHoldStart"]);
             colorNoteHoldSegment = SKColor.Parse(colors["ColorNoteHoldSegment"]);
+            colorNoteHoldSegmentNoRender = SKColor.Parse(colors["ColorNoteHoldSegmentNoRender"]);
             colorNoteMaskAdd = SKColor.Parse(colors["ColorNoteMaskAdd"]);
             colorNoteMaskRemove = SKColor.Parse(colors["ColorNoteMaskRemove"]);
             colorNoteEndOfChart = SKColor.Parse(colors["ColorNoteEndOfChart"]);

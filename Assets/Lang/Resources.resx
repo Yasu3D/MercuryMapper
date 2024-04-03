@@ -556,4 +556,13 @@ Would you like to manually select a file?</value>
     <data name="Settings_Editor_QuantizeOnPause" xml:space="preserve">
         <value>Quantize on Pause</value>
     </data>
+    <data name="Editor_SetRenderTrue" xml:space="preserve">
+        <value>Set Render True</value>
+    </data>
+    <data name="Editor_SetRenderFalse" xml:space="preserve">
+        <value>Set Render False</value>
+    </data>
+    <data name="Note_HoldSegmentNoRender" xml:space="preserve">
+        <value>Hold Segment [No Render]</value>
+    </data>
 </root>

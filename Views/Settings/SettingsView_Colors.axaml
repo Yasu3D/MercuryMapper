@@ -36,6 +36,8 @@
                 <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorNoteHoldStart"/>
                 <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Note_HoldSegment}"/>
                 <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorNoteHoldSegment"/>
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Note_HoldSegmentNoRender}"/>
+                <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorNoteHoldSegmentNoRender"/>
                 <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Note_HoldEnd}"/>
                 <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorNoteHoldEnd"/>
                 <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Note_HoldSurfaceNear}"/>

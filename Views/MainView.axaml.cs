@@ -1479,6 +1479,16 @@ public partial class MainView : UserControl
     
     private void NumericMirrorAxis_OnPointerExited(object? sender, PointerEventArgs e) => RenderEngine.IsHoveringOverMirrorAxis = false;
 
+    private void ButtonSetRenderTrue_OnClick(object? sender, RoutedEventArgs e)
+    {
+        ChartEditor.SetSelectionRenderFlag(true);
+    }
+
+    private void ButtonSetRenderFalse_OnClick(object? sender, RoutedEventArgs e)
+    {
+        ChartEditor.SetSelectionRenderFlag(false);
+    }
+    
     private void ButtonEditGimmick_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.EditGimmick();
 
     private void ButtonDeleteGimmick_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.DeleteGimmick();

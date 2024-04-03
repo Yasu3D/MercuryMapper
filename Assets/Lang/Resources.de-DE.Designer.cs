@@ -717,6 +717,24 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Render Deaktivieren.
+        /// </summary>
+        public static string Editor_SetRenderFalse {
+            get {
+                return ResourceManager.GetString("Editor_SetRenderFalse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Render Aktivieren.
+        /// </summary>
+        public static string Editor_SetRenderTrue {
+            get {
+                return ResourceManager.GetString("Editor_SetRenderTrue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Größe.
         /// </summary>
         public static string Editor_Size {
@@ -1182,6 +1200,15 @@ namespace MercuryMapper.Assets.Lang {
         public static string Note_HoldSegment {
             get {
                 return ResourceManager.GetString("Note_HoldSegment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Halte-Segment [No-Render].
+        /// </summary>
+        public static string Note_HoldSegmentNoRender {
+            get {
+                return ResourceManager.GetString("Note_HoldSegmentNoRender", resourceCulture);
             }
         }
         

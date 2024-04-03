@@ -492,6 +492,13 @@
                             <Button Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Margin="2,0,0,2" Click="ButtonBakeHold_OnClick" Content="{x:Static lang:Resources.Editor_BakeHoldNote}"/>
                             <Button Grid.Row="2" Grid.Column="1" HorizontalAlignment="Stretch" Margin="2,2,0,0" Click="ButtonInsertHoldSegment_OnClick" Content="{x:Static lang:Resources.Editor_InsertHoldSegment}"/>
                         </Grid>
+                        
+                        <Separator/>
+                        
+                        <Grid RowDefinitions="*" ColumnDefinitions="*,*">
+                            <Button Grid.Row="0" Grid.Column="0" HorizontalAlignment="Stretch" Margin="0,0,2,0" Click="ButtonSetRenderTrue_OnClick" Content="{x:Static lang:Resources.Editor_SetRenderTrue}"/>
+                            <Button Grid.Row="0" Grid.Column="1" HorizontalAlignment="Stretch" Margin="2,0,0,0" Click="ButtonSetRenderFalse_OnClick" Content="{x:Static lang:Resources.Editor_SetRenderFalse}"/>
+                        </Grid>
                     </StackPanel>
                 </Expander>
                 

@@ -115,6 +115,7 @@ public class ColorConfig
         ["ColorNoteSnapBackward"] = "FF1D96F1",
         ["ColorNoteHoldStart"] = "FF666666",
         ["ColorNoteHoldSegment"] = "FFB8B8B8",
+        ["ColorNoteHoldSegmentNoRender"] = "FFB8B8B8",
         ["ColorNoteHoldEnd"] = "FFB8B8B8",
         ["ColorNoteHoldSurfaceFar"] = "BEB2B2B2",
         ["ColorNoteHoldSurfaceNear"] = "BEFFFFFF",

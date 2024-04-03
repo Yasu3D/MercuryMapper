@@ -956,6 +956,36 @@ public class ChartEditor
         }
     }
 
+    public void SetSelectionRenderFlag(bool render)
+    {
+        // This operation only works on hold segments. All other note types should have a flag of 1 by default.
+        List<IOperation> operationList = [];
+        foreach (Note selected in SelectedNotes.Where(x => x.NoteType is NoteType.HoldSegment))
+        {
+            addOperation(selected);
+        }
+
+        if (SelectedNotes.Count == 0 && HighlightedElement is Note { NoteType: NoteType.HoldSegment } highlighted)
+        {
+            addOperation(highlighted);
+        }
+        
+        if (operationList.Count == 0) return;
+        UndoRedoManager.InvokeAndPush(new CompositeOperation(operationList));
+        Chart.IsSaved = false;
+        return;
+
+        void addOperation(Note note)
+        {
+            Note newNote = new(note)
+            {
+                RenderSegment = render
+            };
+
+            operationList.Add(new EditNote(note, newNote));
+        }
+    }
+    
     public void QuickEditSize(int delta)
     {
         List<IOperation> operationList = [];
