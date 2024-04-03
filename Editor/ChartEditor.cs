@@ -941,7 +941,7 @@ public class ChartEditor
         {
             int newPosition = shape ? Cursor.Position : note.Position;
             int newSize = shape ? Cursor.Size : note.Size;
-            NoteType newType = properties && !note.IsHold ? CurrentNoteType : note.NoteType;
+            NoteType newType = properties && !note.IsHold && CurrentNoteType is not (NoteType.HoldStart or NoteType.HoldStartRNote or NoteType.HoldSegment or NoteType.HoldEnd) ? CurrentNoteType : note.NoteType;
             MaskDirection newDirection = properties ? CurrentMaskDirection : note.MaskDirection;
             
             Note newNote = new(note)
