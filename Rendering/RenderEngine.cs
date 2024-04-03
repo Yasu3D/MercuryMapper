@@ -392,7 +392,7 @@ public class RenderEngine(MainView mainView)
     {
         List<Note> visibleNotes = chart.Notes.Where(x =>
             x is { IsSegment: false, IsMask: false } && (!x.IsChain || x is { IsChain: true, IsRNote: true }) // because apparently R Note chains have syncs. Just being accurate to the game (:
-            && x.BeatData.MeasureDecimal >= CurrentMeasureDecimal
+            && RenderMath.GreaterAlmostEqual(x.BeatData.MeasureDecimal, CurrentMeasureDecimal)
             && chart.GetScaledMeasureDecimal(x.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) <= ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal).ToList();
         
         // This code is from saturn, lol
@@ -437,7 +437,7 @@ public class RenderEngine(MainView mainView)
         List<Note> visibleNotes = chart.Notes.Where(x =>
             x.IsHold &&
             (
-                (x.BeatData.MeasureDecimal >= CurrentMeasureDecimal && chart.GetScaledMeasureDecimal(x.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) <= ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal)
+                (RenderMath.GreaterAlmostEqual(x.BeatData.MeasureDecimal, CurrentMeasureDecimal) && chart.GetScaledMeasureDecimal(x.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) <= ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal)
                 ||
                 (x.NextReferencedNote != null && x.BeatData.MeasureDecimal < CurrentMeasureDecimal && chart.GetScaledMeasureDecimal(x.NextReferencedNote.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) > ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal)
             )
@@ -577,7 +577,7 @@ public class RenderEngine(MainView mainView)
         // Reverse to draw from middle out => preserves depth overlap
         IEnumerable<Note> visibleNotes = chart.Notes.Where(x =>
             x is { IsHold: false, IsMask: false }
-            && x.BeatData.MeasureDecimal >= CurrentMeasureDecimal
+            && RenderMath.GreaterAlmostEqual(x.BeatData.MeasureDecimal, CurrentMeasureDecimal)
             && chart.GetScaledMeasureDecimal(x.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) <= ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal).Reverse();
 
         foreach (Note note in visibleNotes)
@@ -627,7 +627,7 @@ public class RenderEngine(MainView mainView)
     {
         IEnumerable<Note> visibleNotes = chart.Notes.Where(x =>
             x.IsMask
-            && x.BeatData.MeasureDecimal >= CurrentMeasureDecimal
+            && RenderMath.GreaterAlmostEqual(x.BeatData.MeasureDecimal, CurrentMeasureDecimal)
             && chart.GetScaledMeasureDecimal(x.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) <= ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal).Reverse();
         
         foreach (Note note in visibleNotes)
@@ -655,7 +655,7 @@ public class RenderEngine(MainView mainView)
     private void DrawGimmickNotes(SKCanvas canvas, Chart chart)
     {
         IEnumerable<Gimmick> visibleGimmicks = chart.Gimmicks.Where(x =>
-            x.BeatData.MeasureDecimal >= CurrentMeasureDecimal
+            RenderMath.GreaterAlmostEqual(x.BeatData.MeasureDecimal, CurrentMeasureDecimal)
             && chart.GetScaledMeasureDecimal(x.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) <= ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal).Reverse();
 
         foreach (Gimmick gimmick in visibleGimmicks)
@@ -685,7 +685,7 @@ public class RenderEngine(MainView mainView)
         // Reverse to draw from middle out => preserves depth overlap
         IEnumerable<Note> visibleNotes = chart.Notes.Where(x => 
             (x.IsSlide || x.IsSnap)
-            && x.BeatData.MeasureDecimal >= CurrentMeasureDecimal
+            && RenderMath.GreaterAlmostEqual(x.BeatData.MeasureDecimal, CurrentMeasureDecimal)
             && chart.GetScaledMeasureDecimal(x.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) <= ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal).Reverse();
 
         foreach (Note note in visibleNotes)
@@ -860,6 +860,11 @@ internal static class RenderMath
             (float)(radius * Math.Cos(MathExtensions.DegToRad(angle)) + center.X),
             (float)(radius * Math.Sin(MathExtensions.DegToRad(angle)) + center.Y));
     }
-    
+
+    internal static bool GreaterAlmostEqual(float input, float comparison)
+    {
+        if (input > comparison) return true;
+        return float.Abs(input - comparison) < 0.0005f;
+    }
 }
 
