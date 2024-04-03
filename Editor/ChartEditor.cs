@@ -550,11 +550,12 @@ public class ChartEditor
                 
                 Chart.IsSaved = false;
                 UndoRedoManager.InvokeAndPush(new InsertNote(Chart, SelectedNotes, note));
-
+                
                 if (note.NoteType is NoteType.HoldStart or NoteType.HoldStartRNote)
                 {
                     StartHold(note);
                 }
+                if (mainView.UserConfig.EditorConfig.HighlightPlacedNote) HighlightElement(note);
                 break;
             }
             
@@ -589,6 +590,8 @@ public class ChartEditor
                 UndoRedoManager.InvokeAndPush(new InsertHoldNote(Chart, SelectedNotes, note, LastPlacedHold));
                 Chart.IsSaved = false;
                 LastPlacedHold = note;
+                
+                if (mainView.UserConfig.EditorConfig.HighlightPlacedNote) HighlightElement(note);
                 break;
             }
         }

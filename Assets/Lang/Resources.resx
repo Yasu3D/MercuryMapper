@@ -583,4 +583,7 @@ Would you like to manually select a file?</value>
     <data name="Editor_HoldEase_QuadOut" xml:space="preserve">
         <value>Quad Out</value>
     </data>
+    <data name="Settings_Editor_HighlightPlacedNote" xml:space="preserve">
+        <value>Highlight Placed Note</value>
+    </data>
 </root>

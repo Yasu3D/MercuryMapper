@@ -583,4 +583,7 @@ Möchten Sie eine Datei manuell auswählen?</value>
     <data name="Editor_HoldEase_QuadOut" xml:space="preserve">
         <value>Quad Out</value>
     </data>
+    <data name="Settings_Editor_HighlightPlacedNote" xml:space="preserve">
+        <value>Platzierte Note Hervorheben</value>
+    </data>
 </root>

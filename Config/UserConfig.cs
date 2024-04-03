@@ -169,4 +169,5 @@ public class AudioConfig
 public class EditorConfig
 {
     public bool QuantizeOnPause { get; set; }
+    public bool HighlightPlacedNote { get; set; }
 }

@@ -1492,6 +1492,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Platzierte Note Hervorheben.
+        /// </summary>
+        public static string Settings_Editor_HighlightPlacedNote {
+            get {
+                return ResourceManager.GetString("Settings_Editor_HighlightPlacedNote", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Quantisieren bei Pause.
         /// </summary>
         public static string Settings_Editor_QuantizeOnPause {
