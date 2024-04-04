@@ -1,3 +1,3 @@
-This project is currently still WIP!
+Check releases for the newest version :]
 
-Come back in like... a week probably? if you want to actually use this.
+Documentation (+ tutorials maybe?) coming eventually.
