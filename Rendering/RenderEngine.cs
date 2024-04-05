@@ -265,7 +265,7 @@ public class RenderEngine(MainView mainView)
 
             float maskTimestamp = Chart.MeasureDecimal2Timestamp(note.BeatData.MeasureDecimal);
             float timeDifference = mainView.AudioManager.CurrentSong.Position - maskTimestamp;
-            float animationDuration = note.Size * 8; // 8ms per mask
+            float animationDuration = note.Size * (note.MaskDirection is MaskDirection.Center ? 4 : 8); // 8ms per unit. 4ms if its from center since notes are basically cut in half.
             
             // In range for animation
             if (timeDifference < animationDuration)
