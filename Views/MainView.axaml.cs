@@ -57,7 +57,7 @@ public partial class MainView : UserControl
     }
 
     public bool CanShutdown;
-    public const string AppVersion = "v1.1.0";
+    public const string AppVersion = "v1.1.1";
     
     public UserConfig UserConfig = new();
     public readonly KeybindEditor KeybindEditor;
