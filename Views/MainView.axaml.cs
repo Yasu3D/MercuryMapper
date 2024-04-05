@@ -85,7 +85,6 @@ public partial class MainView : UserControl
     }
 
     private PlayerState playerState = PlayerState.Paused;
-
     public enum PlayerState
     {
         Paused,
@@ -412,6 +411,11 @@ public partial class MainView : UserControl
         ChartEditor.Cursor.MinSize = minimum;
 
         SliderNoteSize.Value = double.Max(SliderNoteSize.Value, minimum);
+    }
+
+    public void UpdateAudioFilepath()
+    {
+        ChartInfoAudioFilepath.Text = Path.GetFileName(ChartEditor.Chart.AudioFilePath);
     }
     
     // ________________ Input
@@ -995,6 +999,7 @@ public partial class MainView : UserControl
                 ChartEditor.NewChart(filepath, author, bpm, timeSigUpper, timeSigLower);
                 AudioManager.SetSong(filepath, (float)UserConfig.AudioConfig.MusicVolume * 0.01f, (int)SliderPlaybackSpeed.Value);
                 SetSongPositionSliderMaximum();
+                UpdateAudioFilepath();
                 RenderEngine.UpdateVisibleTime();
             }
         });
@@ -1405,6 +1410,7 @@ public partial class MainView : UserControl
         
         AudioManager.SetSong(ChartEditor.Chart.AudioFilePath, (float)(UserConfig.AudioConfig.MusicVolume * 0.01), (int)SliderPlaybackSpeed.Value);
         SetSongPositionSliderMaximum();
+        UpdateAudioFilepath();
         RenderEngine.UpdateVisibleTime();
     }
     
@@ -1770,6 +1776,7 @@ public partial class MainView : UserControl
         
         AudioManager.SetSong(ChartEditor.Chart.AudioFilePath, (float)(UserConfig.AudioConfig.MusicVolume * 0.01), (int)SliderPlaybackSpeed.Value);
         SetSongPositionSliderMaximum();
+        UpdateAudioFilepath();
         RenderEngine.UpdateVisibleTime();
     }
     
