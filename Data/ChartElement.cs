@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using MercuryMapper.Enums;
 using MercuryMapper.Utils;
@@ -109,13 +110,13 @@ public class Gimmick : ChartElement
         switch (GimmickType)
         {
             case GimmickType.BpmChange:
-                Bpm = Convert.ToSingle(value1);
+                Bpm = Convert.ToSingle(value1, CultureInfo.InvariantCulture);
                 break;
             case GimmickType.TimeSigChange:
-                TimeSig = new(Convert.ToInt32(value1), Convert.ToInt32(value2));
+                TimeSig = new(Convert.ToInt32(value1, CultureInfo.InvariantCulture), Convert.ToInt32(value2, CultureInfo.InvariantCulture));
                 break;
             case GimmickType.HiSpeedChange:
-                HiSpeed = Convert.ToSingle(value1);
+                HiSpeed = Convert.ToSingle(value1, CultureInfo.InvariantCulture);
                 break;
         }
     }
