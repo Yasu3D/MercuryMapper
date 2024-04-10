@@ -863,7 +863,7 @@ internal static class RenderMath
     internal static bool GreaterAlmostEqual(float input, float comparison)
     {
         if (input > comparison) return true;
-        return float.Abs(input - comparison) < 0.0005f;
+        return float.Abs(input - comparison) < 0.001f;
     }
 }
 
