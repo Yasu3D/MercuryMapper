@@ -1178,6 +1178,13 @@ public partial class MainView : UserControl
         {
             ContentDialogResult result = await dialog.ShowAsync();
             if (result is not ContentDialogResult.Primary) return;
+            
+            if (gimmickView.BpmNumberBox.Value <= 0)
+            {
+                ShowWarningMessage(Assets.Lang.Resources.Editor_NewChartInvalidBpm);
+                return;
+            }
+            
             ChartEditor.InsertBpmChange((float)gimmickView.BpmNumberBox.Value);
         });
     }
@@ -1583,7 +1590,7 @@ public partial class MainView : UserControl
         File.WriteAllText("UserConfig.toml", Toml.FromModel(UserConfig));
     }
 
-    private static void ShowWarningMessage(string title, string? text = null)
+    internal void ShowWarningMessage(string title, string? text = null)
     {
         ContentDialog dialog = new()
         {

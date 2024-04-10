@@ -714,6 +714,12 @@ public class ChartEditor
                 ContentDialogResult result = await dialog.ShowAsync();
                 if (result is not ContentDialogResult.Primary) return;
 
+                if (gimmickView.BpmNumberBox.Value <= 0)
+                {
+                    mainView.ShowWarningMessage(Assets.Lang.Resources.Editor_NewChartInvalidBpm);
+                    return;
+                }
+                
                 Gimmick oldGimmick = (Gimmick)HighlightedElement;
                 Gimmick newGimmick = new(oldGimmick)
                 {
@@ -740,6 +746,12 @@ public class ChartEditor
                 ContentDialogResult result = await dialog.ShowAsync();
                 if (result is not ContentDialogResult.Primary) return;
 
+                if ((int)gimmickView.TimeSigUpperNumberBox.Value <= 0 || (int)gimmickView.TimeSigLowerNumberBox.Value <= 0)
+                {
+                    mainView.ShowWarningMessage(Assets.Lang.Resources.Editor_NewChartInvalidTimeSig);
+                    return;
+                }
+                
                 Gimmick oldGimmick = (Gimmick)HighlightedElement;
                 Gimmick newGimmick = new(oldGimmick)
                 {
