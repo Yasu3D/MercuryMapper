@@ -1197,6 +1197,13 @@ public partial class MainView : UserControl
         {
             ContentDialogResult result = await dialog.ShowAsync();
             if (result is not ContentDialogResult.Primary) return;
+            
+            if ((int)gimmickView.TimeSigUpperNumberBox.Value <= 0 || (int)gimmickView.TimeSigLowerNumberBox.Value <= 0)
+            {
+                ShowWarningMessage(Assets.Lang.Resources.Editor_NewChartInvalidTimeSig);
+                return;
+            }
+            
             ChartEditor.InsertTimeSigChange((int)gimmickView.TimeSigUpperNumberBox.Value, (int)gimmickView.TimeSigLowerNumberBox.Value);
         });
     }
