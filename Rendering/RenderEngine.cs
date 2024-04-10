@@ -379,8 +379,9 @@ public class RenderEngine(MainView mainView)
         
         for (float i = start; chart.GetScaledMeasureDecimal(i, RenderConfig.ShowHiSpeed) < end; i += interval)
         {
-            SKRect rect = GetRect(GetNoteScale(chart, i));
-            if (rect.Width < 1) continue;
+            float scale = GetNoteScale(chart, i);
+            SKRect rect = GetRect(scale);
+            if (!RenderMath.InRange(scale)) continue;
 
             bool isMeasure = Math.Abs(i - (int)i) < 0.001f;
             canvas.DrawOval(rect, isMeasure ? brushes.MeasurePen : brushes.BeatPen);
@@ -403,6 +404,9 @@ public class RenderEngine(MainView mainView)
             if (current.BeatData.FullTick != previous.BeatData.FullTick) continue;
             
             float scale = GetNoteScale(chart, current.BeatData.MeasureDecimal);
+            
+            if (!RenderMath.InRange(scale)) continue;
+            
             SKRect rect = GetRect(scale);
             
             drawSyncConnector(current, previous, rect, scale);
@@ -532,7 +536,7 @@ public class RenderEngine(MainView mainView)
             if (note.Size != 60) TruncateArc(ref currentData, true);
             else TrimCircleArc(ref currentData);
             
-            if (currentData.Rect.Width < 1 || note.BeatData.MeasureDecimal < CurrentMeasureDecimal) continue;
+            if (!RenderMath.InRange(currentData.Scale) || note.BeatData.MeasureDecimal < CurrentMeasureDecimal) continue;
             
             if (note.IsRNote)
             {
@@ -583,7 +587,7 @@ public class RenderEngine(MainView mainView)
         {
             ArcData data = GetArc(chart, note);
 
-            if (data.Rect.Width < 1) continue;
+            if (!RenderMath.InRange(data.Scale)) continue;
             
             if (note.IsRNote)
             {
@@ -633,7 +637,7 @@ public class RenderEngine(MainView mainView)
         {
             ArcData data = GetArc(chart, note);
 
-            if (data.Rect.Width < 1) continue;
+            if (!RenderMath.InRange(data.Scale)) continue;
             
             canvas.DrawArc(data.Rect, data.StartAngle, data.SweepAngle, false, brushes.GetNotePen(note, canvasScale * data.Scale));
 
@@ -660,8 +664,10 @@ public class RenderEngine(MainView mainView)
         foreach (Gimmick gimmick in visibleGimmicks)
         {
             ArcData data = GetArc(chart, gimmick);
-            canvas.DrawOval(data.Rect, brushes.GetGimmickPen(gimmick, canvasScale * data.Scale));
             
+            if (!RenderMath.InRange(data.Scale)) continue;
+            
+            canvas.DrawOval(data.Rect, brushes.GetGimmickPen(gimmick, canvasScale * data.Scale));
             if (gimmick == mainView.ChartEditor.HighlightedElement)
             {
                 canvas.DrawArc(data.Rect, data.StartAngle, data.SweepAngle, false, brushes.GetHighlightPen(canvasScale * data.Scale));
@@ -690,6 +696,8 @@ public class RenderEngine(MainView mainView)
         foreach (Note note in visibleNotes)
         {
             float scale = GetNoteScale(chart, note.BeatData.MeasureDecimal);
+            if (!RenderMath.InRange(scale)) continue;
+            
             SKRect rect = GetRect(scale);
 
             int arrowDirection = note.NoteType switch
@@ -860,6 +868,11 @@ internal static class RenderMath
             (float)(radius * Math.Sin(MathExtensions.DegToRad(angle)) + center.Y));
     }
 
+    internal static bool InRange(float scale)
+    {
+        return scale is > 0 and <= 1;
+    }
+    
     internal static bool GreaterAlmostEqual(float input, float comparison)
     {
         if (input > comparison) return true;
