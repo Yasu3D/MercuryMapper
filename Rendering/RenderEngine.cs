@@ -870,7 +870,7 @@ internal static class RenderMath
 
     internal static bool InRange(float scale)
     {
-        return scale is > 0 and <= 1;
+        return scale is > 0 and < 1.001f;
     }
     
     internal static bool GreaterAlmostEqual(float input, float comparison)
