@@ -14,7 +14,6 @@
         <SignAssembly>true</SignAssembly>
     </PropertyGroup>
 
-
     <ItemGroup>
         <PackageReference Include="Avalonia" Version="11.0.6"/>
         <PackageReference Include="Avalonia.Desktop" Version="11.0.6"/>
@@ -29,18 +28,11 @@
         <PackageReference Include="Tomlyn" Version="0.17.0" />
     </ItemGroup>
 
-
     <ItemGroup>
       <UpToDateCheckInput Remove="Views\MainViewControls\MainView_ButtonPanel.axaml" />
       <UpToDateCheckInput Remove="Views\MainViewControls\MainView_OperationDrawer.axaml" />
       <UpToDateCheckInput Remove="Views\MainViewControls\MainView_SongControls.axaml" />
     </ItemGroup>
-
-
-    <ItemGroup>
-      <None Remove="Assets\icon.png" />
-    </ItemGroup>
-
 
     <ItemGroup>
       <EmbeddedResource Update="Assets\Lang\Resources.resx">
@@ -52,7 +44,6 @@
         <LastGenOutput>Resources.de-DE.Designer.cs</LastGenOutput>
       </EmbeddedResource>
     </ItemGroup>
-
 
     <ItemGroup>
       <Compile Update="Assets\Locales\Resources.Designer.cs">
@@ -80,33 +71,89 @@
       </Compile>
     </ItemGroup>
 
-
     <ItemGroup>
-      <None Remove="Assets\AppIcon.png" />
       <AvaloniaResource Include="Assets\AppIcon.png" />
-      <None Remove="Assets\AppIcon.ico" />
       <AvaloniaResource Include="Assets\AppIcon.ico" />
-      <None Remove="Assets\JetbrainsMono.ttf" />
-      <None Remove="Assets\Inter.ttf" />
       <AvaloniaResource Include="Assets\Inter.ttf" />
     </ItemGroup>
 
-
+    <!-- Windows x86 DLLs -->
     <ItemGroup>
-      <None Remove="lib\win-x64\bass.dll" />
-      <ContentWithTargetPath Include="lib\win-x64\bass.dll">
+        <ContentWithTargetPath Include="lib\win-x86\bass.dll" Condition="'$(RuntimeIdentifier)' == 'win-x86'">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <TargetPath>bass.dll</TargetPath>
+        </ContentWithTargetPath>
+        <ContentWithTargetPath Include="lib\win-x86\bass_fx.dll" Condition="'$(RuntimeIdentifier)' == 'win-x86'">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <TargetPath>bass_fx.dll</TargetPath>
+        </ContentWithTargetPath>
+        <ContentWithTargetPath Include="lib\win-x86\bassflac.dll" Condition="'$(RuntimeIdentifier)' == 'win-x86'">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <TargetPath>bassflac.dll</TargetPath>
+        </ContentWithTargetPath>
+    </ItemGroup>
+    
+    <!-- Windows x64 DLLs -->
+    <ItemGroup>
+      <ContentWithTargetPath Include="lib\win-x64\bass.dll" Condition="'$(RuntimeIdentifier)' == 'win-x64'">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         <TargetPath>bass.dll</TargetPath>
       </ContentWithTargetPath>
-      <None Remove="lib\win-x64\bass_fx.dll" />
-      <ContentWithTargetPath Include="lib\win-x64\bass_fx.dll">
+      <ContentWithTargetPath Include="lib\win-x64\bass_fx.dll" Condition="'$(RuntimeIdentifier)' == 'win-x64'">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         <TargetPath>bass_fx.dll</TargetPath>
       </ContentWithTargetPath>
-      <None Remove="lib\win-x64\bassflac.dll" />
-      <ContentWithTargetPath Include="lib\win-x64\bassflac.dll">
+      <ContentWithTargetPath Include="lib\win-x64\bassflac.dll" Condition="'$(RuntimeIdentifier)' == 'win-x64'">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         <TargetPath>bassflac.dll</TargetPath>
       </ContentWithTargetPath>
+    </ItemGroup>
+
+    <!-- macOS Dynamic Libraries -->
+    <ItemGroup>
+        <ContentWithTargetPath Include="lib\darwin\libbass.dylib" Condition="'$(RuntimeIdentifier)' == 'osx-x64' Or '$(RuntimeIdentifier)' == 'osx-arm64'">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <TargetPath>libbass.dylib</TargetPath>
+        </ContentWithTargetPath>
+        <ContentWithTargetPath Include="lib\darwin\libbass_fx.dylib" Condition="'$(RuntimeIdentifier)' == 'osx-x64' Or '$(RuntimeIdentifier)' == 'osx-arm64'">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <TargetPath>libbass_fx.dylib</TargetPath>
+        </ContentWithTargetPath>
+        <ContentWithTargetPath Include="lib\darwin\libbassflac.dylib" Condition="'$(RuntimeIdentifier)' == 'osx-x64' Or '$(RuntimeIdentifier)' == 'osx-arm64'">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <TargetPath>libbassflac.dylib</TargetPath>
+        </ContentWithTargetPath>
+    </ItemGroup>
+
+    <!-- Linux Shared Objects -->
+    <ItemGroup>
+        <ContentWithTargetPath Include="lib\linux-x64\libbass.so" Condition="'$(RuntimeIdentifier)' == 'linux-x64'">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <TargetPath>libbass.so</TargetPath>
+        </ContentWithTargetPath>
+        <ContentWithTargetPath Include="lib\linux-x64\libbass_fx.so" Condition="'$(RuntimeIdentifier)' == 'linux-x64'">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <TargetPath>libbass_fx.so</TargetPath>
+        </ContentWithTargetPath>
+        <ContentWithTargetPath Include="lib\linux-x64\libbassflac.so" Condition="'$(RuntimeIdentifier)' == 'linux-x64'">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <TargetPath>libbassflac.so</TargetPath>
+        </ContentWithTargetPath>
+    </ItemGroup>
+
+    <!-- Linux ARM Shared Objects -->
+    <ItemGroup>
+        <ContentWithTargetPath Include="lib\linux-arm64\libbass.so" Condition="'$(RuntimeIdentifier)' == 'linux-arm64'">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <TargetPath>libbass.so</TargetPath>
+        </ContentWithTargetPath>
+        <ContentWithTargetPath Include="lib\linux-arm64\libbass_fx.so" Condition="'$(RuntimeIdentifier)' == 'linux-arm64'">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <TargetPath>libbass_fx.so</TargetPath>
+        </ContentWithTargetPath>
+        <ContentWithTargetPath Include="lib\linux-arm64\libbassflac.so" Condition="'$(RuntimeIdentifier)' == 'linux-arm64'">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <TargetPath>libbassflac.so</TargetPath>
+        </ContentWithTargetPath>
     </ItemGroup>
 </Project>
