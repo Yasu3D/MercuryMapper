@@ -58,6 +58,7 @@ public partial class MainView : UserControl
 
     public bool CanShutdown;
     public const string AppVersion = "v1.1.3";
+    private const string ConfigPath = "UserConfig.toml";
     
     public UserConfig UserConfig = new();
     public readonly KeybindEditor KeybindEditor;
@@ -96,15 +97,15 @@ public partial class MainView : UserControl
 
     private void LoadUserConfig()
     {
-        if (!File.Exists("UserConfig.toml"))
+        if (!File.Exists(ConfigPath))
         {
-            File.WriteAllText("UserConfig.toml", Toml.FromModel(UserConfig));
+            File.WriteAllText(ConfigPath, Toml.FromModel(UserConfig));
             return;
         }
         
         try
         {
-            UserConfig = Toml.ToModel<UserConfig>(File.ReadAllText("UserConfig.Toml"));
+            UserConfig = Toml.ToModel<UserConfig>(File.ReadAllText(ConfigPath));
         }
         catch (Exception e)
         {
@@ -764,7 +765,7 @@ public partial class MainView : UserControl
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["RenderIncreaseNoteSpeed"]))
         {
             UserConfig.RenderConfig.NoteSpeed = decimal.Min(UserConfig.RenderConfig.NoteSpeed + 0.1m, 6);
-            File.WriteAllText("UserConfig.toml", Toml.FromModel(UserConfig));
+            File.WriteAllText(ConfigPath, Toml.FromModel(UserConfig));
             RenderEngine.UpdateVisibleTime();
             SetQuickSettings();
             
@@ -774,7 +775,7 @@ public partial class MainView : UserControl
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["RenderDecreaseNoteSpeed"]))
         {
             UserConfig.RenderConfig.NoteSpeed = decimal.Max(UserConfig.RenderConfig.NoteSpeed - 0.1m, 1);
-            File.WriteAllText("UserConfig.toml", Toml.FromModel(UserConfig));
+            File.WriteAllText(ConfigPath, Toml.FromModel(UserConfig));
             RenderEngine.UpdateVisibleTime();
             SetQuickSettings();
             
@@ -1587,7 +1588,7 @@ public partial class MainView : UserControl
         TimeSpan interval = TimeSpan.FromSeconds(1.0 / UserConfig.RenderConfig.RefreshRate);
         UpdateTimer = new(interval, DispatcherPriority.Background, UpdateTimer_Tick) { IsEnabled = AudioManager.CurrentSong?.IsPlaying ?? false };
         
-        File.WriteAllText("UserConfig.toml", Toml.FromModel(UserConfig));
+        File.WriteAllText(ConfigPath, Toml.FromModel(UserConfig));
     }
 
     internal void ShowWarningMessage(string title, string? text = null)
