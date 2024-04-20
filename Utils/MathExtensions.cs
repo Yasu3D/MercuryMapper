@@ -109,10 +109,10 @@ public static class MathExtensions
             HoldEaseType.SmoothOut => float.Asin(x * float.Sin(float.Pi * a)) / (float.Pi * a),
             HoldEaseType.SharpIn => 5f * x / (4f * x + 1),
             HoldEaseType.SharpOut => -(x / (4f * x - 5f)),
-            HoldEaseType.SineIn => 1 - float.Cos(x * float.Pi * 0.5f),
-            HoldEaseType.SineOut => float.Sin(x * float.Pi * 0.5f),
-            HoldEaseType.QuadIn => x * x,
-            HoldEaseType.QuadOut => 1 - (1 - x) * (1 - x),
+            HoldEaseType.SineIn => float.Sin(x * float.Pi * 0.5f),
+            HoldEaseType.SineOut => 1 - float.Cos(x * float.Pi * 0.5f),
+            HoldEaseType.QuadIn => 1 - (1 - x) * (1 - x),
+            HoldEaseType.QuadOut => x * x,
             _ => x
         };
     }
