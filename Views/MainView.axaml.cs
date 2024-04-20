@@ -950,7 +950,7 @@ public partial class MainView : UserControl
     
     public async void DragDrop(string path)
     {
-        if (await PromptSave()) return;
+        if (!await PromptSave()) return;
         OpenChart(path);
     }
     

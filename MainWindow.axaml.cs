@@ -25,7 +25,8 @@ public partial class MainWindow : Window
     private void Window_Drop(object? sender, DragEventArgs e)
     {
         Uri? path = e.Data.GetFiles()?.First().Path;
-        if (path == null || !File.Exists(path.LocalPath) || Path.GetExtension(path.LocalPath) != ".mer") return;
+        
+        if (path == null || !File.Exists(path.LocalPath) || Path.GetExtension(path.LocalPath) is not (".mer" or ".map")) return;
         
         MainView.DragDrop(path.LocalPath);
         e.Handled = true;
