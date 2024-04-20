@@ -300,6 +300,11 @@
                PointerReleased="Canvas_OnPointerReleased">
         </controls:SkiaCanvas>
         
+        <!-- Selection Count Popup -->
+        <TextBlock Grid.Row="1" Grid.Column="1" Margin="5,5,0,0"
+                   Name="SelectionCountText" Text="" IsVisible="False"
+                   FontSize="15" Foreground="Aqua"/>
+        
         <!-- Song Controls -->
         <Grid Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="2" Height="65" Name="SongControlPanel"
               ColumnDefinitions="Auto, *">

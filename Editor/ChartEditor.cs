@@ -108,6 +108,7 @@ public class ChartEditor
         }
 
         mainView.SetChartInfo();
+        mainView.SetSelectionInfo();
     }
 
     public void LoadChart(string path)
@@ -121,6 +122,7 @@ public class ChartEditor
         
         Chart.LoadFile(path);
         mainView.SetChartInfo();
+        mainView.SetSelectionInfo();
     }
     
     public void UpdateCursorNoteType()
@@ -373,6 +375,7 @@ public class ChartEditor
         
         UndoRedoManager.InvokeAndPush(new CompositeOperation(operationList));
         Chart.IsSaved = false;
+        mainView.SetSelectionInfo();
     }
 
     private void CopyToClipboard(List<Note> selectedNotes)

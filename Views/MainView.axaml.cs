@@ -289,6 +289,8 @@ public partial class MainView : UserControl
     public void SetSelectionInfo()
         {
             SelectionInfoSelectedNotesValue.Text = ChartEditor.SelectedNotes.Count.ToString();
+            SelectionCountText.Text = $"{Assets.Lang.Resources.Editor_SelectionInfo_SelectedNotes}: {ChartEditor.SelectedNotes.Count}";
+            SelectionCountText.IsVisible = ChartEditor.SelectedNotes.Count != 0;
             
             if (ChartEditor.HighlightedElement is null)
             {
