@@ -448,9 +448,7 @@ public class RenderEngine(MainView mainView)
         
         foreach (Note note in visibleNotes)
         {
-            ArcData currentData = GetArc(chart, note);
-            if (note.Size != 60) TruncateArc(ref currentData, true);
-            else TrimCircleArc(ref currentData);
+            ArcData currentData = getArcData(note);
             
             bool currentVisible = note.BeatData.MeasureDecimal >= CurrentMeasureDecimal;
             bool nextVisible = note.NextReferencedNote != null && chart.GetScaledMeasureDecimal(note.NextReferencedNote.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) <= ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal;
@@ -526,15 +524,41 @@ public class RenderEngine(MainView mainView)
             }
         }
         
-        // Second foreach to ensure notes are rendered on top of surfaces.
-        // Reverse so notes further away are rendered first, then closer notes
+        // Second and Third foreach to ensure notes are rendered on top of surfaces.
+        // Reversed so notes further away are rendered first, then closer notes
         // are rendered on top.
         visibleNotes.Reverse();
+
+        // Hold Ends
         foreach (Note note in visibleNotes)
         {
-            ArcData currentData = GetArc(chart, note);
-            if (note.Size != 60) TruncateArc(ref currentData, true);
-            else TrimCircleArc(ref currentData);
+            if (note.NoteType is not NoteType.HoldEnd) continue;
+            
+            ArcData currentData = getArcData(note);
+            
+            if (!RenderMath.InRange(currentData.Scale) || note.BeatData.MeasureDecimal < CurrentMeasureDecimal) continue;
+            
+            canvas.DrawArc(currentData.Rect, currentData.StartAngle, currentData.SweepAngle, false, brushes.GetHoldEndPen(canvasScale * currentData.Scale));
+            
+            if (mainView.ChartEditor.SelectedNotes.Contains(note))
+            {
+                ArcData selectedData = GetArc(chart, note);
+                canvas.DrawArc(selectedData.Rect, selectedData.StartAngle, selectedData.SweepAngle, false, brushes.GetSelectionPen(canvasScale * selectedData.Scale));
+            }
+            
+            if (note == mainView.ChartEditor.HighlightedElement)
+            {
+                ArcData selectedData = GetArc(chart, note);
+                canvas.DrawArc(selectedData.Rect, selectedData.StartAngle, selectedData.SweepAngle, false, brushes.GetHighlightPen(canvasScale * selectedData.Scale));
+            }
+        }
+        
+        // Hold Start/Segment
+        foreach (Note note in visibleNotes)
+        {
+            if (note.NoteType is NoteType.HoldEnd) continue;
+
+            ArcData currentData = getArcData(note);
             
             if (!RenderMath.InRange(currentData.Scale) || note.BeatData.MeasureDecimal < CurrentMeasureDecimal) continue;
             
@@ -555,11 +579,6 @@ public class RenderEngine(MainView mainView)
             {
                 canvas.DrawArc(currentData.Rect, currentData.StartAngle, currentData.SweepAngle, false, brushes.GetNotePen(note, canvasScale * currentData.Scale * 0.5f));
             }
-
-            if (note.NoteType is NoteType.HoldEnd)
-            {
-                canvas.DrawArc(currentData.Rect, currentData.StartAngle, currentData.SweepAngle, false, brushes.GetHoldEndPen(canvasScale * currentData.Scale));
-            }
             
             if (mainView.ChartEditor.SelectedNotes.Contains(note))
             {
@@ -572,6 +591,18 @@ public class RenderEngine(MainView mainView)
                 ArcData selectedData = GetArc(chart, note);
                 canvas.DrawArc(selectedData.Rect, selectedData.StartAngle, selectedData.SweepAngle, false, brushes.GetHighlightPen(canvasScale * selectedData.Scale));
             }
+        }
+
+        return;
+
+        // Preventing a little bit of code reptition. Not sure if this is cleaner or not :^)
+        ArcData getArcData(Note note)
+        {
+            ArcData arc = GetArc(chart, note);
+            if (note.Size != 60) TruncateArc(ref arc, true);
+            else TrimCircleArc(ref arc);
+
+            return arc;
         }
     }
     
