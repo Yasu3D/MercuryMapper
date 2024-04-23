@@ -486,6 +486,8 @@ public class ChartEditor
                 SelectedNotes.Add(reference);
             }
         }
+        
+        mainView.SetSelectionInfo();
     }
     
     // ________________ Highlighting
