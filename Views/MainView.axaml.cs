@@ -1128,8 +1128,6 @@ public partial class MainView : UserControl
         
         ToggleTypeRadio(isMask);
         ToggleBonusTypeRadios(noBonusAvailable, bonusAvailable, rNoteAvailable);
-        
-        Console.WriteLine(ChartEditor.CurrentNoteType);
     }
 
     private void RadioBonusType_IsCheckedChanged(object? sender, RoutedEventArgs e)
@@ -1145,8 +1143,6 @@ public partial class MainView : UserControl
 
         ChartEditor.CurrentBonusType = bonusType;
         ChartEditor.UpdateCursorNoteType();
-        
-        Console.WriteLine(ChartEditor.CurrentNoteType);
     }
 
     private void RadioMaskDirection_IsCheckedChanged(object? sender, RoutedEventArgs e)
@@ -1162,8 +1158,6 @@ public partial class MainView : UserControl
 
         ChartEditor.CurrentMaskDirection = maskDirection;
         ChartEditor.UpdateCursorNoteType();
-        
-        Console.WriteLine(ChartEditor.CurrentNoteType);
     }
 
     private void ButtonGimmickBpmChange_OnClick(object? sender, RoutedEventArgs e)
