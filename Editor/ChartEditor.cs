@@ -702,10 +702,13 @@ public class ChartEditor
     public void EditGimmick()
     {
         if (HighlightedElement is null or Note) return;
+
+        Gimmick highlightedGimmick = (Gimmick)HighlightedElement;
         
-        if (HighlightedElement.GimmickType is GimmickType.BpmChange)
+        if (highlightedGimmick.GimmickType is GimmickType.BpmChange)
         {
-            GimmickView_Bpm gimmickView = new();
+            GimmickView_Bpm gimmickView = new(highlightedGimmick.Bpm);
+            
             ContentDialog dialog = new()
             {
                 Content = gimmickView,
@@ -724,20 +727,19 @@ public class ChartEditor
                     mainView.ShowWarningMessage(Assets.Lang.Resources.Editor_NewChartInvalidBpm);
                     return;
                 }
-                
-                Gimmick oldGimmick = (Gimmick)HighlightedElement;
-                Gimmick newGimmick = new(oldGimmick)
+
+                Gimmick newGimmick = new(highlightedGimmick)
                 {
                     Bpm = (float)gimmickView.BpmNumberBox.Value
                 };
                 
-                UndoRedoManager.InvokeAndPush(new EditGimmick(Chart, oldGimmick, newGimmick));
+                UndoRedoManager.InvokeAndPush(new EditGimmick(Chart, highlightedGimmick, newGimmick));
             });
         }
         
-        if (HighlightedElement.GimmickType is GimmickType.TimeSigChange)
+        if (highlightedGimmick.GimmickType is GimmickType.TimeSigChange)
         {
-            GimmickView_TimeSig gimmickView = new();
+            GimmickView_TimeSig gimmickView = new(highlightedGimmick.TimeSig.Upper, highlightedGimmick.TimeSig.Lower);
             ContentDialog dialog = new()
             {
                 Content = gimmickView,
@@ -756,20 +758,19 @@ public class ChartEditor
                     mainView.ShowWarningMessage(Assets.Lang.Resources.Editor_NewChartInvalidTimeSig);
                     return;
                 }
-                
-                Gimmick oldGimmick = (Gimmick)HighlightedElement;
-                Gimmick newGimmick = new(oldGimmick)
+
+                Gimmick newGimmick = new(highlightedGimmick)
                 {
                     TimeSig = new((int)gimmickView.TimeSigUpperNumberBox.Value, (int)gimmickView.TimeSigLowerNumberBox.Value)
                 };
                 
-                UndoRedoManager.InvokeAndPush(new EditGimmick(Chart, oldGimmick, newGimmick));
+                UndoRedoManager.InvokeAndPush(new EditGimmick(Chart, highlightedGimmick, newGimmick));
             });
         }
         
-        if (HighlightedElement.GimmickType is GimmickType.HiSpeedChange)
+        if (highlightedGimmick.GimmickType is GimmickType.HiSpeedChange)
         {
-            GimmickView_HiSpeed gimmickView = new();
+            GimmickView_HiSpeed gimmickView = new(highlightedGimmick.HiSpeed);
             ContentDialog dialog = new()
             {
                 Content = gimmickView,
@@ -783,13 +784,12 @@ public class ChartEditor
                 ContentDialogResult result = await dialog.ShowAsync();
                 if (result is not ContentDialogResult.Primary) return;
 
-                Gimmick oldGimmick = (Gimmick)HighlightedElement;
-                Gimmick newGimmick = new(oldGimmick)
+                Gimmick newGimmick = new(highlightedGimmick)
                 {
                     HiSpeed = (float)gimmickView.HiSpeedNumberBox.Value
                 };
                 
-                UndoRedoManager.InvokeAndPush(new EditGimmick(Chart, oldGimmick, newGimmick));
+                UndoRedoManager.InvokeAndPush(new EditGimmick(Chart, highlightedGimmick, newGimmick));
             });
         }
 
