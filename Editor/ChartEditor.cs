@@ -961,7 +961,7 @@ public class ChartEditor
         {
             int newPosition = shape ? Cursor.Position : note.Position;
             int newSize = shape ? Cursor.Size : note.Size;
-            NoteType newType = properties && !note.IsHold && CurrentNoteType is not (NoteType.HoldStart or NoteType.HoldStartRNote or NoteType.HoldSegment or NoteType.HoldEnd) ? CurrentNoteType : note.NoteType;
+            NoteType newType = properties ? editNoteType(note, CurrentNoteType) : note.NoteType;
             MaskDirection newDirection = properties ? CurrentMaskDirection : note.MaskDirection;
             
             Note newNote = new(note)
@@ -973,6 +973,23 @@ public class ChartEditor
             };
 
             operationList.Add(new EditNote(note, newNote));
+        }
+
+        NoteType editNoteType(Note note, NoteType currentNoteType)
+        {
+            // EndOfChart, HoldSegment and HoldEnd are not editable.
+            if (note.NoteType is NoteType.EndOfChart or NoteType.HoldSegment or NoteType.HoldEnd) return note.NoteType;
+            
+            // Cannot edit a note into EndOfChart, HoldSegment or HoldEnd.
+            if (currentNoteType is NoteType.EndOfChart or NoteType.HoldSegment or NoteType.HoldEnd) return note.NoteType;
+
+            // HoldStart and HoldStartRNote cannot be edited into other note types.
+            if (note.NoteType is NoteType.HoldStart or NoteType.HoldStartRNote && currentNoteType is not (NoteType.HoldStart or NoteType.HoldStartRNote)) return note.NoteType;
+
+            // Other note types cannot be edited into HoldStart and HoldStartRNote.
+            if (note.NoteType is not (NoteType.HoldStart or NoteType.HoldStartRNote) && currentNoteType is NoteType.HoldStart or NoteType.HoldStartRNote) return note.NoteType;
+            
+            return currentNoteType;
         }
     }
 
