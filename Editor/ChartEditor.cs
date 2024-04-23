@@ -541,6 +541,14 @@ public class ChartEditor
         {
             case ChartEditorState.InsertNote:
             {
+                // Something must have gone terribly wrong and the user is placing hold segments/ends not attached to a hold.
+                // Just force start a new hold as that's what they probably expect to happen.
+                if (CurrentNoteType is NoteType.HoldSegment or NoteType.HoldEnd)
+                {
+                    CurrentNoteType = NoteType.HoldStart;
+                    UpdateCursorNoteType();
+                }
+                
                 bool endOfChart = CurrentNoteType is NoteType.EndOfChart;
             
                 Note note = new()
