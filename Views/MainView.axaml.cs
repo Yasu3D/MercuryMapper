@@ -803,6 +803,8 @@ public partial class MainView : UserControl
         if (p.Properties.IsRightButtonPressed)
         {
             ChartEditor.Cursor.IncrementSize(delta);
+            NumericNoteSize.Value = ChartEditor.Cursor.Size;
+            SliderNoteSize.Value = ChartEditor.Cursor.Size;
             return;
         }
 
