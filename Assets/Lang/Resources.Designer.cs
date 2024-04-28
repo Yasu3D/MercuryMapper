@@ -798,6 +798,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Stitch Hold.
+        /// </summary>
+        public static string Editor_StitchHold {
+            get {
+                return ResourceManager.GetString("Editor_StitchHold", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cancel.
         /// </summary>
         public static string Generic_Cancel {

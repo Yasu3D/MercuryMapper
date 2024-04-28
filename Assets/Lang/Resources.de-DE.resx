@@ -586,4 +586,7 @@ Möchten Sie eine Datei manuell auswählen?</value>
     <data name="Settings_Editor_HighlightPlacedNote" xml:space="preserve">
         <value>Platzierte Note Hervorheben</value>
     </data>
+    <data name="Editor_StitchHold" xml:space="preserve">
+        <value>Hold Verbinden</value>
+    </data>
 </root>

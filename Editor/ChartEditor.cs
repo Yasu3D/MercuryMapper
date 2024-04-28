@@ -1305,6 +1305,28 @@ public class ChartEditor
         
         UndoRedoManager.InvokeAndPush(new InsertHoldSegment(Chart, SelectedNotes, note, highlighted));
     }
+
+    public void StitchHold()
+    {
+        // Must not be in hold placement mode.
+        // Must have only 2 notes selected.
+        // Second Timestamp must be >= First.
+        // First must be HoldEnd.
+        // Second must be HoldStart.
+
+        if (EditorState is ChartEditorState.InsertHold) return;
+        
+        List<Note> sorted = SelectedNotes.OrderBy(x => x.BeatData.FullTick).ToList();
+        Note first = sorted[0];
+        Note second = sorted[1];
+        
+        if (sorted.Count != 2) return;
+        if (first.BeatData.FullTick == second.BeatData.FullTick) return;
+        if (first.NoteType is not NoteType.HoldEnd) return;
+        if (second.NoteType is not (NoteType.HoldStart or NoteType.HoldStartRNote)) return;
+
+        UndoRedoManager.InvokeAndPush(new StitchHold(Chart, first, second));
+    }
     
     public void EditHold()
     {
