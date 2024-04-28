@@ -297,7 +297,7 @@ public class Chart
             }
         }
         
-        IsSaved = setSaved;
+        if (setSaved) IsSaved = true;
         return true;
     }
 
@@ -307,7 +307,8 @@ public class Chart
         Gimmicks.Clear();
         TimeEvents?.Clear();
         TimeScales.Clear();
-            
+
+        FilePath = "";
         AudioFilePath = "";
         Level = 0;
         ClearThreshold = 0.83m;
