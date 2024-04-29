@@ -1310,7 +1310,7 @@ public class ChartEditor
     {
         // Must not be in hold placement mode.
         // Must have only 2 notes selected.
-        // Second Timestamp must be >= First.
+        // Second Timestamp must be > First.
         // First must be HoldEnd.
         // Second must be HoldStart.
 
