@@ -868,15 +868,15 @@ public class ChartEditor
         List<Note> checkedHolds = [];
         List<Note> checkedCurrentHolds = [];
         
-        foreach (Note selected in SelectedNotes.OrderByDescending(x => x.BeatData.FullTick))
-        {
-            addOperation(selected);
-        }
-
         if (SelectedNotes.Count == 0 && HighlightedElement is Note highlighted)
         {
             addOperation(highlighted);
             HighlightedElement = Chart.Notes.LastOrDefault(x => x.BeatData.FullTick <= highlighted.BeatData.FullTick && x != highlighted);
+        }
+        
+        foreach (Note selected in SelectedNotes.OrderByDescending(x => x.BeatData.FullTick))
+        {
+            addOperation(selected);
         }
 
         // Temporarily undo all hold operations, then add them to the operationList
