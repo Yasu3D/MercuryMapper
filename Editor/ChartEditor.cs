@@ -1315,12 +1315,12 @@ public class ChartEditor
         // Second must be HoldStart.
 
         if (EditorState is ChartEditorState.InsertHold) return;
+        if (SelectedNotes.Count != 2) return;
         
         List<Note> sorted = SelectedNotes.OrderBy(x => x.BeatData.FullTick).ToList();
         Note first = sorted[0];
         Note second = sorted[1];
         
-        if (sorted.Count != 2) return;
         if (first.BeatData.FullTick == second.BeatData.FullTick) return;
         if (first.NoteType is not NoteType.HoldEnd) return;
         if (second.NoteType is not (NoteType.HoldStart or NoteType.HoldStartRNote)) return;
