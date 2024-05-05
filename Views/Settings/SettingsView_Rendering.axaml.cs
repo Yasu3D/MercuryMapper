@@ -22,7 +22,7 @@ public partial class SettingsView_Rendering : UserControl
     {
         NumericRefreshRate.Value = RenderConfig.RefreshRate;
         NumericNoteSize.Value = RenderConfig.NoteSize;
-        NumericNoteSpeed.Value = RenderConfig.NoteSpeed;
+        NumericNoteSpeed.Value = (decimal?)RenderConfig.NoteSpeed;
         CheckBoxShowHiSpeed.IsChecked = RenderConfig.ShowHiSpeed;
         ComboGuideLineType.SelectedIndex = RenderConfig.GuideLineType;
         NumericBeatDivision.Value = RenderConfig.BeatDivision;
@@ -53,7 +53,7 @@ public partial class SettingsView_Rendering : UserControl
     
     private void NoteSpeed_OnValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
     {
-        RenderConfig.NoteSpeed = NumericNoteSpeed.Value ?? 4.5m;
+        RenderConfig.NoteSpeed = (double?)NumericNoteSpeed.Value ?? 4.5;
     }
 
     private void ShowHiSpeed_OnIsCheckedChanged(object? sender, RoutedEventArgs e)

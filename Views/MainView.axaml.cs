@@ -57,7 +57,7 @@ public partial class MainView : UserControl
     }
 
     public bool CanShutdown;
-    public const string AppVersion = "v1.3.1";
+    public const string AppVersion = "v1.3.2";
     private const string ConfigPath = "UserConfig.toml";
     
     public UserConfig UserConfig = new();
@@ -109,7 +109,8 @@ public partial class MainView : UserControl
         }
         catch (Exception e)
         {
-            // ignored for now
+            Console.WriteLine(e.Message);
+            // basically ignored for now
         }
     }
 
@@ -403,7 +404,7 @@ public partial class MainView : UserControl
         QuickSettingsSliderHitsound.Value = UserConfig.AudioConfig.HitsoundVolume;
         QuickSettingsSliderMusic.Value = UserConfig.AudioConfig.MusicVolume;
         QuickSettingsNumericBeatDivision.Value = UserConfig.RenderConfig.BeatDivision;
-        QuickSettingsNumericNoteSpeed.Value = UserConfig.RenderConfig.NoteSpeed;
+        QuickSettingsNumericNoteSpeed.Value = (decimal?)UserConfig.RenderConfig.NoteSpeed;
     }
     
     public void SetMinNoteSize(NoteType type)
@@ -772,7 +773,7 @@ public partial class MainView : UserControl
         
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["RenderIncreaseNoteSpeed"]))
         {
-            UserConfig.RenderConfig.NoteSpeed = decimal.Min(UserConfig.RenderConfig.NoteSpeed + 0.1m, 6);
+            UserConfig.RenderConfig.NoteSpeed = double.Min(UserConfig.RenderConfig.NoteSpeed + 0.1, 6);
             File.WriteAllText(ConfigPath, Toml.FromModel(UserConfig));
             RenderEngine.UpdateVisibleTime();
             SetQuickSettings();
@@ -782,7 +783,7 @@ public partial class MainView : UserControl
         }
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["RenderDecreaseNoteSpeed"]))
         {
-            UserConfig.RenderConfig.NoteSpeed = decimal.Max(UserConfig.RenderConfig.NoteSpeed - 0.1m, 1);
+            UserConfig.RenderConfig.NoteSpeed = double.Max((UserConfig.RenderConfig.NoteSpeed - 0.1), 1);
             File.WriteAllText(ConfigPath, Toml.FromModel(UserConfig));
             RenderEngine.UpdateVisibleTime();
             SetQuickSettings();
@@ -1485,26 +1486,30 @@ public partial class MainView : UserControl
     
     private void QuickSettingsNoteSpeed_OnValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
     {
-        UserConfig.RenderConfig.NoteSpeed = QuickSettingsNumericNoteSpeed.Value ?? 4.5m;
+        UserConfig.RenderConfig.NoteSpeed = (double?)QuickSettingsNumericNoteSpeed.Value ?? 4.5;
         RenderEngine.UpdateVisibleTime();
+        ApplySettings();
     }
 
     private void QuickSettingsBeatDivision_OnValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
     {
         UserConfig.RenderConfig.BeatDivision = (int)(QuickSettingsNumericBeatDivision.Value ?? 4);
         RenderEngine.UpdateVisibleTime();
+        ApplySettings();
     }
     
     private void QuickSettingsSliderMusic_OnValueChanged(object? sender, RangeBaseValueChangedEventArgs e)
     {
         UserConfig.AudioConfig.MusicVolume = QuickSettingsSliderMusic.Value;
         AudioManager.UpdateVolume();
+        ApplySettings();
     }
 
     private void QuickSettingsSliderHitsound_OnValueChanged(object? sender, RangeBaseValueChangedEventArgs e)
     {
         UserConfig.AudioConfig.HitsoundVolume = QuickSettingsSliderHitsound.Value;
         AudioManager.UpdateVolume();
+        ApplySettings();
     }
     
     private void ButtonEditSelectionShape_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.EditSelection(true, false);

@@ -17,7 +17,7 @@ public class RenderConfig
 {
     public int RefreshRate { get; set; } = 60;
     public int NoteSize { get; set; } = 3;
-    public decimal NoteSpeed { get; set; } = 4.5m;
+    public double NoteSpeed { get; set; } = 2.5;
     public int GuideLineType { get; set; } = 1;
     public int BeatDivision { get; set; } = 4;
     public bool ShowHiSpeed { get; set; } = true;
