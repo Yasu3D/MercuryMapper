@@ -259,7 +259,7 @@ public class ChartEditor
         }
         
         // Reset Editor State
-        EndHold(false);
+        if (CurrentNoteType is not (NoteType.HoldStart or NoteType.HoldStartRNote or NoteType.HoldSegment or NoteType.HoldEnd)) EndHold(false);
         mainView.SetHoldContextButton(EditorState);
         mainView.ToggleInsertButton();
         mainView.SetMinNoteSize(CurrentNoteType);
@@ -946,7 +946,7 @@ public class ChartEditor
     public void EditSelection(bool shape, bool properties)
     {
         if (!shape && !properties) return;
-        
+
         List<IOperation> operationList = [];
         foreach (Note selected in SelectedNotes)
         {
@@ -1339,7 +1339,7 @@ public class ChartEditor
         mainView.SetHoldContextButton(EditorState);
         mainView.ToggleInsertButton();
         CurrentNoteType = NoteType.HoldEnd;
-        Cursor.MinSize = Note.MinSize(CurrentNoteType);
+        UpdateCursorNoteType();
         
         LastPlacedHold = lastPlacedHold;
         CurrentHoldStart = lastPlacedHold.FirstReference();
