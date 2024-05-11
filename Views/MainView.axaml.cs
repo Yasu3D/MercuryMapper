@@ -301,7 +301,7 @@ public partial class MainView : UserControl
         // This was causing a lot of off-by-one errors on BeatData.Tick values. >:[
         BeatData data = timeUpdateSource is TimeUpdateSource.Timer or TimeUpdateSource.Slider || NumericMeasure.Value is null || NumericBeatValue.Value is null || NumericBeatDivisor.Value is null
             ? ChartEditor.Chart.Timestamp2BeatData(AudioManager.CurrentSong.Position)
-            : new((float)(NumericMeasure.Value + NumericBeatValue.Value / NumericBeatDivisor.Value));
+            : new((int)NumericMeasure.Value, (int)(NumericBeatValue.Value / NumericBeatDivisor.Value * 1920));
         
         // Update Numeric
         if (source is not TimeUpdateSource.Numeric && NumericBeatDivisor.Value != null)

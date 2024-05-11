@@ -39,6 +39,8 @@ public class ChartEditor
     public ChartEditorState EditorState { get; private set; }
     
     public float CurrentMeasureDecimal { get; set; }
+    public BeatData CurrentBeatData => new((int?)mainView.NumericMeasure.Value ?? 0, (int?)(mainView.NumericBeatValue.Value / mainView.NumericBeatDivisor.Value * 1920) ?? 0);
+
     public NoteType CurrentNoteType { get; set; } = NoteType.Touch;
     public BonusType CurrentBonusType { get; set; } = BonusType.None;
     public MaskDirection CurrentMaskDirection { get; set; } = MaskDirection.Clockwise;
@@ -362,14 +364,12 @@ public class ChartEditor
         
         DeselectAllNotes();
         List<Note> copy = DeepCloneNotes(Clipboard);
-
         List<IOperation> operationList = [];
         
         foreach (Note note in copy)
         {
             SelectedNotes.Add(note);
-            note.BeatData = new(CurrentMeasureDecimal + note.BeatData.MeasureDecimal);
-            
+            note.BeatData = new(CurrentBeatData.FullTick + note.BeatData.FullTick);
             operationList.Add(new InsertNote(Chart, SelectedNotes, note));
         }
         
@@ -535,8 +535,6 @@ public class ChartEditor
     {
         if (Chart.StartBpm is null || Chart.StartTimeSig is null) return;
         
-        BeatData data = new(CurrentMeasureDecimal);
-
         switch (EditorState)
         {
             case ChartEditorState.InsertNote:
@@ -553,7 +551,7 @@ public class ChartEditor
             
                 Note note = new()
                 {
-                    BeatData = data,
+                    BeatData = CurrentBeatData,
                     GimmickType = GimmickType.None,
                     MaskDirection = CurrentMaskDirection,
                     NoteType = CurrentNoteType,
@@ -580,12 +578,12 @@ public class ChartEditor
                 // If previous note is hold end, convert it to hold segment
 
                 if (LastPlacedHold is null || CurrentHoldStart is null) return;
-                if (data.FullTick <= CurrentHoldStart.BeatData.FullTick) return;
-                if (data.FullTick <= LastPlacedHold.BeatData.FullTick) return;
+                if (CurrentBeatData.FullTick <= CurrentHoldStart.BeatData.FullTick) return;
+                if (CurrentBeatData.FullTick <= LastPlacedHold.BeatData.FullTick) return;
             
                 Note note = new()
                 {
-                    BeatData = data,
+                    BeatData = CurrentBeatData,
                     GimmickType = GimmickType.None,
                     MaskDirection = CurrentMaskDirection,
                     NoteType = NoteType.HoldEnd,
@@ -1115,7 +1113,7 @@ public class ChartEditor
 
         if (operationList.Count == 0) return;
         
-        foreach (IOperation op in operationList)
+        foreach (IOperation unused in operationList)
         {
             UndoRedoManager.Undo();
         }
