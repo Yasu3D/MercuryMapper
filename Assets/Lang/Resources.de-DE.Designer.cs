@@ -807,6 +807,24 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Autosave gefunden. Zeitstempel:.
+        /// </summary>
+        public static string Generic_AutosaveFound {
+            get {
+                return ResourceManager.GetString("Generic_AutosaveFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Möchten sie diesen öffnen?.
+        /// </summary>
+        public static string Generic_AutosavePrompt {
+            get {
+                return ResourceManager.GetString("Generic_AutosavePrompt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Abbrechen.
         /// </summary>
         public static string Generic_Cancel {

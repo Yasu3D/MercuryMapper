@@ -589,4 +589,10 @@ Möchten Sie eine Datei manuell auswählen?</value>
     <data name="Editor_StitchHold" xml:space="preserve">
         <value>Hold Verbinden</value>
     </data>
+    <data name="Generic_AutosaveFound" xml:space="preserve">
+        <value>Autosave gefunden. Zeitstempel:</value>
+    </data>
+    <data name="Generic_AutosavePrompt" xml:space="preserve">
+        <value>Möchten sie diesen öffnen?</value>
+    </data>
 </root>

@@ -589,4 +589,10 @@ Would you like to manually select a file?</value>
     <data name="Editor_StitchHold" xml:space="preserve">
         <value>Stitch Hold</value>
     </data>
+    <data name="Generic_AutosaveFound" xml:space="preserve">
+        <value>Autosave found. Timestamp:</value>
+    </data>
+    <data name="Generic_AutosavePrompt" xml:space="preserve">
+        <value>Would you like to open it?</value>
+    </data>
 </root>

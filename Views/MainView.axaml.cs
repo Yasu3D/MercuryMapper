@@ -40,11 +40,12 @@ public partial class MainView : UserControl
         ChartEditor = new(this);
         AudioManager = new(this);
         RenderEngine = new(this);
-
+        
         TimeSpan interval = TimeSpan.FromSeconds(1.0 / UserConfig.RenderConfig.RefreshRate);
         UpdateTimer = new(interval, DispatcherPriority.Background, UpdateTimer_Tick) { IsEnabled = false };
         HitsoundTimer = new(TimeSpan.FromMilliseconds(1), DispatcherPriority.Background, HitsoundTimer_Tick) { IsEnabled = false };
-
+        AutosaveTimer = new(TimeSpan.FromMinutes(1), DispatcherPriority.Background, AutosaveTimer_Tick) { IsEnabled = true };
+        
         KeyDownEvent.AddClassHandler<TopLevel>(OnKeyDown, RoutingStrategies.Tunnel, handledEventsToo: true);
         KeyUpEvent.AddClassHandler<TopLevel>(OnKeyUp, RoutingStrategies.Tunnel, handledEventsToo: true);
 
@@ -54,10 +55,12 @@ public partial class MainView : UserControl
         ToggleInsertButton();
         SetSelectionInfo();
         SetQuickSettings();
+        
+        Dispatcher.UIThread.Post(async () => await CheckAutosaves(), DispatcherPriority.Background);
     }
 
     public bool CanShutdown;
-    public const string AppVersion = "v1.3.2";
+    public const string AppVersion = "v1.4.0 [AUTOSAVE TEST BUILD V3]";
     private const string ConfigPath = "UserConfig.toml";
     
     public UserConfig UserConfig = new();
@@ -67,6 +70,7 @@ public partial class MainView : UserControl
     public readonly RenderEngine RenderEngine;
     public DispatcherTimer UpdateTimer;
     public readonly DispatcherTimer HitsoundTimer;
+    public readonly DispatcherTimer AutosaveTimer;
     
     private TimeUpdateSource timeUpdateSource = TimeUpdateSource.None;
     private enum TimeUpdateSource
@@ -209,6 +213,54 @@ public partial class MainView : UserControl
         {
             AudioManager.PlayHitsound(ChartEditor.Chart.Notes[AudioManager.HitsoundNoteIndex]);
         }
+    }
+
+    public void AutosaveTimer_Tick(object? sender, EventArgs e)
+    {
+        if (ChartEditor.Chart.IsSaved) return;
+        
+        string filepath = Path.GetTempFileName().Replace(".tmp",".autosave.mer");
+        ChartEditor.Chart.WriteFile(filepath, ChartWriteType.Editor);
+        
+        Console.WriteLine(filepath);
+    }
+
+    private async Task CheckAutosaves()
+    {
+        string[] autosaves = Directory.GetFiles(Path.GetTempPath(), "*.autosave.mer").OrderByDescending(File.GetCreationTime).ToArray();
+        if (autosaves.Length == 0) return;
+        
+        ContentDialogResult result = await showSelectAudioPrompt(File.GetCreationTime(autosaves[0]).ToString("yyyy-MM-dd HH:mm:ss"));
+        if (result != ContentDialogResult.Primary) return;
+
+        OpenChart(autosaves[0]);
+        ChartEditor.Chart.IsSaved = false; // Force saved prompt
+        ChartEditor.Chart.IsNew = true; // Set new to force a new save.
+        ChartEditor.Chart.FilePath = ""; // Clear path to not overwrite temp file.
+        
+        ClearAutosaves();
+        return;
+
+        Task<ContentDialogResult> showSelectAudioPrompt(string timestamp)
+        {
+            ContentDialog dialog = new()
+            {
+                Title = $"{Assets.Lang.Resources.Generic_AutosaveFound} {timestamp}",
+                Content = Assets.Lang.Resources.Generic_AutosavePrompt,
+                PrimaryButtonText = Assets.Lang.Resources.Generic_Yes,
+                CloseButtonText = Assets.Lang.Resources.Generic_No
+            };
+            
+            return dialog.ShowAsync();
+        }
+    }
+
+    private static void ClearAutosaves()
+    {
+        Console.WriteLine("Clearing Autosaves");
+        
+        string[] autosaves = Directory.GetFiles(Path.GetTempPath(), "*.autosave.mer");
+        foreach (string file in autosaves) File.Delete(file);
     }
     
     /// <summary>
@@ -1013,6 +1065,7 @@ public partial class MainView : UserControl
                 SetSongPositionSliderMaximum();
                 UpdateAudioFilepath();
                 RenderEngine.UpdateVisibleTime();
+                ClearAutosaves();
             }
         });
     }
@@ -1031,12 +1084,12 @@ public partial class MainView : UserControl
     
     private async void MenuItemSave_OnClick(object? sender, RoutedEventArgs e)
     {
-        await SaveFile(ChartEditor.Chart.IsNew);
+        await SaveFile(ChartEditor.Chart.IsNew, ChartEditor.Chart.FilePath);
     }
 
     private async void MenuItemSaveAs_OnClick(object? sender, RoutedEventArgs e)
     {
-        await SaveFile(true);
+        await SaveFile(true, ChartEditor.Chart.FilePath);
     }
 
     private async void MenuItemExportMercury_OnClick(object? sender, RoutedEventArgs e)
@@ -1658,7 +1711,7 @@ public partial class MainView : UserControl
 
         return result switch
         {
-            ContentDialogResult.Primary => await SaveFile(true),
+            ContentDialogResult.Primary => await SaveFile(true, ChartEditor.Chart.FilePath),
             ContentDialogResult.Secondary => true,
             _ => false
         };
@@ -1806,10 +1859,8 @@ public partial class MainView : UserControl
         RenderEngine.UpdateVisibleTime();
     }
     
-    public async Task<bool> SaveFile(bool openFilePicker)
+    public async Task<bool> SaveFile(bool openFilePicker, string filepath)
     {
-        string filepath = ChartEditor.Chart.FilePath;
-        
         if (openFilePicker || string.IsNullOrEmpty(filepath))
         {
             IStorageFile? file = await SaveChartFilePicker(ChartWriteType.Editor);
@@ -1823,6 +1874,8 @@ public partial class MainView : UserControl
         ChartEditor.Chart.WriteFile(filepath, ChartWriteType.Editor);
         ChartEditor.Chart.FilePath = filepath;
         ChartEditor.Chart.IsNew = false;
+        ChartEditor.Chart.IsSaved = true;
+        ClearAutosaves();
         return true;
     }
 
@@ -1834,6 +1887,6 @@ public partial class MainView : UserControl
         string filepath = file.Path.LocalPath;
         
         if (string.IsNullOrEmpty(filepath)) return;
-        ChartEditor.Chart.WriteFile(filepath, chartWriteType, false);
+        ChartEditor.Chart.WriteFile(filepath, chartWriteType);
     }
 }
