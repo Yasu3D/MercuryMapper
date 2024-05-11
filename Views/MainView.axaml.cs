@@ -60,7 +60,7 @@ public partial class MainView : UserControl
     }
 
     public bool CanShutdown;
-    public const string AppVersion = "v1.4.0 [AUTOSAVE TEST BUILD V3]";
+    public const string AppVersion = "v1.4.0";
     private const string ConfigPath = "UserConfig.toml";
     
     public UserConfig UserConfig = new();
@@ -1160,6 +1160,27 @@ public partial class MainView : UserControl
         });
     }
     
+    private async void MenuItemFixOffByOne_OnClick(object? sender, RoutedEventArgs e)
+    {
+        ContentDialogResult result = await showPrompt();
+        if (result != ContentDialogResult.Primary) return;
+        ChartEditor.FixOffByOneErrors();
+        return;
+
+        Task<ContentDialogResult> showPrompt()
+        {
+            ContentDialog dialog = new()
+            {
+                Title = Assets.Lang.Resources.Tools_FixOffByOneTitle,
+                Content = Assets.Lang.Resources.Tools_FixOffByOneDescription,
+                PrimaryButtonText = Assets.Lang.Resources.Generic_Yes,
+                CloseButtonText = Assets.Lang.Resources.Generic_No
+            };
+            
+            return dialog.ShowAsync();
+        }
+    }
+
     private void RadioNoteType_IsCheckedChanged(object? sender, RoutedEventArgs e)
     {
         if (RadioNoteMaskAdd?.IsChecked == null || RadioNoteMaskRemove?.IsChecked == null) return;

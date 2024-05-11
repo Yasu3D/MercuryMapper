@@ -595,4 +595,15 @@ Möchten Sie eine Datei manuell auswählen?</value>
     <data name="Generic_AutosavePrompt" xml:space="preserve">
         <value>Möchten sie diesen öffnen?</value>
     </data>
+    <data name="Menu_FixOffByOneErrors" xml:space="preserve">
+        <value>Off-By-One Fehler korrigieren</value>
+    </data>
+    <data name="Tools_FixOffByOneTitle" xml:space="preserve">
+        <value>Off-By-One Fehler beheben</value>
+    </data>
+    <data name="Tools_FixOffByOneDescription" xml:space="preserve">
+        <value>Dies quantisiert alle Noten auf gemeinsame Taktteilungen, um Fehler wie eine Note auf [0 1919] statt [1 0] zu korrigieren.
+
+Fortfahren?</value>
+    </data>
 </root>

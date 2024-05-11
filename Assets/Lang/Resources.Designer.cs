@@ -1105,6 +1105,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Fix off-by-one Errors.
+        /// </summary>
+        public static string Menu_FixOffByOneErrors {
+            get {
+                return ResourceManager.GetString("Menu_FixOffByOneErrors", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mirror Chart.
         /// </summary>
         public static string Menu_MirrorChart {
@@ -1776,6 +1785,26 @@ namespace MercuryMapper.Assets.Lang {
         public static string Settings_ShowSpeedChanges {
             get {
                 return ResourceManager.GetString("Settings_ShowSpeedChanges", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This will quantize all notes to common beat divisions to fix errors like a note on [0 1919] instead of [1 0].
+        ///
+        ///Continue?.
+        /// </summary>
+        public static string Tools_FixOffByOneDescription {
+            get {
+                return ResourceManager.GetString("Tools_FixOffByOneDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fix off-by-one Error.
+        /// </summary>
+        public static string Tools_FixOffByOneTitle {
+            get {
+                return ResourceManager.GetString("Tools_FixOffByOneTitle", resourceCulture);
             }
         }
         

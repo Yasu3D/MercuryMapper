@@ -1445,4 +1445,38 @@ public class ChartEditor
             operationList.Add(new EditNote(note, newNote));
         }
     }
+
+    public void FixOffByOneErrors()
+    {
+        if (Chart.Notes.Count == 0 && Chart.Gimmicks.Count == 0) return;
+
+        List<IOperation> operationList = [];
+        
+        foreach (Note note in Chart.Notes.Where(x => x.NoteType is not NoteType.HoldSegment)) addOperationNote(note);
+        foreach (Gimmick gimmick in Chart.Gimmicks) addOperationGimmick(gimmick);
+        
+        if (operationList.Count == 0) return;
+        UndoRedoManager.InvokeAndPush(new CompositeOperation(operationList));
+        Chart.IsSaved = false;
+        return;
+
+        void addOperationNote(Note note)
+        {
+            Note newNote = new(note) { BeatData = new(quantize(note)) };
+            operationList.Add(new EditNote(note, newNote));
+        }
+
+        void addOperationGimmick(Gimmick gimmick)
+        {
+            Gimmick newGimmick = new(gimmick) { BeatData = new(quantize(gimmick)) };
+            operationList.Add(new EditGimmick(Chart, gimmick, newGimmick));
+        }
+
+        int quantize(ChartElement element)
+        {
+            int nearest = (int)float.Round(element.BeatData.FullTick / 10.0f) * 10;
+            int difference = int.Abs(element.BeatData.FullTick - nearest);
+            return difference != 1 ? element.BeatData.FullTick : nearest;
+        }
+    }
 }

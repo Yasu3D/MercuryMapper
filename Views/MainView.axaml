@@ -78,6 +78,8 @@
                               Click="MenuItemMirrorChart_OnClick"/>
                     <MenuItem Header="{x:Static lang:Resources.Menu_ShiftChart}" Name="MenuItemShiftChart"
                               Click="MenuItemShiftChart_OnClick"/>
+                    <MenuItem Header="{x:Static lang:Resources.Menu_FixOffByOneErrors}" Name="MenuItemFixOffByOne"
+                              Click="MenuItemFixOffByOne_OnClick"/>
                 </MenuItem>
             </Menu>
             <Panel Grid.Column="1" Background="{DynamicResource TitleBar}" IsHitTestVisible="False"/>

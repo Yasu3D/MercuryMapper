@@ -1105,6 +1105,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Off-By-One Fehler korrigieren.
+        /// </summary>
+        public static string Menu_FixOffByOneErrors {
+            get {
+                return ResourceManager.GetString("Menu_FixOffByOneErrors", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Chart Spiegeln.
         /// </summary>
         public static string Menu_MirrorChart {
@@ -1776,6 +1785,26 @@ namespace MercuryMapper.Assets.Lang {
         public static string Settings_ShowSpeedChanges {
             get {
                 return ResourceManager.GetString("Settings_ShowSpeedChanges", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dies quantisiert alle Noten auf gemeinsame Taktteilungen, um Fehler wie eine Note auf [0 1919] statt [1 0] zu korrigieren.
+        ///
+        ///Fortfahren?.
+        /// </summary>
+        public static string Tools_FixOffByOneDescription {
+            get {
+                return ResourceManager.GetString("Tools_FixOffByOneDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Off-By-One Fehler beheben.
+        /// </summary>
+        public static string Tools_FixOffByOneTitle {
+            get {
+                return ResourceManager.GetString("Tools_FixOffByOneTitle", resourceCulture);
             }
         }
         
