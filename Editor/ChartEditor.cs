@@ -1339,6 +1339,7 @@ public class ChartEditor
         mainView.SetHoldContextButton(EditorState);
         mainView.ToggleInsertButton();
         CurrentNoteType = NoteType.HoldEnd;
+        Cursor.MinSize = Note.MinSize(CurrentNoteType);
         
         LastPlacedHold = lastPlacedHold;
         CurrentHoldStart = lastPlacedHold.FirstReference();
