@@ -42,6 +42,7 @@ public class Chart
     public bool LoadFile(string filepath)
     {
         if (filepath == "") return false;
+        bool isMer = Path.GetExtension(filepath) == ".mer";
         
         Stream stream = File.OpenRead(filepath);
 
@@ -56,7 +57,7 @@ public class Chart
         {
             Clear();
 
-            FilePath = filepath;
+            FilePath = isMer ? "" : filepath;
             
             readTags(merFile);
             readChartElements(merFile);
@@ -69,7 +70,7 @@ public class Chart
         }
         
         IsSaved = true;
-        IsNew = false;
+        IsNew = isMer;
         return true;
         
         void readTags(List<string> lines)
