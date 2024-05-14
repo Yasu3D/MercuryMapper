@@ -867,11 +867,8 @@ public partial class MainView : UserControl
             return;
         }
 
-        // Unused at the moment - used to be cursor depth
-        if (e.KeyModifiers.HasFlag(KeyModifiers.Control)) { }
-        
         // Shift Beat Divisor
-        else if (e.KeyModifiers.HasFlag(KeyModifiers.Shift))
+        if (e.KeyModifiers.HasFlag(KeyModifiers.Control))
         {
             decimal value = NumericBeatDivisor.Value ?? 16;
             NumericBeatDivisor.Value = Math.Clamp(value + delta, NumericBeatDivisor.Minimum, NumericBeatDivisor.Maximum);
