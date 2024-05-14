@@ -39,7 +39,7 @@ public class ChartEditor
     public ChartEditorState EditorState { get; private set; }
     
     public float CurrentMeasureDecimal { get; set; }
-    public BeatData CurrentBeatData => new((int?)mainView.NumericMeasure.Value ?? 0, (int?)(mainView.NumericBeatValue.Value / mainView.NumericBeatDivisor.Value * 1920) ?? 0);
+    public BeatData CurrentBeatData => new((int?)mainView.NumericMeasure.Value ?? 0, (int?)(mainView.NumericBeatValue.Value * 1920 / mainView.NumericBeatDivisor.Value) ?? 0);
 
     public NoteType CurrentNoteType { get; set; } = NoteType.Touch;
     public BonusType CurrentBonusType { get; set; } = BonusType.None;
