@@ -49,12 +49,12 @@ public class RenderEngine(MainView mainView)
         }
         
         DrawMeasureLines(canvas, Chart);
-        if (!IsPlaying || (IsPlaying && RenderConfig.ShowGimmickNotesDuringPlayback)) DrawGimmickNotes(canvas, Chart);
-        if (!IsPlaying || (IsPlaying && RenderConfig.ShowMaskDuringPlayback)) DrawMaskNotes(canvas, Chart);
-        DrawSyncs(canvas, Chart); // Hold Surfaces normally render under syncs but the syncs poke into the note a bit, and it looks shit.
-        DrawHolds(canvas, Chart);
-        DrawNotes(canvas, Chart);
-        DrawArrows(canvas, Chart);
+        if ((!IsPlaying || (IsPlaying && RenderConfig.ShowGimmickNotesDuringPlayback)) && mainView.ChartEditor.LayerGimmickActive) DrawGimmickNotes(canvas, Chart);
+        if ((!IsPlaying || (IsPlaying && RenderConfig.ShowMaskDuringPlayback)) && mainView.ChartEditor.LayerMaskActive) DrawMaskNotes(canvas, Chart);
+        if (mainView.ChartEditor.LayerNoteActive) DrawSyncs(canvas, Chart); // Hold Surfaces normally render under syncs but the syncs poke into the note a bit, and it looks shit.
+        if (mainView.ChartEditor.LayerNoteActive) DrawHolds(canvas, Chart);
+        if (mainView.ChartEditor.LayerNoteActive) DrawNotes(canvas, Chart);
+        if (mainView.ChartEditor.LayerNoteActive) DrawArrows(canvas, Chart);
     }
 
     // ________________
@@ -88,7 +88,7 @@ public class RenderEngine(MainView mainView)
     
     // ________________
 
-    public ChartElement? GetChartElementAtPointer(Chart chart, SKPoint point, bool includeGimmicks)
+    public ChartElement? GetChartElementAtPointer(Chart chart, SKPoint point, bool includeGimmicks, bool layerNote, bool layerMask, bool layerGimmick)
     {
         int clickPosition = MathExtensions.GetThetaNotePosition(point.X, point.Y);
         float clickRadius = (1 - MathExtensions.InversePerspective(point.Length)) * visibleDistanceMeasureDecimal;
@@ -110,7 +110,11 @@ public class RenderEngine(MainView mainView)
 
         List<Gimmick> clickedGimmicks = chart.Gimmicks.Where(x => Math.Abs(x.BeatData.MeasureDecimal - measureDecimal) < 0.005f).ToList();
 
-        return includeGimmicks && clickedGimmicks.Count > 0 ? clickedGimmicks[0] : clickedNotes.MinBy(x => x.IsHold);
+        if (layerGimmick && includeGimmicks && clickedGimmicks.Count > 0) return clickedGimmicks[0];
+        if (layerMask && !layerNote) return clickedNotes.FirstOrDefault(x => x.IsMask);
+        if (!layerMask && layerNote) return clickedNotes.FirstOrDefault(x => !x.IsMask);
+        
+        return clickedNotes.FirstOrDefault();
     }
     
     // ________________

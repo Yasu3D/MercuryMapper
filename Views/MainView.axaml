@@ -234,6 +234,23 @@
                                         Content="{x:Static lang:Resources.Gimmick_Reverse}" />
                             </StackPanel>
                         </Border>
+                        
+                        <Border ClipToBounds="True" Classes="Outline" Margin="0,6,0,0">
+                            <StackPanel>
+                                <ToggleButton Name="ToggleNoteLayer" Classes="CompactButton" IsCheckedChanged="ToggleNoteLayer_IsCheckedChanged"
+                                        Content="{x:Static lang:Resources.Editor_LayerNote}" IsChecked="True"/>
+                                    
+                                <Separator Margin="0"/>
+                                    
+                                <ToggleButton Name="ToggleMaskLayer" Classes="CompactButton" IsCheckedChanged="ToggleMaskLayer_IsCheckedChanged"
+                                              Content="{x:Static lang:Resources.Editor_LayerMask}" IsChecked="True"/>
+                                    
+                                <Separator Margin="0"/>
+                                    
+                                <ToggleButton Name="ToggleGimmickLayer" Classes="CompactButton" IsCheckedChanged="ToggleGimmickLayer_IsCheckedChanged"
+                                              Content="{x:Static lang:Resources.Editor_LayerGimmick}" IsChecked="True"/>
+                            </StackPanel>
+                        </Border>
                     </StackPanel>
                 </Grid>
             </ScrollViewer>

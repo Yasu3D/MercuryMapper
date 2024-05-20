@@ -32,14 +32,13 @@ public partial class MainView : UserControl
 {
     public MainView()
     {
-        InitializeComponent();
-        
-        LoadUserConfig();
-        
         KeybindEditor = new(UserConfig);
         ChartEditor = new(this);
         AudioManager = new(this);
         RenderEngine = new(this);
+        
+        InitializeComponent();
+        LoadUserConfig();
         
         TimeSpan interval = TimeSpan.FromSeconds(1.0 / UserConfig.RenderConfig.RefreshRate);
         UpdateTimer = new(interval, DispatcherPriority.Background, UpdateTimer_Tick) { IsEnabled = false };
@@ -960,7 +959,7 @@ public partial class MainView : UserControl
         if (modifiers.HasFlag(KeyModifiers.Shift))
         {
             // Selecting
-            if ((Note?)RenderEngine.GetChartElementAtPointer(ChartEditor.Chart, point, false) is not { } note) return;
+            if ((Note?)RenderEngine.GetChartElementAtPointer(ChartEditor.Chart, point, false, ChartEditor.LayerNoteActive, ChartEditor.LayerMaskActive, ChartEditor.LayerGimmickActive) is not { } note) return;
             
             if (pointerMoved && note == ChartEditor.LastSelectedNote) return;
             
@@ -970,7 +969,7 @@ public partial class MainView : UserControl
         else if (modifiers.HasFlag(KeyModifiers.Control))
         {
             // Highlighting
-            if (RenderEngine.GetChartElementAtPointer(ChartEditor.Chart, point, true) is not { } note) return;
+            if (RenderEngine.GetChartElementAtPointer(ChartEditor.Chart, point, true, ChartEditor.LayerNoteActive, ChartEditor.LayerMaskActive, ChartEditor.LayerGimmickActive) is not { } note) return;
             
             if (pointerMoved && note == ChartEditor.HighlightedElement) return;
             
@@ -1625,6 +1624,24 @@ public partial class MainView : UserControl
     private void ButtonEditGimmick_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.EditGimmick();
 
     private void ButtonDeleteGimmick_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.DeleteGimmick();
+    
+    private void ToggleNoteLayer_IsCheckedChanged(object? sender, RoutedEventArgs e)
+    {
+        if (sender is not ToggleButton button) return;
+        ChartEditor.LayerNoteActive = button.IsChecked ?? true;
+    }
+    
+    private void ToggleMaskLayer_IsCheckedChanged(object? sender, RoutedEventArgs e)
+    {
+        if (sender is not ToggleButton button) return;
+        ChartEditor.LayerMaskActive = button.IsChecked ?? true;
+    }
+    
+    private void ToggleGimmickLayer_IsCheckedChanged(object? sender, RoutedEventArgs e)
+    {
+        if (sender is not ToggleButton button) return;
+        ChartEditor.LayerGimmickActive = button.IsChecked ?? true;
+    }
     
     // ________________ UI Dialogs & Misc
     

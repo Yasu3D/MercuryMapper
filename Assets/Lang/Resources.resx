@@ -606,4 +606,13 @@ Would you like to manually select a file?</value>
 
 Continue?</value>
     </data>
+    <data name="Editor_LayerNote" xml:space="preserve">
+        <value>Layer: Note</value>
+    </data>
+    <data name="Editor_LayerMask" xml:space="preserve">
+        <value>Layer: Mask</value>
+    </data>
+    <data name="Editor_LayerGimmick" xml:space="preserve">
+        <value>Layer: Gimmick</value>
+    </data>
 </root>

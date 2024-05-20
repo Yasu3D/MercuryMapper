@@ -564,6 +564,33 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Layer: Gimmick.
+        /// </summary>
+        public static string Editor_LayerGimmick {
+            get {
+                return ResourceManager.GetString("Editor_LayerGimmick", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Layer: Mask.
+        /// </summary>
+        public static string Editor_LayerMask {
+            get {
+                return ResourceManager.GetString("Editor_LayerMask", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Layer: Note.
+        /// </summary>
+        public static string Editor_LayerNote {
+            get {
+                return ResourceManager.GetString("Editor_LayerNote", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mask Direction.
         /// </summary>
         public static string Editor_MaskDirection {

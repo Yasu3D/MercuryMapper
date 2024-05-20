@@ -45,6 +45,10 @@ public class ChartEditor
     public BonusType CurrentBonusType { get; set; } = BonusType.None;
     public MaskDirection CurrentMaskDirection { get; set; } = MaskDirection.Clockwise;
 
+    public bool LayerNoteActive = true;
+    public bool LayerMaskActive = true;
+    public bool LayerGimmickActive = true;
+    
     public List<Note> SelectedNotes { get; } = [];
     public Note? LastSelectedNote;
     public ChartElement? HighlightedElement;
