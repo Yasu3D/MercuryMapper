@@ -51,7 +51,7 @@ public class RenderEngine(MainView mainView)
         DrawMeasureLines(canvas, Chart);
         if (!IsPlaying || (IsPlaying && RenderConfig.ShowGimmickNotesDuringPlayback)) DrawGimmickNotes(canvas, Chart);
         if (!IsPlaying || (IsPlaying && RenderConfig.ShowMaskDuringPlayback)) DrawMaskNotes(canvas, Chart);
-        DrawSyncs(canvas, Chart); // Hold Surfaces normally render under syncs but the syncs poke into the note a bit and it looks shit.
+        DrawSyncs(canvas, Chart); // Hold Surfaces normally render under syncs but the syncs poke into the note a bit, and it looks shit.
         DrawHolds(canvas, Chart);
         DrawNotes(canvas, Chart);
         DrawArrows(canvas, Chart);
@@ -431,104 +431,159 @@ public class RenderEngine(MainView mainView)
         }
     }
 
+    /// <summary>
+    /// Performs better than the original by drawing hold-by-hold, not segment-by-segment. Saves dozens, if not hundreds of calls to SkiaSharp and fixes the tv-static-looking seams on dense holds. <br/>
+    /// This first batches notes into a "hold" struct, then draws each hold.
+    /// </summary>
     private void DrawHolds(SKCanvas canvas, Chart chart)
     {
-        // Long-ass line of code. Not a fan but idk how else to write this where it still makes sense. TL;DR:
-        //
-        // IsHold &&
-        // (Note is in vision range || Next note it's referencing is in front of vision range)
-        List<Note> visibleNotes = chart.Notes.Where(x =>
-            x.IsHold &&
-            (
-                (RenderMath.GreaterAlmostEqual(x.BeatData.MeasureDecimal, CurrentMeasureDecimal) && chart.GetScaledMeasureDecimal(x.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) <= ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal)
-                ||
-                (x.NextReferencedNote != null && x.BeatData.MeasureDecimal < CurrentMeasureDecimal && chart.GetScaledMeasureDecimal(x.NextReferencedNote.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) > ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal)
-            )
-        ).ToList();
+        // The long line of code returns, even for the optimized version.
+        // A note counts as "visible" if:
+        //    it's a hold
+        // && it's in vision range
+        // || it's behind camera and next reference is in front of camera outside of vision range
+        List<Note> visibleNotes = chart.Notes.Where(
+            x => x.IsHold 
+            && (RenderMath.GreaterAlmostEqual(x.BeatData.MeasureDecimal, CurrentMeasureDecimal) && chart.GetScaledMeasureDecimal(x.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) <= ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal)
+            || (x.BeatData.MeasureDecimal < CurrentMeasureDecimal && x.NextReferencedNote != null && chart.GetScaledMeasureDecimal(x.NextReferencedNote.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) > ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal)
+            ).ToList();
+        
+        HashSet<Note> checkedNotes = [];
+        List<Hold> holdNotes = [];
         
         foreach (Note note in visibleNotes)
         {
-            ArcData currentData = getArcData(note);
-            
-            bool currentVisible = note.BeatData.MeasureDecimal >= CurrentMeasureDecimal;
-            bool nextVisible = note.NextReferencedNote != null && chart.GetScaledMeasureDecimal(note.NextReferencedNote.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) <= ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal;
-            bool prevVisible = note.PrevReferencedNote != null && note.PrevReferencedNote.BeatData.MeasureDecimal >= CurrentMeasureDecimal;
-            
-            if (currentVisible && nextVisible)
+            if (checkedNotes.Contains(note)) continue;
+
+            Hold hold = new();
+
+            foreach (Note reference in note.References())
             {
-                Note nextNote = note.NextReferencedNote!;
-                ArcData nextData = GetArc(chart, nextNote);
-                
-                if (nextNote.Size != 60) TruncateArc(ref nextData, true);
-                else TrimCircleArc(ref nextData);
-                
-                FlipArc(ref nextData);
-                
-                SKPath path = new(); 
-                path.ArcTo(currentData.Rect, currentData.StartAngle, currentData.SweepAngle, true);
-                path.ArcTo(nextData.Rect, nextData.StartAngle, nextData.SweepAngle, false);
-                
-                canvas.DrawPath(path, brushes.HoldFill);
+                if (visibleNotes.Contains(reference)) hold.Segments.Add(reference);
+                checkedNotes.Add(reference);
             }
+            
+            holdNotes.Add(hold);
+        }
 
-            if (currentVisible && !prevVisible && note.PrevReferencedNote != null)
+        // The brainfuck. If there's any questions, ask me, and I'll help you decipher it.
+        foreach (Hold hold in holdNotes)
+        {
+            SKPath path = new();
+
+            // This must be one of them darn damn dangit hold notes where the first segment is behind the camera
+            // and the second is outside of vision range. Aw shucks, we have to do some extra special work.
+            if (hold.Segments[0].BeatData.MeasureDecimal < CurrentMeasureDecimal && hold.Segments.Count == 1)
             {
-                Note prevNote = note.PrevReferencedNote;
-                ArcData prevData = GetArc(chart, prevNote);
-                
-                if (prevNote.Size != 60) TruncateArc(ref prevData, true);
-                else TrimCircleArc(ref prevData);
+                Note prev = hold.Segments[0];
+                Note? next = prev.NextReferencedNote;
 
-                float ratio = MathExtensions.InverseLerp(CurrentMeasureDecimal, note.BeatData.MeasureDecimal, prevNote.BeatData.MeasureDecimal);
+                if (next == null) continue;
                 
-                if (float.Abs(currentData.StartAngle - prevData.StartAngle) > 180)
+                ArcData prevData = GetArc(chart, prev);
+                ArcData nextData = GetArc(chart, next);
+                
+                if (prev.Size != 60) TruncateArc(ref prevData, true);
+                else TrimCircleArc(ref prevData);
+                
+                if (next.Size != 60) TruncateArc(ref nextData, true);
+                else TrimCircleArc(ref nextData);
+
+                float ratio = MathExtensions.InverseLerp(CurrentMeasureDecimal, next.BeatData.MeasureDecimal, prev.BeatData.MeasureDecimal);
+                
+                if (float.Abs(nextData.StartAngle - prevData.StartAngle) > 180)
                 {
-                    if (currentData.StartAngle > prevData.StartAngle) currentData.StartAngle -= 360;
+                    if (nextData.StartAngle > prevData.StartAngle) nextData.StartAngle -= 360;
                     else prevData.StartAngle -= 360;
                 }
                 
-                ArcData intermediateData = new(canvasRect, 1, MathExtensions.Lerp(currentData.StartAngle, prevData.StartAngle, ratio), MathExtensions.Lerp(currentData.SweepAngle, prevData.SweepAngle, ratio));
-                FlipArc(ref intermediateData);
-                
-                SKPath path = new(); 
-                path.ArcTo(currentData.Rect, currentData.StartAngle, currentData.SweepAngle, true);
+                ArcData intermediateData = new(canvasRect, 1, MathExtensions.Lerp(nextData.StartAngle, prevData.StartAngle, ratio), MathExtensions.Lerp(nextData.SweepAngle, prevData.SweepAngle, ratio));
                 path.ArcTo(intermediateData.Rect, intermediateData.StartAngle, intermediateData.SweepAngle, false);
-                
+                path.LineTo(canvasCenter);
                 canvas.DrawPath(path, brushes.HoldFill);
-            }
-
-            if (currentVisible && !nextVisible && note.NextReferencedNote != null )
-            {
-                canvas.DrawArc(currentData.Rect, currentData.StartAngle, currentData.SweepAngle, true, brushes.HoldFill);
+                
+                continue;
             }
             
-            if (!currentVisible && !nextVisible && note.NextReferencedNote != null)
+            for (int i = 0; i < hold.Segments.Count; i++)
             {
-                Note nextNote = note.NextReferencedNote;
-                ArcData nextData = GetArc(chart, nextNote);
+                Note note = hold.Segments[i];
+                ArcData currentData = getArcData(note);
                 
-                if (nextNote.Size != 60) TruncateArc(ref nextData, true);
-                else TrimCircleArc(ref nextData);
-                
-                float ratio = MathExtensions.InverseLerp(CurrentMeasureDecimal, note.BeatData.MeasureDecimal, nextNote.BeatData.MeasureDecimal);
-                
-                if (float.Abs(currentData.StartAngle - nextData.StartAngle) > 180)
+                // First part of the path. Must be an arc.
+                if (i == 0)
                 {
-                    if (currentData.StartAngle > nextData.StartAngle) currentData.StartAngle -= 360;
-                    else nextData.StartAngle -= 360;
+                    // If the hold start is visible there's no need to interpolate.
+                    if (note.NoteType is NoteType.HoldStart or NoteType.HoldStartRNote)
+                    {
+                        path.ArcTo(currentData.Rect, currentData.StartAngle, currentData.SweepAngle, true);
+                    }
+                    
+                    // If it's a segment, there must be an earlier note off-screen.
+                    else if (note.PrevReferencedNote != null)
+                    {
+                        Note prevNote = note.PrevReferencedNote;
+                        ArcData prevData = GetArc(chart, prevNote);
+                
+                        if (prevNote.Size != 60) TruncateArc(ref prevData, true);
+                        else TrimCircleArc(ref prevData);
+
+                        float ratio = MathExtensions.InverseLerp(CurrentMeasureDecimal, note.BeatData.MeasureDecimal, prevNote.BeatData.MeasureDecimal);
+                
+                        if (float.Abs(currentData.StartAngle - prevData.StartAngle) > 180)
+                        {
+                            if (currentData.StartAngle > prevData.StartAngle) currentData.StartAngle -= 360;
+                            else prevData.StartAngle -= 360;
+                        }
+                
+                        ArcData intermediateData = new(canvasRect, 1, MathExtensions.Lerp(currentData.StartAngle, prevData.StartAngle, ratio), MathExtensions.Lerp(currentData.SweepAngle, prevData.SweepAngle, ratio));
+                        path.ArcTo(intermediateData.Rect, intermediateData.StartAngle, intermediateData.SweepAngle, false);
+                    }
                 }
                 
-                ArcData intermediateData = new(canvasRect, 1, MathExtensions.Lerp(currentData.StartAngle, nextData.StartAngle, ratio), MathExtensions.Lerp(currentData.SweepAngle, nextData.SweepAngle, ratio));
+                if ((i == 0 && note.NoteType is NoteType.HoldSegment or NoteType.HoldEnd) || (i != 0 && i != hold.Segments.Count - 1))
+                {
+                    // Line to right edge
+                    path.LineTo(RenderMath.GetPointOnArc(canvasCenter, currentData.Rect.Width * 0.5f, currentData.StartAngle + currentData.SweepAngle));
+                } 
                 
-                canvas.DrawArc(intermediateData.Rect, intermediateData.StartAngle, intermediateData.SweepAngle, true, brushes.HoldFill);
+                if (i == hold.Segments.Count - 1)
+                {
+                    // If there's a next note there can't be a final arc.
+                    if (note.NextReferencedNote != null)
+                    {
+                        // Line to right edge
+                        path.LineTo(RenderMath.GetPointOnArc(canvasCenter, currentData.Rect.Width * 0.5f, currentData.StartAngle + currentData.SweepAngle));
+                        path.LineTo(canvasCenter);
+                    }
+                    else
+                    {
+                        FlipArc(ref currentData);
+                        path.ArcTo(currentData.Rect, currentData.StartAngle, currentData.SweepAngle, false);
+                    }
+                }
             }
+
+            // >= 0 because last segment in the backwards sequence (so the first segment of the hold) is skipped*.
+            for (int i = hold.Segments.Count - 1; i >= 0; i--)
+            {
+                Note note = hold.Segments[i];
+                
+                // *technically unnecessary to skip, but doing it just for consistency.
+                if (i == 0 && note.NoteType is NoteType.HoldStart or NoteType.HoldStartRNote) continue;
+                
+                ArcData currentData = getArcData(note);
+                path.LineTo(RenderMath.GetPointOnArc(canvasCenter, currentData.Rect.Width * 0.5f, currentData.StartAngle));
+            }
+            
+            canvas.DrawPath(path, brushes.HoldFill);
         }
         
         // Second and Third foreach to ensure notes are rendered on top of surfaces.
         // Reversed so notes further away are rendered first, then closer notes
         // are rendered on top.
         visibleNotes.Reverse();
-
+        
         // Hold Ends
         foreach (Note note in visibleNotes)
         {
@@ -595,7 +650,7 @@ public class RenderEngine(MainView mainView)
 
         return;
 
-        // Preventing a little bit of code reptition. Not sure if this is cleaner or not :^)
+        // Preventing a little bit of code repetition. Not sure if this is cleaner or not :^)
         ArcData getArcData(Note note)
         {
             ArcData arc = GetArc(chart, note);

@@ -284,3 +284,8 @@ public class Note : ChartElement
         return first;
     }
 }
+
+public struct Hold()
+{
+    public List<Note> Segments = [];
+}
