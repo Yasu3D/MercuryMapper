@@ -809,7 +809,8 @@ public class ChartEditor
     public void DeleteGimmick()
     {
         if (HighlightedElement is null or Note) return;
-
+        if (!Chart.Gimmicks.Contains(HighlightedElement)) return;
+        
         Gimmick gimmick = (Gimmick)HighlightedElement;
         List<IOperation> operationList = [new DeleteGimmick(Chart, gimmick)];
 
@@ -845,6 +846,9 @@ public class ChartEditor
                 break;
             }
         }
+
+        HighlightedElement = null;
+        mainView.SetSelectionInfo();
         
         UndoRedoManager.InvokeAndPush(new CompositeOperation(operationList));
         Chart.IsSaved = false;
