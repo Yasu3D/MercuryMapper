@@ -450,16 +450,14 @@ public class RenderEngine(MainView mainView)
     /// </summary>
     private void DrawHolds(SKCanvas canvas, Chart chart)
     {
-        // The long line of code returns, even for the optimized version.
-        // A note counts as "visible" if:
-        //    it's a hold
-        // && it's in vision range
-        // || it's behind camera and next reference is in front of camera outside of vision range
-        List<Note> visibleNotes = chart.Notes.Where(
-            x => x.IsHold 
-            && (RenderMath.GreaterAlmostEqual(x.BeatData.MeasureDecimal, CurrentMeasureDecimal) && chart.GetScaledMeasureDecimal(x.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) <= ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal)
-            || (x.BeatData.MeasureDecimal < CurrentMeasureDecimal && x.NextReferencedNote != null && chart.GetScaledMeasureDecimal(x.NextReferencedNote.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) > ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal)
-            ).ToList();
+        List<Note> visibleNotes = chart.Notes.Where(x =>
+        {
+            float scaledMeasureDecimal = chart.GetScaledMeasureDecimal(x.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed);
+            bool inVisionRange = RenderMath.GreaterAlmostEqual(scaledMeasureDecimal, ScaledCurrentMeasureDecimal) && scaledMeasureDecimal <= ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal;
+            bool aroundVisionRange = scaledMeasureDecimal < ScaledCurrentMeasureDecimal && x.NextReferencedNote != null && chart.GetScaledMeasureDecimal(x.NextReferencedNote.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) > ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal;
+            
+            return x.IsHold && (inVisionRange || aroundVisionRange);
+        }).ToList();
         
         HashSet<Note> checkedNotes = [];
         List<Hold> holdNotes = [];
@@ -486,12 +484,15 @@ public class RenderEngine(MainView mainView)
 
             // This must be one of them darn damn dangit hold notes where the first segment is behind the camera
             // and the second is outside of vision range. Aw shucks, we have to do some extra special work.
-            if (hold.Segments[0].BeatData.MeasureDecimal < CurrentMeasureDecimal && hold.Segments.Count == 1)
+            if (chart.GetScaledMeasureDecimal(hold.Segments[0].BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) < ScaledCurrentMeasureDecimal && hold.Segments.Count == 1)
             {
                 Note prev = hold.Segments[0];
                 Note? next = prev.NextReferencedNote;
 
                 if (next == null) continue;
+                
+                // Aw, nevermind. It ain't one of them darn damn dangit hold notes where the first segment is behind the camera and the second is outside of vision range.
+                if (chart.GetScaledMeasureDecimal(next.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) <= ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal) continue;
                 
                 ArcData prevData = GetArc(chart, prev);
                 ArcData nextData = GetArc(chart, next);
@@ -540,8 +541,8 @@ public class RenderEngine(MainView mainView)
                 
                         if (prevNote.Size != 60) TruncateArc(ref prevData, true);
                         else TrimCircleArc(ref prevData);
-
-                        float ratio = MathExtensions.InverseLerp(CurrentMeasureDecimal, note.BeatData.MeasureDecimal, prevNote.BeatData.MeasureDecimal);
+                        
+                        float ratio = MathExtensions.InverseLerp(ScaledCurrentMeasureDecimal, chart.GetScaledMeasureDecimal(note.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed), chart.GetScaledMeasureDecimal(prevNote.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed));
                 
                         if (float.Abs(currentData.StartAngle - prevData.StartAngle) > 180)
                         {
