@@ -616,10 +616,10 @@ Fortfahren?</value>
         <value>Layer: Gimmick</value>
     </data>
     <data name="ToolTip_HoldRender_Legacy" xml:space="preserve">
-        <value>Original Render-Methode die Hold Noten Segment für Segment gezeichnet hat. Schlechte performance, aber funktioniert gut.</value>
+        <value>Original Render-Methode die Hold Noten Segment für Segment gezeichnet hat. Schlechte performance, aber ausgereifter.</value>
     </data>
     <data name="ToolTip_HoldRender_Modern" xml:space="preserve">
-        <value>Erheblich bessere Performance, da Hold Noten als eine Form gezeichnet werden. Aktuell instabil und kann clipping an nicht vorberechneten Holds verursachen.</value>
+        <value>Bessere Leistung als Legacy, da alle Segmente in einer Form zusammengefasst werden, wodurch Dutzende, wenn nicht sogar Hunderte SkiaSharp Aufrufe erspart werden. Behebt auch die TV-Static optik von Nähten in dichten Holds.</value>
     </data>
     <data name="Settings_HoldRenderMethod" xml:space="preserve">
         <value>Hold Render Methode</value>

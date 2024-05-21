@@ -1854,7 +1854,7 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Original rendering method that draws holds segment-by-segment. Bad performance, but known to work ~fine~..
+        ///   Looks up a localized string similar to Original rendering method that draws holds segment-by-segment. Bad performance, but technically more mature..
         /// </summary>
         public static string ToolTip_HoldRender_Legacy {
             get {
@@ -1863,7 +1863,7 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Significantly improves performance by rendering holds as one shape. Currently still unstable and may cause clipping issues on unbaked holds..
+        ///   Looks up a localized string similar to Performs better than the original by batching all segments into one shape, saving dozens, if not hundreds of calls to SkiaSharp. Also fixes the tv-static-looking seams on dense holds..
         /// </summary>
         public static string ToolTip_HoldRender_Modern {
             get {

@@ -1854,7 +1854,7 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Original Render-Methode die Hold Noten Segment für Segment gezeichnet hat. Schlechte performance, aber funktioniert gut..
+        ///   Looks up a localized string similar to Original Render-Methode die Hold Noten Segment für Segment gezeichnet hat. Schlechte performance, aber ausgereifter..
         /// </summary>
         public static string ToolTip_HoldRender_Legacy {
             get {
@@ -1863,7 +1863,7 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Erheblich bessere Performance, da Hold Noten als eine Form gezeichnet werden. Aktuell instabil und kann clipping an nicht vorberechneten Holds verursachen..
+        ///   Looks up a localized string similar to Bessere Leistung als Legacy, da alle Segmente in einer Form zusammengefasst werden, wodurch Dutzende, wenn nicht sogar Hunderte SkiaSharp Aufrufe erspart werden. Behebt auch die TV-Static optik von Nähten in dichten Holds..
         /// </summary>
         public static string ToolTip_HoldRender_Modern {
             get {

@@ -616,10 +616,10 @@ Continue?</value>
         <value>Layer: Gimmick</value>
     </data>
     <data name="ToolTip_HoldRender_Modern" xml:space="preserve">
-        <value>Significantly improves performance by rendering holds as one shape. Currently still unstable and may cause clipping issues on unbaked holds.</value>
+        <value>Performs better than the original by batching all segments into one shape, saving dozens, if not hundreds of calls to SkiaSharp. Also fixes the tv-static-looking seams on dense holds.</value>
     </data>
     <data name="ToolTip_HoldRender_Legacy" xml:space="preserve">
-        <value>Original rendering method that draws holds segment-by-segment. Bad performance, but known to work ~fine~.</value>
+        <value>Original rendering method that draws holds segment-by-segment. Bad performance, but technically more mature.</value>
     </data>
     <data name="Settings_HoldRenderMethod" xml:space="preserve">
         <value>Hold Render Method</value>
