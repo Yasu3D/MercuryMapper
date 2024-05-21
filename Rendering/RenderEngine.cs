@@ -41,6 +41,7 @@ public class RenderEngine(MainView mainView)
         DrawGuideLines(canvas, RenderConfig.GuideLineType);
         DrawJudgementLine(canvas);
         DrawMaskEffect(canvas);
+        
         if (!IsPlaying)
         {
             DrawCursor(canvas, mainView.ChartEditor.CurrentNoteType, mainView.ChartEditor.Cursor.Position, mainView.ChartEditor.Cursor.Size);
@@ -49,12 +50,20 @@ public class RenderEngine(MainView mainView)
         }
         
         DrawMeasureLines(canvas, Chart);
+        
         if ((!IsPlaying || (IsPlaying && RenderConfig.ShowGimmickNotesDuringPlayback)) && mainView.ChartEditor.LayerGimmickActive) DrawGimmickNotes(canvas, Chart);
         if ((!IsPlaying || (IsPlaying && RenderConfig.ShowMaskDuringPlayback)) && mainView.ChartEditor.LayerMaskActive) DrawMaskNotes(canvas, Chart);
-        if (mainView.ChartEditor.LayerNoteActive) DrawSyncs(canvas, Chart); // Hold Surfaces normally render under syncs but the syncs poke into the note a bit, and it looks shit.
-        if (mainView.ChartEditor.LayerNoteActive) DrawHolds(canvas, Chart);
-        if (mainView.ChartEditor.LayerNoteActive) DrawNotes(canvas, Chart);
-        if (mainView.ChartEditor.LayerNoteActive) DrawArrows(canvas, Chart);
+        
+        if (mainView.ChartEditor.LayerNoteActive)
+        {
+            DrawSyncs(canvas, Chart); // Hold Surfaces normally render under syncs but the syncs poke into the note a bit, and it looks shit.
+            
+            if (RenderConfig.HoldRenderMethod == 0) DrawHolds(canvas, Chart);
+            else DrawHoldsLegacy(canvas, Chart);
+            
+            DrawNotes(canvas, Chart);
+            DrawArrows(canvas, Chart);
+        }
     }
 
     // ________________
@@ -655,6 +664,184 @@ public class RenderEngine(MainView mainView)
         return;
 
         // Preventing a little bit of code repetition. Not sure if this is cleaner or not :^)
+        ArcData getArcData(Note note)
+        {
+            ArcData arc = GetArc(chart, note);
+            if (note.Size != 60) TruncateArc(ref arc, true);
+            else TrimCircleArc(ref arc);
+
+            return arc;
+        }
+    }
+
+    /// <summary>
+    /// Old Hold Rendering Method. See above for new method.
+    /// </summary>
+    private void DrawHoldsLegacy(SKCanvas canvas, Chart chart)
+    {
+        // Long-ass line of code. Not a fan but idk how else to write this where it still makes sense. TL;DR:
+        //
+        // IsHold &&
+        // (Note is in vision range || Next note it's referencing is in front of vision range)
+        List<Note> visibleNotes = chart.Notes.Where(x =>
+            x.IsHold &&
+            (
+                (RenderMath.GreaterAlmostEqual(x.BeatData.MeasureDecimal, CurrentMeasureDecimal) && chart.GetScaledMeasureDecimal(x.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) <= ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal)
+                ||
+                (x.NextReferencedNote != null && x.BeatData.MeasureDecimal < CurrentMeasureDecimal && chart.GetScaledMeasureDecimal(x.NextReferencedNote.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) > ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal)
+            )
+        ).ToList();
+        
+        foreach (Note note in visibleNotes)
+        {
+            ArcData currentData = getArcData(note);
+            
+            bool currentVisible = note.BeatData.MeasureDecimal >= CurrentMeasureDecimal;
+            bool nextVisible = note.NextReferencedNote != null && chart.GetScaledMeasureDecimal(note.NextReferencedNote.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) <= ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal;
+            bool prevVisible = note.PrevReferencedNote != null && note.PrevReferencedNote.BeatData.MeasureDecimal >= CurrentMeasureDecimal;
+            
+            if (currentVisible && nextVisible)
+            {
+                Note nextNote = note.NextReferencedNote!;
+                ArcData nextData = GetArc(chart, nextNote);
+                
+                if (nextNote.Size != 60) TruncateArc(ref nextData, true);
+                else TrimCircleArc(ref nextData);
+                
+                FlipArc(ref nextData);
+                
+                SKPath path = new(); 
+                path.ArcTo(currentData.Rect, currentData.StartAngle, currentData.SweepAngle, true);
+                path.ArcTo(nextData.Rect, nextData.StartAngle, nextData.SweepAngle, false);
+                
+                canvas.DrawPath(path, brushes.HoldFill);
+            }
+
+            if (currentVisible && !prevVisible && note.PrevReferencedNote != null)
+            {
+                Note prevNote = note.PrevReferencedNote;
+                ArcData prevData = GetArc(chart, prevNote);
+                
+                if (prevNote.Size != 60) TruncateArc(ref prevData, true);
+                else TrimCircleArc(ref prevData);
+
+                float ratio = MathExtensions.InverseLerp(CurrentMeasureDecimal, note.BeatData.MeasureDecimal, prevNote.BeatData.MeasureDecimal);
+                
+                if (float.Abs(currentData.StartAngle - prevData.StartAngle) > 180)
+                {
+                    if (currentData.StartAngle > prevData.StartAngle) currentData.StartAngle -= 360;
+                    else prevData.StartAngle -= 360;
+                }
+                
+                ArcData intermediateData = new(canvasRect, 1, MathExtensions.Lerp(currentData.StartAngle, prevData.StartAngle, ratio), MathExtensions.Lerp(currentData.SweepAngle, prevData.SweepAngle, ratio));
+                FlipArc(ref intermediateData);
+                
+                SKPath path = new(); 
+                path.ArcTo(currentData.Rect, currentData.StartAngle, currentData.SweepAngle, true);
+                path.ArcTo(intermediateData.Rect, intermediateData.StartAngle, intermediateData.SweepAngle, false);
+                
+                canvas.DrawPath(path, brushes.HoldFill);
+            }
+
+            if (currentVisible && !nextVisible && note.NextReferencedNote != null )
+            {
+                canvas.DrawArc(currentData.Rect, currentData.StartAngle, currentData.SweepAngle, true, brushes.HoldFill);
+            }
+            
+            if (!currentVisible && !nextVisible && note.NextReferencedNote != null)
+            {
+                Note nextNote = note.NextReferencedNote;
+                ArcData nextData = GetArc(chart, nextNote);
+                
+                if (nextNote.Size != 60) TruncateArc(ref nextData, true);
+                else TrimCircleArc(ref nextData);
+                
+                float ratio = MathExtensions.InverseLerp(CurrentMeasureDecimal, note.BeatData.MeasureDecimal, nextNote.BeatData.MeasureDecimal);
+                
+                if (float.Abs(currentData.StartAngle - nextData.StartAngle) > 180)
+                {
+                    if (currentData.StartAngle > nextData.StartAngle) currentData.StartAngle -= 360;
+                    else nextData.StartAngle -= 360;
+                }
+                
+                ArcData intermediateData = new(canvasRect, 1, MathExtensions.Lerp(currentData.StartAngle, nextData.StartAngle, ratio), MathExtensions.Lerp(currentData.SweepAngle, nextData.SweepAngle, ratio));
+                
+                canvas.DrawArc(intermediateData.Rect, intermediateData.StartAngle, intermediateData.SweepAngle, true, brushes.HoldFill);
+            }
+        }
+        
+        // Second and Third foreach to ensure notes are rendered on top of surfaces.
+        // Reversed so notes further away are rendered first, then closer notes
+        // are rendered on top.
+        visibleNotes.Reverse();
+
+        // Hold Ends
+        foreach (Note note in visibleNotes)
+        {
+            if (note.NoteType is not NoteType.HoldEnd) continue;
+            
+            ArcData currentData = getArcData(note);
+            
+            if (!RenderMath.InRange(currentData.Scale) || note.BeatData.MeasureDecimal < CurrentMeasureDecimal) continue;
+            
+            canvas.DrawArc(currentData.Rect, currentData.StartAngle, currentData.SweepAngle, false, brushes.GetHoldEndPen(canvasScale * currentData.Scale));
+            
+            if (mainView.ChartEditor.SelectedNotes.Contains(note))
+            {
+                ArcData selectedData = GetArc(chart, note);
+                canvas.DrawArc(selectedData.Rect, selectedData.StartAngle, selectedData.SweepAngle, false, brushes.GetSelectionPen(canvasScale * selectedData.Scale));
+            }
+            
+            if (note == mainView.ChartEditor.HighlightedElement)
+            {
+                ArcData selectedData = GetArc(chart, note);
+                canvas.DrawArc(selectedData.Rect, selectedData.StartAngle, selectedData.SweepAngle, false, brushes.GetHighlightPen(canvasScale * selectedData.Scale));
+            }
+        }
+        
+        // Hold Start/Segment
+        foreach (Note note in visibleNotes)
+        {
+            if (note.NoteType is NoteType.HoldEnd) continue;
+
+            ArcData currentData = getArcData(note);
+            
+            if (!RenderMath.InRange(currentData.Scale) || note.BeatData.MeasureDecimal < CurrentMeasureDecimal) continue;
+            
+            if (note.IsRNote)
+            {
+                float start = currentData.StartAngle + (note.Size != 60 ? 4.5f : 0);
+                float sweep = currentData.SweepAngle - (note.Size != 60 ? 9.0f : 0);
+                canvas.DrawArc(currentData.Rect, start, sweep, false, brushes.GetRNotePen(canvasScale * currentData.Scale));
+            }
+            
+            if (note.NoteType is NoteType.HoldStart or NoteType.HoldStartRNote)
+            {
+                if (note.Size != 60) DrawNoteCaps(canvas, currentData.Rect, currentData.StartAngle, currentData.SweepAngle, currentData.Scale);
+                canvas.DrawArc(currentData.Rect, currentData.StartAngle, currentData.SweepAngle, false, brushes.GetNotePen(note, canvasScale * currentData.Scale));
+            }
+
+            if (note.NoteType is NoteType.HoldSegment && !IsPlaying)
+            {
+                canvas.DrawArc(currentData.Rect, currentData.StartAngle, currentData.SweepAngle, false, brushes.GetNotePen(note, canvasScale * currentData.Scale * 0.5f));
+            }
+            
+            if (mainView.ChartEditor.SelectedNotes.Contains(note))
+            {
+                ArcData selectedData = GetArc(chart, note);
+                canvas.DrawArc(selectedData.Rect, selectedData.StartAngle, selectedData.SweepAngle, false, brushes.GetSelectionPen(canvasScale * selectedData.Scale));
+            }
+            
+            if (note == mainView.ChartEditor.HighlightedElement)
+            {
+                ArcData selectedData = GetArc(chart, note);
+                canvas.DrawArc(selectedData.Rect, selectedData.StartAngle, selectedData.SweepAngle, false, brushes.GetHighlightPen(canvasScale * selectedData.Scale));
+            }
+        }
+
+        return;
+
+        // Preventing a little bit of code reptition. Not sure if this is cleaner or not :^)
         ArcData getArcData(Note note)
         {
             ArcData arc = GetArc(chart, note);

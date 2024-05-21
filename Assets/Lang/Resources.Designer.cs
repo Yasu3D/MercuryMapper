@@ -1690,6 +1690,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Hold Render Method.
+        /// </summary>
+        public static string Settings_HoldRenderMethod {
+            get {
+                return ResourceManager.GetString("Settings_HoldRenderMethod", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Decrease Note Speed.
         /// </summary>
         public static string Settings_Keymap_DecreaseNoteSpeed {
@@ -1841,6 +1850,24 @@ namespace MercuryMapper.Assets.Lang {
         public static string Tools_ShiftBy {
             get {
                 return ResourceManager.GetString("Tools_ShiftBy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Original rendering method that draws holds segment-by-segment. Bad performance, but known to work ~fine~..
+        /// </summary>
+        public static string ToolTip_HoldRender_Legacy {
+            get {
+                return ResourceManager.GetString("ToolTip_HoldRender_Legacy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Significantly improves performance by rendering holds as one shape. Currently still unstable and may cause clipping issues on unbaked holds..
+        /// </summary>
+        public static string ToolTip_HoldRender_Modern {
+            get {
+                return ResourceManager.GetString("ToolTip_HoldRender_Modern", resourceCulture);
             }
         }
     }

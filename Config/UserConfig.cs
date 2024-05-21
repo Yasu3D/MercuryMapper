@@ -16,6 +16,7 @@ public class UserConfig
 public class RenderConfig
 {
     public int RefreshRate { get; set; } = 60;
+    public int HoldRenderMethod { get; set; } = 0;
     public int NoteSize { get; set; } = 3;
     public double NoteSpeed { get; set; } = 2.5;
     public int GuideLineType { get; set; } = 1;

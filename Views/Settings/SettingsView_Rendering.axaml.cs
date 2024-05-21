@@ -21,6 +21,7 @@ public partial class SettingsView_Rendering : UserControl
     private void SetValuesFromConfig()
     {
         NumericRefreshRate.Value = RenderConfig.RefreshRate;
+        ComboHoldRenderMethod.SelectedIndex = RenderConfig.HoldRenderMethod;
         NumericNoteSize.Value = RenderConfig.NoteSize;
         NumericNoteSpeed.Value = (decimal?)RenderConfig.NoteSpeed;
         CheckBoxShowHiSpeed.IsChecked = RenderConfig.ShowHiSpeed;
@@ -69,5 +70,11 @@ public partial class SettingsView_Rendering : UserControl
     private void CheckBoxShowGimmickNotesDuringPlayback_OnIsCheckedChanged(object? sender, RoutedEventArgs e)
     {
         RenderConfig.ShowGimmickNotesDuringPlayback = CheckBoxShowGimmickNotesDuringPlayback.IsChecked ?? false;
+    }
+
+    private void ComboHoldRenderMethod_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        if (ComboHoldRenderMethod == null) return;
+        RenderConfig.HoldRenderMethod = ComboHoldRenderMethod.SelectedIndex;
     }
 }

@@ -11,7 +11,18 @@
                 <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_RefreshRate}"/>
                 <NumericUpDown Name="NumericRefreshRate" FormatString="N0" ParsingNumberStyle="Integer" 
                                Minimum="10" Value="60" Increment="1" ValueChanged="RefreshRate_OnValueChanged"
-                               HorizontalAlignment="Right" Width="80" Margin="5"/>
+                               HorizontalAlignment="Right" Width="90" Margin="5"/>
+            </UniformGrid>
+            
+            <Separator/>
+            
+            <UniformGrid Columns="2">
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_HoldRenderMethod}"/>
+                <ComboBox Name="ComboHoldRenderMethod" SelectedIndex="0" SelectionChanged="ComboHoldRenderMethod_OnSelectionChanged"
+                          HorizontalAlignment="Right" Width="90" Margin="5">
+                    <ComboBoxItem Content="Modern" ToolTip.Tip="{x:Static lang:Resources.ToolTip_HoldRender_Modern}"/>
+                    <ComboBoxItem Content="Legacy" ToolTip.Tip="{x:Static lang:Resources.ToolTip_HoldRender_Legacy}"/>
+                </ComboBox>
             </UniformGrid>
             
             <Separator/>
@@ -20,15 +31,15 @@
                 <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_NoteSize}"/>
                 <NumericUpDown Name="NumericNoteSize" FormatString="N0" ParsingNumberStyle="Integer" 
                                Minimum="1" Maximum="5" Value="3" Increment="1" ValueChanged="NoteSize_OnValueChanged"
-                               HorizontalAlignment="Right" Width="80" Margin="5"/>
+                               HorizontalAlignment="Right" Width="90" Margin="5"/>
                 
                 <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_NoteSpeed}"/>
                 <NumericUpDown Name="NumericNoteSpeed" FormatString="N1" ParsingNumberStyle="Number" 
                                Minimum="1" Maximum="6" Value="4.5" Increment="0.1" ValueChanged="NoteSpeed_OnValueChanged"
-                               HorizontalAlignment="Right" Width="80" Margin="5"/>
+                               HorizontalAlignment="Right" Width="90" Margin="5"/>
                 <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_GuideLineType}"/>
                 <ComboBox Name="ComboGuideLineType" SelectedIndex="1" SelectionChanged="GuideLineType_OnSelectionChanged"
-                          HorizontalAlignment="Right" Width="80" Margin="5">
+                          HorizontalAlignment="Right" Width="90" Margin="5">
                     <ComboBoxItem Content="None"/>
                     <ComboBoxItem Content="A"/>
                     <ComboBoxItem Content="B"/>
@@ -41,7 +52,7 @@
                 <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_BeatDivision}"/>
                 <NumericUpDown Name="NumericBeatDivision" FormatString="N0" ParsingNumberStyle="Integer" 
                                Minimum="1" Maximum="128" Value="4" Increment="1" ValueChanged="BeatDivision_OnValueChanged"
-                               HorizontalAlignment="Right" Width="80" Margin="5"/>
+                               HorizontalAlignment="Right" Width="90" Margin="5"/>
             </UniformGrid>
             
             <Separator/>

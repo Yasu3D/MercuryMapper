@@ -1690,6 +1690,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Hold Render Methode.
+        /// </summary>
+        public static string Settings_HoldRenderMethod {
+            get {
+                return ResourceManager.GetString("Settings_HoldRenderMethod", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Noten-Geschwindigkeit verringern.
         /// </summary>
         public static string Settings_Keymap_DecreaseNoteSpeed {
@@ -1841,6 +1850,24 @@ namespace MercuryMapper.Assets.Lang {
         public static string Tools_ShiftBy {
             get {
                 return ResourceManager.GetString("Tools_ShiftBy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Original Render-Methode die Hold Noten Segment für Segment gezeichnet hat. Schlechte performance, aber funktioniert gut..
+        /// </summary>
+        public static string ToolTip_HoldRender_Legacy {
+            get {
+                return ResourceManager.GetString("ToolTip_HoldRender_Legacy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Erheblich bessere Performance, da Hold Noten als eine Form gezeichnet werden. Aktuell instabil und kann clipping an nicht vorberechneten Holds verursachen..
+        /// </summary>
+        public static string ToolTip_HoldRender_Modern {
+            get {
+                return ResourceManager.GetString("ToolTip_HoldRender_Modern", resourceCulture);
             }
         }
     }
