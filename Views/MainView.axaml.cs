@@ -32,13 +32,14 @@ public partial class MainView : UserControl
 {
     public MainView()
     {
-        KeybindEditor = new(UserConfig);
         ChartEditor = new(this);
-        AudioManager = new(this);
-        RenderEngine = new(this);
         
         InitializeComponent();
         LoadUserConfig();
+        
+        KeybindEditor = new(UserConfig);
+        AudioManager = new(this);
+        RenderEngine = new(this);
         
         TimeSpan interval = TimeSpan.FromSeconds(1.0 / UserConfig.RenderConfig.RefreshRate);
         UpdateTimer = new(interval, DispatcherPriority.Background, UpdateTimer_Tick) { IsEnabled = false };
