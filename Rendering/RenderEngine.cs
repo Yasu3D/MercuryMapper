@@ -113,7 +113,8 @@ public class RenderEngine(MainView mainView)
                 return new { Note = note, Distance = distance };
             })
             .Where(item => item.Distance <= item.Note.Size * 0.5f)
-            .OrderBy(item => item.Distance)
+            .OrderBy(item => item.Note.IsHold)
+            .ThenBy(item => item.Distance)
             .Select(item => item.Note)
             .ToList();
 
