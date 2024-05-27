@@ -71,11 +71,10 @@ public class Brushes(UserConfig userConfig)
         StrokeWidth = NotePenStrokeWidth,
     };
 
-    private readonly SKPaint snapPen = new()
+    private readonly SKPaint snapFill = new()
     {
-        Style = SKPaintStyle.Stroke,
+        Style = SKPaintStyle.Fill,
         IsAntialias = true,
-        StrokeWidth = SnapPenStrokeWidth
     };
 
     private readonly SKPaint swipeFill = new()
@@ -254,11 +253,10 @@ public class Brushes(UserConfig userConfig)
         return highlightPen;
     }
 
-    public SKPaint GetSnapPen(NoteType type, float scale)
+    public SKPaint GetSnapFill(NoteType type)
     {
-        snapPen.StrokeWidth = SnapPenStrokeWidth * scale;
-        snapPen.Color = NoteType2Color(type);
-        return snapPen;
+        snapFill.Color = NoteType2Color(type);
+        return snapFill;
     }
 
     public SKPaint GetSwipeFill(NoteType type)

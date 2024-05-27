@@ -1004,34 +1004,61 @@ public class RenderEngine(MainView mainView)
         {
             int arrowCount = note.Size / 3;
             float radius = rect.Width * 0.53f;
-            float snapRadiusOffset = arrowDirection > 0 ? 0.8f : 0.7f;
-            float snapRowOffset = rect.Width * 0.045f;
-            const float snapArrowLength = 0.1f;
-            const float snapArrowWidth = 3.0f;
+            float snapRadiusOffset = arrowDirection > 0 ? 0.78f : 0.67f;
+            float snapRowOffset = rect.Width * 0.043f;
+            float snapArrowThickness = rect.Width * 0.028f;
             
-            float startPoint = note.Position * -6;
-            float endPoint = startPoint + note.Size * -6;
+            const float snapArrowLength = 0.12f;
+            const float snapArrowWidth = 4.0f;
+            
+            float startPoint = note.Position * -6 - 3;
+            float endPoint = startPoint + note.Size * -6 + 6;
             float interval = (endPoint - startPoint) / arrowCount;
             float offset = interval * 0.5f;
 
             for (float i = startPoint + offset; i > endPoint; i += interval)
             {
-                SKPoint p1 = RenderMath.GetPointOnArc(canvasCenter, radius * snapRadiusOffset, i + snapArrowWidth);
-                SKPoint p2 = RenderMath.GetPointOnArc(canvasCenter, radius * (snapRadiusOffset - snapArrowLength * arrowDirection), i);
-                SKPoint p3 = RenderMath.GetPointOnArc(canvasCenter, radius * snapRadiusOffset, i - snapArrowWidth);
-                SKPoint p4 = RenderMath.GetPointOnArc(canvasCenter, snapRowOffset + radius * snapRadiusOffset, i + snapArrowWidth);
-                SKPoint p5 = RenderMath.GetPointOnArc(canvasCenter, snapRowOffset + radius * (snapRadiusOffset - snapArrowLength * arrowDirection), i);
-                SKPoint p6 = RenderMath.GetPointOnArc(canvasCenter, snapRowOffset + radius * snapRadiusOffset, i - snapArrowWidth);
-
-                SKPath path = new SKPath();
-                path.MoveTo(p1);
-                path.LineTo(p2);
-                path.LineTo(p3);
-                path.MoveTo(p4);
-                path.LineTo(p5);
-                path.LineTo(p6);
+                //       p2
+                //      /  \
+                //    /      \
+                //  p1   p5    p3
+                //  |  /    \  |
+                //  |/        \|
+                //  p6        p4
                 
-                canvas.DrawPath(path, brushes.GetSnapPen(note.NoteType, canvasScale * scale));
+                SKPoint  p1 = RenderMath.GetPointOnArc(canvasCenter, radius * snapRadiusOffset, i + snapArrowWidth);
+                SKPoint  p2 = RenderMath.GetPointOnArc(canvasCenter, radius * (snapRadiusOffset - snapArrowLength * arrowDirection), i);
+                SKPoint  p3 = RenderMath.GetPointOnArc(canvasCenter, radius * snapRadiusOffset, i - snapArrowWidth);
+                SKPoint  p4 = RenderMath.GetPointOnArc(canvasCenter, snapArrowThickness + radius * snapRadiusOffset, i - snapArrowWidth);
+                SKPoint  p5 = RenderMath.GetPointOnArc(canvasCenter, snapArrowThickness + radius * (snapRadiusOffset - snapArrowLength * arrowDirection), i);
+                SKPoint  p6 = RenderMath.GetPointOnArc(canvasCenter, snapArrowThickness + radius * snapRadiusOffset, i + snapArrowWidth);
+                
+                SKPoint  p7 = RenderMath.GetPointOnArc(canvasCenter, snapRowOffset + radius * snapRadiusOffset, i + snapArrowWidth);
+                SKPoint  p8 = RenderMath.GetPointOnArc(canvasCenter, snapRowOffset + radius * (snapRadiusOffset - snapArrowLength * arrowDirection), i);
+                SKPoint  p9 = RenderMath.GetPointOnArc(canvasCenter, snapRowOffset + radius * snapRadiusOffset, i - snapArrowWidth);
+                SKPoint p10 = RenderMath.GetPointOnArc(canvasCenter, snapRowOffset + snapArrowThickness + radius * snapRadiusOffset, i - snapArrowWidth);
+                SKPoint p11 = RenderMath.GetPointOnArc(canvasCenter, snapRowOffset + snapArrowThickness + radius * (snapRadiusOffset - snapArrowLength * arrowDirection), i);
+                SKPoint p12 = RenderMath.GetPointOnArc(canvasCenter, snapRowOffset + snapArrowThickness + radius * snapRadiusOffset, i + snapArrowWidth);
+
+                SKPath path1 = new();
+                SKPath path2 = new();
+                
+                path1.MoveTo(p1);
+                path1.LineTo(p2);
+                path1.LineTo(p3);
+                path1.LineTo(p4);
+                path1.LineTo(p5);
+                path1.LineTo(p6);
+                
+                path2.MoveTo(p7);
+                path2.LineTo(p8);
+                path2.LineTo(p9);
+                path2.LineTo(p10);
+                path2.LineTo(p11);
+                path2.LineTo(p12);
+                
+                canvas.DrawPath(path1, brushes.GetSnapFill(note.NoteType));
+                canvas.DrawPath(path2, brushes.GetSnapFill(note.NoteType));
             }
         }
         
