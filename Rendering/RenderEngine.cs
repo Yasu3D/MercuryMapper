@@ -424,6 +424,7 @@ public class RenderEngine(MainView mainView)
             SKRect rect = GetRect(scale);
             
             drawSyncConnector(current, previous, rect, scale);
+            drawSyncOutline(current, previous, rect, scale);
         }
 
         return;
@@ -442,6 +443,54 @@ public class RenderEngine(MainView mainView)
             if (finalSize > 30) return;
             
             canvas.DrawArc(rect, finalPosition * -6, finalSize * -6, false, brushes.GetSyncPen(scale));
+        }
+
+        void drawSyncOutline(Note current, Note previous, SKRect rect, float scale)
+        {
+            float outlineOffset = (RenderConfig.NoteSize * 4.5f + 4.5f) * scale;
+            const float controlOffset = 2;
+            
+            SKPath path1 = new();
+            SKPath path2 = new();
+
+            SKRect rectOuter = new(rect.Left, rect.Top, rect.Right, rect.Bottom);
+            SKRect rectInner = new(rect.Left, rect.Top, rect.Right, rect.Bottom);
+            rectOuter.Inflate(outlineOffset, outlineOffset);
+            rectInner.Inflate(-outlineOffset, -outlineOffset);
+
+            float currentPos = current.Position * -6 - 2.5f;
+            float currentSweep = current.Size * -6 + 5;
+
+            SKPoint control1 = RenderMath.GetPointOnArc(canvasCenter, rect.Width * 0.5f, currentPos + currentSweep - controlOffset);
+            SKPoint arcEdge1 = RenderMath.GetPointOnArc(canvasCenter, rect.Width * 0.5f - outlineOffset, currentPos + currentSweep);
+            
+            SKPoint control2 = RenderMath.GetPointOnArc(canvasCenter, rect.Width * 0.5f, currentPos + controlOffset);
+            SKPoint arcEdge2 = RenderMath.GetPointOnArc(canvasCenter, rect.Width * 0.5f + outlineOffset, currentPos);
+
+            path1.ArcTo(rectOuter, currentPos, currentSweep, true);
+            path1.QuadTo(control1, arcEdge1);
+            path1.ArcTo(rectInner, currentPos + currentSweep, -currentSweep, false);
+            path1.QuadTo(control2, arcEdge2);
+            path1.Close();
+            
+            
+            float previousPos = previous.Position * -6 - 2.5f;
+            float previousSweep = previous.Size * -6 + 5;
+            
+            SKPoint control3 = RenderMath.GetPointOnArc(canvasCenter, rect.Width * 0.5f, previousPos + previousSweep - controlOffset);
+            SKPoint arcEdge3 = RenderMath.GetPointOnArc(canvasCenter, rect.Width * 0.5f - outlineOffset, previousPos + previousSweep);
+            
+            SKPoint control4 = RenderMath.GetPointOnArc(canvasCenter, rect.Width * 0.5f, previousPos + controlOffset);
+            SKPoint arcEdge4 = RenderMath.GetPointOnArc(canvasCenter, rect.Width * 0.5f + outlineOffset, previousPos);
+
+            path2.ArcTo(rectOuter, previousPos, previousSweep, true);
+            path2.QuadTo(control3, arcEdge3);
+            path2.ArcTo(rectInner, previousPos + previousSweep, -previousSweep, false);
+            path2.QuadTo(control4, arcEdge4);
+            path2.Close();
+            
+            canvas.DrawPath(path1, brushes.GetSyncPen(scale * 0.75f));
+            canvas.DrawPath(path2, brushes.GetSyncPen(scale * 0.75f));
         }
     }
 
