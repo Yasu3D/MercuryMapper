@@ -940,6 +940,63 @@ public class RenderEngine(MainView mainView)
             
             canvas.DrawArc(data.Rect, data.StartAngle, data.SweepAngle, false, brushes.GetNotePen(note, canvasScale * data.Scale));
 
+            if (note.NoteType is NoteType.Chain or NoteType.ChainRNote)
+            {
+                int stripes = note.Size * 2;
+                float radiusInner = 0.5f * (data.Rect.Width - brushes.NoteWidthMultiplier * canvasScale * data.Scale);
+                float radiusOuter = 0.5f * (data.Rect.Width + brushes.NoteWidthMultiplier * canvasScale * data.Scale);
+                
+                SKPath path = new();
+                
+                for (int i = 0; i < stripes; i++)
+                {
+                    if (i == 0 && note.Size != 60) continue;
+                    if (i >= stripes - 3 && note.Size != 60) continue;
+
+                    if (note.Size != 60 && i == 1)
+                    {
+                        SKPoint t0 = RenderMath.GetPointOnArc(canvasCenter, radiusInner, data.StartAngle + i * -3 + 3);
+                        SKPoint t1 = RenderMath.GetPointOnArc(canvasCenter, radiusInner, data.StartAngle + i * -3 + 1.5f);
+                        SKPoint t2 = RenderMath.GetPointOnArc(canvasCenter, radiusOuter, data.StartAngle + i * -3 + 3);
+                        
+                        path.Reset();
+                        path.MoveTo(t0);
+                        path.LineTo(t1);
+                        path.LineTo(t2);
+                        
+                        canvas.DrawPath(path, brushes.ChainStripeFill);
+                    }
+
+                    if (note.Size != 60 && i == stripes - 4)
+                    {
+                        SKPoint t1 = RenderMath.GetPointOnArc(canvasCenter, radiusInner, data.StartAngle + i * -3);
+                        SKPoint t2 = RenderMath.GetPointOnArc(canvasCenter, radiusOuter, data.StartAngle + i * -3);
+                        SKPoint t3 = RenderMath.GetPointOnArc(canvasCenter, radiusOuter, data.StartAngle + i * -3 + 1.5f);
+                        
+                        path.Reset();
+                        path.MoveTo(t1);
+                        path.LineTo(t2);
+                        path.LineTo(t3);
+                        
+                        canvas.DrawPath(path, brushes.ChainStripeFill);
+                        continue;
+                    }
+                    
+                    SKPoint p0 = RenderMath.GetPointOnArc(canvasCenter, radiusInner, data.StartAngle + i * -3);
+                    SKPoint p1 = RenderMath.GetPointOnArc(canvasCenter, radiusInner, data.StartAngle + i * -3 - 1.5f);
+                    SKPoint p2 = RenderMath.GetPointOnArc(canvasCenter, radiusOuter, data.StartAngle + i * -3);
+                    SKPoint p3 = RenderMath.GetPointOnArc(canvasCenter, radiusOuter, data.StartAngle + i * -3 + 1.5f);
+                    
+                    path.Reset();
+                    path.MoveTo(p0);
+                    path.LineTo(p1);
+                    path.LineTo(p2);
+                    path.LineTo(p3);
+                    
+                    canvas.DrawPath(path, brushes.ChainStripeFill);
+                }
+            }
+            
             if (mainView.ChartEditor.SelectedNotes.Contains(note))
             {
                 ArcData selectedData = GetArc(chart, note);
@@ -1053,7 +1110,7 @@ public class RenderEngine(MainView mainView)
         {
             int arrowCount = note.Size / 3;
             float radius = rect.Width * 0.53f;
-            float snapRadiusOffset = arrowDirection > 0 ? 0.78f : 0.67f;
+            float snapRadiusOffset = arrowDirection > 0 ? 0.78f : 0.65f;
             float snapRowOffset = rect.Width * 0.043f;
             float snapArrowThickness = rect.Width * 0.028f;
             

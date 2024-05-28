@@ -19,7 +19,6 @@ public class Brushes(UserConfig userConfig)
     private const float GuidelinePenStrokeWidth = 1;
     private const float NotePenStrokeWidth = 8;
     private const float HoldEndPenStrokeWidth = 12;
-    private const float SnapPenStrokeWidth = 8;
     private const float CursorPenStrokeWidth = 15;
     private const float SelectionPenStrokeWidth = 15;
     private const float SyncPenStrokeWidth = 6;
@@ -187,6 +186,13 @@ public class Brushes(UserConfig userConfig)
     {
         Style = SKPaintStyle.Fill,
         IsAntialias = false
+    };
+    
+    public readonly SKPaint ChainStripeFill = new()
+    {
+        Color = SKColors.Black.WithAlpha(0x35),
+        Style = SKPaintStyle.Fill,
+        IsAntialias = true,
     };
     
     // ________ Dynamic Brushes
