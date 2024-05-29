@@ -44,6 +44,8 @@
                     <MenuItem Header="{x:Static lang:Resources.Menu_Export}" >
                         <MenuItem Header="{x:Static lang:Resources.Menu_ExportMercury}" Click="MenuItemExportMercury_OnClick" />
                         <MenuItem Header="{x:Static lang:Resources.Menu_ExportSaturn}" Click="MenuItemExportSaturn_OnClick" />
+                        <Separator/>
+                        <MenuItem Header="{x:Static lang:Resources.Menu_ExportSaturnFolder}" Click="MenuItemExportSaturnFolder_OnClick" />
                     </MenuItem>
                     
                     <Separator/>
@@ -362,6 +364,10 @@
             <StackPanel>
                 <Expander IsExpanded="True" Header="{x:Static lang:Resources.Editor_ExpanderHeader_ChartInfo}">
                     <StackPanel>
+                        <TextBlock Name="ChartInfoChartFilepath" Text=""/>
+                        
+                        <Separator/>
+                        
                         <UniformGrid Columns="2">
                             <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Editor_ChartInfo_ChartAudio}" Margin="0,2,0,2"/>
                             <Button Content="{x:Static lang:Resources.Generic_SelectFile}" Name="ChartInfoSelectAudio" Click="ChartInfoSelectAudio_OnClick" Width="130" Height="35" HorizontalAlignment="Right" Margin="0,2,0,2"/>

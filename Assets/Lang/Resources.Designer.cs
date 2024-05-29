@@ -897,6 +897,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Export.
+        /// </summary>
+        public static string Generic_Export {
+            get {
+                return ResourceManager.GetString("Generic_Export", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Audio not found..
         /// </summary>
         public static string Generic_InvalidAudioWarning {
@@ -1146,6 +1155,15 @@ namespace MercuryMapper.Assets.Lang {
         public static string Menu_ExportSaturn {
             get {
                 return ResourceManager.GetString("Menu_ExportSaturn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Create Saturn Folder.
+        /// </summary>
+        public static string Menu_ExportSaturnFolder {
+            get {
+                return ResourceManager.GetString("Menu_ExportSaturnFolder", resourceCulture);
             }
         }
         
@@ -1443,6 +1461,132 @@ namespace MercuryMapper.Assets.Lang {
         public static string Note_Touch {
             get {
                 return ResourceManager.GetString("Note_Touch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Artist.
+        /// </summary>
+        public static string SaturnExport_Artist {
+            get {
+                return ResourceManager.GetString("SaturnExport_Artist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to BPM.
+        /// </summary>
+        public static string SaturnExport_Bpm {
+            get {
+                return ResourceManager.GetString("SaturnExport_Bpm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Beyond Diff.
+        /// </summary>
+        public static string SaturnExport_DiffBeyond {
+            get {
+                return ResourceManager.GetString("SaturnExport_DiffBeyond", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Expert Diff.
+        /// </summary>
+        public static string SaturnExport_DiffExpert {
+            get {
+                return ResourceManager.GetString("SaturnExport_DiffExpert", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hard Diff.
+        /// </summary>
+        public static string SaturnExport_DiffHard {
+            get {
+                return ResourceManager.GetString("SaturnExport_DiffHard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Inferno Diff.
+        /// </summary>
+        public static string SaturnExport_DiffInferno {
+            get {
+                return ResourceManager.GetString("SaturnExport_DiffInferno", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Normal Diff.
+        /// </summary>
+        public static string SaturnExport_DiffNormal {
+            get {
+                return ResourceManager.GetString("SaturnExport_DiffNormal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Export Folder.
+        /// </summary>
+        public static string SaturnExport_Folder {
+            get {
+                return ResourceManager.GetString("SaturnExport_Folder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Genre.
+        /// </summary>
+        public static string SaturnExport_Genre {
+            get {
+                return ResourceManager.GetString("SaturnExport_Genre", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Jacket.
+        /// </summary>
+        public static string SaturnExport_Jacket {
+            get {
+                return ResourceManager.GetString("SaturnExport_Jacket", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Music.
+        /// </summary>
+        public static string SaturnExport_Music {
+            get {
+                return ResourceManager.GetString("SaturnExport_Music", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rubi.
+        /// </summary>
+        public static string SaturnExport_Rubi {
+            get {
+                return ResourceManager.GetString("SaturnExport_Rubi", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Title.
+        /// </summary>
+        public static string SaturnExport_Title {
+            get {
+                return ResourceManager.GetString("SaturnExport_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Export Saturn Folder.
+        /// </summary>
+        public static string SaturnExport_WindowTitle {
+            get {
+                return ResourceManager.GetString("SaturnExport_WindowTitle", resourceCulture);
             }
         }
         

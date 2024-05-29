@@ -630,4 +630,52 @@ Continue?</value>
     <data name="Editor_HoldEase_LinearPlusOut" xml:space="preserve">
         <value>Linear+ Out</value>
     </data>
+    <data name="Menu_ExportSaturnFolder" xml:space="preserve">
+        <value>Create Saturn Folder</value>
+    </data>
+    <data name="SaturnExport_Title" xml:space="preserve">
+        <value>Title</value>
+    </data>
+    <data name="SaturnExport_Rubi" xml:space="preserve">
+        <value>Rubi</value>
+    </data>
+    <data name="SaturnExport_Artist" xml:space="preserve">
+        <value>Artist</value>
+    </data>
+    <data name="SaturnExport_Genre" xml:space="preserve">
+        <value>Genre</value>
+    </data>
+    <data name="SaturnExport_Bpm" xml:space="preserve">
+        <value>BPM</value>
+    </data>
+    <data name="SaturnExport_Jacket" xml:space="preserve">
+        <value>Jacket</value>
+    </data>
+    <data name="SaturnExport_Music" xml:space="preserve">
+        <value>Music</value>
+    </data>
+    <data name="Generic_Export" xml:space="preserve">
+        <value>Export</value>
+    </data>
+    <data name="SaturnExport_WindowTitle" xml:space="preserve">
+        <value>Export Saturn Folder</value>
+    </data>
+    <data name="SaturnExport_Folder" xml:space="preserve">
+        <value>Export Folder</value>
+    </data>
+    <data name="SaturnExport_DiffNormal" xml:space="preserve">
+        <value>Normal Diff</value>
+    </data>
+    <data name="SaturnExport_DiffHard" xml:space="preserve">
+        <value>Hard Diff</value>
+    </data>
+    <data name="SaturnExport_DiffExpert" xml:space="preserve">
+        <value>Expert Diff</value>
+    </data>
+    <data name="SaturnExport_DiffInferno" xml:space="preserve">
+        <value>Inferno Diff</value>
+    </data>
+    <data name="SaturnExport_DiffBeyond" xml:space="preserve">
+        <value>Beyond Diff</value>
+    </data>
 </root>

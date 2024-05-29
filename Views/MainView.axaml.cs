@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
@@ -440,6 +441,7 @@ public partial class MainView : UserControl
 
     public void SetChartInfo()
     {
+        ChartInfoChartFilepath.Text = Path.GetFileName(ChartEditor.Chart.FilePath);
         ChartInfoAudioFilepath.Text = Path.GetFileName(ChartEditor.Chart.AudioFilePath);
         
         ChartInfoAuthor.Text = ChartEditor.Chart.Author;
@@ -1099,6 +1101,63 @@ public partial class MainView : UserControl
         await ExportFile(ChartWriteType.Saturn);
     }
 
+    private void MenuItemExportSaturnFolder_OnClick(object? sender, RoutedEventArgs e)
+    {
+        SaturnFolderExportView exportView = new(this);
+        
+        ContentDialog dialog = new()
+        {
+            Title = Assets.Lang.Resources.SaturnExport_WindowTitle,
+            Content = exportView,
+            PrimaryButtonText = Assets.Lang.Resources.Generic_Export,
+            CloseButtonText = Assets.Lang.Resources.Generic_Cancel,
+            Resources =
+            {
+                ["ContentDialogMaxWidth"] = 730
+            }
+        };
+
+        Dispatcher.UIThread.Post(async () =>
+        {
+            ContentDialogResult result = await dialog.ShowAsync();
+
+            if (result is ContentDialogResult.Primary)
+            {
+                if (exportView.FolderPathTextBox.Text is null) return;
+                string folderPath = exportView.FolderPathTextBox.Text;
+                
+                // Write metadata
+                Stream stream = File.OpenWrite(Path.Combine(folderPath, "meta.mer"));
+                stream.SetLength(0);
+                
+                await using StreamWriter streamWriter = new(stream, new UTF8Encoding(false));
+                streamWriter.NewLine = "\n";
+                
+                await streamWriter.WriteLineAsync($"#TITLE {exportView.TitleTextBox.Text}");
+                await streamWriter.WriteLineAsync($"#RUBI_TITLE {exportView.RubiTextBox.Text}");
+                await streamWriter.WriteLineAsync($"#ARTIST {exportView.ArtistTextBox.Text}");
+                await streamWriter.WriteLineAsync($"#GENRE {exportView.GenreTextBox.Text}");
+                await streamWriter.WriteLineAsync($"#BPM {exportView.BpmTextBox.Text}");
+
+                try
+                {
+                    if (File.Exists(exportView.NormalPathTextBox.Text)) File.Copy(exportView.NormalPathTextBox.Text, Path.Combine(folderPath, "0.mer"), true);
+                    if (File.Exists(exportView.HardPathTextBox.Text)) File.Copy(exportView.HardPathTextBox.Text, Path.Combine(folderPath, "1.mer"), true);
+                    if (File.Exists(exportView.ExpertPathTextBox.Text)) File.Copy(exportView.ExpertPathTextBox.Text, Path.Combine(folderPath, "2.mer"), true);
+                    if (File.Exists(exportView.InfernoPathTextBox.Text)) File.Copy(exportView.InfernoPathTextBox.Text, Path.Combine(folderPath, "3.mer"), true);
+                    if (File.Exists(exportView.BeyondPathTextBox.Text)) File.Copy(exportView.BeyondPathTextBox.Text, Path.Combine(folderPath, "4.mer"), true);
+                
+                    if (File.Exists(exportView.MusicTextBox.Text)) File.Copy(exportView.MusicTextBox.Text, Path.Combine(folderPath, Path.GetFileName(exportView.MusicTextBox.Text)), true);
+                    if (File.Exists(exportView.JacketTextBox.Text)) File.Copy(exportView.JacketTextBox.Text, Path.Combine(folderPath, $"jacket{Path.GetExtension(exportView.JacketTextBox.Text)}"), true);
+                }
+                catch (Exception ignored)
+                {
+                    // ignored. most likely caused by: copying a file to itself => file already being used by another process.
+                }
+            }
+        });
+    }
+    
     private void MenuItemSettings_OnClick(object? sender, RoutedEventArgs e)
     {
         ContentDialog dialog = new()
@@ -1809,7 +1868,7 @@ public partial class MainView : UserControl
         return result.Count != 1 ? null : result[0];
     }
     
-    private async Task<IStorageFile?> OpenChartFilePicker()
+    public async Task<IStorageFile?> OpenChartFilePicker()
     {
         IReadOnlyList<IStorageFile> result = await GetStorageProvider().OpenFilePickerAsync(new()
         {
@@ -1822,6 +1881,34 @@ public partial class MainView : UserControl
                     AppleUniformTypeIdentifiers = new[] {"public.item"}
                 }
             }
+        });
+
+        return result.Count != 1 ? null : result[0];
+    }
+    
+    public async Task<IStorageFile?> OpenJacketFilePicker()
+    {
+        IReadOnlyList<IStorageFile> result = await GetStorageProvider().OpenFilePickerAsync(new()
+        {
+            AllowMultiple = false,
+            FileTypeFilter = new List<FilePickerFileType>
+            {
+                new("Image files")
+                {
+                    Patterns = new[] {"*.png","*.jpg","*.jpeg"},
+                    AppleUniformTypeIdentifiers = new[] {"public.item"}
+                }
+            }
+        });
+
+        return result.Count != 1 ? null : result[0];
+    }
+    
+    public async Task<IStorageFolder?> OpenFolderPicker()
+    {
+        IReadOnlyList<IStorageFolder> result = await GetStorageProvider().OpenFolderPickerAsync(new()
+        {
+            AllowMultiple = false,
         });
 
         return result.Count != 1 ? null : result[0];
@@ -1912,6 +1999,7 @@ public partial class MainView : UserControl
         ChartEditor.Chart.IsNew = false;
         ChartEditor.Chart.IsSaved = true;
         ClearAutosaves();
+        SetChartInfo();
         return true;
     }
 

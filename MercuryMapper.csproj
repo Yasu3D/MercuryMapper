@@ -69,6 +69,10 @@
         <DependentUpon>GimmickView_Stop.axaml</DependentUpon>
         <SubType>Code</SubType>
       </Compile>
+      <Compile Update="Views\SaturnFolderExportView.axaml.cs">
+        <DependentUpon>SaturnFolderExportView.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
     </ItemGroup>
 
     <ItemGroup>
