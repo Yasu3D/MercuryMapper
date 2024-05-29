@@ -22,6 +22,10 @@
         <Style Selector="fluent|NumberBox">
             <Setter Property="HorizontalAlignment" Value="Stretch"/>
         </Style>
+        
+        <Style Selector="Button">
+            <Setter Property="Margin" Value="5"></Setter>
+        </Style>
     </UserControl.Styles>
     
     <!-- These row definitions remind me of a gladde paling song -->
