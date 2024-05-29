@@ -451,7 +451,6 @@ public class RenderEngine(MainView mainView)
             const float controlOffset = 2;
             
             SKPath path1 = new();
-            SKPath path2 = new();
 
             SKRect rectOuter = new(rect.Left, rect.Top, rect.Right, rect.Bottom);
             SKRect rectInner = new(rect.Left, rect.Top, rect.Right, rect.Bottom);
@@ -473,7 +472,6 @@ public class RenderEngine(MainView mainView)
             path1.QuadTo(control2, arcEdge2);
             path1.Close();
             
-            
             float previousPos = previous.Position * -6 - 2.5f;
             float previousSweep = previous.Size * -6 + 5;
             
@@ -483,14 +481,13 @@ public class RenderEngine(MainView mainView)
             SKPoint control4 = RenderMath.GetPointOnArc(canvasCenter, rect.Width * 0.5f, previousPos + controlOffset);
             SKPoint arcEdge4 = RenderMath.GetPointOnArc(canvasCenter, rect.Width * 0.5f + outlineOffset, previousPos);
 
-            path2.ArcTo(rectOuter, previousPos, previousSweep, true);
-            path2.QuadTo(control3, arcEdge3);
-            path2.ArcTo(rectInner, previousPos + previousSweep, -previousSweep, false);
-            path2.QuadTo(control4, arcEdge4);
-            path2.Close();
+            path1.ArcTo(rectOuter, previousPos, previousSweep, true);
+            path1.QuadTo(control3, arcEdge3);
+            path1.ArcTo(rectInner, previousPos + previousSweep, -previousSweep, false);
+            path1.QuadTo(control4, arcEdge4);
+            path1.Close();
             
             canvas.DrawPath(path1, brushes.GetSyncPen(scale * 0.75f));
-            canvas.DrawPath(path2, brushes.GetSyncPen(scale * 0.75f));
         }
     }
 
@@ -603,7 +600,14 @@ public class RenderEngine(MainView mainView)
                         ArcData intermediateData = new(canvasRect, 1, MathExtensions.Lerp(currentData.StartAngle, prevData.StartAngle, ratio), MathExtensions.Lerp(currentData.SweepAngle, prevData.SweepAngle, ratio));
                         path.ArcTo(intermediateData.Rect, intermediateData.StartAngle, intermediateData.SweepAngle, false);
                     }
-                }
+
+                    // Hack to fix a very odd rendering bug where path.Points[0] is at (0,0).
+                    // It still happens, but this makes it less obvious by moving the spike to the center of the screen instead of the top left.
+                    if (path.Points.Length == 0)
+                    {
+                        path.MoveTo(canvasCenter);
+                    }
+                }                                               
                 
                 if ((i == 0 && note.NoteType is NoteType.HoldSegment or NoteType.HoldEnd) || (i != 0 && i != hold.Segments.Count - 1))
                 {
