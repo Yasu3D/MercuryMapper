@@ -80,8 +80,14 @@
                               Click="MenuItemMirrorChart_OnClick"/>
                     <MenuItem Header="{x:Static lang:Resources.Menu_ShiftChart}" Name="MenuItemShiftChart"
                               Click="MenuItemShiftChart_OnClick"/>
+                    <Separator/>
                     <MenuItem Header="{x:Static lang:Resources.Menu_FixOffByOneErrors}" Name="MenuItemFixOffByOne"
                               Click="MenuItemFixOffByOne_OnClick"/>
+                    <Separator/>
+                    <MenuItem Header="{x:Static lang:Resources.Menu_JaggedHolds}" Name="MenuItemGenerateJaggedHolds"
+                              Click="MenuItemGenerateJaggedHolds_OnClick"/>
+                    <MenuItem Header="{x:Static lang:Resources.Menu_ReconstructHolds}" Name="MenuItemReconstructHolds"
+                              Click="MenuItemReconstructHolds_OnClick"/>
                 </MenuItem>
             </Menu>
             <Panel Grid.Column="1" Background="{DynamicResource TitleBar}" IsHitTestVisible="False"/>

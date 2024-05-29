@@ -28,7 +28,9 @@
         <entry key="Views/Settings/SettingsView_Keymap.axaml" value="MercuryMapper.csproj" />
         <entry key="Views/Settings/SettingsView_Rendering.axaml" value="MercuryMapper.csproj" />
         <entry key="Views/SettingsView.axaml" value="MercuryMapper.csproj" />
+        <entry key="Views/Tools/ToolsView_GenerateJaggedHolds.axaml" value="MercuryMapper.csproj" />
         <entry key="Views/Tools/ToolsView_MirrorChart.axaml" value="MercuryMapper.csproj" />
+        <entry key="Views/Tools/ToolsView_ReconstructHolds.axaml" value="MercuryMapper.csproj" />
         <entry key="Views/Tools/ToolsView_ShiftChart.axaml" value="MercuryMapper.csproj" />
       </map>
     </option>

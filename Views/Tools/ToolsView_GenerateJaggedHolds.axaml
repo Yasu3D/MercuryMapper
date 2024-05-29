@@ -1,0 +1,50 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:lang="clr-namespace:MercuryMapper.Assets.Lang"
+             Width="300"
+             mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="500"
+             x:Class="MercuryMapper.Views.Tools.ToolsView_GenerateJaggedHolds">
+    <ScrollViewer Margin="20">
+        <StackPanel>
+            <UniformGrid Columns="2">
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Tools_GeneratorType}"/>
+                <ComboBox SelectedIndex="0" Name="GeneratorMethod" HorizontalAlignment="Stretch" Margin="5" SelectionChanged="GeneratorMethod_OnSelectionChanged">
+                    <ComboBoxItem Content="{x:Static lang:Resources.Tools_Jagged_Spikes}"/>
+                    <ComboBoxItem Content="{x:Static lang:Resources.Tools_Jagged_Noise}"/>
+                </ComboBox>
+            </UniformGrid>
+            
+            <Separator/>
+            
+            <UniformGrid Columns="2" Name="SpikesData" IsVisible="True">
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Tools_Jagged_LeftEdge}"/>
+                <NumericUpDown Name="LeftEdge" Value="0" Minimum="-60" Maximum="60" HorizontalAlignment="Stretch" Margin="5" FormatString="N0" ParsingNumberStyle="Integer"/>
+            
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Tools_Jagged_RightEdge}"/>
+                <NumericUpDown Name="RightEdge" Value="0" Minimum="-60" Maximum="60" HorizontalAlignment="Stretch" Margin="5" FormatString="N0" ParsingNumberStyle="Integer"/>
+            </UniformGrid>
+            
+            <StackPanel Name="NoiseData" IsVisible="False">
+                <UniformGrid Columns="2">
+                    <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Tools_Jagged_LeftEdgeMin}"/>
+                <NumericUpDown Name="LeftEdgeMin" Value="0" Minimum="-60" Maximum="60" HorizontalAlignment="Stretch" Margin="5" FormatString="N0" ParsingNumberStyle="Integer"/>
+                
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Tools_Jagged_LeftEdgeMax}"/>
+                <NumericUpDown Name="LeftEdgeMax" Value="0" Minimum="-60" Maximum="60" HorizontalAlignment="Stretch" Margin="5" FormatString="N0" ParsingNumberStyle="Integer"/>
+                </UniformGrid>
+            
+                <Separator/>
+                
+                <UniformGrid Columns="2">
+                    <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Tools_Jagged_RightEdgeMin}"/>
+                    <NumericUpDown Name="RightEdgeMin" Value="0" Minimum="-60" Maximum="60" HorizontalAlignment="Stretch" Margin="5" FormatString="N0" ParsingNumberStyle="Integer"/>
+                
+                    <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Tools_Jagged_RightEdgeMax}"/>
+                    <NumericUpDown Name="RightEdgeMax" Value="0" Minimum="-60" Maximum="60" HorizontalAlignment="Stretch" Margin="5" FormatString="N0" ParsingNumberStyle="Integer"/>
+                </UniformGrid>
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

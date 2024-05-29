@@ -678,4 +678,55 @@ Fortfahren?</value>
     <data name="SaturnExport_DiffNormal" xml:space="preserve">
         <value>Normal Diff</value>
     </data>
+    <data name="Menu_JaggedHolds" xml:space="preserve">
+        <value>Zackige Hold Notes Generieren</value>
+    </data>
+    <data name="Menu_ReconstructHolds" xml:space="preserve">
+        <value>Holds Rekonstruieren</value>
+    </data>
+    <data name="Generic_Generate" xml:space="preserve">
+        <value>Generieren</value>
+    </data>
+    <data name="Tools_Interval" xml:space="preserve">
+        <value>Intervall [Beat Division]</value>
+    </data>
+    <data name="Tools_GeneratorType" xml:space="preserve">
+        <value>Generator Typ</value>
+    </data>
+    <data name="Tools_Jagged_Noise" xml:space="preserve">
+        <value>Zufällig</value>
+    </data>
+    <data name="Tools_Jagged_Spikes" xml:space="preserve">
+        <value>Zacken</value>
+    </data>
+    <data name="Tools_Reconstruct_HoldToChain" xml:space="preserve">
+        <value>Hold zu Kette</value>
+    </data>
+    <data name="Tools_Reconstruct_HoldToHold" xml:space="preserve">
+        <value>Hold zu Hold</value>
+    </data>
+    <data name="Tools_Jagged_LeftEdge" xml:space="preserve">
+        <value>Links</value>
+    </data>
+    <data name="Tools_Jagged_LeftEdgeMax" xml:space="preserve">
+        <value>Links [Max]</value>
+    </data>
+    <data name="Tools_Jagged_LeftEdgeMin" xml:space="preserve">
+        <value>Links [Min]</value>
+    </data>
+    <data name="Tools_Jagged_RightEdge" xml:space="preserve">
+        <value>Rechts</value>
+    </data>
+    <data name="Tools_Jagged_RightEdgeMax" xml:space="preserve">
+        <value>Rechts [Max]</value>
+    </data>
+    <data name="Tools_Jagged_RightEdgeMin" xml:space="preserve">
+        <value>Rechts [Min]</value>
+    </data>
+    <data name="Editor_NoHoldsSelected" xml:space="preserve">
+        <value>Keine Hold Noten ausgewählt!</value>
+    </data>
+    <data name="Editor_NoHoldsSelectedTip" xml:space="preserve">
+        <value>Wähle ein Segment einer Hold Note aus um diesen algorithmus auf dieser auszuführen.</value>
+    </data>
 </root>

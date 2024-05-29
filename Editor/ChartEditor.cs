@@ -1488,4 +1488,246 @@ public class ChartEditor
             return difference != 1 ? element.BeatData.FullTick : nearest;
         }
     }
+
+    public void GenerateSpikeHolds(int left, int right)
+    {
+        if (EditorState is ChartEditorState.InsertHold) return;
+        
+        HashSet<Note> checkedNotes = [];
+        List<Hold> holdNotes = [];
+        List<IOperation> operationList = [];
+        
+        foreach (Note note in SelectedNotes)
+        {
+            if (checkedNotes.Contains(note)) continue;
+
+            Hold hold = new();
+
+            foreach (Note reference in note.References())
+            {
+                hold.Segments.Add(reference);
+                checkedNotes.Add(reference);
+            }
+            
+            holdNotes.Add(hold);
+        }
+
+        foreach (Hold hold in holdNotes)
+        {
+            for (int i = 0; i < hold.Segments.Count; i++)
+            {
+                if (i % 2 == 0) continue;
+
+                Note note = hold.Segments[i];
+
+                int position = note.Position - left;
+                int size = int.Clamp(note.Size + left + right, Note.MinSize(note.NoteType), 60);
+                
+                Note newNote = new(note)
+                {
+                    Position = position,
+                    Size = size
+                };
+
+                operationList.Add(new EditNote(note, newNote));
+            }
+        }
+        
+        if (operationList.Count == 0) return;
+        UndoRedoManager.InvokeAndPush(new CompositeOperation(operationList));
+        Chart.IsSaved = false;
+    }
+
+    public void GenerateNoiseHolds(int leftMin, int leftMax, int rightMin, int rightMax)
+    {
+        if (EditorState is ChartEditorState.InsertHold) return;
+        
+        HashSet<Note> checkedNotes = [];
+        List<Hold> holdNotes = [];
+        List<IOperation> operationList = [];
+        Random random = new();
+        
+        foreach (Note note in SelectedNotes)
+        {
+            if (checkedNotes.Contains(note)) continue;
+
+            Hold hold = new();
+
+            foreach (Note reference in note.References())
+            {
+                hold.Segments.Add(reference);
+                checkedNotes.Add(reference);
+            }
+            
+            holdNotes.Add(hold);
+        }
+
+        foreach (Hold hold in holdNotes)
+        {
+            for (int i = 0; i < hold.Segments.Count; i++)
+            {
+                if (i % 2 == 0) continue;
+
+                Note note = hold.Segments[i];
+
+                // Can't trust the user to keep max >= min
+                int lMin = int.Min(leftMin, leftMax);
+                int lMax = int.Max(leftMin, leftMax);
+                int rMin = int.Min(rightMin, rightMax);
+                int rMax = int.Max(rightMin, rightMax);
+                
+                int left = random.Next(leftMin, leftMax);
+                int right = random.Next(rightMin, rightMax);
+
+                int position = note.Position - left;
+                int size = int.Clamp(note.Size + left + right, Note.MinSize(note.NoteType), 60);
+                
+                Note newNote = new(note)
+                {
+                    Position = position,
+                    Size = size
+                };
+
+                operationList.Add(new EditNote(note, newNote));
+            }
+        }
+        
+        if (operationList.Count == 0) return;
+        UndoRedoManager.InvokeAndPush(new CompositeOperation(operationList));
+        Chart.IsSaved = false;
+    }
+
+    public void ReconstructHold(int generatorMethod, int beatDivision)
+    {
+        if (EditorState is ChartEditorState.InsertHold) return;
+        
+        HashSet<Note> checkedNotes = [];
+        List<Hold> holdNotes = [];
+        List<IOperation> operationList = [];
+        
+        foreach (Note note in SelectedNotes)
+        {
+            if (checkedNotes.Contains(note)) continue;
+
+            Hold hold = new();
+
+            foreach (Note reference in note.References())
+            {
+                hold.Segments.Add(reference);
+                checkedNotes.Add(reference);
+            }
+            
+            holdNotes.Add(hold);
+        }
+
+        int interval = 1920 / beatDivision;
+        
+        foreach (Hold hold in holdNotes)
+        {
+            int firstTick = hold.Segments[0].BeatData.FullTick;
+            int lastTick = hold.Segments[^1].BeatData.FullTick;
+
+            switch (generatorMethod)
+            {
+                case 0: holdToHold(hold, firstTick, lastTick); break;
+                case 1: holdToChain(hold, firstTick, lastTick); break;
+            }
+            
+            deleteHold(hold);
+        }
+        
+        if (operationList.Count == 0) return;
+        UndoRedoManager.InvokeAndPush(new CompositeOperation(operationList));
+        Chart.IsSaved = false;
+        return;
+
+        void holdToHold(Hold hold, int firstTick, int lastTick)
+        {
+            Note? last = null;
+            for (int i = firstTick; i <= lastTick; i += interval)
+            {
+                int pos = hold.Segments.MinBy(x => int.Abs(i - x.BeatData.FullTick))!.Position;
+                int size = hold.Segments.MinBy(x => int.Abs(i - x.BeatData.FullTick))!.Size;
+                
+                Note note = new()
+                {
+                    BeatData = new(i),
+                    GimmickType = GimmickType.None,
+                    MaskDirection = MaskDirection.Center,
+                    NoteType = last == null ? NoteType.HoldStart : NoteType.HoldEnd,
+                    Position = pos % 60,
+                    Size = int.Max(size, Note.MinSize(last == null ? NoteType.HoldStart : NoteType.HoldEnd)),
+                    PrevReferencedNote = last,
+                };
+
+                if (last != null)
+                {
+                    last.NextReferencedNote = note;
+                    if (last.NoteType == NoteType.HoldEnd) last.NoteType = NoteType.HoldSegment;
+                }
+                
+                last = note;
+
+                operationList.Add(new InsertNote(Chart, SelectedNotes, note));
+            }
+
+            if (last != null && last.BeatData.FullTick < lastTick)
+            {
+                Note segment = hold.Segments[^1];
+                
+                Note note = new(segment)
+                {
+                    PrevReferencedNote = last,
+                };
+
+                last.NextReferencedNote = note;
+                if (last.NoteType == NoteType.HoldEnd) last.NoteType = NoteType.HoldSegment;
+                
+                operationList.Add(new InsertNote(Chart, SelectedNotes, note));
+            }
+        }
+
+        void holdToChain(Hold hold, int firstTick, int lastTick)
+        {
+            for (int i = firstTick; i <= lastTick; i += interval)
+            {
+                int pos = hold.Segments.MinBy(x => int.Abs(i - x.BeatData.FullTick))!.Position;
+                int size = hold.Segments.MinBy(x => int.Abs(i - x.BeatData.FullTick))!.Size;
+                
+                Note note = new()
+                {
+                    BeatData = new(i),
+                    GimmickType = GimmickType.None,
+                    MaskDirection = MaskDirection.Center,
+                    NoteType = NoteType.Chain,
+                    Position = pos % 60,
+                    Size = int.Max(size, Note.MinSize(NoteType.Chain))
+                };
+
+                operationList.Add(new InsertNote(Chart, SelectedNotes, note));
+            }
+        }
+        
+        void deleteHold(Hold hold)
+        {
+            List<DeleteHoldNote> holdOperationList = [];
+            
+            foreach (Note note in hold.Segments.OrderByDescending(x => x.BeatData.FullTick))
+            {
+                Note? newLastPlacedHold = null;
+                
+                DeleteHoldNote holdOp = new(Chart, this, SelectedNotes, note, newLastPlacedHold);
+                holdOperationList.Add(holdOp);
+                
+                UndoRedoManager.InvokeAndPush(holdOp);
+            }
+            
+            // Temporarily undo all hold operations, then add them to the operationList
+            foreach (DeleteHoldNote deleteHoldOp in holdOperationList)
+            {
+                UndoRedoManager.Undo();
+                operationList.Add(deleteHoldOp);
+            }
+        }
+    }
 }

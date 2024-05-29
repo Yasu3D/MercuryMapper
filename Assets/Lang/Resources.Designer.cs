@@ -681,6 +681,24 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No Holds selected!.
+        /// </summary>
+        public static string Editor_NoHoldsSelected {
+            get {
+                return ResourceManager.GetString("Editor_NoHoldsSelected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select any segment of a hold note to run this algorithm on it..
+        /// </summary>
+        public static string Editor_NoHoldsSelectedTip {
+            get {
+                return ResourceManager.GetString("Editor_NoHoldsSelectedTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Note Caps.
         /// </summary>
         public static string Editor_NoteCaps {
@@ -902,6 +920,15 @@ namespace MercuryMapper.Assets.Lang {
         public static string Generic_Export {
             get {
                 return ResourceManager.GetString("Generic_Export", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Generate.
+        /// </summary>
+        public static string Generic_Generate {
+            get {
+                return ResourceManager.GetString("Generic_Generate", resourceCulture);
             }
         }
         
@@ -1177,6 +1204,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Generate Jagged Holds.
+        /// </summary>
+        public static string Menu_JaggedHolds {
+            get {
+                return ResourceManager.GetString("Menu_JaggedHolds", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mirror Chart.
         /// </summary>
         public static string Menu_MirrorChart {
@@ -1209,6 +1245,15 @@ namespace MercuryMapper.Assets.Lang {
         public static string Menu_Paste {
             get {
                 return ResourceManager.GetString("Menu_Paste", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reconstruct Holds.
+        /// </summary>
+        public static string Menu_ReconstructHolds {
+            get {
+                return ResourceManager.GetString("Menu_ReconstructHolds", resourceCulture);
             }
         }
         
@@ -2003,6 +2048,114 @@ namespace MercuryMapper.Assets.Lang {
         public static string Tools_FixOffByOneTitle {
             get {
                 return ResourceManager.GetString("Tools_FixOffByOneTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Generator Type.
+        /// </summary>
+        public static string Tools_GeneratorType {
+            get {
+                return ResourceManager.GetString("Tools_GeneratorType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Interval [Beat Division].
+        /// </summary>
+        public static string Tools_Interval {
+            get {
+                return ResourceManager.GetString("Tools_Interval", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Left Edge.
+        /// </summary>
+        public static string Tools_Jagged_LeftEdge {
+            get {
+                return ResourceManager.GetString("Tools_Jagged_LeftEdge", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Left Edge [Max].
+        /// </summary>
+        public static string Tools_Jagged_LeftEdgeMax {
+            get {
+                return ResourceManager.GetString("Tools_Jagged_LeftEdgeMax", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Left Edge [Min].
+        /// </summary>
+        public static string Tools_Jagged_LeftEdgeMin {
+            get {
+                return ResourceManager.GetString("Tools_Jagged_LeftEdgeMin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Noise.
+        /// </summary>
+        public static string Tools_Jagged_Noise {
+            get {
+                return ResourceManager.GetString("Tools_Jagged_Noise", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Right Edge.
+        /// </summary>
+        public static string Tools_Jagged_RightEdge {
+            get {
+                return ResourceManager.GetString("Tools_Jagged_RightEdge", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Right Edge [Max].
+        /// </summary>
+        public static string Tools_Jagged_RightEdgeMax {
+            get {
+                return ResourceManager.GetString("Tools_Jagged_RightEdgeMax", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Right Edge [Min].
+        /// </summary>
+        public static string Tools_Jagged_RightEdgeMin {
+            get {
+                return ResourceManager.GetString("Tools_Jagged_RightEdgeMin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Spikes.
+        /// </summary>
+        public static string Tools_Jagged_Spikes {
+            get {
+                return ResourceManager.GetString("Tools_Jagged_Spikes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hold to Chain.
+        /// </summary>
+        public static string Tools_Reconstruct_HoldToChain {
+            get {
+                return ResourceManager.GetString("Tools_Reconstruct_HoldToChain", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hold to Hold.
+        /// </summary>
+        public static string Tools_Reconstruct_HoldToHold {
+            get {
+                return ResourceManager.GetString("Tools_Reconstruct_HoldToHold", resourceCulture);
             }
         }
         

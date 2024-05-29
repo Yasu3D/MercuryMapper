@@ -1237,6 +1237,70 @@ public partial class MainView : UserControl
         }
     }
 
+    private void MenuItemGenerateJaggedHolds_OnClick(object? sender, RoutedEventArgs e)
+    {
+        if (!ChartEditor.SelectedNotes.Exists(x => x.IsHold))
+        {
+            ShowWarningMessage(Assets.Lang.Resources.Editor_NoHoldsSelected, Assets.Lang.Resources.Editor_NoHoldsSelectedTip);
+            return;
+        }
+        
+        ToolsView_GenerateJaggedHolds generatorView = new();
+        ContentDialog dialog = new()
+        {
+            Content = generatorView,
+            Title = Assets.Lang.Resources.Menu_JaggedHolds,
+            CloseButtonText = Assets.Lang.Resources.Generic_Cancel,
+            PrimaryButtonText = Assets.Lang.Resources.Generic_Generate
+        };
+        
+        Dispatcher.UIThread.Post(async () =>
+        {
+            ContentDialogResult result = await dialog.ShowAsync();
+            if (result is not ContentDialogResult.Primary) return;
+
+            switch (generatorView.GeneratorMethod.SelectedIndex)
+            {
+                case 0:
+                {
+                    ChartEditor.GenerateSpikeHolds((int?)generatorView.LeftEdge.Value ?? 0, (int?)generatorView.RightEdge.Value ?? 0);
+                    break;
+                }
+                case 1:
+                {
+                    ChartEditor.GenerateNoiseHolds((int?)generatorView.LeftEdgeMin.Value ?? 0, (int?)generatorView.LeftEdgeMax.Value ?? 0, (int?)generatorView.RightEdgeMin.Value ?? 0, (int?)generatorView.RightEdgeMax.Value ?? 0);
+                    break;
+                }
+            }
+        });
+    }
+    
+    private void MenuItemReconstructHolds_OnClick(object? sender, RoutedEventArgs e)
+    {
+        if (!ChartEditor.SelectedNotes.Exists(x => x.IsHold))
+        {
+            ShowWarningMessage(Assets.Lang.Resources.Editor_NoHoldsSelected, Assets.Lang.Resources.Editor_NoHoldsSelectedTip);
+            return;
+        }
+        
+        ToolsView_ReconstructHolds reconstructView = new();
+        ContentDialog dialog = new()
+        {
+            Content = reconstructView,
+            Title = Assets.Lang.Resources.Menu_ReconstructHolds,
+            CloseButtonText = Assets.Lang.Resources.Generic_Cancel,
+            PrimaryButtonText = Assets.Lang.Resources.Generic_Generate
+        };
+        
+        Dispatcher.UIThread.Post(async () =>
+        {
+            ContentDialogResult result = await dialog.ShowAsync();
+            if (result is not ContentDialogResult.Primary) return;
+            
+            ChartEditor.ReconstructHold(reconstructView.GeneratorMethod.SelectedIndex, (int?)reconstructView.Interval.Value ?? 0);
+        });
+    }
+    
     private void RadioNoteType_IsCheckedChanged(object? sender, RoutedEventArgs e)
     {
         if (RadioNoteMaskAdd?.IsChecked == null || RadioNoteMaskRemove?.IsChecked == null) return;

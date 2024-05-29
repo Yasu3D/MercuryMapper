@@ -678,4 +678,55 @@ Continue?</value>
     <data name="SaturnExport_DiffBeyond" xml:space="preserve">
         <value>Beyond Diff</value>
     </data>
+    <data name="Menu_JaggedHolds" xml:space="preserve">
+        <value>Generate Jagged Holds</value>
+    </data>
+    <data name="Menu_ReconstructHolds" xml:space="preserve">
+        <value>Reconstruct Holds</value>
+    </data>
+    <data name="Generic_Generate" xml:space="preserve">
+        <value>Generate</value>
+    </data>
+    <data name="Tools_Interval" xml:space="preserve">
+        <value>Interval [Beat Division]</value>
+    </data>
+    <data name="Tools_GeneratorType" xml:space="preserve">
+        <value>Generator Type</value>
+    </data>
+    <data name="Tools_Reconstruct_HoldToHold" xml:space="preserve">
+        <value>Hold to Hold</value>
+    </data>
+    <data name="Tools_Reconstruct_HoldToChain" xml:space="preserve">
+        <value>Hold to Chain</value>
+    </data>
+    <data name="Tools_Jagged_Spikes" xml:space="preserve">
+        <value>Spikes</value>
+    </data>
+    <data name="Tools_Jagged_Noise" xml:space="preserve">
+        <value>Noise</value>
+    </data>
+    <data name="Tools_Jagged_LeftEdge" xml:space="preserve">
+        <value>Left Edge</value>
+    </data>
+    <data name="Tools_Jagged_LeftEdgeMax" xml:space="preserve">
+        <value>Left Edge [Max]</value>
+    </data>
+    <data name="Tools_Jagged_LeftEdgeMin" xml:space="preserve">
+        <value>Left Edge [Min]</value>
+    </data>
+    <data name="Tools_Jagged_RightEdge" xml:space="preserve">
+        <value>Right Edge</value>
+    </data>
+    <data name="Tools_Jagged_RightEdgeMax" xml:space="preserve">
+        <value>Right Edge [Max]</value>
+    </data>
+    <data name="Tools_Jagged_RightEdgeMin" xml:space="preserve">
+        <value>Right Edge [Min]</value>
+    </data>
+    <data name="Editor_NoHoldsSelected" xml:space="preserve">
+        <value>No Holds selected!</value>
+    </data>
+    <data name="Editor_NoHoldsSelectedTip" xml:space="preserve">
+        <value>Select any segment of a hold note to run this algorithm on it.</value>
+    </data>
 </root>
