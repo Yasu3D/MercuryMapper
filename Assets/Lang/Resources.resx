@@ -624,4 +624,10 @@ Continue?</value>
     <data name="Settings_HoldRenderMethod" xml:space="preserve">
         <value>Hold Render Method</value>
     </data>
+    <data name="Editor_HoldEase_LinearPlusIn" xml:space="preserve">
+        <value>Linear+ In</value>
+    </data>
+    <data name="Editor_HoldEase_LinearPlusOut" xml:space="preserve">
+        <value>Linear+ Out</value>
+    </data>
 </root>

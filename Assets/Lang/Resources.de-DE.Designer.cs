@@ -456,6 +456,24 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Linear+ In.
+        /// </summary>
+        public static string Editor_HoldEase_LinearPlusIn {
+            get {
+                return ResourceManager.GetString("Editor_HoldEase_LinearPlusIn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Linear+ Out.
+        /// </summary>
+        public static string Editor_HoldEase_LinearPlusOut {
+            get {
+                return ResourceManager.GetString("Editor_HoldEase_LinearPlusOut", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Quad In.
         /// </summary>
         public static string Editor_HoldEase_QuadIn {
