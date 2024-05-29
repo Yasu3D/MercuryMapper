@@ -810,6 +810,7 @@ public class ChartEditor
     {
         if (HighlightedElement is null or Note) return;
         if (!Chart.Gimmicks.Contains(HighlightedElement)) return;
+        if (HighlightedElement == Chart.StartBpm || HighlightedElement == Chart.StartTimeSig) return;
         
         Gimmick gimmick = (Gimmick)HighlightedElement;
         List<IOperation> operationList = [new DeleteGimmick(Chart, gimmick)];
