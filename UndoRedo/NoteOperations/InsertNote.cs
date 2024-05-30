@@ -69,26 +69,26 @@ public class InsertHoldNote(Chart chart, List<Note> selected, Note note, Note la
     }
 }
 
-public class InsertHoldSegment(Chart chart, List<Note> selected, Note note, Note highlighted) : IOperation
+public class InsertHoldSegment(Chart chart, List<Note> selected, Note newNote, Note previous, Note next) : IOperation
 {
     public Chart Chart { get; } = chart;
-    public Note Note { get; } = note;
-    public Note Highlighted { get; } = highlighted;
-    public Note Previous { get; } = highlighted.PrevReferencedNote!;
+    public Note NewNote { get; } = newNote;
+    public Note Previous { get; } = previous;
+    public Note Next { get; } = next;
     public List<Note> Selected { get; } = selected;
     
     public void Undo()
     {
         lock (Chart)
         {
-            Highlighted.PrevReferencedNote = Previous;
-            Previous.NextReferencedNote = Highlighted;
+            Next.PrevReferencedNote = Previous;
+            Previous.NextReferencedNote = Next;
 
-            Note.PrevReferencedNote = null;
-            Note.NextReferencedNote = null;
+            NewNote.PrevReferencedNote = null;
+            NewNote.NextReferencedNote = null;
             
-            Chart.Notes.Remove(Note);
-            Selected.Remove(Note);
+            Chart.Notes.Remove(NewNote);
+            Selected.Remove(NewNote);
         }
     }
 
@@ -96,13 +96,13 @@ public class InsertHoldSegment(Chart chart, List<Note> selected, Note note, Note
     {
         lock (Chart)
         {
-            Chart.Notes.Add(Note);
-            
-            Previous.NextReferencedNote = Note;
-            Highlighted.PrevReferencedNote = Note;
+            Chart.Notes.Add(NewNote);
 
-            Note.PrevReferencedNote = Previous;
-            Note.NextReferencedNote = Highlighted;
+            Previous.NextReferencedNote = NewNote;
+            Next.PrevReferencedNote = NewNote;
+
+            NewNote.PrevReferencedNote = Previous;
+            NewNote.NextReferencedNote = Next;
         }
     }
 }

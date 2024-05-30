@@ -1307,26 +1307,37 @@ public class ChartEditor
     public void InsertHoldSegment()
     {
         if (HighlightedElement is not Note highlighted) return;
-        if (highlighted.NoteType is not (NoteType.HoldSegment or NoteType.HoldEnd)) return;
-        if (highlighted.PrevReferencedNote is null) return;
+        if (!highlighted.IsHold) return;
 
-        BeatData data = new(CurrentMeasureDecimal);
+        Hold hold = new() { Segments = highlighted.References().ToList() };
+
+        if (CurrentBeatData.FullTick <= hold.Segments[0].BeatData.FullTick) return;
+        if (CurrentBeatData.FullTick >= hold.Segments[^1].BeatData.FullTick) return;
+
+        Note? previous = hold.Segments.LastOrDefault(x => x.BeatData.FullTick <= CurrentBeatData.FullTick);
+        Note? next = hold.Segments.FirstOrDefault(x => x.BeatData.FullTick >= CurrentBeatData.FullTick);
+
+        if (previous is null || next is null) return;
+
+        if (CurrentBeatData.FullTick == previous.BeatData.FullTick ||
+            CurrentBeatData.FullTick == next.BeatData.FullTick) return;
         
-        // Current timestamp not between selected and last note
-        if ( data.FullTick < highlighted.PrevReferencedNote.BeatData.FullTick 
-             || data.FullTick > highlighted.BeatData.FullTick) return;
-
         Note note = new()
         {
-            BeatData = data,
+            BeatData = CurrentBeatData,
             GimmickType = GimmickType.None,
             MaskDirection = CurrentMaskDirection,
             NoteType = NoteType.HoldSegment,
             Position = Cursor.Position,
-            Size = Cursor.Size
+            Size = Cursor.Size,
+            NextReferencedNote = next,
+            PrevReferencedNote = previous
         };
+
+        previous.NextReferencedNote = note;
+        next.PrevReferencedNote = note;
         
-        UndoRedoManager.InvokeAndPush(new InsertHoldSegment(Chart, SelectedNotes, note, highlighted));
+        UndoRedoManager.InvokeAndPush(new InsertHoldSegment(Chart, SelectedNotes, note, previous, next));
     }
 
     public void StitchHold()
