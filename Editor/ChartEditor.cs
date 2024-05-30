@@ -1365,8 +1365,14 @@ public class ChartEditor
     public void EditHold()
     {
         if (HighlightedElement is null or Gimmick) return;
-        if (((Note)HighlightedElement).NoteType is not NoteType.HoldEnd) return;
-        StartHold((Note)HighlightedElement);
+
+        Note note = (Note)HighlightedElement;
+        if (!note.IsHold) return;
+        
+        Note last = note.References().Last();
+
+        HighlightedElement = last;
+        StartHold(last);
     }
     
     public void StartHold(Note lastPlacedHold)
