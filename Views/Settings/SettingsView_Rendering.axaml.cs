@@ -29,6 +29,7 @@ public partial class SettingsView_Rendering : UserControl
         NumericBeatDivision.Value = RenderConfig.BeatDivision;
         CheckBoxShowMaskDuringPlayback.IsChecked = RenderConfig.ShowMaskDuringPlayback;
         CheckBoxShowGimmickNotesDuringPlayback.IsChecked = RenderConfig.ShowGimmickNotesDuringPlayback;
+        CheckBoxShowChainStripes.IsChecked = RenderConfig.ShowChainStripes;
     }
     
     private void RefreshRate_OnValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
@@ -76,5 +77,10 @@ public partial class SettingsView_Rendering : UserControl
     {
         if (ComboHoldRenderMethod == null) return;
         RenderConfig.HoldRenderMethod = ComboHoldRenderMethod.SelectedIndex;
+    }
+
+    private void ShowChainStripes_OnIsCheckedChanged(object? sender, RoutedEventArgs e)
+    {
+        RenderConfig.ShowChainStripes = CheckBoxShowChainStripes.IsChecked ?? true;
     }
 }

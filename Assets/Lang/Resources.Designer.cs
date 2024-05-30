@@ -2005,6 +2005,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Show Chain Stripes.
+        /// </summary>
+        public static string Settings_ShowChainStripes {
+            get {
+                return ResourceManager.GetString("Settings_ShowChainStripes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Show Gimmick Notes during Playback.
         /// </summary>
         public static string Settings_ShowGimmickNotesDuringPlayback {

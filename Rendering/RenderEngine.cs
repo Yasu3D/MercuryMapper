@@ -960,7 +960,7 @@ public class RenderEngine(MainView mainView)
             
             canvas.DrawArc(data.Rect, data.StartAngle, data.SweepAngle, false, brushes.GetNotePen(note, canvasScale * data.Scale));
 
-            if (note.NoteType is NoteType.Chain or NoteType.ChainRNote)
+            if (note.NoteType is NoteType.Chain or NoteType.ChainRNote && RenderConfig.ShowChainStripes)
             {
                 int stripes = note.Size * 2;
                 float radiusInner = 0.5f * (data.Rect.Width - brushes.NoteWidthMultiplier * canvasScale * data.Scale);

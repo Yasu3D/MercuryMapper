@@ -23,6 +23,9 @@
                     <ComboBoxItem Content="Modern" ToolTip.Tip="{x:Static lang:Resources.ToolTip_HoldRender_Modern}"/>
                     <ComboBoxItem Content="Legacy" ToolTip.Tip="{x:Static lang:Resources.ToolTip_HoldRender_Legacy}"/>
                 </ComboBox>
+                
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_ShowChainStripes}"/>
+                <CheckBox Name="CheckBoxShowChainStripes" HorizontalAlignment="Right" IsCheckedChanged="ShowChainStripes_OnIsCheckedChanged"/>
             </UniformGrid>
             
             <Separator/>

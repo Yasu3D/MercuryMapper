@@ -24,6 +24,7 @@ public class RenderConfig
     public bool ShowHiSpeed { get; set; } = true;
     public bool ShowMaskDuringPlayback { get; set; } = false;
     public bool ShowGimmickNotesDuringPlayback { get; set; } = false;
+    public bool ShowChainStripes { get; set; } = true;
 }
 
 public class KeymapConfig

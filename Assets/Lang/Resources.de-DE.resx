@@ -729,4 +729,7 @@ Fortfahren?</value>
     <data name="Editor_NoHoldsSelectedTip" xml:space="preserve">
         <value>Wähle ein Segment einer Hold Note aus um diesen algorithmus auf dieser auszuführen.</value>
     </data>
+    <data name="Settings_ShowChainStripes" xml:space="preserve">
+        <value>Zeige Ketten-Noten Streifen</value>
+    </data>
 </root>
