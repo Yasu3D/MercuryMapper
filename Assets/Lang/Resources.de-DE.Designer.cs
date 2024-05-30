@@ -2178,6 +2178,123 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Fügt Hold-Segmente vor dem ausgewählten Segment einer vorhandenen Hold ein..
+        /// </summary>
+        public static string ToolTip_BakeHold {
+            get {
+                return ResourceManager.GetString("ToolTip_BakeHold", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bonus Note [extra Clear Punkte, glitzernder Ton].
+        /// </summary>
+        public static string ToolTip_BonusType_Bonus {
+            get {
+                return ResourceManager.GetString("ToolTip_BonusType_Bonus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Standard Note [keine Effekte].
+        /// </summary>
+        public static string ToolTip_BonusType_None {
+            get {
+                return ResourceManager.GetString("ToolTip_BonusType_None", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to R-Note [Regenbogen Effekt, Lauter Splash Ton].
+        /// </summary>
+        public static string ToolTip_BonusType_RNote {
+            get {
+                return ResourceManager.GetString("ToolTip_BonusType_RNote", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fügt einen BPM Wechsel ein..
+        /// </summary>
+        public static string ToolTip_BPM {
+            get {
+                return ResourceManager.GetString("ToolTip_BPM", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Informationen zu einer Chart, z. B. Audio, Autor und Level..
+        /// </summary>
+        public static string ToolTip_ChartInfo {
+            get {
+                return ResourceManager.GetString("ToolTip_ChartInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Form und Typ gleichzeitig bearbeiten..
+        /// </summary>
+        public static string ToolTip_EditBoth {
+            get {
+                return ResourceManager.GetString("ToolTip_EditBoth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Markiere irgendeine Note einer Hold und clicke [Hold Bearbeiten] um eine Hold Note weiterzuführen..
+        /// </summary>
+        public static string ToolTip_EditHold {
+            get {
+                return ResourceManager.GetString("ToolTip_EditHold", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Noten Größe und Position bearbeiten..
+        /// </summary>
+        public static string ToolTip_EditShape {
+            get {
+                return ResourceManager.GetString("ToolTip_EditShape", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Noten Typ und Bonus Typ bearbeiten..
+        /// </summary>
+        public static string ToolTip_EditType {
+            get {
+                return ResourceManager.GetString("ToolTip_EditType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hebt automatisch eine Note hervor wenn sie platziert wird..
+        /// </summary>
+        public static string ToolTip_HighlightPlacedNote {
+            get {
+                return ResourceManager.GetString("ToolTip_HighlightPlacedNote", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fügt einen HiSpeed Wechsel ein. [Auch bekannt als Scroll Speed / Soflan].
+        /// </summary>
+        public static string ToolTip_HiSpeed {
+            get {
+                return ResourceManager.GetString("ToolTip_HiSpeed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Optionen für verschienene Hold Noten Formen. Probier sie einfach aus :].
+        /// </summary>
+        public static string ToolTip_HoldEase {
+            get {
+                return ResourceManager.GetString("ToolTip_HoldEase", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Original Render-Methode die Hold Noten Segment für Segment gezeichnet hat. Schlechte performance, aber ausgereifter..
         /// </summary>
         public static string ToolTip_HoldRender_Legacy {
@@ -2192,6 +2309,267 @@ namespace MercuryMapper.Assets.Lang {
         public static string ToolTip_HoldRender_Modern {
             get {
                 return ResourceManager.GetString("ToolTip_HoldRender_Modern", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fügt eine Note mit festgelegten Eigenschaften am aktuellen Zeitstempel ein..
+        /// </summary>
+        public static string ToolTip_Insert {
+            get {
+                return ResourceManager.GetString("ToolTip_Insert", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fügt ein einzelnes Hold Segment am Aktuellen Zeitstempel ein. Hebe irgendein Segment einer Hold hervor um festzulegen, bei welcher das neue Segment eingefügt wird..
+        /// </summary>
+        public static string ToolTip_InsertHold {
+            get {
+                return ResourceManager.GetString("ToolTip_InsertHold", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zeige/Verstecke Gimmick Marker..
+        /// </summary>
+        public static string ToolTip_LayerGimmick {
+            get {
+                return ResourceManager.GetString("ToolTip_LayerGimmick", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zeige/Verstecke Masken Noten..
+        /// </summary>
+        public static string ToolTip_LayerMask {
+            get {
+                return ResourceManager.GetString("ToolTip_LayerMask", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zeige/Verstecke Spielbare Noten..
+        /// </summary>
+        public static string ToolTip_LayerNote {
+            get {
+                return ResourceManager.GetString("ToolTip_LayerNote", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Die Maskenanimation breitet sich von der Mitte der Note nach außen aus..
+        /// </summary>
+        public static string ToolTip_MaskDirection_Center {
+            get {
+                return ResourceManager.GetString("ToolTip_MaskDirection_Center", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Die Maskenanimation wird von einer Seite der Note zur anderen im Uhrzeigersinn ausgebreitet..
+        /// </summary>
+        public static string ToolTip_MaskDirection_Clockwise {
+            get {
+                return ResourceManager.GetString("ToolTip_MaskDirection_Clockwise", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Die Maskenanimation wird von einer Seite der Note zur anderen gegen den Uhrzeigersinn ausgebreitet..
+        /// </summary>
+        public static string ToolTip_MaskDirection_CounterClockwise {
+            get {
+                return ResourceManager.GetString("ToolTip_MaskDirection_CounterClockwise", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Spiegel Noten um die Spiegelachse. Bewege den Mauszeiger über die Zahl, um die Achse zu sehen..
+        /// </summary>
+        public static string ToolTip_Mirror {
+            get {
+                return ResourceManager.GetString("ToolTip_Mirror", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Gimmick-bezogene Funktionen..
+        /// </summary>
+        public static string ToolTip_ModifyGimmicks {
+            get {
+                return ResourceManager.GetString("ToolTip_ModifyGimmicks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Noten-bezogene Funktionen, z.B. Bearbeiten und Löschen..
+        /// </summary>
+        public static string ToolTip_ModifyNotes {
+            get {
+                return ResourceManager.GetString("ToolTip_ModifyNotes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hebe die am Zeitstempel naheste Note hervor..
+        /// </summary>
+        public static string ToolTip_Nearest {
+            get {
+                return ResourceManager.GetString("ToolTip_Nearest", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hebe die nächste Note hervor..
+        /// </summary>
+        public static string ToolTip_Next {
+            get {
+                return ResourceManager.GetString("ToolTip_Next", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Aktuell ausgewählter Noten-Typ..
+        /// </summary>
+        public static string ToolTip_NoteTypes {
+            get {
+                return ResourceManager.GetString("ToolTip_NoteTypes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ändere Wiedergabegeschwindigkeit..
+        /// </summary>
+        public static string ToolTip_PlaybackSpeed {
+            get {
+                return ResourceManager.GetString("ToolTip_PlaybackSpeed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Play/Pause.
+        /// </summary>
+        public static string ToolTip_PlayPause {
+            get {
+                return ResourceManager.GetString("ToolTip_PlayPause", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hebe die vorherige Note hervor..
+        /// </summary>
+        public static string ToolTip_Previous {
+            get {
+                return ResourceManager.GetString("ToolTip_Previous", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Quantisiert den Abspielkopf beim Pausieren auf die aktuelle Taktteilung..
+        /// </summary>
+        public static string ToolTip_QuantizeOnPause {
+            get {
+                return ResourceManager.GetString("ToolTip_QuantizeOnPause", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Schneller Zugriff auf einige häufig geänderte Einstellungen..
+        /// </summary>
+        public static string ToolTip_QuickSettings {
+            get {
+                return ResourceManager.GetString("ToolTip_QuickSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fügt einen Reverse Effekt ein der Noten rückwärts scrollen lässt. DIESER EFFEKT WIRD NOCH NICHT VON MERCURYMAPPER GERENDERT!.
+        /// </summary>
+        public static string ToolTip_Reverse {
+            get {
+                return ResourceManager.GetString("ToolTip_Reverse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Noten hören auf rückwärts zu scrollen, und scrollen wieder vorwärts..
+        /// </summary>
+        public static string ToolTip_Reverse_EffectEnd {
+            get {
+                return ResourceManager.GetString("ToolTip_Reverse_EffectEnd", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Noten beginnen, rückwärts zu scrollen..
+        /// </summary>
+        public static string ToolTip_Reverse_EffectStart {
+            get {
+                return ResourceManager.GetString("ToolTip_Reverse_EffectStart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Die Noten zwischen diesem Zeitstempel und [Effekt Ende] werden rückwärts gescrollt..
+        /// </summary>
+        public static string ToolTip_Reverse_NoteZoneEnd {
+            get {
+                return ResourceManager.GetString("ToolTip_Reverse_NoteZoneEnd", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Informationen zur Auswahl und Hervorhebung..
+        /// </summary>
+        public static string ToolTip_SelectionInfo {
+            get {
+                return ResourceManager.GetString("ToolTip_SelectionInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Setzt die Render-Flag einer Hold Note auf negativ. Das bedeutet, dass das Spiel die Note ignoriert, wenn Visuals generiert werden. Dadurch werden unregelmäßigkeiten ausgeglichen. Die Bewertung der Note folgt aber weiterhin den Segmenten!.
+        /// </summary>
+        public static string ToolTip_SetRenderFalse {
+            get {
+                return ResourceManager.GetString("ToolTip_SetRenderFalse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Setzt die Render-Flag einer Hold Note auf positiv. Siehe [Render Deaktivieren] für mehr Info..
+        /// </summary>
+        public static string ToolTip_SetRenderTrue {
+            get {
+                return ResourceManager.GetString("ToolTip_SetRenderTrue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Verbindet das Ende einer Hold Note mit dem Anfang einer anderen, um sie zu einer Note zusammenzufügen. Sie müssen NUR ein Hold Ende und einen Hold Start auswählen..
+        /// </summary>
+        public static string ToolTip_StitchHold {
+            get {
+                return ResourceManager.GetString("ToolTip_StitchHold", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fügt einen Stop Effekt ein, der den Noten-Scroll zwischen Start und Ende einfriert..
+        /// </summary>
+        public static string ToolTip_Stop {
+            get {
+                return ResourceManager.GetString("ToolTip_Stop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fügt einen Taktart-Wechsel ein..
+        /// </summary>
+        public static string ToolTip_TimeSignature {
+            get {
+                return ResourceManager.GetString("ToolTip_TimeSignature", resourceCulture);
             }
         }
     }

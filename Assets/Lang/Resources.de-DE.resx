@@ -732,4 +732,130 @@ Fortfahren?</value>
     <data name="Settings_ShowChainStripes" xml:space="preserve">
         <value>Zeige Ketten-Noten Streifen</value>
     </data>
+    <data name="ToolTip_NoteTypes" xml:space="preserve">
+        <value>Aktuell ausgewählter Noten-Typ.</value>
+    </data>
+    <data name="ToolTip_BakeHold" xml:space="preserve">
+        <value>Fügt Hold-Segmente vor dem ausgewählten Segment einer vorhandenen Hold ein.</value>
+    </data>
+    <data name="ToolTip_BonusType_None" xml:space="preserve">
+        <value>Standard Note [keine Effekte]</value>
+    </data>
+    <data name="ToolTip_BonusType_Bonus" xml:space="preserve">
+        <value>Bonus Note [extra Clear Punkte, glitzernder Ton]</value>
+    </data>
+    <data name="ToolTip_BonusType_RNote" xml:space="preserve">
+        <value>R-Note [Regenbogen Effekt, Lauter Splash Ton]</value>
+    </data>
+    <data name="ToolTip_BPM" xml:space="preserve">
+        <value>Fügt einen BPM Wechsel ein.</value>
+    </data>
+    <data name="ToolTip_ChartInfo" xml:space="preserve">
+        <value>Informationen zu einer Chart, z. B. Audio, Autor und Level.</value>
+    </data>
+    <data name="ToolTip_EditBoth" xml:space="preserve">
+        <value>Form und Typ gleichzeitig bearbeiten.</value>
+    </data>
+    <data name="ToolTip_EditHold" xml:space="preserve">
+        <value>Markiere irgendeine Note einer Hold und clicke [Hold Bearbeiten] um eine Hold Note weiterzuführen.</value>
+    </data>
+    <data name="ToolTip_EditShape" xml:space="preserve">
+        <value>Noten Größe und Position bearbeiten.</value>
+    </data>
+    <data name="ToolTip_EditType" xml:space="preserve">
+        <value>Noten Typ und Bonus Typ bearbeiten.</value>
+    </data>
+    <data name="ToolTip_HighlightPlacedNote" xml:space="preserve">
+        <value>Hebt automatisch eine Note hervor wenn sie platziert wird.</value>
+    </data>
+    <data name="ToolTip_HiSpeed" xml:space="preserve">
+        <value>Fügt einen HiSpeed Wechsel ein. [Auch bekannt als Scroll Speed / Soflan]</value>
+    </data>
+    <data name="ToolTip_HoldEase" xml:space="preserve">
+        <value>Optionen für verschienene Hold Noten Formen. Probier sie einfach aus :]</value>
+    </data>
+    <data name="ToolTip_Insert" xml:space="preserve">
+        <value>Fügt eine Note mit festgelegten Eigenschaften am aktuellen Zeitstempel ein.</value>
+    </data>
+    <data name="ToolTip_InsertHold" xml:space="preserve">
+        <value>Fügt ein einzelnes Hold Segment am Aktuellen Zeitstempel ein. Hebe irgendein Segment einer Hold hervor um festzulegen, bei welcher das neue Segment eingefügt wird.</value>
+    </data>
+    <data name="ToolTip_LayerGimmick" xml:space="preserve">
+        <value>Zeige/Verstecke Gimmick Marker.</value>
+    </data>
+    <data name="ToolTip_LayerMask" xml:space="preserve">
+        <value>Zeige/Verstecke Masken Noten.</value>
+    </data>
+    <data name="ToolTip_LayerNote" xml:space="preserve">
+        <value>Zeige/Verstecke Spielbare Noten.</value>
+    </data>
+    <data name="ToolTip_MaskDirection_Center" xml:space="preserve">
+        <value>Die Maskenanimation breitet sich von der Mitte der Note nach außen aus.</value>
+    </data>
+    <data name="ToolTip_MaskDirection_CounterClockwise" xml:space="preserve">
+        <value>Die Maskenanimation wird von einer Seite der Note zur anderen gegen den Uhrzeigersinn ausgebreitet.</value>
+    </data>
+    <data name="ToolTip_MaskDirection_Clockwise" xml:space="preserve">
+        <value>Die Maskenanimation wird von einer Seite der Note zur anderen im Uhrzeigersinn ausgebreitet.</value>
+    </data>
+    <data name="ToolTip_Mirror" xml:space="preserve">
+        <value>Spiegel Noten um die Spiegelachse. Bewege den Mauszeiger über die Zahl, um die Achse zu sehen.</value>
+    </data>
+    <data name="ToolTip_ModifyGimmicks" xml:space="preserve">
+        <value>Gimmick-bezogene Funktionen.</value>
+    </data>
+    <data name="ToolTip_ModifyNotes" xml:space="preserve">
+        <value>Noten-bezogene Funktionen, z.B. Bearbeiten und Löschen.</value>
+    </data>
+    <data name="ToolTip_Nearest" xml:space="preserve">
+        <value>Hebe die am Zeitstempel naheste Note hervor.</value>
+    </data>
+    <data name="ToolTip_Next" xml:space="preserve">
+        <value>Hebe die nächste Note hervor.</value>
+    </data>
+    <data name="ToolTip_Previous" xml:space="preserve">
+        <value>Hebe die vorherige Note hervor.</value>
+    </data>
+    <data name="ToolTip_QuantizeOnPause" xml:space="preserve">
+        <value>Quantisiert den Abspielkopf beim Pausieren auf die aktuelle Taktteilung.</value>
+    </data>
+    <data name="ToolTip_QuickSettings" xml:space="preserve">
+        <value>Schneller Zugriff auf einige häufig geänderte Einstellungen.</value>
+    </data>
+    <data name="ToolTip_Reverse" xml:space="preserve">
+        <value>Fügt einen Reverse Effekt ein der Noten rückwärts scrollen lässt. DIESER EFFEKT WIRD NOCH NICHT VON MERCURYMAPPER GERENDERT!</value>
+    </data>
+    <data name="ToolTip_SelectionInfo" xml:space="preserve">
+        <value>Informationen zur Auswahl und Hervorhebung.</value>
+    </data>
+    <data name="ToolTip_SetRenderFalse" xml:space="preserve">
+        <value>Setzt die Render-Flag einer Hold Note auf negativ. Das bedeutet, dass das Spiel die Note ignoriert, wenn Visuals generiert werden. Dadurch werden unregelmäßigkeiten ausgeglichen. Die Bewertung der Note folgt aber weiterhin den Segmenten!</value>
+    </data>
+    <data name="ToolTip_SetRenderTrue" xml:space="preserve">
+        <value>Setzt die Render-Flag einer Hold Note auf positiv. Siehe [Render Deaktivieren] für mehr Info.</value>
+    </data>
+    <data name="ToolTip_StitchHold" xml:space="preserve">
+        <value>Verbindet das Ende einer Hold Note mit dem Anfang einer anderen, um sie zu einer Note zusammenzufügen. Sie müssen NUR ein Hold Ende und einen Hold Start auswählen.</value>
+    </data>
+    <data name="ToolTip_Stop" xml:space="preserve">
+        <value>Fügt einen Stop Effekt ein, der den Noten-Scroll zwischen Start und Ende einfriert.</value>
+    </data>
+    <data name="ToolTip_TimeSignature" xml:space="preserve">
+        <value>Fügt einen Taktart-Wechsel ein.</value>
+    </data>
+    <data name="ToolTip_PlaybackSpeed" xml:space="preserve">
+        <value>Ändere Wiedergabegeschwindigkeit.</value>
+    </data>
+    <data name="ToolTip_PlayPause" xml:space="preserve">
+        <value>Play/Pause</value>
+    </data>
+    <data name="ToolTip_Reverse_EffectEnd" xml:space="preserve">
+        <value>Noten hören auf rückwärts zu scrollen, und scrollen wieder vorwärts.</value>
+    </data>
+    <data name="ToolTip_Reverse_EffectStart" xml:space="preserve">
+        <value>Noten beginnen, rückwärts zu scrollen.</value>
+    </data>
+    <data name="ToolTip_Reverse_NoteZoneEnd" xml:space="preserve">
+        <value>Die Noten zwischen diesem Zeitstempel und [Effekt Ende] werden rückwärts gescrollt.</value>
+    </data>
 </root>
