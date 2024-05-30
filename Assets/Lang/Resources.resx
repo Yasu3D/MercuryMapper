@@ -858,4 +858,7 @@ Continue?</value>
     <data name="ToolTip_Reverse_NoteZoneEnd" xml:space="preserve">
         <value>The Notes between this timestamp and [Effect End] are scrolled backwards.</value>
     </data>
+    <data name="Tools_Jagged_OffsetEven" xml:space="preserve">
+        <value>Offset Even Index</value>
+    </data>
 </root>

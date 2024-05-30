@@ -858,4 +858,7 @@ Fortfahren?</value>
     <data name="ToolTip_Reverse_NoteZoneEnd" xml:space="preserve">
         <value>Die Noten zwischen diesem Zeitstempel und [Effekt Ende] werden rückwärts gescrollt.</value>
     </data>
+    <data name="Tools_Jagged_OffsetEven" xml:space="preserve">
+        <value>Versetze geraden Index</value>
+    </data>
 </root>

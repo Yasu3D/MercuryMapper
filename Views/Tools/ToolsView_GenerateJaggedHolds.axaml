@@ -14,6 +14,9 @@
                     <ComboBoxItem Content="{x:Static lang:Resources.Tools_Jagged_Spikes}"/>
                     <ComboBoxItem Content="{x:Static lang:Resources.Tools_Jagged_Noise}"/>
                 </ComboBox>
+                
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Tools_Jagged_OffsetEven}"/>
+                <CheckBox Name="OffsetEven" Margin="5" IsChecked="False"/>
             </UniformGrid>
             
             <Separator/>

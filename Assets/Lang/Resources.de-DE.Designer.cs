@@ -2115,6 +2115,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Versetze geraden Index.
+        /// </summary>
+        public static string Tools_Jagged_OffsetEven {
+            get {
+                return ResourceManager.GetString("Tools_Jagged_OffsetEven", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Rechts.
         /// </summary>
         public static string Tools_Jagged_RightEdge {

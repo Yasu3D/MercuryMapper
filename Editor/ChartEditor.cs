@@ -1522,7 +1522,7 @@ public class ChartEditor
         }
     }
 
-    public void GenerateSpikeHolds(int left, int right)
+    public void GenerateSpikeHolds(bool offsetEven, int left, int right)
     {
         if (EditorState is ChartEditorState.InsertHold) return;
         
@@ -1549,7 +1549,7 @@ public class ChartEditor
         {
             for (int i = 0; i < hold.Segments.Count; i++)
             {
-                if (i % 2 == 0) continue;
+                if (offsetEven ? i % 2 != 0 : i % 2 == 0) continue;
 
                 Note note = hold.Segments[i];
 
@@ -1571,7 +1571,7 @@ public class ChartEditor
         Chart.IsSaved = false;
     }
 
-    public void GenerateNoiseHolds(int leftMin, int leftMax, int rightMin, int rightMax)
+    public void GenerateNoiseHolds(bool offsetEven, int leftMin, int leftMax, int rightMin, int rightMax)
     {
         if (EditorState is ChartEditorState.InsertHold) return;
         
@@ -1599,7 +1599,7 @@ public class ChartEditor
         {
             for (int i = 0; i < hold.Segments.Count; i++)
             {
-                if (i % 2 == 0) continue;
+                if (offsetEven ? i % 2 != 0 : i % 2 == 0) continue;
 
                 Note note = hold.Segments[i];
 
