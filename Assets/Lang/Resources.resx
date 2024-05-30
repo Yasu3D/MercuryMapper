@@ -766,7 +766,7 @@ Continue?</value>
         <value>Inserts a Stop Effect that freezes Note scroll between Start and End.</value>
     </data>
     <data name="ToolTip_Reverse" xml:space="preserve">
-        <value>Inserts a Reverse Effect that scrolls Notes backwards for a set amount of time. THIS EFFECT IS NOT RENDERED BY MERCURYMAPPER YET!</value>
+        <value>Inserts a Reverse Effect that scrolls Notes backwards for a set amount of time. [not rendered yet]</value>
     </data>
     <data name="ToolTip_LayerNote" xml:space="preserve">
         <value>Show/Hide Playable Notes.</value>

@@ -823,7 +823,7 @@ Fortfahren?</value>
         <value>Schneller Zugriff auf einige häufig geänderte Einstellungen.</value>
     </data>
     <data name="ToolTip_Reverse" xml:space="preserve">
-        <value>Fügt einen Reverse Effekt ein der Noten rückwärts scrollen lässt. DIESER EFFEKT WIRD NOCH NICHT VON MERCURYMAPPER GERENDERT!</value>
+        <value>Fügt einen Reverse Effekt ein der Noten rückwärts scrollen lässt. [wird noch nicht gerendert]</value>
     </data>
     <data name="ToolTip_SelectionInfo" xml:space="preserve">
         <value>Informationen zur Auswahl und Hervorhebung.</value>

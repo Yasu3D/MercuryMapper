@@ -599,6 +599,11 @@
             <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderBrush}"/>
         </Style>
         
+        <Style Selector="ToolTip">
+            <Setter Property="Background" Value="{DynamicResource MenuBorderBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderBrush}"/>
+        </Style>
+        
         <!-- shut up compiler -->
         <Style Selector="TreeView.HideKeybind"/>
 

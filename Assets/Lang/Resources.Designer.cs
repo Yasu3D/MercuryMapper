@@ -2484,7 +2484,7 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Inserts a Reverse Effect that scrolls Notes backwards for a set amount of time. THIS EFFECT IS NOT RENDERED BY MERCURYMAPPER YET!.
+        ///   Looks up a localized string similar to Inserts a Reverse Effect that scrolls Notes backwards for a set amount of time. [not rendered yet].
         /// </summary>
         public static string ToolTip_Reverse {
             get {
