@@ -1520,7 +1520,7 @@ public class ChartEditor
 
                 Note note = hold.Segments[i];
 
-                int position = note.Position - left;
+                int position = (note.Position - left) % 60;
                 int size = int.Clamp(note.Size + left + right, Note.MinSize(note.NoteType), 60);
                 
                 Note newNote = new(note)
@@ -1576,10 +1576,10 @@ public class ChartEditor
                 int rMin = int.Min(rightMin, rightMax);
                 int rMax = int.Max(rightMin, rightMax);
                 
-                int left = random.Next(leftMin, leftMax);
-                int right = random.Next(rightMin, rightMax);
+                int left = random.Next(lMin, lMax);
+                int right = random.Next(rMin, rMax);
 
-                int position = note.Position - left;
+                int position = (note.Position - left) % 60;
                 int size = int.Clamp(note.Size + left + right, Note.MinSize(note.NoteType), 60);
                 
                 Note newNote = new(note)
