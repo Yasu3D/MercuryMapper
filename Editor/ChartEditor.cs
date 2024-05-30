@@ -1271,7 +1271,7 @@ public class ChartEditor
                     BeatData = data,
                     NoteType = NoteType.HoldSegment,
                     Position = MathExtensions.Modulo(newPos0, 60),
-                    Size = MathExtensions.Modulo(newPos1 - newPos0, 60),
+                    Size = int.Clamp(newPos1 - newPos0, 1, 60),
                     RenderSegment = easeType != MathExtensions.HoldEaseType.Linear || forceRender,
                     PrevReferencedNote = lastNote,
                     NextReferencedNote = end
