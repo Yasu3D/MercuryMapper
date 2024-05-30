@@ -960,7 +960,7 @@ public class RenderEngine(MainView mainView)
             
             canvas.DrawArc(data.Rect, data.StartAngle, data.SweepAngle, false, brushes.GetNotePen(note, canvasScale * data.Scale));
 
-            if (note.NoteType is NoteType.Chain or NoteType.ChainRNote && RenderConfig.ShowChainStripes)
+            if (RenderConfig.ShowChainStripes && note.NoteType is NoteType.Chain or NoteType.ChainRNote)
             {
                 int stripes = note.Size * 2;
                 float radiusInner = 0.5f * (data.Rect.Width - brushes.NoteWidthMultiplier * canvasScale * data.Scale);
@@ -979,12 +979,9 @@ public class RenderEngine(MainView mainView)
                         SKPoint t1 = RenderMath.GetPointOnArc(canvasCenter, radiusInner, data.StartAngle + i * -3 + 1.5f);
                         SKPoint t2 = RenderMath.GetPointOnArc(canvasCenter, radiusOuter, data.StartAngle + i * -3 + 3);
                         
-                        path.Reset();
                         path.MoveTo(t0);
                         path.LineTo(t1);
                         path.LineTo(t2);
-                        
-                        canvas.DrawPath(path, brushes.ChainStripeFill);
                     }
 
                     if (note.Size != 60 && i == stripes - 4)
@@ -993,12 +990,10 @@ public class RenderEngine(MainView mainView)
                         SKPoint t2 = RenderMath.GetPointOnArc(canvasCenter, radiusOuter, data.StartAngle + i * -3);
                         SKPoint t3 = RenderMath.GetPointOnArc(canvasCenter, radiusOuter, data.StartAngle + i * -3 + 1.5f);
                         
-                        path.Reset();
                         path.MoveTo(t1);
                         path.LineTo(t2);
                         path.LineTo(t3);
                         
-                        canvas.DrawPath(path, brushes.ChainStripeFill);
                         continue;
                     }
                     
@@ -1007,14 +1002,13 @@ public class RenderEngine(MainView mainView)
                     SKPoint p2 = RenderMath.GetPointOnArc(canvasCenter, radiusOuter, data.StartAngle + i * -3);
                     SKPoint p3 = RenderMath.GetPointOnArc(canvasCenter, radiusOuter, data.StartAngle + i * -3 + 1.5f);
                     
-                    path.Reset();
                     path.MoveTo(p0);
                     path.LineTo(p1);
                     path.LineTo(p2);
                     path.LineTo(p3);
-                    
-                    canvas.DrawPath(path, brushes.ChainStripeFill);
                 }
+                
+                canvas.DrawPath(path, brushes.ChainStripeFill);
             }
             
             if (mainView.ChartEditor.SelectedNotes.Contains(note))
