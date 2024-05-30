@@ -504,8 +504,16 @@ public class ChartEditor
     public void HighlightNextElement()
     {
         if (HighlightedElement is null) return;
+        if (!LayerNoteActive && !LayerGimmickActive && !LayerMaskActive) return;
 
-        List<ChartElement> elements = Chart.Notes.Concat<ChartElement>(Chart.Gimmicks).OrderBy(x => x.BeatData.FullTick).ToList();
+        List<ChartElement> elements = [];
+
+        if (LayerNoteActive) elements.AddRange(Chart.Notes.Where(x => !x.IsMask));
+        if (LayerMaskActive) elements.AddRange(Chart.Notes.Where(x => x.IsMask));
+        if (LayerGimmickActive) elements.AddRange(Chart.Gimmicks);
+
+        elements = elements.OrderBy(x => x.BeatData.FullTick).ToList();
+        
         int index = elements.IndexOf(HighlightedElement);
         HighlightedElement = elements[MathExtensions.Modulo(index + 1, elements.Count)];
         mainView.SetSelectionInfo();
@@ -514,8 +522,16 @@ public class ChartEditor
     public void HighlightPrevElement()
     {
         if (HighlightedElement is null) return;
+        if (!LayerNoteActive && !LayerGimmickActive && !LayerMaskActive) return;
+
+        List<ChartElement> elements = [];
+
+        if (LayerNoteActive) elements.AddRange(Chart.Notes.Where(x => !x.IsMask));
+        if (LayerMaskActive) elements.AddRange(Chart.Notes.Where(x => x.IsMask));
+        if (LayerGimmickActive) elements.AddRange(Chart.Gimmicks);
+
+        elements = elements.OrderBy(x => x.BeatData.FullTick).ToList();
         
-        List<ChartElement> elements = Chart.Notes.Concat<ChartElement>(Chart.Gimmicks).OrderBy(x => x.BeatData.FullTick).ToList();
         int index = elements.IndexOf(HighlightedElement);
         HighlightedElement = elements[MathExtensions.Modulo(index - 1, elements.Count)];
         mainView.SetSelectionInfo();
