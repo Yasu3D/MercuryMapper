@@ -1,6 +1,10 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:styling="clr-namespace:FluentAvalonia.Styling;assembly=FluentAvalonia"
+			 xmlns:themes="using:RangeSlider.Avalonia.Themes.Fluent"
+			 xmlns:rs="using:RangeSlider.Avalonia.Controls"
+			 xmlns:lp="using:RangeSlider.Avalonia.Controls.Primitives"
+			 xmlns:local="using:RangeSlider.Avalonia.Controls"
              x:Class="MercuryMapper.App"
              RequestedThemeVariant="Dark">
 
@@ -49,7 +53,143 @@
     <Application.Styles>
         <FluentTheme/>
         <styling:FluentAvaloniaTheme CustomAccentColor="#A8A8A8A8"/>
-        
+		<themes:RangeSliderTheme >
+	    </themes:RangeSliderTheme>
+		<Style Selector="rs|RangeSlider.Slim">
+			<Setter Property="UseLayoutRounding" Value="False"/>
+			<Setter Property="VerticalAlignment" Value="Center"/>
+			<Setter Property="Background" Value="{DynamicResource SliderTrackFill}" />
+			<Setter Property="BorderThickness" Value="{DynamicResource SliderBorderThemeThickness}" />
+			<Setter Property="Foreground" Value="{DynamicResource SliderTrackValueFill}" />
+			<Setter Property="FontSize" Value="{DynamicResource ControlContentThemeFontSize}" />
+			<Style Selector="^:horizontal">
+				<Setter Property="Template">
+					<ControlTemplate>
+						<DataValidationErrors>
+							<Border BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    CornerRadius="{TemplateBinding CornerRadius}"
+                                    Height="25">
+								<Grid x:Name="SliderContainer"
+                                      Margin="{TemplateBinding Padding}"
+                                      Background="{DynamicResource SliderContainerBackground}">
+									<Grid.Styles>
+										<Style Selector="TickBar">
+											<Setter Property="ReservedSpace" Value="{Binding Path='TemplateSettings.ThumbBoundsRect' RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:RangeSlider}}}}" />
+										</Style>
+									</Grid.Styles>
+									<Grid x:Name="HorizontalTemplate"
+                                          MinHeight="15"
+                                          ColumnDefinitions="Auto,Auto,*">
+										<Grid.RowDefinitions>
+											<RowDefinition Height="{DynamicResource SliderPreContentMargin}" />
+											<RowDefinition Height="Auto" />
+											<RowDefinition Height="{DynamicResource SliderPostContentMargin}" />
+										</Grid.RowDefinitions>
+										<TickBar Name="TopTickBar"
+                                                 Grid.ColumnSpan="3"
+                                                 Ticks="{TemplateBinding Ticks}"
+                                                 TickFrequency="{TemplateBinding Slider.TickFrequency}"
+                                                 Orientation="{TemplateBinding Slider.Orientation}"
+                                                 Minimum="{TemplateBinding Slider.Minimum}"
+                                                 Maximum="{TemplateBinding Slider.Maximum}"
+                                                 Height="{DynamicResource SliderOutsideTickBarThemeHeight}"
+                                                 Margin="0,0,0,4"
+                                                 VerticalAlignment="Bottom"
+                                                 Placement="Top"
+                                                 IsVisible="False"
+                                                 Fill="{DynamicResource SliderTickBarFill}"/>
+										<TickBar Name="BottomTickBar"
+                                                 Grid.Row="2"
+                                                 Grid.ColumnSpan="3"
+                                                 Ticks="{TemplateBinding Ticks}"
+                                                 TickFrequency="{TemplateBinding Slider.TickFrequency}"
+                                                 Orientation="{TemplateBinding Slider.Orientation}"
+                                                 Minimum="{TemplateBinding Slider.Minimum}"
+                                                 Maximum="{TemplateBinding Slider.Maximum}"
+                                                 Height="{DynamicResource SliderOutsideTickBarThemeHeight}"
+                                                 Margin="0,4,0,0"
+                                                 VerticalAlignment="Top"
+                                                 Placement="Bottom"
+                                                 IsVisible="False"
+                                                 Fill="{DynamicResource SliderTickBarFill}" />
+										<lp:RangeTrack x:Name="PART_Track"
+                                               Grid.Row="1"
+                                               Grid.ColumnSpan="3"
+                                               Minimum="{TemplateBinding Minimum}"
+                                               Maximum="{TemplateBinding Maximum}"
+                                               LowerSelectedValue="{TemplateBinding LowerSelectedValue, Mode=TwoWay}"
+											   UpperSelectedValue="{TemplateBinding UpperSelectedValue, Mode=TwoWay}"
+                                               IsDirectionReversed="{TemplateBinding IsDirectionReversed}"
+                                               Orientation="Horizontal">
+											<lp:RangeTrack.BackgroundButton>
+												<RepeatButton x:Name="PART_DecreaseButton"
+															  Theme="{StaticResource FluentSliderHorizontalRepeatButton}"
+															  Background="{TemplateBinding Background}"
+															  Focusable="False" />
+											</lp:RangeTrack.BackgroundButton>
+
+											<lp:RangeTrack.ForegroundButton>
+												<RepeatButton x:Name="PART_IncreaseButton"
+															  Background="{TemplateBinding Foreground}"
+															  Theme="{StaticResource FluentSliderHorizontalRepeatButton}"
+															  Focusable="False"/>
+											</lp:RangeTrack.ForegroundButton>
+											<lp:RangeTrack.LowerThumb>
+												<Thumb x:Name="PART_LowerThumb"
+													   Width="25"
+													   Height="8"
+													   Margin="0"
+													   Padding="0"
+													   Background="{DynamicResource SliderThumbBackground}"
+													   BorderThickness="0"
+													   Theme="{StaticResource MercuryMapperSliderThumbTheme}"
+													   DataContext="{TemplateBinding LowerSelectedValue}"
+													    >
+													<FlyoutBase.AttachedFlyout>
+														<Flyout FlyoutPresenterClasses="ThumbFlyout"
+																Placement="Top"
+																ShowMode="TransientWithDismissOnPointerMoveAway">
+															<TextBlock Text="{Binding #PART_Track.LowerSelectedValue, StringFormat='\{0:0\}'}"
+																	   HorizontalAlignment="Center"
+																	   VerticalAlignment="Center"/>
+														</Flyout>
+													</FlyoutBase.AttachedFlyout>
+												</Thumb>
+											</lp:RangeTrack.LowerThumb>
+
+											<lp:RangeTrack.UpperThumb>
+												<Thumb x:Name="PART_UpperThumb"
+													   Width="25"
+													   Height="8"
+													   Margin="0"
+													   Padding="0"
+													   Background="{DynamicResource SliderThumbBackground}"
+													   BorderThickness="0"
+													   Theme="{StaticResource MercuryMapperSliderThumbTheme}"
+													   DataContext="{TemplateBinding UpperSelectedValue}"
+													    >
+													<FlyoutBase.AttachedFlyout>
+														<Flyout FlyoutPresenterClasses="ThumbFlyout"
+																Placement="Top"
+																ShowMode="TransientWithDismissOnPointerMoveAway">
+															<TextBlock Text="{Binding #PART_Track.UpperSelectedValue, StringFormat='\{0:0\}'}"
+																	   HorizontalAlignment="Center"
+																	   VerticalAlignment="Center"/>
+														</Flyout>
+													</FlyoutBase.AttachedFlyout>
+												</Thumb>
+											</lp:RangeTrack.UpperThumb> 
+											
+										</lp:RangeTrack>
+									</Grid>
+								</Grid>
+							</Border>
+						</DataValidationErrors>
+					</ControlTemplate>
+				</Setter>
+			</Style>
+		</Style>
         <!-- Windows is pepega -->
         <Style Selector="Window[WindowState=Maximized]">
             <Setter Property="Padding" Value="8" />
