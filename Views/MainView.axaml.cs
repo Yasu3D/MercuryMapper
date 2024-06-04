@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Avalonia;
@@ -179,10 +180,11 @@ public partial class MainView : UserControl
 
     public void SetSongPositionSliderMaximum()
     {
-        SliderSongPosition.Value = 0;
-        
+        SliderSongPosition.LowerSelectedValue = 0;
+        SliderSongPosition.Minimum = 0;
         if (AudioManager.CurrentSong == null) return;
         SliderSongPosition.Maximum = AudioManager.CurrentSong.Length;
+        SliderSongPosition.UpperSelectedValue = SliderSongPosition.Maximum;
     }
 
     public void UpdateTimer_Tick(object? sender, EventArgs e)
