@@ -275,9 +275,18 @@ public partial class MainView : UserControl
     /// </summary>
     private void UpdateTime(TimeUpdateSource source)
     {
-        if (AudioManager.CurrentSong == null) return;
-        timeUpdateSource = source;
         
+        if (AudioManager.CurrentSong == null) return;
+            timeUpdateSource = source;
+           
+        if (AudioManager.CurrentSong.Position >= SliderSongPosition.UpperSelectedValue)
+        {
+            SetPlayState(PlayerState.Paused);
+            AudioManager.CurrentSong.Position = LoopReseter;
+            if (ButtonLoop.IsChecked ?? false)
+                SetPlayState(PlayerState.Playing);
+        }
+
         // Update Audio Position
         if (source is not TimeUpdateSource.Timer && !AudioManager.CurrentSong.IsPlaying)
         {
