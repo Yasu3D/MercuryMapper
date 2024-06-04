@@ -334,7 +334,7 @@
                    FontSize="15" Foreground="Aqua"/>
         
         <!-- Song Controls -->
-        <Grid Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="2" Height="65" Name="SongControlPanel"
+        <Grid Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="2" Height="75" Name="SongControlPanel"
               ColumnDefinitions="Auto, *">
             
             <Button Name="ButtonPlay" Click="ButtonPlay_OnClick"
@@ -358,8 +358,14 @@
                         TickPlacement="TopLeft" Ticks="0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200" IsSnapToTickEnabled="True"/>
                 
                 <TextBlock Grid.Row="1" Grid.Column="1" Text="100%" VerticalAlignment="Center" Margin="0,7,0,0" Name="TextBlockPlaybackSpeed"/>
-                
-                <Grid Grid.Row="1" Grid.Column="2" RowDefinitions="*,*" HorizontalAlignment="Right" Margin="0,0,20,0">
+				<ToggleButton  Name="ButtonLoop" IsChecked="False" Height="30"
+						CornerRadius="3"
+						Margin="7,7,0,0"
+                        VerticalAlignment="Stretch"
+                        HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+						Grid.Row="1" Grid.Column="2" Content="{x:Static lang:Resources.Editor_Loop}" >
+				</ToggleButton >
+                <Grid Grid.Row="1" Grid.Column="3" RowDefinitions="*,*" HorizontalAlignment="Right" Margin="0,0,20,0">
                     <TextBlock Grid.Row="0" Name="TimestampDetailed" Text="00:00:00.000" HorizontalAlignment="Right"/>
                     <TextBlock Grid.Row="1" Name="TimestampSeconds" Text="0.000" HorizontalAlignment="Right"/>
                 </Grid>
