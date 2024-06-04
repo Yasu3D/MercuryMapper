@@ -72,7 +72,9 @@ public partial class MainView : UserControl
     public DispatcherTimer UpdateTimer;
     public readonly DispatcherTimer HitsoundTimer;
     public readonly DispatcherTimer AutosaveTimer;
-    
+    private uint LoopReseter = 0;
+
+
     private TimeUpdateSource timeUpdateSource = TimeUpdateSource.None;
     private enum TimeUpdateSource
     {
@@ -281,7 +283,8 @@ public partial class MainView : UserControl
         {
             if (source is TimeUpdateSource.Slider)
             {
-                AudioManager.CurrentSong.Position = (uint)SliderSongPosition.Value;
+                AudioManager.CurrentSong.Position = (uint)SliderSongPosition.LowerSelectedValue;
+                LoopReseter = (uint)SliderSongPosition.LowerSelectedValue;
             }
 
             if (source is TimeUpdateSource.Numeric)
