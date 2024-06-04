@@ -320,7 +320,7 @@ public partial class MainView : UserControl
         // Update Slider
         if (source is not TimeUpdateSource.Slider)
         {
-            SliderSongPosition.Value = (int)AudioManager.CurrentSong.Position;
+            SliderSongPosition.LowerSelectedValue = (int)AudioManager.CurrentSong.Position;
         }
         
         ChartEditor.CurrentMeasureDecimal = data.MeasureDecimal;
@@ -1603,9 +1603,10 @@ public partial class MainView : UserControl
         if (AudioManager.CurrentSong == null) return;
         SetPlayState(AudioManager.CurrentSong.IsPlaying ? PlayerState.Paused : PlayerState.Playing);
     }
-    
-    private void SliderSongPosition_OnValueChanged(object? sender, RangeBaseValueChangedEventArgs e)
+
+    private void SliderSongPosition_OnValueChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
     {
+       
         if (timeUpdateSource is TimeUpdateSource.None)
             UpdateTime(TimeUpdateSource.Slider);
     }
