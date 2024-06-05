@@ -380,7 +380,7 @@
                 
                 <Slider Grid.Row="1" Grid.Column="0" Classes="Compact" Width="200" HorizontalAlignment="Left" Margin="10,0,15,0" Name="SliderPlaybackSpeed"
                         Minimum="10" Maximum="200" Value="100" ValueChanged="SliderPlaybackSpeed_OnValueChanged"
-                        ToolTip.Tip="{x:Static lang:Resources.ToolTip_PlaybackSpeed}"
+                        ToolTip.Tip="{x:Static lang:Resources.ToolTip_PlaybackSpeed}" ToolTip.VerticalOffset="-40"
                         TickPlacement="TopLeft" Ticks="0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200" IsSnapToTickEnabled="True"/>
                 
                 <TextBlock Grid.Row="1" Grid.Column="1" Text="100%" VerticalAlignment="Center" Margin="0,7,0,0" Name="TextBlockPlaybackSpeed"/>
