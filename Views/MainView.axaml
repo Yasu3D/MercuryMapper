@@ -102,7 +102,6 @@
                             <StackPanel>
                                 <RadioButton Name="RadioNoteTouch" Classes="ToggleRadioStripe" 
                                              BorderBrush="White"
-                                             ToolTip.Tip="{x:Static lang:Resources.ToolTip_NoteTypes}"
                                              IsCheckedChanged="RadioNoteType_IsCheckedChanged" GroupName="NoteType"
                                              Content="{x:Static lang:Resources.Note_Touch}" IsChecked="True"/>
                                     
@@ -110,7 +109,6 @@
                                     
                                 <RadioButton Name="RadioNoteSlideClockwise" Classes="ToggleRadioStripe"
                                              BorderBrush="White"
-                                             ToolTip.Tip="{x:Static lang:Resources.ToolTip_NoteTypes}"
                                              IsCheckedChanged="RadioNoteType_IsCheckedChanged" GroupName="NoteType"
                                              Content="{x:Static lang:Resources.Note_SlideClockwise}" />
                                     
@@ -118,7 +116,6 @@
                                     
                                 <RadioButton Name="RadioNoteSlideCounterclockwise" Classes="ToggleRadioStripe"
                                              BorderBrush="White"
-                                             ToolTip.Tip="{x:Static lang:Resources.ToolTip_NoteTypes}"
                                              IsCheckedChanged="RadioNoteType_IsCheckedChanged" GroupName="NoteType"
                                              Content="{x:Static lang:Resources.Note_SlideCounterclockwise}" />
                                     
@@ -126,7 +123,6 @@
                                     
                                 <RadioButton Name="RadioNoteSnapForward" Classes="ToggleRadioStripe"
                                              BorderBrush="White"
-                                             ToolTip.Tip="{x:Static lang:Resources.ToolTip_NoteTypes}"
                                              IsCheckedChanged="RadioNoteType_IsCheckedChanged" GroupName="NoteType"
                                              Content="{x:Static lang:Resources.Note_SnapForward}" />
                                     
@@ -134,7 +130,6 @@
                                     
                                 <RadioButton Name="RadioNoteSnapBackward" Classes="ToggleRadioStripe"
                                              BorderBrush="White"
-                                             ToolTip.Tip="{x:Static lang:Resources.ToolTip_NoteTypes}"
                                              IsCheckedChanged="RadioNoteType_IsCheckedChanged" GroupName="NoteType"
                                              Content="{x:Static lang:Resources.Note_SnapBackward}" />
                                     
@@ -142,7 +137,6 @@
                                     
                                 <RadioButton Name="RadioNoteChain" Classes="ToggleRadioStripe"
                                              BorderBrush="White"
-                                             ToolTip.Tip="{x:Static lang:Resources.ToolTip_NoteTypes}"
                                              IsCheckedChanged="RadioNoteType_IsCheckedChanged" GroupName="NoteType"
                                              Content="{x:Static lang:Resources.Note_Chain}" />
                                     
@@ -150,7 +144,6 @@
                                     
                                 <RadioButton Name="RadioNoteHold" Classes="ToggleRadioStripe"
                                              BorderBrush="White"
-                                             ToolTip.Tip="{x:Static lang:Resources.ToolTip_NoteTypes}"
                                              IsCheckedChanged="RadioNoteType_IsCheckedChanged" GroupName="NoteType"
                                              Content="{x:Static lang:Resources.Note_Hold}" />
                                     
@@ -158,7 +151,6 @@
                                     
                                 <RadioButton Name="RadioNoteMaskAdd" Classes="ToggleRadioStripe"
                                              BorderBrush="White" 
-                                             ToolTip.Tip="{x:Static lang:Resources.ToolTip_NoteTypes}"
                                              IsCheckedChanged="RadioNoteType_IsCheckedChanged" GroupName="NoteType"
                                              Content="{x:Static lang:Resources.Note_MaskAdd}" />
                                     
@@ -166,7 +158,6 @@
                                     
                                 <RadioButton Name="RadioNoteMaskRemove" Classes="ToggleRadioStripe"
                                              BorderBrush="White"
-                                             ToolTip.Tip="{x:Static lang:Resources.ToolTip_NoteTypes}"
                                              IsCheckedChanged="RadioNoteType_IsCheckedChanged" GroupName="NoteType"
                                              Content="{x:Static lang:Resources.Note_MaskRemove}" />
                                     
@@ -174,7 +165,6 @@
                                     
                                 <RadioButton Name="RadioNoteEndOfChart" Classes="ToggleRadioStripe"
                                              BorderBrush="White" 
-                                             ToolTip.Tip="{x:Static lang:Resources.ToolTip_NoteTypes}"
                                              IsCheckedChanged="RadioNoteType_IsCheckedChanged" GroupName="NoteType"
                                              Content="{x:Static lang:Resources.Note_EndOfChart}" />
                                     
@@ -184,21 +174,18 @@
                         <Border   ClipToBounds="True" Classes="Outline" Margin="0,10,0,0" Name="BonusTypePanel">
                             <StackPanel>
                                 <RadioButton Name="RadioNoBonus" IsChecked="True" GroupName="BonusType"
-                                             ToolTip.Tip="{x:Static lang:Resources.ToolTip_BonusType_None}"
                                              Content="{x:Static lang:Resources.BonusType_None}" Margin="0,0"
                                              IsCheckedChanged="RadioBonusType_IsCheckedChanged" Classes="ToggleRadio" />
                                     
                                 <Separator Margin="0"/>
                                     
                                 <RadioButton Name="RadioBonus" IsChecked="False" GroupName="BonusType"
-                                             ToolTip.Tip="{x:Static lang:Resources.ToolTip_BonusType_Bonus}"
                                              Content="{x:Static lang:Resources.BonusType_Bonus}" Margin="0,0"
                                              IsCheckedChanged="RadioBonusType_IsCheckedChanged" Classes="ToggleRadio" />
                                     
                                 <Separator Margin="0"/>
                                     
                                 <RadioButton Name="RadioRNote" IsChecked="False" GroupName="BonusType"
-                                             ToolTip.Tip="{x:Static lang:Resources.ToolTip_BonusType_RNote}"
                                              Content="{x:Static lang:Resources.BonusType_RNote}" Margin="0,0"
                                              IsCheckedChanged="RadioBonusType_IsCheckedChanged" Classes="ToggleRadio" />
                             </StackPanel>
@@ -208,7 +195,6 @@
                             <StackPanel>
                                 <RadioButton Name="RadioMaskClockwise" IsChecked="True"
                                              GroupName="MaskDirection" Classes="ToggleRadio"
-                                             ToolTip.Tip="{x:Static lang:Resources.ToolTip_MaskDirection_Clockwise}"
                                              Content="{x:Static lang:Resources.MaskDirection_Clockwise}"
                                              IsCheckedChanged="RadioMaskDirection_IsCheckedChanged" />
                                     
@@ -216,7 +202,6 @@
                                     
                                 <RadioButton Name="RadioMaskCounterclockwise" IsChecked="False"
                                              GroupName="MaskDirection" Classes="ToggleRadio"
-                                             ToolTip.Tip="{x:Static lang:Resources.ToolTip_MaskDirection_CounterClockwise}"
                                              Content="{x:Static lang:Resources.MaskDirection_Counterclockwise}"
                                              IsCheckedChanged="RadioMaskDirection_IsCheckedChanged" />
                                     
@@ -224,7 +209,6 @@
                                     
                                 <RadioButton Name="RadioMaskCenter" IsChecked="False"
                                              GroupName="MaskDirection" Classes="ToggleRadio"
-                                             ToolTip.Tip="{x:Static lang:Resources.ToolTip_MaskDirection_Center}"
                                              Content="{x:Static lang:Resources.MaskDirection_Center}"
                                              IsCheckedChanged="RadioMaskDirection_IsCheckedChanged" />
                             </StackPanel>
@@ -235,31 +219,26 @@
                         <Border ClipToBounds="True" Classes="Outline">
                             <StackPanel>
                                 <Button Name="ButtonGimmickBpmChange" Classes="CompactButton" Click="ButtonGimmickBpmChange_OnClick"
-                                        ToolTip.Tip="{x:Static lang:Resources.ToolTip_BPM}"
                                         Content="{x:Static lang:Resources.Gimmick_BpmChange}" />
                                     
                                 <Separator Margin="0"/>
                                     
                                 <Button Name="ButtonGimmickTimeSig" Classes="CompactButton" Click="ButtonGimmickTimeSig_OnClick"
-                                        ToolTip.Tip="{x:Static lang:Resources.ToolTip_TimeSignature}"
                                         Content="{x:Static lang:Resources.Gimmick_TimeSigChange}" />
                                     
                                 <Separator Margin="0"/>
                                     
                                 <Button Name="ButtonGimmickHiSpeed" Classes="CompactButton" Click="ButtonGimmickHiSpeed_OnClick"
-                                        ToolTip.Tip="{x:Static lang:Resources.ToolTip_HiSpeed}"
                                         Content="{x:Static lang:Resources.Gimmick_HiSpeedChange}" />
                                     
                                 <Separator Margin="0"/>
                                     
                                 <Button Name="ButtonGimmickStop" Classes="CompactButton" Click="ButtonGimmickStop_OnClick"
-                                        ToolTip.Tip="{x:Static lang:Resources.ToolTip_Stop}"
                                         Content="{x:Static lang:Resources.Gimmick_Stop}" />
                                     
                                 <Separator Margin="0"/>
                                     
                                 <Button Name="ButtonGimmickReverse" Classes="CompactButton" Click="ButtonGimmickReverse_OnClick"
-                                        ToolTip.Tip="{x:Static lang:Resources.ToolTip_Reverse}"
                                         Content="{x:Static lang:Resources.Gimmick_Reverse}" />
                             </StackPanel>
                         </Border>
@@ -267,19 +246,16 @@
                         <Border ClipToBounds="True" Classes="Outline" Margin="0,6,0,0">
                             <StackPanel>
                                 <ToggleButton Name="ToggleNoteLayer" Classes="CompactButton" IsCheckedChanged="ToggleNoteLayer_IsCheckedChanged"
-                                              ToolTip.Tip="{x:Static lang:Resources.ToolTip_LayerNote}"
                                               Content="{x:Static lang:Resources.Editor_LayerNote}" IsChecked="True"/>
                                     
                                 <Separator Margin="0"/>
                                     
                                 <ToggleButton Name="ToggleMaskLayer" Classes="CompactButton" IsCheckedChanged="ToggleMaskLayer_IsCheckedChanged"
-                                              ToolTip.Tip="{x:Static lang:Resources.ToolTip_LayerMask}"
                                               Content="{x:Static lang:Resources.Editor_LayerMask}" IsChecked="True"/>
                                     
                                 <Separator Margin="0"/>
                                     
                                 <ToggleButton Name="ToggleGimmickLayer" Classes="CompactButton" IsCheckedChanged="ToggleGimmickLayer_IsCheckedChanged"
-                                              ToolTip.Tip="{x:Static lang:Resources.ToolTip_LayerGimmick}"
                                               Content="{x:Static lang:Resources.Editor_LayerGimmick}" IsChecked="True"/>
                             </StackPanel>
                         </Border>
@@ -321,13 +297,11 @@
                 <Grid Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="3" ColumnDefinitions="2*,*">
                     <Button Name="ButtonInsert" Click="ButtonInsert_OnClick" Grid.Column="0"
                             Height="45" CornerRadius="3"
-                            ToolTip.Tip="{x:Static lang:Resources.ToolTip_Insert}"
                             HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                             HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
                             Content="{x:Static lang:Resources.Editor_Insert}" Margin="0,0,5,0"/>
                     <Button Name="ButtonEditHold" Click="ButtonEditHold_OnClick" Grid.Column="1"
                             Height="45" CornerRadius="3"
-                            ToolTip.Tip="{x:Static lang:Resources.ToolTip_EditHold}"
                             HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                             HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
                             Content="{x:Static lang:Resources.Editor_EditHold}"/>
@@ -364,7 +338,6 @@
             
             <Button Name="ButtonPlay" Click="ButtonPlay_OnClick"
                     Width="55" Height="55" CornerRadius="3"
-                    ToolTip.Tip="{x:Static lang:Resources.ToolTip_PlayPause}"
                     Grid.Column="0" Margin="5">
                 <Button.Content>
                     <Panel>
@@ -380,7 +353,6 @@
                 
                 <Slider Grid.Row="1" Grid.Column="0" Classes="Compact" Width="200" HorizontalAlignment="Left" Margin="10,0,15,0" Name="SliderPlaybackSpeed"
                         Minimum="10" Maximum="200" Value="100" ValueChanged="SliderPlaybackSpeed_OnValueChanged"
-                        ToolTip.Tip="{x:Static lang:Resources.ToolTip_PlaybackSpeed}" ToolTip.VerticalOffset="-40"
                         TickPlacement="TopLeft" Ticks="0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200" IsSnapToTickEnabled="True"/>
                 
                 <TextBlock Grid.Row="1" Grid.Column="1" Text="100%" VerticalAlignment="Center" Margin="0,7,0,0" Name="TextBlockPlaybackSpeed"/>
@@ -459,9 +431,9 @@
                             <Separator Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4"/>
                             
                             <Grid Grid.Row="2" Grid.Column="0" ColumnSpan="4" RowDefinitions="*" ColumnDefinitions="*,*,*">
-                                <Button Grid.Column="0" HorizontalAlignment="Stretch" Margin="0,0,2,0" Click="SelectionInfoHighlightPrev_OnClick" Content="{x:Static lang:Resources.Editor_HighlightPrev}" ToolTip.Tip="{x:Static lang:Resources.ToolTip_Previous}"/>
-                                <Button Grid.Column="1" HorizontalAlignment="Stretch" Margin="2,0,2,0" Click="SelectionInfoHighlightNearest_OnClick" Content="{x:Static lang:Resources.Editor_HighlightNearest}" ToolTip.Tip="{x:Static lang:Resources.ToolTip_Nearest}"/>
-                                <Button Grid.Column="2" HorizontalAlignment="Stretch" Margin="2,0,0,0" Click="SelectionInfoHighlightNext_OnClick" Content="{x:Static lang:Resources.Editor_HighlightNext}" ToolTip.Tip="{x:Static lang:Resources.ToolTip_Next}"/>
+                                <Button Grid.Column="0" HorizontalAlignment="Stretch" Margin="0,0,2,0" Click="SelectionInfoHighlightPrev_OnClick" Content="{x:Static lang:Resources.Editor_HighlightPrev}"/>
+                                <Button Grid.Column="1" HorizontalAlignment="Stretch" Margin="2,0,2,0" Click="SelectionInfoHighlightNearest_OnClick" Content="{x:Static lang:Resources.Editor_HighlightNearest}"/>
+                                <Button Grid.Column="2" HorizontalAlignment="Stretch" Margin="2,0,0,0" Click="SelectionInfoHighlightNext_OnClick" Content="{x:Static lang:Resources.Editor_HighlightNext}"/>
                             </Grid>
                             
                             <Separator Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="4"/>
@@ -530,9 +502,9 @@
                 <Expander Header="{x:Static lang:Resources.Editor_ExpanderHeader_ModifyNotes}">
                     <StackPanel>
                         <Grid RowDefinitions="*,*" ColumnDefinitions="*,*">
-                            <Button Grid.Row="0" Grid.Column="0" HorizontalAlignment="Stretch" Margin="0,0,2,2" Click="ButtonEditSelectionShape_OnClick" Content="{x:Static lang:Resources.Editor_EditNoteShape}" ToolTip.Tip="{x:Static lang:Resources.ToolTip_EditShape}"/>
-                            <Button Grid.Row="0" Grid.Column="1" HorizontalAlignment="Stretch" Margin="2,0,0,2" Click="ButtonEditSelectionProperties_OnClick" Content="{x:Static lang:Resources.Editor_EditNoteProperties}" ToolTip.Tip="{x:Static lang:Resources.ToolTip_EditType}"/>
-                            <Button Grid.Row="1" Grid.Column="0" HorizontalAlignment="Stretch" Margin="0,2,2,0" Click="ButtonEditSelectionFull_OnClick" Content="{x:Static lang:Resources.Editor_EditNoteShapeProperties}" ToolTip.Tip="{x:Static lang:Resources.ToolTip_EditBoth}"/>
+                            <Button Grid.Row="0" Grid.Column="0" HorizontalAlignment="Stretch" Margin="0,0,2,2" Click="ButtonEditSelectionShape_OnClick" Content="{x:Static lang:Resources.Editor_EditNoteShape}"/>
+                            <Button Grid.Row="0" Grid.Column="1" HorizontalAlignment="Stretch" Margin="2,0,0,2" Click="ButtonEditSelectionProperties_OnClick" Content="{x:Static lang:Resources.Editor_EditNoteProperties}"/>
+                            <Button Grid.Row="1" Grid.Column="0" HorizontalAlignment="Stretch" Margin="0,2,2,0" Click="ButtonEditSelectionFull_OnClick" Content="{x:Static lang:Resources.Editor_EditNoteShapeProperties}"/>
                             <Button Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Margin="2,2,0,0" Click="ButtonDeleteSelection_OnClick" Content="{x:Static lang:Resources.Editor_DeleteSelection}" Foreground="Red"/>
                         </Grid>
                         
@@ -541,7 +513,7 @@
                         <Grid RowDefinitions="*,*" ColumnDefinitions="*,*">
                             <TextBlock Grid.Row="0" Grid.Column="0" Text="{x:Static lang:Resources.Editor_MirrorAxis}"/>
                             <NumericUpDown Grid.Row="1" Grid.Column="0" Name="NumericMirrorAxis" Margin="0,0,2,0" Maximum="60" Minimum="-1" Increment="1" Value="30" ValueChanged="NumericMirrorAxis_OnValueChanged" PointerEntered="NumericMirrorAxis_OnPointerEntered" PointerExited="NumericMirrorAxis_OnPointerExited"/>
-                            <Button Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Margin="2,0,0,0" Click="ButtonMirrorSelection_OnClick" Content="{x:Static lang:Resources.Editor_MirrorNote}" ToolTip.Tip="{x:Static lang:Resources.ToolTip_Mirror}"/>
+                            <Button Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Margin="2,0,0,0" Click="ButtonMirrorSelection_OnClick" Content="{x:Static lang:Resources.Editor_MirrorNote}"/>
                         </Grid>
                         
                         <Separator/>
@@ -561,16 +533,16 @@
                                 <ComboBoxItem Content="{x:Static lang:Resources.Editor_HoldEase_QuadIn}"/>
                                 <ComboBoxItem Content="{x:Static lang:Resources.Editor_HoldEase_QuadOut}"/>
                             </ComboBox>
-                            <Button Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Margin="2,0,0,2" Click="ButtonBakeHold_OnClick" Content="{x:Static lang:Resources.Editor_BakeHoldNote}" ToolTip.Tip="{x:Static lang:Resources.ToolTip_BakeHold}"/>
-                            <Button Grid.Row="2" Grid.Column="0" HorizontalAlignment="Stretch" Margin="0,2,2,0" Click="ButtonStitchHold_OnClick" Content="{x:Static lang:Resources.Editor_StitchHold}" ToolTip.Tip="{x:Static lang:Resources.ToolTip_StitchHold}"/>
-                            <Button Grid.Row="2" Grid.Column="1" HorizontalAlignment="Stretch" Margin="2,2,0,0" Click="ButtonInsertHoldSegment_OnClick" Content="{x:Static lang:Resources.Editor_InsertHoldSegment}" ToolTip.Tip="{x:Static lang:Resources.ToolTip_InsertHold}"/>
+                            <Button Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Margin="2,0,0,2" Click="ButtonBakeHold_OnClick" Content="{x:Static lang:Resources.Editor_BakeHoldNote}"/>
+                            <Button Grid.Row="2" Grid.Column="0" HorizontalAlignment="Stretch" Margin="0,2,2,0" Click="ButtonStitchHold_OnClick" Content="{x:Static lang:Resources.Editor_StitchHold}"/>
+                            <Button Grid.Row="2" Grid.Column="1" HorizontalAlignment="Stretch" Margin="2,2,0,0" Click="ButtonInsertHoldSegment_OnClick" Content="{x:Static lang:Resources.Editor_InsertHoldSegment}"/>
                         </Grid>
                         
                         <Separator/>
                         
                         <Grid RowDefinitions="*" ColumnDefinitions="*,*">
-                            <Button Grid.Row="0" Grid.Column="0" HorizontalAlignment="Stretch" Margin="0,0,2,0" Click="ButtonSetRenderTrue_OnClick" Content="{x:Static lang:Resources.Editor_SetRenderTrue}" ToolTip.Tip="{x:Static lang:Resources.ToolTip_SetRenderTrue}"/>
-                            <Button Grid.Row="0" Grid.Column="1" HorizontalAlignment="Stretch" Margin="2,0,0,0" Click="ButtonSetRenderFalse_OnClick" Content="{x:Static lang:Resources.Editor_SetRenderFalse}" ToolTip.Tip="{x:Static lang:Resources.ToolTip_SetRenderFalse}"/>
+                            <Button Grid.Row="0" Grid.Column="0" HorizontalAlignment="Stretch" Margin="0,0,2,0" Click="ButtonSetRenderTrue_OnClick" Content="{x:Static lang:Resources.Editor_SetRenderTrue}"/>
+                            <Button Grid.Row="0" Grid.Column="1" HorizontalAlignment="Stretch" Margin="2,0,0,0" Click="ButtonSetRenderFalse_OnClick" Content="{x:Static lang:Resources.Editor_SetRenderFalse}"/>
                         </Grid>
                     </StackPanel>
                 </Expander>
