@@ -634,7 +634,7 @@ public class ChartEditor
         
         Gimmick gimmick = new()
         {
-            BeatData = new(CurrentMeasureDecimal),
+            BeatData = CurrentBeatData,
             Bpm = bpm,
             GimmickType = GimmickType.BpmChange
         };
@@ -649,7 +649,7 @@ public class ChartEditor
         
         Gimmick gimmick = new()
         {
-            BeatData = new(CurrentMeasureDecimal),
+            BeatData = CurrentBeatData,
             TimeSig = new(upper, lower),
             GimmickType = GimmickType.TimeSigChange
         };
@@ -664,7 +664,7 @@ public class ChartEditor
         
         Gimmick gimmick = new()
         {
-            BeatData = new(CurrentMeasureDecimal),
+            BeatData = CurrentBeatData,
             HiSpeed = hiSpeed,
             GimmickType = GimmickType.HiSpeedChange
         };
