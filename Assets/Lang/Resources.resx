@@ -742,7 +742,7 @@ Continue?</value>
         <value>Standard Note [no effects]</value>
     </data>
     <data name="ToolTip_BonusType_RNote" xml:space="preserve">
-        <value>R-Note [rainbow effect, loud splash sound]</value>
+        <value>R-Note [worth double, rainbow effect, loud splash sound]</value>
     </data>
     <data name="ToolTip_MaskDirection_Clockwise" xml:space="preserve">
         <value>Mask Animation will propagate from one edge of the Note to the other Clockwise.</value>

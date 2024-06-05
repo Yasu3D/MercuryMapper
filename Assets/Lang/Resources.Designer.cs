@@ -2214,7 +2214,7 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to R-Note [rainbow effect, loud splash sound].
+        ///   Looks up a localized string similar to R-Note [worth double, rainbow effect, loud splash sound].
         /// </summary>
         public static string ToolTip_BonusType_RNote {
             get {

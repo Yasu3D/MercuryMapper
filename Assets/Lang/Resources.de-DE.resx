@@ -745,7 +745,7 @@ Fortfahren?</value>
         <value>Bonus Note [extra Clear Punkte, glitzernder Ton]</value>
     </data>
     <data name="ToolTip_BonusType_RNote" xml:space="preserve">
-        <value>R-Note [Regenbogen Effekt, Lauter Splash Ton]</value>
+        <value>R-Note [Das Doppelte wert, Regenbogen Effekt, Lauter Splash Ton]</value>
     </data>
     <data name="ToolTip_BPM" xml:space="preserve">
         <value>Fügt einen BPM Wechsel ein.</value>
