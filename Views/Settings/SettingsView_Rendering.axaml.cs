@@ -40,6 +40,7 @@ public partial class SettingsView_Rendering : UserControl
     private void NoteSize_OnValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
     {
         RenderConfig.NoteSize = (int)(NumericNoteSize.Value ?? 3);
+        mainView.RenderEngine.UpdateBrushes();
     }
     
     private void GuideLineType_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
