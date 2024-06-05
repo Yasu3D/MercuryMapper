@@ -388,11 +388,14 @@ public class RenderEngine(MainView mainView)
     private void DrawMeasureLines(SKCanvas canvas, Chart chart)
     {
         float interval = 1.0f / RenderConfig.BeatDivision;
-        float start = MathF.Ceiling(CurrentMeasureDecimal * RenderConfig.BeatDivision) * (interval);
+        float start = MathF.Ceiling(ScaledCurrentMeasureDecimal * RenderConfig.BeatDivision) * interval;
         float end = ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal;
         
         for (float i = start; chart.GetScaledMeasureDecimal(i, RenderConfig.ShowHiSpeed) < end; i += interval)
         {
+            TimeScaleData? timeScaleData = chart.BinarySearchTimeScales(i);
+            if (timeScaleData == null || timeScaleData.HiSpeed <= 0.001f) break;
+                
             float scale = GetNoteScale(chart, i);
             SKRect rect = GetRect(scale);
             if (!RenderMath.InRange(scale)) continue;
