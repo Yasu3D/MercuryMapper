@@ -861,4 +861,10 @@ Fortfahren?</value>
     <data name="Tools_Jagged_OffsetEven" xml:space="preserve">
         <value>Versetze geraden Index</value>
     </data>
+    <data name="Generic_EndOfChartWarning" xml:space="preserve">
+        <value>Chart-Ende Note fehlt!</value>
+    </data>
+    <data name="Generic_EndOfChartWarningExplanation" xml:space="preserve">
+        <value>Platziere eine Chart-Ende Note mindestens einen Takt nach der letzten spielbaren Note. Ohne Chart-Ende stürzt das Spiel ab.</value>
+    </data>
 </root>

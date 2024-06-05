@@ -915,6 +915,24 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to End of Chart Note is missing!.
+        /// </summary>
+        public static string Generic_EndOfChartWarning {
+            get {
+                return ResourceManager.GetString("Generic_EndOfChartWarning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Place an End of Chart note at least a Measure after the last playable note. Without it, the game would crash..
+        /// </summary>
+        public static string Generic_EndOfChartWarningExplanation {
+            get {
+                return ResourceManager.GetString("Generic_EndOfChartWarningExplanation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Export.
         /// </summary>
         public static string Generic_Export {

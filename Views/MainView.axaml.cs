@@ -1093,11 +1093,23 @@ public partial class MainView : UserControl
 
     private async void MenuItemExportMercury_OnClick(object? sender, RoutedEventArgs e)
     {
+        if (ChartEditor.Chart.EndOfChart == null)
+        {
+            ShowWarningMessage(Assets.Lang.Resources.Generic_EndOfChartWarning, Assets.Lang.Resources.Generic_EndOfChartWarningExplanation);
+            return;
+        }
+        
         await ExportFile(ChartWriteType.Mercury);
     }
 
     private async void MenuItemExportSaturn_OnClick(object? sender, RoutedEventArgs e)
     {
+        if (ChartEditor.Chart.EndOfChart == null)
+        {
+            ShowWarningMessage(Assets.Lang.Resources.Generic_EndOfChartWarning, Assets.Lang.Resources.Generic_EndOfChartWarningExplanation);
+            return;
+        }
+        
         await ExportFile(ChartWriteType.Saturn);
     }
 

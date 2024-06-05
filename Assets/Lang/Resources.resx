@@ -861,4 +861,10 @@ Continue?</value>
     <data name="Tools_Jagged_OffsetEven" xml:space="preserve">
         <value>Offset Even Index</value>
     </data>
+    <data name="Generic_EndOfChartWarning" xml:space="preserve">
+        <value>End of Chart Note is missing!</value>
+    </data>
+    <data name="Generic_EndOfChartWarningExplanation" xml:space="preserve">
+        <value>Place an End of Chart note at least a Measure after the last playable note. Without it, the game would crash.</value>
+    </data>
 </root>
