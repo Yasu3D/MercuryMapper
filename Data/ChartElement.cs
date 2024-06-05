@@ -60,6 +60,8 @@ public class TimeScaleData
     public float HiSpeed { get; set; }
     public float TimeSigRatio { get; set; }
     public float BpmRatio { get; set; }
+
+    public bool IsLast { get; set; }
 }
 
 public class TimeSig(int upper, int lower)

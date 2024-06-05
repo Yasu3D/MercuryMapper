@@ -23,7 +23,7 @@ public class Chart
     public Note? EndOfChart => Notes.LastOrDefault(x => x.NoteType is NoteType.EndOfChart);
     
     private List<Gimmick>? TimeEvents { get; set; }
-    private List<TimeScaleData> TimeScales { get; } = [];
+    public List<TimeScaleData> TimeScales { get; } = [];
 
     public string FilePath { get; set; } = "";
 
@@ -382,15 +382,19 @@ public class Chart
             TimeSigRatio = 1,
             BpmRatio = 1
         };
-        
-        foreach (Gimmick gimmick in Gimmicks)
+
+        for (int i = 0; i < Gimmicks.Count; i++)
         {
+            Gimmick gimmick = Gimmicks[i];
+            
             TimeScaleData data = calculateTimeScaleData(gimmick);
             lastData = data;
             
+            data.IsLast = i == Gimmicks.Count - 1;
+            
             TimeScales.Add(data);
         }
-        
+
         TimeScales.Add(new()
         {
             MeasureDecimal = float.PositiveInfinity,
