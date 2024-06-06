@@ -9,6 +9,7 @@
              RequestedThemeVariant="Dark">
 
     <Application.Resources>
+		
         <ResourceDictionary>
             <Color x:Key='DarkBrush'>#1A1A1A</Color>
             <Color x:Key='MediumBrush'>#202020</Color>
@@ -47,6 +48,18 @@
                 </ControlTemplate>
             </Setter>
         </ControlTheme>
+
+		<ControlTheme x:Key="MercuryMapperSliderThumbThemeLower" TargetType="Thumb">
+			<Setter Property="Template">
+				<ControlTemplate>
+					<Border
+                        Background="DarkCyan"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="0"
+                        CornerRadius="3"/>
+				</ControlTemplate>
+			</Setter>
+		</ControlTheme>
         
     </Application.Resources>
 
@@ -143,7 +156,7 @@
 													   Padding="0"
 													   Background="{DynamicResource SliderThumbBackground}"
 													   BorderThickness="0"
-													   Theme="{StaticResource MercuryMapperSliderThumbTheme}"
+													   Theme="{StaticResource MercuryMapperSliderThumbThemeLower}"
 													   DataContext="{TemplateBinding LowerSelectedValue}"
 													    >
 													<FlyoutBase.AttachedFlyout>
@@ -194,11 +207,10 @@
         <Style Selector="Window[WindowState=Maximized]">
             <Setter Property="Padding" Value="8" />
         </Style>
-        
         <Style Selector="Separator">
             <Setter Property="Margin" Value="0, 5, 0, 5" />
         </Style>
-
+		
         <Style Selector="TextBlock">
             <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
         </Style>
@@ -216,6 +228,7 @@
             <Setter Property="HorizontalAlignment" Value="Stretch" />
         </Style>
         
+		
         <Style Selector="ToggleButton.CompactButton">
             <Setter Property="Height" Value="35" />
             <Setter Property="CornerRadius" Value="0" />
@@ -574,7 +587,7 @@
                 </ControlTemplate>
             </Setter>
         </Style>
-        
+		
         <Style Selector="Slider.Compact">
             <Setter Property="UseLayoutRounding" Value="False"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
