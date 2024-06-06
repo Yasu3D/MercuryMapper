@@ -861,6 +861,9 @@ Continue?</value>
     <data name="Tools_Jagged_OffsetEven" xml:space="preserve">
         <value>Offset Even Index</value>
     </data>
+	<data name="Editor_Loop" xml:space="preserve">
+        <value>Loop</value>
+    </data>
     <data name="Generic_EndOfChartWarning" xml:space="preserve">
         <value>End of Chart Note is missing!</value>
     </data>

@@ -2599,5 +2599,16 @@ namespace MercuryMapper.Assets.Lang {
                 return ResourceManager.GetString("ToolTip_TimeSignature", resourceCulture);
             }
         }
+
+        // <summary>
+        ///   Looks up a localized string similar to Loop.
+        /// </summary>
+        public static string Editor_Loop
+        {
+            get
+            {
+                return ResourceManager.GetString("Editor_Loop", resourceCulture);
+            }
+        }
     }
 }

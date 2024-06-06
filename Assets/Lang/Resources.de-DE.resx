@@ -273,6 +273,9 @@
     <data name="Editor_EditHold" xml:space="preserve">
         <value>Hold Bearbeiten</value>
     </data>
+	<data name="Editor_Loop" xml:space="preserve">
+        <value>Loop</value>
+    </data>
     <data name="Settings_Color_JudgementLinePrimary" xml:space="preserve">
         <value>Wertungslinie Primär</value>
     </data>
