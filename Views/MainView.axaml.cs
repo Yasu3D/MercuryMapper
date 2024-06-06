@@ -278,7 +278,7 @@ public partial class MainView : UserControl
     private void UpdateTime(TimeUpdateSource source)
     {
         
-        if (AudioManager.CurrentSong == null) return;
+        if (AudioManager?.CurrentSong == null) return;
             timeUpdateSource = source;
            
         if (AudioManager.CurrentSong.Position >= SliderSongPosition.UpperSelectedValue)

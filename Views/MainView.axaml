@@ -351,7 +351,7 @@
             <Grid Grid.Column="1" RowDefinitions="Auto, Auto" ColumnDefinitions="Auto, Auto, *">
 				
 				<rs:RangeSlider Grid.Row="0" Grid.Column="0"  Grid.ColumnSpan="3" Classes="Slim" Margin="10,0,15,0" IsThumbOverlap="True"
-                        MoveWholeRange="True" Name="SliderSongPosition" PropertyChanged="SliderSongPosition_OnValueChanged" />
+                        MoveWholeRange="True" Name="SliderSongPosition" PropertyChanged="SliderSongPosition_OnValueChanged"/>
 				
                 <Slider Grid.Row="1" Grid.Column="0" Classes="Compact" Width="200" HorizontalAlignment="Left" Margin="10,0,15,0" Name="SliderPlaybackSpeed"
                         Minimum="10" Maximum="200" Value="100" ValueChanged="SliderPlaybackSpeed_OnValueChanged"
