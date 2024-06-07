@@ -49,19 +49,19 @@
             </Setter>
         </ControlTheme>
 
-		<ControlTheme x:Key="MercuryMapperSliderThumbThemeLower" TargetType="Thumb">
+		<ControlTheme x:Key="MercuryMapperSliderLowerThumbTheme" TargetType="Thumb">
 			<Setter Property="Template">
 				<ControlTemplate>
 					<Border
-                        Background="DarkCyan"
+                        Background="#FFFF00FF"
                         BorderBrush="{TemplateBinding BorderBrush}"
                         BorderThickness="0"
                         CornerRadius="3"/>
 				</ControlTemplate>
 			</Setter>
 		</ControlTheme>
-        
-    </Application.Resources>
+
+	</Application.Resources>
 
     <Application.Styles>
         <FluentTheme/>
@@ -156,7 +156,7 @@
 													   Padding="0"
 													   Background="{DynamicResource SliderThumbBackground}"
 													   BorderThickness="0"
-													   Theme="{StaticResource MercuryMapperSliderThumbThemeLower}"
+													   Theme="{StaticResource MercuryMapperSliderLowerThumbTheme}"
 													   DataContext="{TemplateBinding LowerSelectedValue}"
 													    >
 													<FlyoutBase.AttachedFlyout>
