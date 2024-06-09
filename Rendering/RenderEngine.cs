@@ -520,7 +520,7 @@ public class RenderEngine(MainView mainView)
         List<Note> visibleNotes = chart.Notes.Where(x =>
         {
             float scaledMeasureDecimal = chart.GetScaledMeasureDecimal(x.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed);
-            bool inVisionRange = RenderMath.GreaterAlmostEqual(scaledMeasureDecimal, ScaledCurrentMeasureDecimal) && scaledMeasureDecimal <= ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal;
+            bool inVisionRange = RenderMath.GreaterAlmostEqual(scaledMeasureDecimal, ScaledCurrentMeasureDecimal) && RenderMath.GreaterAlmostEqual(x.BeatData.MeasureDecimal, CurrentMeasureDecimal) && scaledMeasureDecimal <= ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal;
             bool aroundVisionRange = scaledMeasureDecimal < ScaledCurrentMeasureDecimal && x.NextReferencedNote != null && chart.GetScaledMeasureDecimal(x.NextReferencedNote.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) > ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal;
             
             return x.IsHold && (inVisionRange || aroundVisionRange);
