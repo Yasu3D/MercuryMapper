@@ -451,7 +451,7 @@ public class RenderEngine(MainView mainView)
 
         void drawSyncOutline(Note current, Note previous, SKRect rect, float scale)
         {
-            float outlineOffset = (RenderConfig.NoteSize * 4.5f + 4.5f) * scale;
+            float outlineOffset = (RenderConfig.NoteSize * 4.5f + 4.5f) * scale * canvasScale;
             const float controlOffset = 2;
             
             SKPath path1 = new();
@@ -507,7 +507,7 @@ public class RenderEngine(MainView mainView)
                 path1.Close();
             }
             
-            if (current.Size != 60 || previous.Size != 60) canvas.DrawPath(path1, brushes.GetSyncPen(scale * 0.75f));
+            if (current.Size != 60 || previous.Size != 60) canvas.DrawPath(path1, brushes.GetSyncPen(scale * canvasScale * 0.75f));
         }
     }
 
