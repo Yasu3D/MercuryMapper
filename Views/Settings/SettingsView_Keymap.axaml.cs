@@ -54,6 +54,5 @@ public partial class SettingsView_Keymap : UserControl
         string name = item.Name ?? "";
 
         mainView.KeybindEditor.ResetKeybind(name);
-        Console.WriteLine(name);
     }
 }
