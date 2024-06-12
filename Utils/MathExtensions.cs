@@ -84,6 +84,18 @@ public static class MathExtensions
         }
         return x | y;
     }
+    
+    public static bool GreaterAlmostEqual(float input, float comparison)
+    {
+        if (input > comparison) return true;
+        return float.Abs(input - comparison) < 0.001f;
+    }
+
+    public static bool LessAlmostEqual(float input, float comparison)
+    {
+        if (input < comparison) return true;
+        return float.Abs(input - comparison) < 0.001f;
+    }
 
     public enum HoldEaseType
     {

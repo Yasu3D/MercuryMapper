@@ -1233,6 +1233,9 @@ public class ChartEditor
         {
             if (HighlightedElement is Note highlighted)
                 addOperation(highlighted);
+
+            if (HighlightedElement is Gimmick gimmick)
+                addOperationGimmick(gimmick);
         }
 
         if (operationList.Count == 0) return;
@@ -1258,6 +1261,77 @@ public class ChartEditor
 
             EditNote edit = new(note, newNote);
             
+            operationList.Add(edit);
+            UndoRedoManager.InvokeAndPush(edit);
+        }
+
+        void addOperationGimmick(Gimmick gimmick)
+        {
+            float min = 0;
+            float max = endOfChartMeasureDecimal;
+
+            switch (gimmick.GimmickType)
+            {
+                case GimmickType.None:
+                case GimmickType.BpmChange:
+                case GimmickType.TimeSigChange:
+                case GimmickType.HiSpeedChange:
+                {
+                    break;
+                }
+                
+                case GimmickType.ReverseEffectStart:
+                {
+                    Gimmick? next = Chart.Gimmicks.FirstOrDefault(x => x.BeatData.FullTick > gimmick.BeatData.FullTick && x.GimmickType is GimmickType.ReverseEffectEnd);
+                    if (next != null) max = next.BeatData.MeasureDecimal;
+                    break;
+                }
+                
+                case GimmickType.ReverseEffectEnd:
+                {
+                    Gimmick? prev = Chart.Gimmicks.LastOrDefault(x => x.BeatData.FullTick < gimmick.BeatData.FullTick && x.GimmickType is GimmickType.ReverseEffectStart);
+                    if (prev != null) min = prev.BeatData.MeasureDecimal;
+                    
+                    Gimmick? next = Chart.Gimmicks.FirstOrDefault(x => x.BeatData.FullTick > gimmick.BeatData.FullTick && x.GimmickType is GimmickType.ReverseNoteEnd);
+                    if (next != null) max = next.BeatData.MeasureDecimal;
+                    break;
+                }
+                
+                case GimmickType.ReverseNoteEnd:
+                {
+                    Gimmick? prev = Chart.Gimmicks.LastOrDefault(x => x.BeatData.FullTick < gimmick.BeatData.FullTick && x.GimmickType is GimmickType.ReverseEffectEnd);
+                    if (prev != null) min = prev.BeatData.MeasureDecimal;
+                    
+                    break;
+                }
+                
+                case GimmickType.StopStart:
+                {
+                    Gimmick? next = Chart.Gimmicks.FirstOrDefault(x => x.BeatData.FullTick > gimmick.BeatData.FullTick && x.GimmickType is GimmickType.StopEnd);
+                    if (next != null) max = next.BeatData.MeasureDecimal;
+                    
+                    break;
+                }
+                
+                case GimmickType.StopEnd:
+                {
+                    Gimmick? prev = Chart.Gimmicks.LastOrDefault(x => x.BeatData.FullTick < gimmick.BeatData.FullTick && x.GimmickType is GimmickType.StopStart);
+                    if (prev != null) min = prev.BeatData.MeasureDecimal;
+                    
+                    break;
+                }
+            }
+
+            float newMeasureDecimal = gimmick.BeatData.MeasureDecimal + divisor;
+            if (MathExtensions.GreaterAlmostEqual(newMeasureDecimal, max) || MathExtensions.LessAlmostEqual(newMeasureDecimal, min)) return;
+            
+            Gimmick newGimmick = new(gimmick)
+            {
+                BeatData = new(float.Clamp(gimmick.BeatData.MeasureDecimal + divisor, min, max))
+            };
+
+            QuickEditGimmick edit = new(Chart, gimmick, newGimmick);
+
             operationList.Add(edit);
             UndoRedoManager.InvokeAndPush(edit);
         }

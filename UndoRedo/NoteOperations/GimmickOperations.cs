@@ -89,3 +89,31 @@ public class DeleteGimmick(Chart chart, Gimmick gimmick) : IOperation
         }
     }
 }
+
+public class QuickEditGimmick(Chart chart, Gimmick gimmick, Gimmick newGimmick) : IOperation
+{
+    public Chart Chart { get; } = chart;
+    public Gimmick BaseGimmick { get; } = gimmick;
+    public Gimmick OldGimmick { get; } = new(gimmick);
+    public Gimmick NewGimmick { get; } = newGimmick;
+
+    public void Undo()
+    {
+        lock (Chart)
+        {
+            BaseGimmick.BeatData = OldGimmick.BeatData;
+            Chart.GenerateTimeEvents();
+            Chart.GenerateTimeScales();
+        }
+    }
+
+    public void Redo()
+    {
+        lock (Chart)
+        {
+            BaseGimmick.BeatData = NewGimmick.BeatData;
+            Chart.GenerateTimeEvents();
+            Chart.GenerateTimeScales();
+        }
+    }
+}
