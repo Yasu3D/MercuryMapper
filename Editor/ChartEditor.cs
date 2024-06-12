@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Threading;
 using FluentAvalonia.UI.Controls;
@@ -53,7 +52,7 @@ public class ChartEditor
     public List<Note> SelectedNotes { get; } = [];
     public Note? LastSelectedNote;
     public ChartElement? HighlightedElement;
-    public BoxSelect BoxSelect;
+    public BoxSelect BoxSelect = new();
 
     public List<Note> Clipboard { get; private set; } = [];
 
@@ -509,23 +508,18 @@ public class ChartEditor
 
             case ChartEditorState.InsertNote:
             {
-                Console.WriteLine("Box Select Started. Define Size and Start");
-                
                 BoxSelect = new();
-                
+
+                mainView.SetMinNoteSize(NoteType.None);
                 EditorState = ChartEditorState.BoxSelectStart;
                 break;
             }
 
             case ChartEditorState.BoxSelectStart:
             {
-                Console.WriteLine("Size and Start Defined. Now Define End");
-                
                 BoxSelect.SelectionStart = CurrentBeatData;
                 BoxSelect.Position = Cursor.Position;
                 BoxSelect.Size = Cursor.Size;
-                
-                Console.WriteLine($"{BoxSelect.SelectionStart.MeasureDecimal} {BoxSelect.Position} {BoxSelect.Size}");
                 
                 EditorState = ChartEditorState.BoxSelectEnd;
                 break;
@@ -533,8 +527,6 @@ public class ChartEditor
 
             case ChartEditorState.BoxSelectEnd:
             {
-                Console.WriteLine("End Defined! Selecting...");
-
                 // Handle case where user scrolls backwards
                 if (measureDecimal <= BoxSelect.SelectionStart?.MeasureDecimal)
                 {
@@ -545,8 +537,9 @@ public class ChartEditor
                 {
                     BoxSelect.SelectionEnd = new(measureDecimal);
                 }
-                select();
                 
+                select();
+                mainView.SetMinNoteSize(CurrentNoteType);
                 EditorState = ChartEditorState.InsertNote;
                 break;
             }
@@ -590,7 +583,7 @@ public class ChartEditor
 
     public void StopBoxSelect()
     {
-        Console.WriteLine("Box Select Stopped.");
+        mainView.SetMinNoteSize(CurrentNoteType);
         EditorState = ChartEditorState.InsertNote;
     }
     

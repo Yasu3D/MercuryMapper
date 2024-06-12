@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using MercuryMapper.Config;
 using MercuryMapper.Data;
+using MercuryMapper.Editor;
 using MercuryMapper.Enums;
 using MercuryMapper.Utils;
 using MercuryMapper.Views;
@@ -18,6 +19,7 @@ public class RenderEngine(MainView mainView)
     private readonly MainView mainView = mainView;
     private readonly Brushes brushes = new(mainView.UserConfig);
     private Chart Chart => mainView.ChartEditor.Chart;
+    private BoxSelect BoxSelect => mainView.ChartEditor.BoxSelect;
 
     private SKPoint canvasCenter;
     private SKRect canvasRect;
@@ -55,15 +57,9 @@ public class RenderEngine(MainView mainView)
             if (IsHoveringOverMirrorAxis) DrawMirrorAxis(canvas, MirrorAxis);
         }
 
-        if (mainView.ChartEditor.EditorState is ChartEditorState.BoxSelectStart)
-        {
-            DrawBoxSelectCursor(canvas, mainView.ChartEditor.Cursor.Position, mainView.ChartEditor.Cursor.Size);
-        }
+        if (mainView.ChartEditor.EditorState is ChartEditorState.BoxSelectStart) DrawBoxSelectCursor(canvas, mainView.ChartEditor.Cursor.Position, mainView.ChartEditor.Cursor.Size);
 
-        if (mainView.ChartEditor.EditorState is ChartEditorState.BoxSelectEnd)
-        {
-            DrawBoxSelectArea(canvas, Chart);
-        }
+        if (mainView.ChartEditor.EditorState is ChartEditorState.BoxSelectEnd) DrawBoxSelectArea(canvas, Chart);
         
         DrawMeasureLines(canvas, Chart);
         
@@ -403,20 +399,37 @@ public class RenderEngine(MainView mainView)
 
     private void DrawBoxSelectArea(SKCanvas canvas, Chart chart)
     {
-        if (mainView.ChartEditor.BoxSelect.SelectionStart is null) return;
+        if (BoxSelect.SelectionStart is null) return;
 
-        float selectionStartScale = mainView.ChartEditor.BoxSelect.SelectionStart.MeasureDecimal <= CurrentMeasureDecimal ? 1 : GetNoteScale(chart, mainView.ChartEditor.BoxSelect.SelectionStart.MeasureDecimal);
+        float selectionStartScale = BoxSelect.SelectionStart.MeasureDecimal <= CurrentMeasureDecimal ? 1 : GetNoteScale(chart, BoxSelect.SelectionStart.MeasureDecimal);
         SKRect selectionStartRect = GetRect(selectionStartScale);
         
         float selectionEndScale = float.Min(1, GetNoteScale(chart, GetMeasureDecimalAtPointer(chart, PointerPosition)));
         SKRect selectionEndRect = GetRect(selectionEndScale);
+
+        float startAngle = BoxSelect.Position * -6;
+        float sweepAngle = BoxSelect.Size == 60 ? 359.99f : BoxSelect.Size * -6;
         
         SKPath path = new();
 
-        if (selectionStartScale <= 0) path.MoveTo(canvasCenter);
-        else path.ArcTo(selectionStartRect, mainView.ChartEditor.BoxSelect.Position * -6, mainView.ChartEditor.BoxSelect.Size * -6, true);
-        path.ArcTo(selectionEndRect, mainView.ChartEditor.BoxSelect.Position * -6 + mainView.ChartEditor.BoxSelect.Size * -6, mainView.ChartEditor.BoxSelect.Size * 6, false);
-        path.Close();
+        if (selectionStartScale <= 0)
+        {
+            path.MoveTo(canvasCenter);
+        }
+        else
+        {
+            path.ArcTo(selectionStartRect, startAngle, sweepAngle, true);
+        }
+
+        if (BoxSelect.Size != 60)
+        {
+            path.ArcTo(selectionEndRect, startAngle + sweepAngle, -sweepAngle, false);
+            path.Close();
+        }
+        else
+        {
+            path.ArcTo(selectionEndRect, startAngle + sweepAngle, -sweepAngle, true);
+        }
         
         canvas.DrawPath(path, brushes.BoxSelectFill);
         canvas.DrawPath(path, brushes.GetBoxSelectOutlinePen(canvasScale));

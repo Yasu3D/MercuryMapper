@@ -599,7 +599,7 @@ Would you like to manually select a file?</value>
         <value>Fix off-by-one Errors</value>
     </data>
     <data name="Tools_FixOffByOneTitle" xml:space="preserve">
-        <value>Fix off-by-one Error</value>
+        <value>Fix off-by-one Errors</value>
     </data>
     <data name="Tools_FixOffByOneDescription" xml:space="preserve">
         <value>This will quantize all notes to common beat divisions to fix errors like a note on [0 1919] instead of [1 0].

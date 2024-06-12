@@ -167,6 +167,11 @@ public partial class MainView : UserControl
         MenuItemCut.InputGesture = UserConfig.KeymapConfig.Keybinds["EditCut"].ToGesture();
         MenuItemCopy.InputGesture = UserConfig.KeymapConfig.Keybinds["EditCopy"].ToGesture();
         MenuItemPaste.InputGesture = UserConfig.KeymapConfig.Keybinds["EditPaste"].ToGesture();
+        MenuItemSelectAll.InputGesture = UserConfig.KeymapConfig.Keybinds["EditorSelectAll"].ToGesture();
+        MenuItemDeselectAll.InputGesture = UserConfig.KeymapConfig.Keybinds["EditorDeselectAll"].ToGesture();
+        MenuItemBoxSelect.InputGesture = UserConfig.KeymapConfig.Keybinds["EditorBoxSelect"].ToGesture();
+        MenuItemSelectHighlightedNote.InputGesture = UserConfig.KeymapConfig.Keybinds["EditorSelectHighlightedNote"].ToGesture();
+        MenuItemSelectHoldReferences.InputGesture = UserConfig.KeymapConfig.Keybinds["EditorSelectHoldReferences"].ToGesture();
     }
 
     public void SetHoldContextButton(ChartEditorState state)
@@ -938,6 +943,7 @@ public partial class MainView : UserControl
             point.Y /= 0.9f;
 
             RenderEngine.PointerPosition = point;
+            return;
         }
         
         PointerPoint p = e.GetCurrentPoint(Canvas);
@@ -980,6 +986,9 @@ public partial class MainView : UserControl
         if (ChartEditor.EditorState is ChartEditorState.BoxSelectStart or ChartEditorState.BoxSelectEnd)
         {
             PointerPoint p = e.GetCurrentPoint(Canvas);
+
+            if (p.Properties.PointerUpdateKind is not PointerUpdateKind.LeftButtonReleased) return;
+            
             SKPoint point = new((float)p.Position.X, (float)p.Position.Y);
             point.X -= (float)Canvas.Width * 0.5f;
             point.Y -= (float)Canvas.Height * 0.5f;

@@ -2079,7 +2079,7 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Fix off-by-one Error.
+        ///   Looks up a localized string similar to Fix off-by-one Errors.
         /// </summary>
         public static string Tools_FixOffByOneTitle {
             get {

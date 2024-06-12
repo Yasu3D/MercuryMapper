@@ -221,6 +221,7 @@ public class Note : ChartElement
     {
         return type switch
         {
+            NoteType.None => 1,
             NoteType.Touch => 4,
             NoteType.TouchBonus => 5,
             NoteType.SnapForward => 6,

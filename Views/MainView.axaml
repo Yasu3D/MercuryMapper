@@ -81,13 +81,14 @@
                     <MenuItem Header="{x:Static lang:Resources.Editor_DeselectAll}" Name="MenuItemDeselectAll"
                               Click="MenuItemDeselectAll_OnClick"/>
                     <Separator/>
-                    <MenuItem Header="{x:Static lang:Resources.Editor_SelectHoldReferences}" Name="MenuItemSelectHoldreferences"
+                    <MenuItem Header="{x:Static lang:Resources.Editor_BoxSelect}" Name="MenuItemBoxSelect" 
+                              Click="MenuItemBoxSelect_OnClick"/>
+                    <Separator/>
+                    <MenuItem Header="{x:Static lang:Resources.Editor_SelectHoldReferences}" Name="MenuItemSelectHoldReferences"
                               Click="MenuItemSelectHoldReferences_OnClick"/>
                     <MenuItem Header="{x:Static lang:Resources.Editor_SelectHighlightedNote}" Name="MenuItemSelectHighlightedNote" 
                               Click="MenuItemSelectHighlightedNote_OnClick"/>
-                    <Separator/>
-                    <MenuItem Header="{x:Static lang:Resources.Editor_BoxSelect}" Name="MenuItemBoxSelect" 
-                              Click="MenuItemBoxSelect_OnClick"/>
+                    
                 </MenuItem>
                 
                 <MenuItem Header="{x:Static lang:Resources.MenuHeader_Tools}">

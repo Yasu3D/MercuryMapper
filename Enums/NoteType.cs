@@ -2,6 +2,7 @@ namespace MercuryMapper.Enums;
 
 public enum NoteType
 {
+    None = 0,
     Touch = 1,
     TouchBonus = 2,
     SnapForward = 3,
