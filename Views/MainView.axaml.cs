@@ -660,6 +660,12 @@ public partial class MainView : UserControl
             e.Handled = true;
             return;
         }
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorBoxSelect"]))
+        {
+            ChartEditor.RunBoxSelect();
+            e.Handled = true;
+            return;
+        }
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorIncreasePlaybackSpeed"]))
         {
             SliderPlaybackSpeed.Value += 10;

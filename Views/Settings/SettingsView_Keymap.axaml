@@ -40,6 +40,7 @@
                 <TreeViewItem Name="EditorHighlightNearestNote" Header="{x:Static lang:Resources.Editor_HighlightNearestNote}"/>
                 <TreeViewItem Name="EditorSelectHighlightedNote" Header="{x:Static lang:Resources.Editor_SelectHighlightedNote}"/>
                 <TreeViewItem Name="EditorSelectHoldReferences" Header="{x:Static lang:Resources.Editor_SelectHoldReferences}"/>
+                <TreeViewItem Name="EditorBoxSelect" Header="{x:Static lang:Resources.Editor_BoxSelect}"/>
                 <TreeViewItem Name="EditorIncreasePlaybackSpeed" Header="{x:Static lang:Resources.Editor_IncreasePlaybackSpeed}"/>
                 <TreeViewItem Name="EditorDecreasePlaybackSpeed" Header="{x:Static lang:Resources.Editor_DecreasePlaybackSpeed}"/>
                 <TreeViewItem Name="EditorNoteTypeTouch" Header="{x:Static lang:Resources.Note_Touch}"/>

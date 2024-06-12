@@ -75,6 +75,7 @@ public class KeymapConfig
         ["EditorHighlightNearestNote"] = new(Key.Q, false, true, false),
         ["EditorSelectHighlightedNote"] = new(Key.Space, false, true, false),
         ["EditorSelectHoldReferences"] = new(Key.R, false, true, false),
+        ["EditorBoxSelect"] = new(Key.B, true, false, false),
         ["EditorIncreasePlaybackSpeed"] = new(Key.Add),
         ["EditorDecreasePlaybackSpeed"] = new(Key.Subtract),
         ["EditorNoteTypeTouch"] = new(Key.D1),
@@ -147,7 +148,6 @@ public class ColorConfig
         ["ColorMeasureLine"] = "FFFFFFFF",
         ["ColorBeatLine"] = "80FFFFFF",
         ["ColorAngleTicks"] = "AAFFFFFF",
-        ["ColorBoxSelect"] = "8000FFFF",
     };
 }
 

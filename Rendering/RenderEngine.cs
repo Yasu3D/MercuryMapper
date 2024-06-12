@@ -404,16 +404,17 @@ public class RenderEngine(MainView mainView)
     private void DrawBoxSelectArea(SKCanvas canvas, Chart chart)
     {
         if (mainView.ChartEditor.BoxSelect.SelectionStart is null) return;
-        
-        float selectionStartScale = float.Min(1, GetNoteScale(chart, mainView.ChartEditor.BoxSelect.SelectionStart.MeasureDecimal));
+
+        float selectionStartScale = mainView.ChartEditor.BoxSelect.SelectionStart.MeasureDecimal <= CurrentMeasureDecimal ? 1 : GetNoteScale(chart, mainView.ChartEditor.BoxSelect.SelectionStart.MeasureDecimal);
         SKRect selectionStartRect = GetRect(selectionStartScale);
         
         float selectionEndScale = float.Min(1, GetNoteScale(chart, GetMeasureDecimalAtPointer(chart, PointerPosition)));
         SKRect selectionEndRect = GetRect(selectionEndScale);
-
-        SKPath path = new();
         
-        path.ArcTo(selectionStartRect, mainView.ChartEditor.BoxSelect.Position * -6, mainView.ChartEditor.BoxSelect.Size * -6, true);
+        SKPath path = new();
+
+        if (selectionStartScale <= 0) path.MoveTo(canvasCenter);
+        else path.ArcTo(selectionStartRect, mainView.ChartEditor.BoxSelect.Position * -6, mainView.ChartEditor.BoxSelect.Size * -6, true);
         path.ArcTo(selectionEndRect, mainView.ChartEditor.BoxSelect.Position * -6 + mainView.ChartEditor.BoxSelect.Size * -6, mainView.ChartEditor.BoxSelect.Size * 6, false);
         path.Close();
         

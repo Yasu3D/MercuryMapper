@@ -413,9 +413,9 @@ public class Brushes(UserConfig userConfig)
             MaskFill.Color = SKColor.Parse(colors["ColorBackgroundNoMask"]);
             tunnelStripesPen.Color = SKColor.Parse(colors["ColorBackgroundFar"]).WithAlpha(0x80);
 
-            boxSelectOutlinePen.Color = SKColor.Parse(colors["ColorBoxSelect"]);
-            boxSelectCursorPen.Color = SKColor.Parse(colors["ColorBoxSelect"]).WithAlpha(0x80);
-            BoxSelectFill.Color = SKColor.Parse(colors["ColorBoxSelect"]).WithAlpha(0x20);
+            boxSelectOutlinePen.Color = SKColor.Parse(colors["ColorSelection"]).WithAlpha(0xFF);
+            boxSelectCursorPen.Color = SKColor.Parse(colors["ColorSelection"]).WithAlpha(0x80);
+            BoxSelectFill.Color = SKColor.Parse(colors["ColorSelection"]).WithAlpha(0x20);
         }
 
         void setStrokeWidths()
