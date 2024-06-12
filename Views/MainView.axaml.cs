@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
@@ -42,8 +43,8 @@ public partial class MainView : UserControl
         AudioManager = new(this);
         RenderEngine = new(this);
         
-        TimeSpan interval = TimeSpan.FromSeconds(1.0 / UserConfig.RenderConfig.RefreshRate);
-        UpdateTimer = new(interval, DispatcherPriority.Background, UpdateTimer_Tick) { IsEnabled = false };
+        updateInterval = TimeSpan.FromSeconds(1.0 / UserConfig.RenderConfig.RefreshRate);
+        UpdateTimer = new(UpdateTimer_Tick, null, Timeout.Infinite, Timeout.Infinite);
         HitsoundTimer = new(TimeSpan.FromMilliseconds(1), DispatcherPriority.Background, HitsoundTimer_Tick) { IsEnabled = false };
         AutosaveTimer = new(TimeSpan.FromMinutes(1), DispatcherPriority.Background, AutosaveTimer_Tick) { IsEnabled = true };
         
@@ -69,7 +70,9 @@ public partial class MainView : UserControl
     public readonly ChartEditor ChartEditor;
     public readonly AudioManager AudioManager;
     public readonly RenderEngine RenderEngine;
-    public DispatcherTimer UpdateTimer;
+
+    private TimeSpan updateInterval;
+    public readonly Timer UpdateTimer;
     public readonly DispatcherTimer HitsoundTimer;
     public readonly DispatcherTimer AutosaveTimer;
     
@@ -182,25 +185,28 @@ public partial class MainView : UserControl
         if (AudioManager.CurrentSong == null) return;
         SliderSongPosition.Maximum = AudioManager.CurrentSong.Length;
     }
-
-    public void UpdateTimer_Tick(object? sender, EventArgs e)
-    { 
-        if (AudioManager.CurrentSong == null) return;
-        
-        if (AudioManager.CurrentSong.Position >= AudioManager.CurrentSong.Length && AudioManager.CurrentSong.IsPlaying)
+    
+    public void UpdateTimer_Tick(object? sender)
+    {
+        Dispatcher.UIThread.Post(() =>
         {
-            SetPlayState(PlayerState.Paused);
-            AudioManager.CurrentSong.Position = 0;
-        }
-
-        if (playerState is PlayerState.Preview && AudioManager.CurrentSong.Position >= (int)((ChartEditor.Chart.PreviewTime + ChartEditor.Chart.PreviewLength) * 1000))
-        {
-            SetPlayState(PlayerState.Paused);
-            AudioManager.CurrentSong.Position = (uint)(ChartEditor.Chart.PreviewTime * 1000);
-        }
+            if (AudioManager.CurrentSong == null) return;
         
-        if (timeUpdateSource == TimeUpdateSource.None)
-            UpdateTime(TimeUpdateSource.Timer);
+            if (AudioManager.CurrentSong.Position >= AudioManager.CurrentSong.Length && AudioManager.CurrentSong.IsPlaying)
+            {
+                SetPlayState(PlayerState.Paused);
+                AudioManager.CurrentSong.Position = 0;
+            }
+
+            if (playerState is PlayerState.Preview && AudioManager.CurrentSong.Position >= (int)((ChartEditor.Chart.PreviewTime + ChartEditor.Chart.PreviewLength) * 1000))
+            {
+                SetPlayState(PlayerState.Paused);
+                AudioManager.CurrentSong.Position = (uint)(ChartEditor.Chart.PreviewTime * 1000);
+            }
+        
+            if (timeUpdateSource == TimeUpdateSource.None) 
+                UpdateTime(TimeUpdateSource.Timer);
+        });
     }
     
     public void HitsoundTimer_Tick(object? sender, EventArgs e)
@@ -1812,17 +1818,17 @@ public partial class MainView : UserControl
         Console.WriteLine("Applying settings");
         KeybindEditor.StopRebinding(); // Stop rebinding in case it was active.
         SetButtonColors(); // Update button colors if they were changed
-        SetMenuItemInputGestureText(); // Update inputgesture text in case stuff was rebound
+        SetMenuItemInputGestureText(); // Update InputGesture text in case stuff was rebound
         SetQuickSettings();
         RenderEngine.UpdateBrushes();
         RenderEngine.UpdateVisibleTime();
         AudioManager.LoadHitsoundSamples();
         AudioManager.UpdateVolume();
         
-        // I know some maniac is gonna change their refresh rate while playing a song.
-        TimeSpan interval = TimeSpan.FromSeconds(1.0 / UserConfig.RenderConfig.RefreshRate);
-        UpdateTimer = new(interval, DispatcherPriority.Background, UpdateTimer_Tick) { IsEnabled = AudioManager.CurrentSong?.IsPlaying ?? false };
-        
+        // I know some maniac is going to change their refresh rate while playing a song.
+        updateInterval = TimeSpan.FromSeconds(1.0 / UserConfig.RenderConfig.RefreshRate);
+        if (playerState is not PlayerState.Paused) UpdateTimer.Change(updateInterval, updateInterval);
+
         File.WriteAllText(ConfigPath, Toml.FromModel(UserConfig));
     }
 
@@ -1842,7 +1848,7 @@ public partial class MainView : UserControl
     {
         if (AudioManager.CurrentSong == null)
         {
-            UpdateTimer.IsEnabled = false;
+            UpdateTimer.Change(Timeout.Infinite, Timeout.Infinite);
             HitsoundTimer.IsEnabled = false;
             IconPlay.IsVisible = true;
             IconStop.IsVisible = false;
@@ -1854,7 +1860,10 @@ public partial class MainView : UserControl
         
         AudioManager.CurrentSong.Volume = (float)(UserConfig.AudioConfig.MusicVolume * 0.01);
         AudioManager.CurrentSong.IsPlaying = playing;
-        UpdateTimer.IsEnabled = playing;
+        
+        if (playing) UpdateTimer.Change(updateInterval, updateInterval);
+        else UpdateTimer.Change(Timeout.Infinite, Timeout.Infinite);
+        
         HitsoundTimer.IsEnabled = playing;
         
         IconPlay.IsVisible = !playing;
