@@ -75,6 +75,21 @@
                               Click="MenuItemPaste_OnClick"/>
                 </MenuItem>
                 
+                <MenuItem Header="{x:Static lang:Resources.MenuHeader_Select}">
+                    <MenuItem Header="{x:Static lang:Resources.Editor_SelectAll}" Name="MenuItemSelectAll"
+                              Click="MenuItemSelectAll_OnClick"/>
+                    <MenuItem Header="{x:Static lang:Resources.Editor_DeselectAll}" Name="MenuItemDeselectAll"
+                              Click="MenuItemDeselectAll_OnClick"/>
+                    <Separator/>
+                    <MenuItem Header="{x:Static lang:Resources.Editor_SelectHoldReferences}" Name="MenuItemSelectHoldreferences"
+                              Click="MenuItemSelectHoldReferences_OnClick"/>
+                    <MenuItem Header="{x:Static lang:Resources.Editor_SelectHighlightedNote}" Name="MenuItemSelectHighlightedNote" 
+                              Click="MenuItemSelectHighlightedNote_OnClick"/>
+                    <Separator/>
+                    <MenuItem Header="{x:Static lang:Resources.Editor_BoxSelect}" Name="MenuItemBoxSelect" 
+                              Click="MenuItemBoxSelect_OnClick"/>
+                </MenuItem>
+                
                 <MenuItem Header="{x:Static lang:Resources.MenuHeader_Tools}">
                     <MenuItem Header="{x:Static lang:Resources.Menu_MirrorChart}" Name="MenuItemMirrorChart"
                               Click="MenuItemMirrorChart_OnClick"/>

@@ -146,7 +146,8 @@ public class ColorConfig
         ["ColorJudgementLineSecondary"] = "FFAE00FF",
         ["ColorMeasureLine"] = "FFFFFFFF",
         ["ColorBeatLine"] = "80FFFFFF",
-        ["ColorAngleTicks"] = "AAFFFFFF"
+        ["ColorAngleTicks"] = "AAFFFFFF",
+        ["ColorBoxSelect"] = "8000FFFF",
     };
 }
 

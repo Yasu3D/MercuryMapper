@@ -867,4 +867,7 @@ Continue?</value>
     <data name="Generic_EndOfChartWarningExplanation" xml:space="preserve">
         <value>Place an End of Chart note at least a Measure after the last playable note. Without it, the game would crash.</value>
     </data>
+    <data name="Editor_BoxSelect" xml:space="preserve">
+        <value>Box Select</value>
+    </data>
 </root>

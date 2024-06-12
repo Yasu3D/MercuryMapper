@@ -631,7 +631,7 @@ Fortfahren?</value>
         <value>Linear+ Out</value>
     </data>
     <data name="Menu_ExportSaturnFolder" xml:space="preserve">
-        <value>Create Saturn Folder</value>
+        <value>Saturn Ordner Erstellen</value>
     </data>
     <data name="SaturnExport_Artist" xml:space="preserve">
         <value>Künstler</value>
@@ -866,5 +866,8 @@ Fortfahren?</value>
     </data>
     <data name="Generic_EndOfChartWarningExplanation" xml:space="preserve">
         <value>Platziere eine Chart-Ende Note mindestens einen Takt nach der letzten spielbaren Note. Ohne Chart-Ende stürzt das Spiel ab.</value>
+    </data>
+    <data name="Editor_BoxSelect" xml:space="preserve">
+        <value>Box-Auswahl</value>
     </data>
 </root>

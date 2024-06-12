@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Threading;
 using FluentAvalonia.UI.Controls;
@@ -52,6 +53,7 @@ public class ChartEditor
     public List<Note> SelectedNotes { get; } = [];
     public Note? LastSelectedNote;
     public ChartElement? HighlightedElement;
+    public BoxSelect BoxSelect;
 
     public List<Note> Clipboard { get; private set; } = [];
 
@@ -64,6 +66,7 @@ public class ChartEditor
         LastPlacedHold = null;
         HighlightedElement = null;
         EndHold(true);
+        EditorState = ChartEditorState.InsertNote; // manually reset state one more time
         UndoRedoManager.Clear();
         SelectedNotes.Clear();
         
@@ -123,6 +126,7 @@ public class ChartEditor
         LastPlacedHold = null;
         HighlightedElement = null;
         EndHold(true);
+        EditorState = ChartEditorState.InsertNote; // manually reset state one more time
         UndoRedoManager.Clear();
         SelectedNotes.Clear();
         
@@ -493,6 +497,102 @@ public class ChartEditor
         
         mainView.SetSelectionInfo();
     }
+
+    public void RunBoxSelect(float measureDecimal = 0)
+    {
+        switch (EditorState)
+        {
+            case ChartEditorState.InsertHold:
+            {
+                return;
+            }
+
+            case ChartEditorState.InsertNote:
+            {
+                Console.WriteLine("Box Select Started. Define Size and Start");
+                
+                BoxSelect = new();
+                
+                EditorState = ChartEditorState.BoxSelectStart;
+                break;
+            }
+
+            case ChartEditorState.BoxSelectStart:
+            {
+                Console.WriteLine("Size and Start Defined. Now Define End");
+                
+                BoxSelect.SelectionStart = CurrentBeatData;
+                BoxSelect.Position = Cursor.Position;
+                BoxSelect.Size = Cursor.Size;
+                
+                Console.WriteLine($"{BoxSelect.SelectionStart.MeasureDecimal} {BoxSelect.Position} {BoxSelect.Size}");
+                
+                EditorState = ChartEditorState.BoxSelectEnd;
+                break;
+            }
+
+            case ChartEditorState.BoxSelectEnd:
+            {
+                Console.WriteLine("End Defined! Selecting...");
+
+                // Handle case where user scrolls backwards
+                if (measureDecimal <= BoxSelect.SelectionStart?.MeasureDecimal)
+                {
+                    BoxSelect.SelectionEnd = BoxSelect.SelectionStart;
+                    BoxSelect.SelectionStart = new(measureDecimal);
+                }
+                else
+                {
+                    BoxSelect.SelectionEnd = new(measureDecimal);
+                }
+                select();
+                
+                EditorState = ChartEditorState.InsertNote;
+                break;
+            }
+        }
+
+        return;
+
+        void select()
+        {
+            if (BoxSelect.SelectionStart is null || BoxSelect.SelectionEnd is null) return;
+
+            IEnumerable<Note> selectable = Chart.Notes.Where(x =>
+            {
+                bool inTimeRange = x.BeatData.FullTick >= BoxSelect.SelectionStart.FullTick &&
+                                   x.BeatData.FullTick <= BoxSelect.SelectionEnd.FullTick;
+
+                int noteEnd = (x.Position + x.Size) % 60;
+                int boxSelectEnd = (BoxSelect.Position + BoxSelect.Size) % 60;
+                
+                bool case1 = (x.Position <= noteEnd && BoxSelect.Position >= x.Position && BoxSelect.Position <= noteEnd) ||
+                             (x.Position > noteEnd && (BoxSelect.Position >= x.Position || BoxSelect.Position <= noteEnd));
+
+                bool case2 = (x.Position <= noteEnd && boxSelectEnd >= x.Position && boxSelectEnd <= noteEnd) ||
+                             (x.Position > noteEnd && (boxSelectEnd >= x.Position || boxSelectEnd <= noteEnd));
+
+                bool case3 = (BoxSelect.Position <= boxSelectEnd && x.Position >= BoxSelect.Position && x.Position <= boxSelectEnd) ||
+                             (BoxSelect.Position > boxSelectEnd && (x.Position >= BoxSelect.Position || x.Position <= boxSelectEnd));
+
+                bool case4 = (BoxSelect.Position <= boxSelectEnd && noteEnd >= BoxSelect.Position && noteEnd <= boxSelectEnd) ||
+                             (BoxSelect.Position > boxSelectEnd && (noteEnd >= BoxSelect.Position || noteEnd <= boxSelectEnd));
+                
+                return inTimeRange && (BoxSelect.Size == 60 || case1 || case2 || case3 || case4);
+            });
+            
+            foreach (Note note in selectable)
+            {
+                if (!SelectedNotes.Contains(note)) SelectedNotes.Add(note);
+            }
+        }
+    }
+
+    public void StopBoxSelect()
+    {
+        Console.WriteLine("Box Select Stopped.");
+        EditorState = ChartEditorState.InsertNote;
+    }
     
     // ________________ Highlighting
     public void HighlightElement(ChartElement? element)
@@ -624,6 +724,12 @@ public class ChartEditor
                 
                 if (mainView.UserConfig.EditorConfig.HighlightPlacedNote) HighlightElement(note);
                 break;
+            }
+
+            case ChartEditorState.BoxSelectStart:
+            case ChartEditorState.BoxSelectEnd:
+            {
+                return;
             }
         }
     }

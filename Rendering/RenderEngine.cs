@@ -35,6 +35,8 @@ public class RenderEngine(MainView mainView)
     public bool IsHoveringOverMirrorAxis { get; set; }
     public int MirrorAxis { get; set; } = 30;
 
+    public SKPoint PointerPosition;
+
     public void Render(SKCanvas canvas)
     {
         DrawBackground(canvas);
@@ -44,9 +46,23 @@ public class RenderEngine(MainView mainView)
         
         if (!IsPlaying)
         {
-            DrawCursor(canvas, mainView.ChartEditor.CurrentNoteType, mainView.ChartEditor.Cursor.Position, mainView.ChartEditor.Cursor.Size);
+            if (mainView.ChartEditor.EditorState is ChartEditorState.InsertNote or ChartEditorState.InsertHold)
+            {
+                DrawCursor(canvas, mainView.ChartEditor.CurrentNoteType, mainView.ChartEditor.Cursor.Position, mainView.ChartEditor.Cursor.Size);
+            }
+                
             DrawAngleTicks(canvas);
             if (IsHoveringOverMirrorAxis) DrawMirrorAxis(canvas, MirrorAxis);
+        }
+
+        if (mainView.ChartEditor.EditorState is ChartEditorState.BoxSelectStart)
+        {
+            DrawBoxSelectCursor(canvas, mainView.ChartEditor.Cursor.Position, mainView.ChartEditor.Cursor.Size);
+        }
+
+        if (mainView.ChartEditor.EditorState is ChartEditorState.BoxSelectEnd)
+        {
+            DrawBoxSelectArea(canvas, Chart);
         }
         
         DrawMeasureLines(canvas, Chart);
@@ -97,11 +113,16 @@ public class RenderEngine(MainView mainView)
     
     // ________________
 
+    public float GetMeasureDecimalAtPointer(Chart chart, SKPoint point)
+    {
+        float clickRadius = (1 - MathExtensions.InversePerspective(point.Length)) * visibleDistanceMeasureDecimal;
+        return chart.GetUnscaledMeasureDecimal(clickRadius + ScaledCurrentMeasureDecimal, RenderConfig.ShowHiSpeed);
+    }
+    
     public ChartElement? GetChartElementAtPointer(Chart chart, SKPoint point, bool includeGimmicks, bool layerNote, bool layerMask, bool layerGimmick)
     {
         int clickPosition = MathExtensions.GetThetaNotePosition(point.X, point.Y);
-        float clickRadius = (1 - MathExtensions.InversePerspective(point.Length)) * visibleDistanceMeasureDecimal;
-        float measureDecimal = chart.GetUnscaledMeasureDecimal(clickRadius + ScaledCurrentMeasureDecimal, RenderConfig.ShowHiSpeed);
+        float measureDecimal = GetMeasureDecimalAtPointer(chart, point);
         
         // Holy mother of LINQ
         List<Note> clickedNotes = chart.Notes
@@ -375,6 +396,31 @@ public class RenderEngine(MainView mainView)
         canvas.DrawArc(canvasRect, position * -6, size * -6, false, brushes.GetCursorPen(noteType, canvasScale));
     }
 
+    private void DrawBoxSelectCursor(SKCanvas canvas, int position, int size)
+    {
+        canvas.DrawArc(canvasRect, position * -6, size * -6, false, brushes.GetBoxSelectCursorPen(canvasScale));
+    }
+
+    private void DrawBoxSelectArea(SKCanvas canvas, Chart chart)
+    {
+        if (mainView.ChartEditor.BoxSelect.SelectionStart is null) return;
+        
+        float selectionStartScale = float.Min(1, GetNoteScale(chart, mainView.ChartEditor.BoxSelect.SelectionStart.MeasureDecimal));
+        SKRect selectionStartRect = GetRect(selectionStartScale);
+        
+        float selectionEndScale = float.Min(1, GetNoteScale(chart, GetMeasureDecimalAtPointer(chart, PointerPosition)));
+        SKRect selectionEndRect = GetRect(selectionEndScale);
+
+        SKPath path = new();
+        
+        path.ArcTo(selectionStartRect, mainView.ChartEditor.BoxSelect.Position * -6, mainView.ChartEditor.BoxSelect.Size * -6, true);
+        path.ArcTo(selectionEndRect, mainView.ChartEditor.BoxSelect.Position * -6 + mainView.ChartEditor.BoxSelect.Size * -6, mainView.ChartEditor.BoxSelect.Size * 6, false);
+        path.Close();
+        
+        canvas.DrawPath(path, brushes.BoxSelectFill);
+        canvas.DrawPath(path, brushes.GetBoxSelectOutlinePen(canvasScale));
+    }
+    
     private void DrawMirrorAxis(SKCanvas canvas, int axis)
     {
         int angle = -axis * 3;

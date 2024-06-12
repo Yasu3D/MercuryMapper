@@ -504,6 +504,11 @@ public partial class MainView : UserControl
 
             return;
         }
+
+        if (e.Key is Key.Escape && ChartEditor.EditorState is ChartEditorState.BoxSelectStart or ChartEditorState.BoxSelectEnd)
+        {
+            ChartEditor.StopBoxSelect();
+        }
         
         Keybind keybind = new(e);
         
@@ -915,9 +920,23 @@ public partial class MainView : UserControl
     
     private void Canvas_OnPointerMoved(object? sender, PointerEventArgs e)
     {
-        if (pointerState is not PointerState.Pressed) return;
+        if (ChartEditor.EditorState is ChartEditorState.BoxSelectEnd)
+        {
+            PointerPoint pointer = e.GetCurrentPoint(Canvas);
+            SKPoint point = new((float)pointer.Position.X, (float)pointer.Position.Y);
+            point.X -= (float)Canvas.Width * 0.5f;
+            point.Y -= (float)Canvas.Height * 0.5f;
+            point.X /= (float)(Canvas.Width - 30) * 0.5f;
+            point.Y /= (float)(Canvas.Height - 30) * 0.5f;
+            point.X /= 0.9f;
+            point.Y /= 0.9f;
 
+            RenderEngine.PointerPosition = point;
+        }
+        
         PointerPoint p = e.GetCurrentPoint(Canvas);
+        
+        if (pointerState is not PointerState.Pressed) return;
         
         if (p.Properties is { IsLeftButtonPressed: true, IsRightButtonPressed: false })
         {
@@ -951,6 +970,20 @@ public partial class MainView : UserControl
     {
         pointerState = PointerState.Released;
         ChartEditor.LastSelectedNote = null;
+        
+        if (ChartEditor.EditorState is ChartEditorState.BoxSelectStart or ChartEditorState.BoxSelectEnd)
+        {
+            PointerPoint p = e.GetCurrentPoint(Canvas);
+            SKPoint point = new((float)p.Position.X, (float)p.Position.Y);
+            point.X -= (float)Canvas.Width * 0.5f;
+            point.Y -= (float)Canvas.Height * 0.5f;
+            point.X /= (float)(Canvas.Width - 30) * 0.5f;
+            point.Y /= (float)(Canvas.Height - 30) * 0.5f;
+            point.X /= 0.9f;
+            point.Y /= 0.9f;
+            
+            ChartEditor.RunBoxSelect(RenderEngine.GetMeasureDecimalAtPointer(ChartEditor.Chart, point));
+        }
     }
     
     private void OnLeftClick(PointerPoint p, KeyModifiers modifiers, bool pointerMoved)
@@ -964,6 +997,8 @@ public partial class MainView : UserControl
         point.Y /= 0.9f;
         
         pointerState = PointerState.Pressed;
+
+        if (ChartEditor.EditorState is ChartEditorState.BoxSelectEnd) return;
         
         if (modifiers.HasFlag(KeyModifiers.Shift))
         {
@@ -1212,6 +1247,32 @@ public partial class MainView : UserControl
 
     private void MenuItemPaste_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.Paste();
 
+    private void MenuItemSelectAll_OnClick(object? sender, RoutedEventArgs e)
+    {
+        ChartEditor.SelectAllNotes();
+    }
+
+    private void MenuItemDeselectAll_OnClick(object? sender, RoutedEventArgs e)
+    {
+        ChartEditor.DeselectAllNotes();
+    }
+
+    private void MenuItemSelectHoldReferences_OnClick(object? sender, RoutedEventArgs e)
+    {
+        ChartEditor.SelectHoldReferences();
+    }
+    
+    private void MenuItemSelectHighlightedNote_OnClick(object? sender, RoutedEventArgs e)
+    {
+        ChartEditor.SelectHighlightedNote();
+    }
+
+    private void MenuItemBoxSelect_OnClick(object? sender, RoutedEventArgs e)
+    {
+        if (ChartEditor.EditorState is not ChartEditorState.InsertNote) return;
+        ChartEditor.RunBoxSelect();
+    }
+    
     private void MenuItemMirrorChart_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.MirrorChart((int?)NumericMirrorAxis.Value ?? 30);
 
     private void MenuItemShiftChart_OnClick(object? sender, RoutedEventArgs e)

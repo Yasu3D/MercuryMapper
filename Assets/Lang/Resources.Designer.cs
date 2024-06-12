@@ -231,6 +231,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Box Select.
+        /// </summary>
+        public static string Editor_BoxSelect {
+            get {
+                return ResourceManager.GetString("Editor_BoxSelect", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Chart Audio.
         /// </summary>
         public static string Editor_ChartInfo_ChartAudio {

@@ -3,5 +3,7 @@ namespace MercuryMapper.Enums;
 public enum ChartEditorState
 {
     InsertNote,
-    InsertHold
+    InsertHold,
+    BoxSelectStart,
+    BoxSelectEnd
 }

@@ -23,6 +23,7 @@ public class Brushes(UserConfig userConfig)
     private const float SelectionPenStrokeWidth = 15;
     private const float SyncPenStrokeWidth = 6;
     private const float RNotePenStrokeWidth = 17;
+    private const float BoxSelectOutlinePenStrokeWidth = 8;
     
     public float NoteWidthMultiplier = 1;
     private float cursorWidthMultiplier = 1;
@@ -87,6 +88,20 @@ public class Brushes(UserConfig userConfig)
         Style = SKPaintStyle.Stroke,
         IsAntialias = true,
         StrokeWidth = CursorPenStrokeWidth
+    };
+
+    private readonly SKPaint boxSelectCursorPen = new()
+    {
+        Style = SKPaintStyle.Stroke,
+        IsAntialias = true,
+        StrokeWidth = CursorPenStrokeWidth
+    };
+
+    private readonly SKPaint boxSelectOutlinePen = new()
+    {
+        Style = SKPaintStyle.Stroke,
+        IsAntialias = true,
+        StrokeWidth = BoxSelectOutlinePenStrokeWidth
     };
 
     private readonly SKPaint selectionPen = new()
@@ -194,6 +209,12 @@ public class Brushes(UserConfig userConfig)
         Style = SKPaintStyle.Fill,
         IsAntialias = true,
     };
+
+    public readonly SKPaint BoxSelectFill = new()
+    {
+        Style = SKPaintStyle.Fill,
+        IsAntialias = true
+    };
     
     // ________ Dynamic Brushes
     public SKPaint GetTunnelStripes(float strokeWidth)
@@ -245,6 +266,18 @@ public class Brushes(UserConfig userConfig)
         cursorPen.StrokeWidth = cursorWidthMultiplier * scale;
         cursorPen.Color = NoteType2Color(type).WithAlpha(0x80);
         return cursorPen;
+    }
+
+    public SKPaint GetBoxSelectCursorPen(float scale)
+    {
+        boxSelectCursorPen.StrokeWidth = cursorWidthMultiplier * scale;
+        return boxSelectCursorPen;
+    }
+
+    public SKPaint GetBoxSelectOutlinePen(float scale)
+    {
+        boxSelectOutlinePen.StrokeWidth = BoxSelectOutlinePenStrokeWidth * scale;
+        return boxSelectOutlinePen;
     }
     
     public SKPaint GetSelectionPen(float scale)
@@ -379,6 +412,10 @@ public class Brushes(UserConfig userConfig)
         
             MaskFill.Color = SKColor.Parse(colors["ColorBackgroundNoMask"]);
             tunnelStripesPen.Color = SKColor.Parse(colors["ColorBackgroundFar"]).WithAlpha(0x80);
+
+            boxSelectOutlinePen.Color = SKColor.Parse(colors["ColorBoxSelect"]);
+            boxSelectCursorPen.Color = SKColor.Parse(colors["ColorBoxSelect"]).WithAlpha(0x80);
+            BoxSelectFill.Color = SKColor.Parse(colors["ColorBoxSelect"]).WithAlpha(0x20);
         }
 
         void setStrokeWidths()

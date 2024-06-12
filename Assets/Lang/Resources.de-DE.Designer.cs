@@ -231,6 +231,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Box-Auswahl.
+        /// </summary>
+        public static string Editor_BoxSelect {
+            get {
+                return ResourceManager.GetString("Editor_BoxSelect", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Chart Audio.
         /// </summary>
         public static string Editor_ChartInfo_ChartAudio {
@@ -1204,7 +1213,7 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Create Saturn Folder.
+        ///   Looks up a localized string similar to Saturn Ordner Erstellen.
         /// </summary>
         public static string Menu_ExportSaturnFolder {
             get {
