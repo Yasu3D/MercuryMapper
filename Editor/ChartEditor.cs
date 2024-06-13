@@ -1553,6 +1553,7 @@ public class ChartEditor
         EditorState = ChartEditorState.InsertHold;
         mainView.SetHoldContextButton(EditorState);
         mainView.ToggleInsertButton();
+        mainView.RadioNoteHold.IsChecked = true;
         CurrentNoteType = NoteType.HoldEnd;
         UpdateCursorNoteType();
         
