@@ -510,9 +510,31 @@ public partial class MainView : UserControl
             return;
         }
 
-        if (e.Key is Key.Escape && ChartEditor.EditorState is ChartEditorState.BoxSelectStart or ChartEditorState.BoxSelectEnd)
+        if (e.Key is Key.Escape)
         {
-            ChartEditor.StopBoxSelect();
+            switch (ChartEditor.EditorState)
+            {
+                case ChartEditorState.InsertNote:
+                {
+                    break;
+                }
+                
+                case ChartEditorState.InsertHold:
+                {
+                    ChartEditor.EndHold(true);
+                    break;
+                }
+                
+                case ChartEditorState.BoxSelectStart:
+                case ChartEditorState.BoxSelectEnd:
+                {
+                    ChartEditor.StopBoxSelect();
+                    break;
+                }
+            }
+
+            e.Handled = true;
+            return;
         }
         
         Keybind keybind = new(e);
