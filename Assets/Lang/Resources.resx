@@ -885,4 +885,19 @@ Continue?</value>
     <data name="Editor_ToggleLoop" xml:space="preserve">
         <value>Toggle Loop</value>
     </data>
+    <data name="Settings_Header_Playback" xml:space="preserve">
+        <value>Playback</value>
+    </data>
+    <data name="Settings_Header_Selection" xml:space="preserve">
+        <value>Selection</value>
+    </data>
+    <data name="Settings_Header_EditHolds" xml:space="preserve">
+        <value>Edit Holds</value>
+    </data>
+    <data name="Settings_Header_EditNotes" xml:space="preserve">
+        <value>Edit Notes</value>
+    </data>
+    <data name="Settings_Header_NoteTypes" xml:space="preserve">
+        <value>Note Types</value>
+    </data>
 </root>

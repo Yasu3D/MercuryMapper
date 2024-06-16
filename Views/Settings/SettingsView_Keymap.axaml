@@ -8,77 +8,91 @@
              x:Class="MercuryMapper.Views.Settings.SettingsView_Keymap">
     <ScrollViewer Name="KeybindList">
         <StackPanel>
-            <TreeView Margin="0,0,10,0" Name="KeybindsTreeView" Classes="KeybindList" DoubleTapped="KeybindsTreeView_OnDoubleTapped" PointerPressed="KeybindsTreeView_OnPointerPressed">
-            <TreeViewItem Header="{x:Static lang:Resources.MenuHeader_File}" Classes="HideKeybind" IsExpanded="True">
-                <TreeViewItem Name="FileNew" Header="{x:Static lang:Resources.Menu_New}"/>
-                <TreeViewItem Name="FileOpen" Header="{x:Static lang:Resources.Menu_Open}"/>
-                <TreeViewItem Name="FileSave" Header="{x:Static lang:Resources.Menu_Save}"/>
-                <TreeViewItem Name="FileSaveAs" Header="{x:Static lang:Resources.Menu_SaveAs}"/>
-                <TreeViewItem Name="FileSettings" Header="{x:Static lang:Resources.Menu_Settings}"/>
-            </TreeViewItem>
-            
-            <TreeViewItem Header="{x:Static lang:Resources.MenuHeader_Edit}" Classes="HideKeybind">
-                <TreeViewItem Name="EditUndo" Header="{x:Static lang:Resources.Menu_Undo}"/>
-                <TreeViewItem Name="EditRedo" Header="{x:Static lang:Resources.Menu_Redo}"/>
-                <TreeViewItem Name="EditCut" Header="{x:Static lang:Resources.Menu_Cut}"/>
-                <TreeViewItem Name="EditCopy" Header="{x:Static lang:Resources.Menu_Copy}"/>
-                <TreeViewItem Name="EditPaste" Header="{x:Static lang:Resources.Menu_Paste}"/>
-            </TreeViewItem>
-            
-            <TreeViewItem Header="{x:Static lang:Resources.Settings_Header_Editor}" Classes="HideKeybind">
-                <TreeViewItem Name="EditorInsert" Header="{x:Static lang:Resources.Editor_Insert}"/>
-                <TreeViewItem Name="EditorPlay" Header="{x:Static lang:Resources.Editor_Play}"/>
-                <TreeViewItem Name="EditorSelectAll" Header="{x:Static lang:Resources.Editor_SelectAll}"/>
-                <TreeViewItem Name="EditorDeselectAll" Header="{x:Static lang:Resources.Editor_DeselectAll}"/>
-                <TreeViewItem Name="EditorEndHold" Header="{x:Static lang:Resources.Editor_EndHold}"/>
-                <TreeViewItem Name="EditorEditHold" Header="{x:Static lang:Resources.Editor_EditHold}"/>
-                <TreeViewItem Name="EditorBakeHold" Header="{x:Static lang:Resources.Editor_BakeHoldNote}"/>
-                <TreeViewItem Name="EditorStitchHold" Header="{x:Static lang:Resources.Editor_StitchHold}"/>
-                <TreeViewItem Name="EditorInsertHoldSegment" Header="{x:Static lang:Resources.Editor_InsertHoldSegment}"/>
-                <TreeViewItem Name="EditorHighlightNextNote" Header="{x:Static lang:Resources.Editor_HighlightNextNote}"/>
-                <TreeViewItem Name="EditorHighlightPrevNote" Header="{x:Static lang:Resources.Editor_HighlightPrevNote}"/>
-                <TreeViewItem Name="EditorHighlightNearestNote" Header="{x:Static lang:Resources.Editor_HighlightNearestNote}"/>
-                <TreeViewItem Name="EditorSelectHighlightedNote" Header="{x:Static lang:Resources.Editor_SelectHighlightedNote}"/>
-                <TreeViewItem Name="EditorSelectHoldReferences" Header="{x:Static lang:Resources.Editor_SelectHoldReferences}"/>
-                <TreeViewItem Name="EditorBoxSelect" Header="{x:Static lang:Resources.Editor_BoxSelect}"/>
-                <TreeViewItem Name="EditorIncreasePlaybackSpeed" Header="{x:Static lang:Resources.Editor_IncreasePlaybackSpeed}"/>
-                <TreeViewItem Name="EditorDecreasePlaybackSpeed" Header="{x:Static lang:Resources.Editor_DecreasePlaybackSpeed}"/>
-                <TreeViewItem Name="EditorNoteTypeTouch" Header="{x:Static lang:Resources.Note_Touch}"/>
-                <TreeViewItem Name="EditorNoteTypeSlideClockwise" Header="{x:Static lang:Resources.Note_SlideClockwise}"/>
-                <TreeViewItem Name="EditorNoteTypeSlideCounterclockwise" Header="{x:Static lang:Resources.Note_SlideCounterclockwise}"/>
-                <TreeViewItem Name="EditorNoteTypeSnapForward" Header="{x:Static lang:Resources.Note_SnapForward}"/>
-                <TreeViewItem Name="EditorNoteTypeSnapBackward" Header="{x:Static lang:Resources.Note_SnapBackward}"/>
-                <TreeViewItem Name="EditorNoteTypeChain" Header="{x:Static lang:Resources.Note_Chain}"/>
-                <TreeViewItem Name="EditorNoteTypeHold" Header="{x:Static lang:Resources.Note_Hold}"/>
-                <TreeViewItem Name="EditorNoteTypeMaskAdd" Header="{x:Static lang:Resources.Note_MaskAdd}"/>
-                <TreeViewItem Name="EditorNoteTypeMaskRemove" Header="{x:Static lang:Resources.Note_MaskRemove}"/>
-                <TreeViewItem Name="EditorNoteTypeEndOfChart" Header="{x:Static lang:Resources.Note_EndOfChart}"/>
-                <TreeViewItem Name="EditorTypeRadio1" Header="{x:Static lang:Resources.Settings_Keymap_TypeRadio1}"/>
-                <TreeViewItem Name="EditorTypeRadio2" Header="{x:Static lang:Resources.Settings_Keymap_TypeRadio2}"/>
-                <TreeViewItem Name="EditorTypeRadio3" Header="{x:Static lang:Resources.Settings_Keymap_TypeRadio3}"/>
-                <TreeViewItem Name="EditorEditNoteShape" Header="{x:Static lang:Resources.Editor_EditNoteShape}"/>
-                <TreeViewItem Name="EditorEditNoteProperties" Header="{x:Static lang:Resources.Editor_EditNoteProperties}"/>
-                <TreeViewItem Name="EditorEditNoteShapeProperties" Header="{x:Static lang:Resources.Editor_EditNoteShapeProperties}"/>
-                <TreeViewItem Name="EditorMirrorNote" Header="{x:Static lang:Resources.Editor_MirrorNote}"/>
-                <TreeViewItem Name="EditorDelete" Header="{x:Static lang:Resources.Editor_Delete}"/>
-                <TreeViewItem Name="EditorQuickEditIncreaseSize" Header="{x:Static lang:Resources.Editor_QuickEditIncreaseSize}"/>
-                <TreeViewItem Name="EditorQuickEditDecreaseSize" Header="{x:Static lang:Resources.Editor_QuickEditDecreaseSize}"/>
-                <TreeViewItem Name="EditorQuickEditIncreasePosition" Header="{x:Static lang:Resources.Editor_QuickEditIncreasePosition}"/>
-                <TreeViewItem Name="EditorQuickEditDecreasePosition" Header="{x:Static lang:Resources.Editor_QuickEditDecreasePosition}"/>
-                <TreeViewItem Name="EditorQuickEditIncreaseTimestamp" Header="{x:Static lang:Resources.Editor_QuickEditIncreaseTimestamp}"/>
-                <TreeViewItem Name="EditorQuickEditDecreaseTimestamp" Header="{x:Static lang:Resources.Editor_QuickEditDecreaseTimestamp}"/>
-                <TreeViewItem Name="EditorSetRenderTrue" Header="{x:Static lang:Resources.Editor_SetRenderTrue}"/>
-                <TreeViewItem Name="EditorSetRenderFalse" Header="{x:Static lang:Resources.Editor_SetRenderFalse}"/>
-                <TreeViewItem Name="EditorToggleLoop" Header="{x:Static lang:Resources.Editor_ToggleLoop}"/>
-                <TreeViewItem Name="EditorSetLoopStart" Header="{x:Static lang:Resources.Editor_SetLoopStart}"/>
-                <TreeViewItem Name="EditorSetLoopEnd" Header="{x:Static lang:Resources.Editor_SetLoopEnd}"/>
-            </TreeViewItem>
-            
-            <TreeViewItem Header="{x:Static lang:Resources.Settings_Header_Rendering}" Classes="HideKeybind">
-                <TreeViewItem Name="RenderIncreaseNoteSpeed" Header="{x:Static lang:Resources.Settings_Keymap_IncreaseNoteSpeed}"/>
-                <TreeViewItem Name="RenderDecreaseNoteSpeed" Header="{x:Static lang:Resources.Settings_Keymap_DecreaseNoteSpeed}"/>
-            </TreeViewItem>
-        </TreeView>
+            <TreeView Margin="0,0,10,0" Name="KeybindsTreeView" Classes="KeybindList"
+                      DoubleTapped="KeybindsTreeView_OnDoubleTapped" PointerPressed="KeybindsTreeView_OnPointerPressed">
+                <TreeViewItem Header="{x:Static lang:Resources.MenuHeader_File}" Classes="HideKeybind" IsExpanded="True">
+                    <TreeViewItem Name="FileNew" Header="{x:Static lang:Resources.Menu_New}" />
+                    <TreeViewItem Name="FileOpen" Header="{x:Static lang:Resources.Menu_Open}" />
+                    <TreeViewItem Name="FileSave" Header="{x:Static lang:Resources.Menu_Save}" />
+                    <TreeViewItem Name="FileSaveAs" Header="{x:Static lang:Resources.Menu_SaveAs}" />
+                    <TreeViewItem Name="FileSettings" Header="{x:Static lang:Resources.Menu_Settings}" />
+                </TreeViewItem>
+
+                <TreeViewItem Header="{x:Static lang:Resources.MenuHeader_Edit}" Classes="HideKeybind">
+                    <TreeViewItem Name="EditUndo" Header="{x:Static lang:Resources.Menu_Undo}" />
+                    <TreeViewItem Name="EditRedo" Header="{x:Static lang:Resources.Menu_Redo}" />
+                    <TreeViewItem Name="EditCut" Header="{x:Static lang:Resources.Menu_Cut}" />
+                    <TreeViewItem Name="EditCopy" Header="{x:Static lang:Resources.Menu_Copy}" />
+                    <TreeViewItem Name="EditPaste" Header="{x:Static lang:Resources.Menu_Paste}" />
+                </TreeViewItem>
+
+                <TreeViewItem Header="{x:Static lang:Resources.Settings_Header_Playback}" Classes="HideKeybind">
+                    <TreeViewItem Name="EditorPlay" Header="{x:Static lang:Resources.Editor_Play}" />
+                    <TreeViewItem Name="EditorToggleLoop" Header="{x:Static lang:Resources.Editor_ToggleLoop}" />
+                    <TreeViewItem Name="EditorSetLoopStart" Header="{x:Static lang:Resources.Editor_SetLoopStart}" />
+                    <TreeViewItem Name="EditorSetLoopEnd" Header="{x:Static lang:Resources.Editor_SetLoopEnd}" />
+                    <TreeViewItem Name="EditorIncreasePlaybackSpeed" Header="{x:Static lang:Resources.Editor_IncreasePlaybackSpeed}" />
+                    <TreeViewItem Name="EditorDecreasePlaybackSpeed" Header="{x:Static lang:Resources.Editor_DecreasePlaybackSpeed}" />
+                </TreeViewItem>
+
+                <TreeViewItem Header="{x:Static lang:Resources.Settings_Header_Selection}" Classes="HideKeybind">
+                    <TreeViewItem Name="EditorHighlightNextNote" Header="{x:Static lang:Resources.Editor_HighlightNextNote}" />
+                    <TreeViewItem Name="EditorHighlightPrevNote" Header="{x:Static lang:Resources.Editor_HighlightPrevNote}" />
+                    <TreeViewItem Name="EditorHighlightNearestNote" Header="{x:Static lang:Resources.Editor_HighlightNearestNote}" />
+                    <TreeViewItem Name="EditorSelectAll" Header="{x:Static lang:Resources.Editor_SelectAll}" />
+                    <TreeViewItem Name="EditorDeselectAll" Header="{x:Static lang:Resources.Editor_DeselectAll}" />
+                    <TreeViewItem Name="EditorBoxSelect" Header="{x:Static lang:Resources.Editor_BoxSelect}" />
+                    <TreeViewItem Name="EditorSelectHighlightedNote" Header="{x:Static lang:Resources.Editor_SelectHighlightedNote}" />
+                    <TreeViewItem Name="EditorSelectHoldReferences" Header="{x:Static lang:Resources.Editor_SelectHoldReferences}" />
+                </TreeViewItem>
+
+                <TreeViewItem Header="{x:Static lang:Resources.Settings_Header_EditHolds}" Classes="HideKeybind">
+                    <TreeViewItem Name="EditorEndHold" Header="{x:Static lang:Resources.Editor_EndHold}" />
+                    <TreeViewItem Name="EditorEditHold" Header="{x:Static lang:Resources.Editor_EditHold}" />
+                    <TreeViewItem Name="EditorBakeHold" Header="{x:Static lang:Resources.Editor_BakeHoldNote}" />
+                    <TreeViewItem Name="EditorStitchHold" Header="{x:Static lang:Resources.Editor_StitchHold}" />
+                    <TreeViewItem Name="EditorInsertHoldSegment"
+                                  Header="{x:Static lang:Resources.Editor_InsertHoldSegment}" />
+                </TreeViewItem>
+
+                <TreeViewItem Header="{x:Static lang:Resources.Settings_Header_EditNotes}" Classes="HideKeybind">
+                    <TreeViewItem Name="EditorInsert" Header="{x:Static lang:Resources.Editor_Insert}" />
+                    <TreeViewItem Name="EditorEditNoteShape" Header="{x:Static lang:Resources.Editor_EditNoteShape}" />
+                    <TreeViewItem Name="EditorEditNoteProperties" Header="{x:Static lang:Resources.Editor_EditNoteProperties}" />
+                    <TreeViewItem Name="EditorEditNoteShapeProperties" Header="{x:Static lang:Resources.Editor_EditNoteShapeProperties}" />
+                    <TreeViewItem Name="EditorMirrorNote" Header="{x:Static lang:Resources.Editor_MirrorNote}" />
+                    <TreeViewItem Name="EditorDelete" Header="{x:Static lang:Resources.Editor_Delete}" />
+                    <TreeViewItem Name="EditorQuickEditIncreaseSize" Header="{x:Static lang:Resources.Editor_QuickEditIncreaseSize}" />
+                    <TreeViewItem Name="EditorQuickEditDecreaseSize" Header="{x:Static lang:Resources.Editor_QuickEditDecreaseSize}" />
+                    <TreeViewItem Name="EditorQuickEditIncreasePosition" Header="{x:Static lang:Resources.Editor_QuickEditIncreasePosition}" />
+                    <TreeViewItem Name="EditorQuickEditDecreasePosition" Header="{x:Static lang:Resources.Editor_QuickEditDecreasePosition}" />
+                    <TreeViewItem Name="EditorQuickEditIncreaseTimestamp" Header="{x:Static lang:Resources.Editor_QuickEditIncreaseTimestamp}" />
+                    <TreeViewItem Name="EditorQuickEditDecreaseTimestamp" Header="{x:Static lang:Resources.Editor_QuickEditDecreaseTimestamp}" />
+                    <TreeViewItem Name="EditorSetRenderTrue" Header="{x:Static lang:Resources.Editor_SetRenderTrue}" />
+                    <TreeViewItem Name="EditorSetRenderFalse" Header="{x:Static lang:Resources.Editor_SetRenderFalse}" />
+                </TreeViewItem>
+
+                <TreeViewItem Header="{x:Static lang:Resources.Settings_Header_NoteTypes}" Classes="HideKeybind">
+                    <TreeViewItem Name="EditorNoteTypeTouch" Header="{x:Static lang:Resources.Note_Touch}" />
+                    <TreeViewItem Name="EditorNoteTypeSlideClockwise" Header="{x:Static lang:Resources.Note_SlideClockwise}" />
+                    <TreeViewItem Name="EditorNoteTypeSlideCounterclockwise" Header="{x:Static lang:Resources.Note_SlideCounterclockwise}" />
+                    <TreeViewItem Name="EditorNoteTypeSnapForward" Header="{x:Static lang:Resources.Note_SnapForward}" />
+                    <TreeViewItem Name="EditorNoteTypeSnapBackward" Header="{x:Static lang:Resources.Note_SnapBackward}" />
+                    <TreeViewItem Name="EditorNoteTypeChain" Header="{x:Static lang:Resources.Note_Chain}" />
+                    <TreeViewItem Name="EditorNoteTypeHold" Header="{x:Static lang:Resources.Note_Hold}" />
+                    <TreeViewItem Name="EditorNoteTypeMaskAdd" Header="{x:Static lang:Resources.Note_MaskAdd}" />
+                    <TreeViewItem Name="EditorNoteTypeMaskRemove" Header="{x:Static lang:Resources.Note_MaskRemove}" />
+                    <TreeViewItem Name="EditorNoteTypeEndOfChart" Header="{x:Static lang:Resources.Note_EndOfChart}" />
+                    <TreeViewItem Name="EditorTypeRadio1" Header="{x:Static lang:Resources.Settings_Keymap_TypeRadio1}" />
+                    <TreeViewItem Name="EditorTypeRadio2" Header="{x:Static lang:Resources.Settings_Keymap_TypeRadio2}" />
+                    <TreeViewItem Name="EditorTypeRadio3" Header="{x:Static lang:Resources.Settings_Keymap_TypeRadio3}" />
+                </TreeViewItem>
+
+                <TreeViewItem Header="{x:Static lang:Resources.Settings_Header_Rendering}" Classes="HideKeybind">
+                    <TreeViewItem Name="RenderIncreaseNoteSpeed" Header="{x:Static lang:Resources.Settings_Keymap_IncreaseNoteSpeed}" />
+                    <TreeViewItem Name="RenderDecreaseNoteSpeed" Header="{x:Static lang:Resources.Settings_Keymap_DecreaseNoteSpeed}" />
+                </TreeViewItem>
+            </TreeView>
         </StackPanel>
     </ScrollViewer>
 </UserControl>

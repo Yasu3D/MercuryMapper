@@ -885,4 +885,19 @@ Fortfahren?</value>
     <data name="Editor_ToggleLoop" xml:space="preserve">
         <value>Schleife umschalten</value>
     </data>
+    <data name="Settings_Header_EditHolds" xml:space="preserve">
+        <value>Holds Bearbeiten</value>
+    </data>
+    <data name="Settings_Header_EditNotes" xml:space="preserve">
+        <value>Noten Bearbeiten</value>
+    </data>
+    <data name="Settings_Header_NoteTypes" xml:space="preserve">
+        <value>Noten-Arten</value>
+    </data>
+    <data name="Settings_Header_Playback" xml:space="preserve">
+        <value>Wiedergabe</value>
+    </data>
+    <data name="Settings_Header_Selection" xml:space="preserve">
+        <value>Auswahl</value>
+    </data>
 </root>

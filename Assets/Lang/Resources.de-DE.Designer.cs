@@ -1888,6 +1888,24 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Holds Bearbeiten.
+        /// </summary>
+        public static string Settings_Header_EditHolds {
+            get {
+                return ResourceManager.GetString("Settings_Header_EditHolds", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Noten Bearbeiten.
+        /// </summary>
+        public static string Settings_Header_EditNotes {
+            get {
+                return ResourceManager.GetString("Settings_Header_EditNotes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Editor.
         /// </summary>
         public static string Settings_Header_Editor {
@@ -1915,11 +1933,38 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Noten-Arten.
+        /// </summary>
+        public static string Settings_Header_NoteTypes {
+            get {
+                return ResourceManager.GetString("Settings_Header_NoteTypes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wiedergabe.
+        /// </summary>
+        public static string Settings_Header_Playback {
+            get {
+                return ResourceManager.GetString("Settings_Header_Playback", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Rendering.
         /// </summary>
         public static string Settings_Header_Rendering {
             get {
                 return ResourceManager.GetString("Settings_Header_Rendering", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Auswahl.
+        /// </summary>
+        public static string Settings_Header_Selection {
+            get {
+                return ResourceManager.GetString("Settings_Header_Selection", resourceCulture);
             }
         }
         
