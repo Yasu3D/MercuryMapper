@@ -915,6 +915,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Toggle Loop.
+        /// </summary>
+        public static string Editor_ToggleLoop {
+            get {
+                return ResourceManager.GetString("Editor_ToggleLoop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Autosave found. Timestamp:.
         /// </summary>
         public static string Generic_AutosaveFound {

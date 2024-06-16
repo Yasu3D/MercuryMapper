@@ -882,4 +882,7 @@ Continue?</value>
     <data name="Editor_ExpanderHeader_LoopOptions" xml:space="preserve">
         <value>Loop Options</value>
     </data>
+    <data name="Editor_ToggleLoop" xml:space="preserve">
+        <value>Toggle Loop</value>
+    </data>
 </root>

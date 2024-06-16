@@ -513,6 +513,22 @@ public partial class MainView : UserControl
         LoopMarkerEnd.Margin = new(SliderSongPosition.Bounds.Width - 12.5, 0, 0, 0);
     }
     
+    private void SetLoopMarkerStart()
+    {
+        if (AudioManager.CurrentSong is null) return;
+
+        AudioManager.LoopStart = AudioManager.CurrentSong.Position;
+        LoopMarkerStart.Margin = new(AudioManager.LoopStart * (SliderSongPosition.Bounds.Width - 25) / AudioManager.CurrentSong.Length + 12.5, 0, 0, 0);
+    }
+
+    private void SetLoopMarkerEnd()
+    {
+        if (AudioManager.CurrentSong is null) return;
+
+        AudioManager.LoopEnd = AudioManager.CurrentSong.Position;
+        LoopMarkerEnd.Margin = new(AudioManager.LoopEnd * (SliderSongPosition.Bounds.Width - 25) / AudioManager.CurrentSong.Length + 12.5, 0, 0, 0);
+    }
+    
     // ________________ Input
     
     private void OnKeyDown(object sender, KeyEventArgs e)
@@ -891,6 +907,24 @@ public partial class MainView : UserControl
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorSetRenderFalse"]))
         {
             ChartEditor.SetSelectionRenderFlag(false);
+            e.Handled = true;
+            return;
+        }
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorToggleLoop"]))
+        {
+            ToggleButtonLoop.IsChecked = !ToggleButtonLoop.IsChecked;
+            e.Handled = true;
+            return;
+        }
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorSetLoopStart"]))
+        {
+            SetLoopMarkerStart();
+            e.Handled = true;
+            return;
+        }
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorSetLoopEnd"]))
+        {
+            SetLoopMarkerEnd();
             e.Handled = true;
             return;
         }
@@ -1894,21 +1928,9 @@ public partial class MainView : UserControl
 
     private void ButtonDeleteGimmick_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.DeleteGimmick();
     
-    private void ButtonSetLoopStart_OnClick(object? sender, RoutedEventArgs e)
-    {
-        if (AudioManager.CurrentSong is null) return;
+    private void ButtonSetLoopStart_OnClick(object? sender, RoutedEventArgs e) => SetLoopMarkerStart();
 
-        AudioManager.LoopStart = AudioManager.CurrentSong.Position;
-        LoopMarkerStart.Margin = new(AudioManager.LoopStart * (SliderSongPosition.Bounds.Width - 25) / AudioManager.CurrentSong.Length + 12.5, 0, 0, 0);
-    }
-
-    private void ButtonSetLoopEnd_OnClick(object? sender, RoutedEventArgs e)
-    {
-        if (AudioManager.CurrentSong is null) return;
-
-        AudioManager.LoopEnd = AudioManager.CurrentSong.Position;
-        LoopMarkerEnd.Margin = new(AudioManager.LoopEnd * (SliderSongPosition.Bounds.Width - 25) / AudioManager.CurrentSong.Length + 12.5, 0, 0, 0);
-    }
+    private void ButtonSetLoopEnd_OnClick(object? sender, RoutedEventArgs e) => SetLoopMarkerEnd();
 
     private void ToggleButtonLoop_IsCheckedChanged(object? sender, RoutedEventArgs e)
     {

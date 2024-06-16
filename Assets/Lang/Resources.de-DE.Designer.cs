@@ -915,6 +915,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Schleife umschalten.
+        /// </summary>
+        public static string Editor_ToggleLoop {
+            get {
+                return ResourceManager.GetString("Editor_ToggleLoop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Autosave gefunden. Zeitstempel:.
         /// </summary>
         public static string Generic_AutosaveFound {
