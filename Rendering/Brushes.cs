@@ -270,7 +270,7 @@ public class Brushes(UserConfig userConfig)
 
     public SKPaint GetBoxSelectCursorPen(float scale)
     {
-        boxSelectCursorPen.StrokeWidth = cursorWidthMultiplier * scale;
+        boxSelectCursorPen.StrokeWidth = cursorWidthMultiplier * 0.75f * scale;
         return boxSelectCursorPen;
     }
 
