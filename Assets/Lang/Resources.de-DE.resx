@@ -870,4 +870,16 @@ Fortfahren?</value>
     <data name="Editor_BoxSelect" xml:space="preserve">
         <value>Box-Auswahl</value>
     </data>
+    <data name="Editor_SetLoopStart" xml:space="preserve">
+        <value>Schleifenstart festlegen</value>
+    </data>
+    <data name="Editor_SetLoopEnd" xml:space="preserve">
+        <value>Schleifenende festlegen</value>
+    </data>
+    <data name="Editor_Loop" xml:space="preserve">
+        <value>Schleife</value>
+    </data>
+    <data name="Editor_ExpanderHeader_LoopOptions" xml:space="preserve">
+        <value>Schleifen-Optionen</value>
+    </data>
 </root>

@@ -357,6 +357,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Schleifen-Optionen.
+        /// </summary>
+        public static string Editor_ExpanderHeader_LoopOptions {
+            get {
+                return ResourceManager.GetString("Editor_ExpanderHeader_LoopOptions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Gimmicks Modifizieren.
         /// </summary>
         public static string Editor_ExpanderHeader_ModifyGimmicks {
@@ -618,6 +627,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Schleife.
+        /// </summary>
+        public static string Editor_Loop {
+            get {
+                return ResourceManager.GetString("Editor_Loop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Masken-Richtung.
         /// </summary>
         public static string Editor_MaskDirection {
@@ -839,6 +857,24 @@ namespace MercuryMapper.Assets.Lang {
         public static string Editor_SelectionInfo_SelectedNotes {
             get {
                 return ResourceManager.GetString("Editor_SelectionInfo_SelectedNotes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Schleifenende festlegen.
+        /// </summary>
+        public static string Editor_SetLoopEnd {
+            get {
+                return ResourceManager.GetString("Editor_SetLoopEnd", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Schleifenstart festlegen.
+        /// </summary>
+        public static string Editor_SetLoopStart {
+            get {
+                return ResourceManager.GetString("Editor_SetLoopStart", resourceCulture);
             }
         }
         

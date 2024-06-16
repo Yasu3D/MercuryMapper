@@ -27,6 +27,9 @@ public class AudioManager(MainView mainView)
     private BassSample? rNoteHitsoundSample;
 
     public int HitsoundNoteIndex { get; set; }
+    public uint LoopStart { get; set; }
+    public uint LoopEnd { get; set; }
+    public bool Loop { get; set; }
 
     public void ResetSong()
     {

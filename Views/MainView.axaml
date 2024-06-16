@@ -391,8 +391,14 @@
             </Button>
             
             <Grid Grid.Column="1" RowDefinitions="Auto, Auto" ColumnDefinitions="Auto, Auto, *">
+                
                 <Slider Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Classes="Compact" Margin="10,0,15,0"
                         Name="SliderSongPosition" ValueChanged="SliderSongPosition_OnValueChanged"/>
+                
+                <Panel Grid.Row="0" Grid.Column="0" VerticalAlignment="Stretch" Grid.ColumnSpan="3" Margin="10,10,0,0">
+                    <Rectangle VerticalAlignment="Stretch" IsVisible="False" HorizontalAlignment="Left" Width="2" Fill="MediumSeaGreen" Name="LoopMarkerStart" IsHitTestVisible="False"/>
+                    <Rectangle VerticalAlignment="Stretch" IsVisible="False" HorizontalAlignment="Left" Width="2" Fill="Firebrick" Name="LoopMarkerEnd" IsHitTestVisible="False"/>
+                </Panel>
                 
                 <Slider Grid.Row="1" Grid.Column="0" Classes="Compact" Width="200" HorizontalAlignment="Left" Margin="10,0,15,0" Name="SliderPlaybackSpeed"
                         Minimum="10" Maximum="200" Value="100" ValueChanged="SliderPlaybackSpeed_OnValueChanged"
@@ -400,6 +406,8 @@
                         TickPlacement="TopLeft" Ticks="0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200" IsSnapToTickEnabled="True"/>
                 
                 <TextBlock Grid.Row="1" Grid.Column="1" Text="100%" VerticalAlignment="Center" Margin="0,7,0,0" Name="TextBlockPlaybackSpeed"/>
+                
+                <ToggleButton Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Margin="50,0,2,2" IsCheckedChanged="ToggleButtonLoop_IsCheckedChanged" Content="{x:Static lang:Resources.Editor_Loop}"/>
                 
                 <Grid Grid.Row="1" Grid.Column="2" RowDefinitions="*,*" HorizontalAlignment="Right" Margin="0,0,20,0">
                     <TextBlock Grid.Row="0" Name="TimestampDetailed" Text="00:00:00.000" HorizontalAlignment="Right"/>
@@ -595,6 +603,13 @@
                     <Grid RowDefinitions="*" ColumnDefinitions="*,*">
                         <Button Grid.Column="0" HorizontalAlignment="Stretch" Margin="0,0,2,0" Click="ButtonEditGimmick_OnClick" Content="{x:Static lang:Resources.Editor_EditGimmick}"/>
                         <Button Grid.Column="1" HorizontalAlignment="Stretch" Margin="2,0,0,0" Click="ButtonDeleteGimmick_OnClick" Content="{x:Static lang:Resources.Editor_DeleteGimmick}" Foreground="Red"/>
+                    </Grid>
+                </Expander>
+                
+                <Expander Header="{x:Static lang:Resources.Editor_ExpanderHeader_LoopOptions}">
+                    <Grid RowDefinitions="*" ColumnDefinitions="*,*">
+                        <Button Grid.Column="0" HorizontalAlignment="Stretch" Margin="0,0,2,0" Click="ButtonSetLoopStart_OnClick" Content="{x:Static lang:Resources.Editor_SetLoopStart}"/>
+                        <Button Grid.Column="1" HorizontalAlignment="Stretch" Margin="2,0,0,0" Click="ButtonSetLoopEnd_OnClick" Content="{x:Static lang:Resources.Editor_SetLoopEnd}"/>
                     </Grid>
                 </Expander>
             </StackPanel>

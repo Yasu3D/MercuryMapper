@@ -870,4 +870,16 @@ Continue?</value>
     <data name="Editor_BoxSelect" xml:space="preserve">
         <value>Box Select</value>
     </data>
+    <data name="Editor_Loop" xml:space="preserve">
+        <value>Loop</value>
+    </data>
+    <data name="Editor_SetLoopStart" xml:space="preserve">
+        <value>Set Loop Start</value>
+    </data>
+    <data name="Editor_SetLoopEnd" xml:space="preserve">
+        <value>Set Loop End</value>
+    </data>
+    <data name="Editor_ExpanderHeader_LoopOptions" xml:space="preserve">
+        <value>Loop Options</value>
+    </data>
 </root>

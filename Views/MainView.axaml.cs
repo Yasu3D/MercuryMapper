@@ -196,7 +196,13 @@ public partial class MainView : UserControl
         Dispatcher.UIThread.Post(() =>
         {
             if (AudioManager.CurrentSong == null) return;
-        
+
+            if (AudioManager.Loop && AudioManager.CurrentSong.Position >= AudioManager.LoopEnd && AudioManager.LoopStart < AudioManager.LoopEnd)
+            {
+                AudioManager.CurrentSong.Position = AudioManager.LoopStart;
+                AudioManager.HitsoundNoteIndex = ChartEditor.Chart.Notes.FindIndex(x => x.BeatData.MeasureDecimal >= ChartEditor.Chart.Timestamp2MeasureDecimal(AudioManager.CurrentSong.Position));
+            }
+            
             if (AudioManager.CurrentSong.Position >= AudioManager.CurrentSong.Length && AudioManager.CurrentSong.IsPlaying)
             {
                 SetPlayState(PlayerState.Paused);
@@ -485,6 +491,26 @@ public partial class MainView : UserControl
     public void UpdateAudioFilepath()
     {
         ChartInfoAudioFilepath.Text = Path.GetFileName(ChartEditor.Chart.AudioFilePath);
+    }
+    
+    private void UpdateLoopMarkerPosition()
+    {
+        if (AudioManager.CurrentSong is null) return;
+
+        double start = AudioManager.LoopStart * (SliderSongPosition.Bounds.Width - 25) / AudioManager.CurrentSong.Length + 12.5;
+        double end = AudioManager.LoopEnd * (SliderSongPosition.Bounds.Width - 25) / AudioManager.CurrentSong.Length + 12.5;
+        
+        LoopMarkerStart.Margin = new(start, 0, 0, 0);
+        LoopMarkerEnd.Margin = new(end, 0, 0, 0);
+    }
+
+    private void ResetLoopMarkers(uint length)
+    {
+        AudioManager.LoopStart = 0;
+        AudioManager.LoopEnd = length;
+        
+        LoopMarkerStart.Margin = new(12.5, 0, 0, 0);
+        LoopMarkerEnd.Margin = new(SliderSongPosition.Bounds.Width - 12.5, 0, 0, 0);
     }
     
     // ________________ Input
@@ -1084,6 +1110,8 @@ public partial class MainView : UserControl
         Canvas.Height = min;
         RenderEngine.UpdateSize(min);
         RenderEngine.UpdateBrushes();
+        
+        UpdateLoopMarkerPosition();
     }
     
     public async void DragDrop(string path)
@@ -1143,6 +1171,7 @@ public partial class MainView : UserControl
                 UpdateAudioFilepath();
                 RenderEngine.UpdateVisibleTime();
                 ClearAutosaves();
+                ResetLoopMarkers(AudioManager.CurrentSong?.Length ?? 0);
             }
         });
     }
@@ -1865,6 +1894,30 @@ public partial class MainView : UserControl
 
     private void ButtonDeleteGimmick_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.DeleteGimmick();
     
+    private void ButtonSetLoopStart_OnClick(object? sender, RoutedEventArgs e)
+    {
+        if (AudioManager.CurrentSong is null) return;
+
+        AudioManager.LoopStart = AudioManager.CurrentSong.Position;
+        LoopMarkerStart.Margin = new(AudioManager.LoopStart * (SliderSongPosition.Bounds.Width - 25) / AudioManager.CurrentSong.Length + 12.5, 0, 0, 0);
+    }
+
+    private void ButtonSetLoopEnd_OnClick(object? sender, RoutedEventArgs e)
+    {
+        if (AudioManager.CurrentSong is null) return;
+
+        AudioManager.LoopEnd = AudioManager.CurrentSong.Position;
+        LoopMarkerEnd.Margin = new(AudioManager.LoopEnd * (SliderSongPosition.Bounds.Width - 25) / AudioManager.CurrentSong.Length + 12.5, 0, 0, 0);
+    }
+
+    private void ToggleButtonLoop_IsCheckedChanged(object? sender, RoutedEventArgs e)
+    {
+        if (sender is not ToggleButton button) return;
+        AudioManager.Loop = button.IsChecked ?? false;
+        LoopMarkerStart.IsVisible = button.IsChecked ?? false;
+        LoopMarkerEnd.IsVisible = button.IsChecked ?? false;
+    }
+    
     private void ToggleNoteLayer_IsCheckedChanged(object? sender, RoutedEventArgs e)
     {
         if (sender is not ToggleButton button) return;
@@ -2163,6 +2216,7 @@ public partial class MainView : UserControl
         SetSongPositionSliderMaximum();
         UpdateAudioFilepath();
         RenderEngine.UpdateVisibleTime();
+        ResetLoopMarkers(AudioManager.CurrentSong?.Length ?? 0);
     }
     
     public async Task<bool> SaveFile(bool openFilePicker, string filepath)
