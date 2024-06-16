@@ -1935,9 +1935,11 @@ public partial class MainView : UserControl
     private void ToggleButtonLoop_IsCheckedChanged(object? sender, RoutedEventArgs e)
     {
         if (sender is not ToggleButton button) return;
-        AudioManager.Loop = button.IsChecked ?? false;
-        LoopMarkerStart.IsVisible = button.IsChecked ?? false;
-        LoopMarkerEnd.IsVisible = button.IsChecked ?? false;
+        bool loop = (button.IsChecked ?? false) && AudioManager.CurrentSong != null;
+        
+        AudioManager.Loop = loop;
+        LoopMarkerStart.IsVisible = loop;
+        LoopMarkerEnd.IsVisible = loop;
     }
     
     private void ToggleNoteLayer_IsCheckedChanged(object? sender, RoutedEventArgs e)
