@@ -539,6 +539,7 @@ public class ChartEditor
                 }
                 
                 select();
+                mainView.SetSelectionInfo();
                 mainView.SetMinNoteSize(CurrentNoteType);
                 EditorState = ChartEditorState.InsertNote;
                 break;
