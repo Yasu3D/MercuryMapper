@@ -480,6 +480,9 @@ public class RenderEngine(MainView mainView)
             Note previous = visibleNotes[i - 1];
             
             if (current.BeatData.FullTick != previous.BeatData.FullTick) continue;
+
+            bool isTapAndHold = (current.NoteType is NoteType.Touch && previous.NoteType is NoteType.HoldStart) || (previous.NoteType is NoteType.Touch && current.NoteType is NoteType.HoldStart);
+            if (isTapAndHold && current.Position == previous.Position && current.Size == previous.Size) continue;
             
             float scale = GetNoteScale(chart, current.BeatData.MeasureDecimal);
             
@@ -802,7 +805,7 @@ public class RenderEngine(MainView mainView)
         ArcData getArcData(Note note)
         {
             ArcData arc = GetArc(chart, note);
-            if (note.Size != 60) TruncateArc(ref arc, true);
+            if (note.Size != 60) TruncateArc(ref arc, false);
             else TrimCircleArc(ref arc);
 
             return arc;
