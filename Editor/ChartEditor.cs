@@ -1268,6 +1268,10 @@ public class ChartEditor
 
         void addOperationGimmick(Gimmick gimmick)
         {
+            // Can't move start gimmicks, otherwise the editor will explode.
+            if (Chart.StartBpm == gimmick) return;
+            if (Chart.StartTimeSig == gimmick) return;
+            
             float min = 0;
             float max = endOfChartMeasureDecimal;
 
