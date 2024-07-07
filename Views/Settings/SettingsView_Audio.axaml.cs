@@ -33,6 +33,7 @@ public partial class SettingsView_Audio : UserControl
         TextBoxSwipe.Text = AudioConfig.SwipeHitsoundPath;
         TextBoxBonus.Text = AudioConfig.BonusHitsoundPath;
         TextBoxRNote.Text = AudioConfig.RNoteHitsoundPath;
+        TextBoxMetronome.Text = AudioConfig.MetronomePath;
     }
 
     private void SetSliders()
@@ -44,6 +45,7 @@ public partial class SettingsView_Audio : UserControl
         SliderSwipe.Value = AudioConfig.SwipeVolume;
         SliderBonus.Value = AudioConfig.BonusVolume;
         SliderRNote.Value = AudioConfig.RNoteVolume;
+        SliderMetronome.Value = AudioConfig.MetronomeVolume;
     }
     
     private async void Touch_OnClick(object? sender, RoutedEventArgs e)
