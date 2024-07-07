@@ -572,6 +572,23 @@ public class RenderEngine(MainView mainView)
         }
     }
 
+    private void DrawSelection(SKCanvas canvas, Chart chart, Note note)
+    {
+        ArcData selectedData = GetArc(chart, note);
+        canvas.DrawArc(selectedData.Rect, selectedData.StartAngle, selectedData.SweepAngle, false, brushes.GetSelectionPen(canvasScale * selectedData.Scale));
+    }
+
+    private void DrawHighlight(SKCanvas canvas, Chart chart, Note note)
+    {
+        ArcData selectedData = GetArc(chart, note);
+        canvas.DrawArc(selectedData.Rect, selectedData.StartAngle, selectedData.SweepAngle, false, brushes.GetHighlightPen(canvasScale * selectedData.Scale));
+    }
+
+    private void DrawHighlight(SKCanvas canvas, ArcData data)
+    {
+        canvas.DrawOval(data.Rect, brushes.GetHighlightPen(canvasScale * data.Scale));
+    }
+    
     /// <summary>
     /// Performs better than the original by drawing hold-by-hold, not segment-by-segment. Saves dozens, if not hundreds of calls to SkiaSharp and fixes the tv-static-looking seams on dense holds. <br/>
     /// This first batches notes into a "hold" struct, then draws each hold.
@@ -735,17 +752,8 @@ public class RenderEngine(MainView mainView)
             
             canvas.DrawArc(currentData.Rect, currentData.StartAngle, currentData.SweepAngle, false, brushes.GetHoldEndPen(canvasScale * currentData.Scale));
             
-            if (mainView.ChartEditor.SelectedNotes.Contains(note))
-            {
-                ArcData selectedData = GetArc(chart, note);
-                canvas.DrawArc(selectedData.Rect, selectedData.StartAngle, selectedData.SweepAngle, false, brushes.GetSelectionPen(canvasScale * selectedData.Scale));
-            }
-            
-            if (note == mainView.ChartEditor.HighlightedElement)
-            {
-                ArcData selectedData = GetArc(chart, note);
-                canvas.DrawArc(selectedData.Rect, selectedData.StartAngle, selectedData.SweepAngle, false, brushes.GetHighlightPen(canvasScale * selectedData.Scale));
-            }
+            if (mainView.ChartEditor.SelectedNotes.Contains(note)) DrawSelection(canvas, chart, note);
+            if (note == mainView.ChartEditor.HighlightedElement) DrawHighlight(canvas, chart, note);
         }
         
         // Hold Start/Segment
@@ -775,17 +783,8 @@ public class RenderEngine(MainView mainView)
                 canvas.DrawArc(currentData.Rect, currentData.StartAngle, currentData.SweepAngle, false, brushes.GetNotePen(note, canvasScale * currentData.Scale * 0.5f));
             }
             
-            if (mainView.ChartEditor.SelectedNotes.Contains(note))
-            {
-                ArcData selectedData = GetArc(chart, note);
-                canvas.DrawArc(selectedData.Rect, selectedData.StartAngle, selectedData.SweepAngle, false, brushes.GetSelectionPen(canvasScale * selectedData.Scale));
-            }
-            
-            if (note == mainView.ChartEditor.HighlightedElement)
-            {
-                ArcData selectedData = GetArc(chart, note);
-                canvas.DrawArc(selectedData.Rect, selectedData.StartAngle, selectedData.SweepAngle, false, brushes.GetHighlightPen(canvasScale * selectedData.Scale));
-            }
+            if (mainView.ChartEditor.SelectedNotes.Contains(note)) DrawSelection(canvas, chart, note);
+            if (note == mainView.ChartEditor.HighlightedElement) DrawHighlight(canvas, chart, note);
         }
 
         return;
@@ -913,17 +912,8 @@ public class RenderEngine(MainView mainView)
             
             canvas.DrawArc(currentData.Rect, currentData.StartAngle, currentData.SweepAngle, false, brushes.GetHoldEndPen(canvasScale * currentData.Scale));
             
-            if (mainView.ChartEditor.SelectedNotes.Contains(note))
-            {
-                ArcData selectedData = GetArc(chart, note);
-                canvas.DrawArc(selectedData.Rect, selectedData.StartAngle, selectedData.SweepAngle, false, brushes.GetSelectionPen(canvasScale * selectedData.Scale));
-            }
-            
-            if (note == mainView.ChartEditor.HighlightedElement)
-            {
-                ArcData selectedData = GetArc(chart, note);
-                canvas.DrawArc(selectedData.Rect, selectedData.StartAngle, selectedData.SweepAngle, false, brushes.GetHighlightPen(canvasScale * selectedData.Scale));
-            }
+            if (mainView.ChartEditor.SelectedNotes.Contains(note)) DrawSelection(canvas, chart, note);
+            if (note == mainView.ChartEditor.HighlightedElement) DrawHighlight(canvas, chart, note);
         }
         
         // Hold Start/Segment
@@ -953,17 +943,8 @@ public class RenderEngine(MainView mainView)
                 canvas.DrawArc(currentData.Rect, currentData.StartAngle, currentData.SweepAngle, false, brushes.GetNotePen(note, canvasScale * currentData.Scale * 0.5f));
             }
             
-            if (mainView.ChartEditor.SelectedNotes.Contains(note))
-            {
-                ArcData selectedData = GetArc(chart, note);
-                canvas.DrawArc(selectedData.Rect, selectedData.StartAngle, selectedData.SweepAngle, false, brushes.GetSelectionPen(canvasScale * selectedData.Scale));
-            }
-            
-            if (note == mainView.ChartEditor.HighlightedElement)
-            {
-                ArcData selectedData = GetArc(chart, note);
-                canvas.DrawArc(selectedData.Rect, selectedData.StartAngle, selectedData.SweepAngle, false, brushes.GetHighlightPen(canvasScale * selectedData.Scale));
-            }
+            if (mainView.ChartEditor.SelectedNotes.Contains(note)) DrawSelection(canvas, chart, note);
+            if (note == mainView.ChartEditor.HighlightedElement) DrawHighlight(canvas, chart, note);
         }
 
         return;
@@ -1067,17 +1048,8 @@ public class RenderEngine(MainView mainView)
                 canvas.DrawPath(path, brushes.ChainStripeFill);
             }
             
-            if (mainView.ChartEditor.SelectedNotes.Contains(note))
-            {
-                ArcData selectedData = GetArc(chart, note);
-                canvas.DrawArc(selectedData.Rect, selectedData.StartAngle, selectedData.SweepAngle, false, brushes.GetSelectionPen(canvasScale * selectedData.Scale));
-            }
-
-            if (note == mainView.ChartEditor.HighlightedElement)
-            {
-                ArcData selectedData = GetArc(chart, note);
-                canvas.DrawArc(selectedData.Rect, selectedData.StartAngle, selectedData.SweepAngle, false, brushes.GetHighlightPen(canvasScale * selectedData.Scale));
-            }
+            if (mainView.ChartEditor.SelectedNotes.Contains(note)) DrawSelection(canvas, chart, note);
+            if (note == mainView.ChartEditor.HighlightedElement) DrawHighlight(canvas, chart, note);
         }
     }
 
@@ -1096,17 +1068,8 @@ public class RenderEngine(MainView mainView)
             
             canvas.DrawArc(data.Rect, data.StartAngle, data.SweepAngle, false, brushes.GetNotePen(note, canvasScale * data.Scale));
 
-            if (mainView.ChartEditor.SelectedNotes.Contains(note))
-            {
-                ArcData selectedData = GetArc(chart, note);
-                canvas.DrawArc(selectedData.Rect, selectedData.StartAngle, selectedData.SweepAngle, false, brushes.GetSelectionPen(canvasScale * selectedData.Scale));
-            }
-            
-            if (note == mainView.ChartEditor.HighlightedElement)
-            {
-                ArcData selectedData = GetArc(chart, note);
-                canvas.DrawArc(selectedData.Rect, selectedData.StartAngle, selectedData.SweepAngle, false, brushes.GetHighlightPen(canvasScale * selectedData.Scale));
-            }
+            if (mainView.ChartEditor.SelectedNotes.Contains(note)) DrawSelection(canvas, chart, note);
+            if (note == mainView.ChartEditor.HighlightedElement) DrawHighlight(canvas, chart, note);
         }
     }
 
@@ -1123,10 +1086,7 @@ public class RenderEngine(MainView mainView)
             if (!RenderMath.InRange(data.Scale)) continue;
             
             canvas.DrawOval(data.Rect, brushes.GetGimmickPen(gimmick, canvasScale * data.Scale));
-            if (gimmick == mainView.ChartEditor.HighlightedElement)
-            {
-                canvas.DrawArc(data.Rect, data.StartAngle, data.SweepAngle, false, brushes.GetHighlightPen(canvasScale * data.Scale));
-            }
+            if (gimmick == mainView.ChartEditor.HighlightedElement) DrawHighlight(canvas, data);
         }
     }
     
