@@ -20,7 +20,7 @@ public class Brushes(UserConfig userConfig)
     private const float NotePenStrokeWidth = 8;
     private const float HoldEndPenStrokeWidth = 12;
     private const float CursorPenStrokeWidth = 15;
-    private const float SelectionPenStrokeWidth = 15;
+    private const float SelectionPenStrokeWidth = 11.25f;
     private const float SyncPenStrokeWidth = 6;
     private const float RNotePenStrokeWidth = 17;
     private const float BoxSelectOutlinePenStrokeWidth = 4;

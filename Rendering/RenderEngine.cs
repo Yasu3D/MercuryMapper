@@ -175,18 +175,46 @@ public class RenderEngine(MainView mainView)
 
         return new(rect, scale, 0, 360);
     }
-    
-    private static void TruncateArc(ref ArcData data, bool includeCaps)
+
+    private enum TruncateMode
     {
-        if (includeCaps)
+        ExcludeCaps,
+        IncludeCaps,
+        OutlineNote,
+        OutlineHoldSegment
+    }
+    
+    private static void TruncateArc(ref ArcData data, TruncateMode mode)
+    {
+        switch (mode)
         {
-            data.StartAngle -= 4.5f;
-            data.SweepAngle += 9f;
-        }
-        else
-        {
-            data.StartAngle -= 6f;
-            data.SweepAngle += 12f;
+            case TruncateMode.ExcludeCaps:
+            {
+                data.StartAngle -= 6f;
+                data.SweepAngle += 12f;
+                break;
+            }
+        
+            case TruncateMode.IncludeCaps:
+            {
+                data.StartAngle -= 4.5f;
+                data.SweepAngle += 9f;
+                break;
+            }
+            
+            case TruncateMode.OutlineNote:
+            {
+                data.StartAngle -= 3.5f;
+                data.SweepAngle += 7f;
+                break;
+            }
+            
+            case TruncateMode.OutlineHoldSegment:
+            {
+                data.StartAngle -= 4.5f;
+                data.SweepAngle += 9f;
+                break;
+            }
         }
     }
 
@@ -575,7 +603,11 @@ public class RenderEngine(MainView mainView)
     private void DrawSelection(SKCanvas canvas, Chart chart, Note note)
     {
         ArcData selectedData = GetArc(chart, note);
-        canvas.DrawArc(selectedData.Rect, selectedData.StartAngle, selectedData.SweepAngle, false, brushes.GetSelectionPen(canvasScale * selectedData.Scale));
+        if (note.Size != 60) TruncateArc(ref selectedData, note.NoteType is NoteType.HoldSegment ? TruncateMode.OutlineHoldSegment : TruncateMode.OutlineNote);
+        else TrimCircleArc(ref selectedData);
+
+        float widthMultiplier = note.NoteType is NoteType.HoldSegment ? 0.75f : 1;
+        canvas.DrawArc(selectedData.Rect, selectedData.StartAngle, selectedData.SweepAngle, false, brushes.GetSelectionPen(canvasScale * selectedData.Scale * widthMultiplier));
     }
 
     private void DrawHighlight(SKCanvas canvas, Chart chart, Note note)
@@ -793,7 +825,7 @@ public class RenderEngine(MainView mainView)
         ArcData getArcData(Note note)
         {
             ArcData arc = GetArc(chart, note);
-            if (note.Size != 60) TruncateArc(ref arc, false);
+            if (note.Size != 60) TruncateArc(ref arc, TruncateMode.ExcludeCaps);
             else TrimCircleArc(ref arc);
 
             return arc;
@@ -831,7 +863,7 @@ public class RenderEngine(MainView mainView)
                 Note nextNote = note.NextReferencedNote!;
                 ArcData nextData = GetArc(chart, nextNote);
                 
-                if (nextNote.Size != 60) TruncateArc(ref nextData, true);
+                if (nextNote.Size != 60) TruncateArc(ref nextData, TruncateMode.IncludeCaps);
                 else TrimCircleArc(ref nextData);
                 
                 FlipArc(ref nextData);
@@ -848,7 +880,7 @@ public class RenderEngine(MainView mainView)
                 Note prevNote = note.PrevReferencedNote;
                 ArcData prevData = GetArc(chart, prevNote);
                 
-                if (prevNote.Size != 60) TruncateArc(ref prevData, true);
+                if (prevNote.Size != 60) TruncateArc(ref prevData, TruncateMode.IncludeCaps);
                 else TrimCircleArc(ref prevData);
 
                 float ratio = MathExtensions.InverseLerp(CurrentMeasureDecimal, note.BeatData.MeasureDecimal, prevNote.BeatData.MeasureDecimal);
@@ -879,7 +911,7 @@ public class RenderEngine(MainView mainView)
                 Note nextNote = note.NextReferencedNote;
                 ArcData nextData = GetArc(chart, nextNote);
                 
-                if (nextNote.Size != 60) TruncateArc(ref nextData, true);
+                if (nextNote.Size != 60) TruncateArc(ref nextData, TruncateMode.IncludeCaps);
                 else TrimCircleArc(ref nextData);
                 
                 float ratio = MathExtensions.InverseLerp(CurrentMeasureDecimal, note.BeatData.MeasureDecimal, nextNote.BeatData.MeasureDecimal);
@@ -953,7 +985,7 @@ public class RenderEngine(MainView mainView)
         ArcData getArcData(Note note)
         {
             ArcData arc = GetArc(chart, note);
-            if (note.Size != 60) TruncateArc(ref arc, true);
+            if (note.Size != 60) TruncateArc(ref arc, TruncateMode.IncludeCaps);
             else TrimCircleArc(ref arc);
 
             return arc;
@@ -991,7 +1023,7 @@ public class RenderEngine(MainView mainView)
             // Normal Note
             if (note.Size != 60)
             {
-                TruncateArc(ref data, false);
+                TruncateArc(ref data, TruncateMode.ExcludeCaps);
                 DrawNoteCaps(canvas, data.Rect, data.StartAngle, data.SweepAngle, data.Scale);
             }
             
