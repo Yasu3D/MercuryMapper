@@ -622,14 +622,8 @@ public class RenderEngine(MainView mainView)
                 // Aw, nevermind. It ain't one of them darn damn dangit hold notes where the first segment is behind the camera and the second is outside of vision range.
                 if (chart.GetScaledMeasureDecimal(next.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) <= ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal) continue;
                 
-                ArcData prevData = GetArc(chart, prev);
-                ArcData nextData = GetArc(chart, next);
-                
-                if (prev.Size != 60) TruncateArc(ref prevData, true);
-                else TrimCircleArc(ref prevData);
-                
-                if (next.Size != 60) TruncateArc(ref nextData, true);
-                else TrimCircleArc(ref nextData);
+                ArcData prevData = getArcData(prev);
+                ArcData nextData = getArcData(next);
 
                 float ratio = MathExtensions.InverseLerp(CurrentMeasureDecimal, next.BeatData.MeasureDecimal, prev.BeatData.MeasureDecimal);
                 
@@ -665,10 +659,7 @@ public class RenderEngine(MainView mainView)
                     else if (note.PrevReferencedNote != null)
                     {
                         Note prevNote = note.PrevReferencedNote;
-                        ArcData prevData = GetArc(chart, prevNote);
-                
-                        if (prevNote.Size != 60) TruncateArc(ref prevData, true);
-                        else TrimCircleArc(ref prevData);
+                        ArcData prevData = getArcData(prevNote);
                         
                         float ratio = MathExtensions.InverseLerp(ScaledCurrentMeasureDecimal, chart.GetScaledMeasureDecimal(note.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed), chart.GetScaledMeasureDecimal(prevNote.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed));
                 
