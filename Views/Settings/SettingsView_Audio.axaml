@@ -37,9 +37,13 @@
             <Slider Classes="Compact" Margin="0,0,0,20" TickFrequency="5" TickPlacement="TopLeft"
                     Minimum="0" Maximum="100" Value="50" Name="SliderRNote" ValueChanged="SliderRNote_OnValueChanged"/>
             
+            <TextBlock VerticalAlignment="Center" Margin="0,0,0,-7" Text="{x:Static lang:Resources.Settings_Hitsound_Metronome}"/>
+            <Slider Classes="Compact" Margin="0,0,0,20" TickFrequency="5" TickPlacement="TopLeft"
+                    Minimum="0" Maximum="100" Value="50" Name="SliderMetronome" ValueChanged="SliderMetronome_OnValueChanged"/>
+            
             <Separator/>
             
-            <Grid ColumnDefinitions="*,Auto" RowDefinitions="*,*,*,*,*,*,*,*,*,*" VerticalAlignment="Top">
+            <Grid ColumnDefinitions="*,Auto" RowDefinitions="*,*,*,*,*,*,*,*,*,*,*,*" VerticalAlignment="Top">
                 <TextBlock Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_Hitsound_Touch}"/>
                 <TextBox Grid.Column="0" Grid.Row="1" Margin="0,0,0,10" Name="TextBoxTouch" TextChanged="Touch_TextChanged"/>
                 <Button Grid.Column="1" Grid.Row="1" Content="Pick File" HorizontalAlignment="Right" Margin="5,0,0,10" Click="Touch_OnClick"/>
@@ -59,6 +63,10 @@
                 <TextBlock Grid.Column="0" Grid.Row="8" VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_Hitsound_RNote}"/>
                 <TextBox Grid.Column="0" Grid.Row="9" Margin="0,0,0,10" Name="TextBoxRNote" TextChanged="RNote_TextChanged"/>
                 <Button Grid.Column="1" Grid.Row="9" Content="Pick File" HorizontalAlignment="Right" Margin="5,0,0,10" Click="RNote_OnClick"/>
+                
+                <TextBlock Grid.Column="0" Grid.Row="10" VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_Hitsound_Metronome}"/>
+                <TextBox Grid.Column="0" Grid.Row="11" Margin="0,0,0,10" Name="TextBoxMetronome" TextChanged="Metronome_TextChanged"/>
+                <Button Grid.Column="1" Grid.Row="11" Content="Pick File" HorizontalAlignment="Right" Margin="5,0,0,10" Click="Metronome_OnClick"/>
             </Grid>
             
             <Separator/>

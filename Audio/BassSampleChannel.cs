@@ -21,7 +21,7 @@ public class BassSampleChannel
         if (!Loaded) return;
         Bass.ChannelSetAttribute(bassChannel, ChannelAttribute.Volume, volume);
     }
-
+    
     public void Play(bool restart = false)
     {
         if (!Loaded) return;

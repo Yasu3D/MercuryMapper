@@ -163,13 +163,15 @@ public class AudioConfig
     public double SwipeVolume { get; set; } = 80;
     public double BonusVolume { get; set; } = 80;
     public double RNoteVolume { get; set; } = 80;
+    public double MetronomeVolume { get; set; } = 80;
 
     public string TouchHitsoundPath { get; set; } = "";
     public string GuideHitsoundPath { get; set; } = "";
     public string SwipeHitsoundPath { get; set; } = "";
     public string BonusHitsoundPath { get; set; } = "";
     public string RNoteHitsoundPath { get; set; } = "";
-    
+    public string MetronomePath { get; set; } = "";
+
     public float HitsoundOffset { get; set; } = 25;
 }
 

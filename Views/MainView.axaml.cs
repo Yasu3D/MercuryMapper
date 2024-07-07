@@ -201,6 +201,14 @@ public partial class MainView : UserControl
             {
                 AudioManager.CurrentSong.Position = AudioManager.LoopStart;
                 AudioManager.HitsoundNoteIndex = ChartEditor.Chart.Notes.FindIndex(x => x.BeatData.MeasureDecimal >= ChartEditor.Chart.Timestamp2MeasureDecimal(AudioManager.CurrentSong.Position));
+                
+                if (ChartEditor.Chart.StartTimeSig != null)
+                {
+                    int clicks = ChartEditor.Chart.StartTimeSig.TimeSig.Upper;
+                    float interval = 1.0f / clicks;
+
+                    AudioManager.MetronomeIndex = (int)float.Ceiling(ChartEditor.CurrentMeasureDecimal / interval);
+                }
             }
             
             if (AudioManager.CurrentSong.Position >= AudioManager.CurrentSong.Length && AudioManager.CurrentSong.IsPlaying)
@@ -226,10 +234,24 @@ public partial class MainView : UserControl
         
         float measure = ChartEditor.Chart.Timestamp2MeasureDecimal(AudioManager.CurrentSong.Position + BassSoundEngine.GetLatency() + UserConfig.AudioConfig.HitsoundOffset);
 
-        while (AudioManager.HitsoundNoteIndex < ChartEditor.Chart.Notes.Count
-               && ChartEditor.Chart.Notes[AudioManager.HitsoundNoteIndex].BeatData.MeasureDecimal <= measure)
+        while (AudioManager.HitsoundNoteIndex < ChartEditor.Chart.Notes.Count && ChartEditor.Chart.Notes[AudioManager.HitsoundNoteIndex].BeatData.MeasureDecimal <= measure)
         {
             AudioManager.PlayHitsound(ChartEditor.Chart.Notes[AudioManager.HitsoundNoteIndex]);
+        }
+
+        
+        if (AudioManager.MetronomeIndex == -1 || ChartEditor.Chart.StartTimeSig is null || measure >= 1) return;
+
+        int clicks = ChartEditor.Chart.StartTimeSig.TimeSig.Upper;
+        float interval = 1.0f / clicks;
+        float nextClick = interval * AudioManager.MetronomeIndex;
+        
+        
+        
+        while (AudioManager.MetronomeIndex < clicks && nextClick <= measure)
+        {
+            AudioManager.PlayMetronome();
+            nextClick = interval * AudioManager.MetronomeIndex;
         }
     }
 
@@ -2052,6 +2074,14 @@ public partial class MainView : UserControl
         }
 
         AudioManager.HitsoundNoteIndex = ChartEditor.Chart.Notes.FindIndex(x => x.BeatData.MeasureDecimal >= ChartEditor.CurrentMeasureDecimal);
+
+        if (ChartEditor.Chart.StartTimeSig != null)
+        {
+            int clicks = ChartEditor.Chart.StartTimeSig.TimeSig.Upper;
+            float interval = 1.0f / clicks;
+
+            AudioManager.MetronomeIndex = (int)float.Ceiling(ChartEditor.CurrentMeasureDecimal / interval);
+        }
     }
     
     /// <summary>

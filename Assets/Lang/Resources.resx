@@ -900,4 +900,7 @@ Continue?</value>
     <data name="Settings_Header_NoteTypes" xml:space="preserve">
         <value>Note Types</value>
     </data>
+    <data name="Settings_Hitsound_Metronome" xml:space="preserve">
+        <value>Metronome</value>
+    </data>
 </root>

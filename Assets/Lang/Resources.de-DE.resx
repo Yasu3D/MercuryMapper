@@ -900,4 +900,7 @@ Fortfahren?</value>
     <data name="Settings_Header_Selection" xml:space="preserve">
         <value>Auswahl</value>
     </data>
+    <data name="Settings_Hitsound_Metronome" xml:space="preserve">
+        <value>Metronom</value>
+    </data>
 </root>

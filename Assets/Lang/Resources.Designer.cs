@@ -1987,6 +1987,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Metronome.
+        /// </summary>
+        public static string Settings_Hitsound_Metronome {
+            get {
+                return ResourceManager.GetString("Settings_Hitsound_Metronome", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to R-Note Hitsound.
         /// </summary>
         public static string Settings_Hitsound_RNote {

@@ -116,6 +116,20 @@ public partial class SettingsView_Audio : UserControl
         AudioConfig.RNoteHitsoundPath = TextBoxRNote.Text ?? "";
     }
     
+    private async void Metronome_OnClick(object? sender, RoutedEventArgs e)
+    {
+        IStorageFile? file = await mainView.OpenAudioFilePicker();
+        if (file == null) return;
+
+        AudioConfig.MetronomePath = file.Path.LocalPath;
+        TextBoxMetronome.Text = file.Path.LocalPath;
+    }
+    
+    private void Metronome_TextChanged(object? sender, TextChangedEventArgs e)
+    {
+        AudioConfig.MetronomePath = TextBoxMetronome.Text ?? "";
+    }
+    
     private void SliderMusic_OnValueChanged(object? sender, RangeBaseValueChangedEventArgs e)
     {
         AudioConfig.MusicVolume = SliderMusic.Value;
@@ -155,6 +169,12 @@ public partial class SettingsView_Audio : UserControl
     private void SliderRNote_OnValueChanged(object? sender, RangeBaseValueChangedEventArgs e)
     {
         AudioConfig.RNoteVolume = SliderRNote.Value;
+        mainView.AudioManager.UpdateVolume();
+    }
+    
+    private void SliderMetronome_OnValueChanged(object? sender, RangeBaseValueChangedEventArgs e)
+    {
+        AudioConfig.MetronomeVolume = SliderMetronome.Value;
         mainView.AudioManager.UpdateVolume();
     }
 
