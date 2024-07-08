@@ -181,7 +181,8 @@ public class RenderEngine(MainView mainView)
         ExcludeCaps,
         IncludeCaps,
         OutlineNote,
-        OutlineHoldSegment
+        OutlineHoldSegment,
+        OutlineMask
     }
     
     private static void TruncateArc(ref ArcData data, TruncateMode mode)
@@ -213,6 +214,13 @@ public class RenderEngine(MainView mainView)
             {
                 data.StartAngle -= 4.5f;
                 data.SweepAngle += 9f;
+                break;
+            }
+
+            case TruncateMode.OutlineMask:
+            {
+                data.StartAngle += 1f;
+                data.SweepAngle -= 2f;
                 break;
             }
         }
@@ -603,7 +611,16 @@ public class RenderEngine(MainView mainView)
     private void DrawSelection(SKCanvas canvas, Chart chart, Note note)
     {
         ArcData selectedData = GetArc(chart, note);
-        if (note.Size != 60) TruncateArc(ref selectedData, note.NoteType is NoteType.HoldSegment ? TruncateMode.OutlineHoldSegment : TruncateMode.OutlineNote);
+
+        TruncateMode truncateMode = note.NoteType switch
+        {
+            NoteType.HoldSegment => TruncateMode.OutlineHoldSegment,
+            NoteType.MaskAdd => TruncateMode.OutlineMask,
+            NoteType.MaskRemove => TruncateMode.OutlineMask,
+            _ => TruncateMode.OutlineNote
+        };
+
+        if (note.Size != 60) TruncateArc(ref selectedData, truncateMode);
         else TrimCircleArc(ref selectedData);
 
         float widthMultiplier = note.NoteType is NoteType.HoldSegment ? 0.75f : 1;
@@ -613,7 +630,20 @@ public class RenderEngine(MainView mainView)
     private void DrawHighlight(SKCanvas canvas, Chart chart, Note note)
     {
         ArcData selectedData = GetArc(chart, note);
-        canvas.DrawArc(selectedData.Rect, selectedData.StartAngle, selectedData.SweepAngle, false, brushes.GetHighlightPen(canvasScale * selectedData.Scale));
+
+        TruncateMode truncateMode = note.NoteType switch
+        {
+            NoteType.HoldSegment => TruncateMode.OutlineHoldSegment,
+            NoteType.MaskAdd => TruncateMode.OutlineMask,
+            NoteType.MaskRemove => TruncateMode.OutlineMask,
+            _ => TruncateMode.OutlineNote
+        };
+
+        if (note.Size != 60) TruncateArc(ref selectedData, truncateMode);
+        else TrimCircleArc(ref selectedData);
+
+        float widthMultiplier = note.NoteType is NoteType.HoldSegment ? 0.75f : 1;
+        canvas.DrawArc(selectedData.Rect, selectedData.StartAngle, selectedData.SweepAngle, false, brushes.GetHighlightPen(canvasScale * selectedData.Scale * widthMultiplier));
     }
 
     private void DrawHighlight(SKCanvas canvas, ArcData data)
