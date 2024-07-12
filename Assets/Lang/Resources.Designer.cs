@@ -969,6 +969,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Edit.
+        /// </summary>
+        public static string Generic_Edit {
+            get {
+                return ResourceManager.GetString("Generic_Edit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to End of Chart Note is missing!.
         /// </summary>
         public static string Generic_EndOfChartWarning {

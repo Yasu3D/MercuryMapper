@@ -840,7 +840,7 @@ public class ChartEditor
                 Content = gimmickView,
                 Title = Assets.Lang.Resources.Editor_EditGimmick,
                 CloseButtonText = Assets.Lang.Resources.Generic_Cancel,
-                PrimaryButtonText = Assets.Lang.Resources.Generic_Create
+                PrimaryButtonText = Assets.Lang.Resources.Generic_Edit,
             };
         
             Dispatcher.UIThread.Post(async () =>
@@ -871,7 +871,7 @@ public class ChartEditor
                 Content = gimmickView,
                 Title = Assets.Lang.Resources.Editor_EditGimmick,
                 CloseButtonText = Assets.Lang.Resources.Generic_Cancel,
-                PrimaryButtonText = Assets.Lang.Resources.Generic_Create
+                PrimaryButtonText = Assets.Lang.Resources.Generic_Edit
             };
         
             Dispatcher.UIThread.Post(async () =>
@@ -902,7 +902,7 @@ public class ChartEditor
                 Content = gimmickView,
                 Title = Assets.Lang.Resources.Editor_EditGimmick,
                 CloseButtonText = Assets.Lang.Resources.Generic_Cancel,
-                PrimaryButtonText = Assets.Lang.Resources.Generic_Create
+                PrimaryButtonText = Assets.Lang.Resources.Generic_Edit
             };
         
             Dispatcher.UIThread.Post(async () =>

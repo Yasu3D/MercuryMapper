@@ -903,4 +903,7 @@ Continue?</value>
     <data name="Settings_Hitsound_Metronome" xml:space="preserve">
         <value>Metronome</value>
     </data>
+    <data name="Generic_Edit" xml:space="preserve">
+        <value>Edit</value>
+    </data>
 </root>
