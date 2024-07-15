@@ -537,6 +537,9 @@
                             <NumericUpDown Name="QuickSettingsNumericBeatDivision" FormatString="N0" ParsingNumberStyle="Integer" 
                                            Minimum="1" Maximum="128" Value="4" Increment="1" ValueChanged="QuickSettingsBeatDivision_OnValueChanged"
                                            HorizontalAlignment="Right" Width="80" Margin="5"/>
+                            
+                            <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_ShowSpeedChanges}"/>
+                            <CheckBox Name="QuickSettingsCheckBoxShowHiSpeed" HorizontalAlignment="Right" IsCheckedChanged="QuickSettingsShowHiSpeed_OnIsCheckedChanged"/>
                         </UniformGrid>
                         
                         <Separator Margin="0,5,0,12"/>

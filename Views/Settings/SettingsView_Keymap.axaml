@@ -50,6 +50,7 @@
                     <TreeViewItem Name="EditorEndHold" Header="{x:Static lang:Resources.Editor_EndHold}" />
                     <TreeViewItem Name="EditorEditHold" Header="{x:Static lang:Resources.Editor_EditHold}" />
                     <TreeViewItem Name="EditorBakeHold" Header="{x:Static lang:Resources.Editor_BakeHoldNote}" />
+                    <TreeViewItem Name="EditorBakeHoldNoRender" Header="{x:Static lang:Resources.Editor_BakeHoldNoteNoRender}" />
                     <TreeViewItem Name="EditorStitchHold" Header="{x:Static lang:Resources.Editor_StitchHold}" />
                     <TreeViewItem Name="EditorInsertHoldSegment"
                                   Header="{x:Static lang:Resources.Editor_InsertHoldSegment}" />

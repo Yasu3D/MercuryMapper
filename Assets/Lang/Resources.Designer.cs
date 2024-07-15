@@ -222,6 +222,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Bake Hold [No Render].
+        /// </summary>
+        public static string Editor_BakeHoldNoteNoRender {
+            get {
+                return ResourceManager.GetString("Editor_BakeHoldNoteNoRender", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Beat.
         /// </summary>
         public static string Editor_Beat {

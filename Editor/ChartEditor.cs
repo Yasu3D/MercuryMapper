@@ -1388,7 +1388,7 @@ public class ChartEditor
         }
     }
 
-    public void BakeHold(MathExtensions.HoldEaseType easeType)
+    public void BakeHold(MathExtensions.HoldEaseType easeType, bool forceNoRender)
     {
         List<IOperation> operationList = [];
         foreach (Note selected in SelectedNotes)
@@ -1466,7 +1466,7 @@ public class ChartEditor
                     NoteType = NoteType.HoldSegment,
                     Position = MathExtensions.Modulo(newPos0, 60),
                     Size = int.Clamp(newPos1 - newPos0, 1, 60),
-                    RenderSegment = easeType != MathExtensions.HoldEaseType.Linear || forceRender,
+                    RenderSegment = !forceNoRender && (easeType != MathExtensions.HoldEaseType.Linear || forceRender),
                     PrevReferencedNote = lastNote,
                     NextReferencedNote = end
                 };

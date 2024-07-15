@@ -906,4 +906,7 @@ Continue?</value>
     <data name="Generic_Edit" xml:space="preserve">
         <value>Edit</value>
     </data>
+    <data name="Editor_BakeHoldNoteNoRender" xml:space="preserve">
+        <value>Bake Hold [No Render]</value>
+    </data>
 </root>

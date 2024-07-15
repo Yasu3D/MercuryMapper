@@ -68,6 +68,7 @@ public class KeymapConfig
         ["EditorEndHold"] = new(Key.Enter, false, false, false),
         ["EditorEditHold"] = new(Key.Enter, false, true, false),
         ["EditorBakeHold"] = new(Key.B, false, true, false),
+        ["EditorBakeHoldNoRender"] = new(Key.B, true, true, false),
         ["EditorStitchHold"] = new(Key.H, true, false, false),
         ["EditorInsertHoldSegment"] = new(Key.H, false, true, false),
         ["EditorHighlightNextNote"] = new(Key.W, false, true, false),

@@ -705,7 +705,13 @@ public partial class MainView : UserControl
         }
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorBakeHold"]))
         {
-            ChartEditor.BakeHold((MathExtensions.HoldEaseType)HoldEaseComboBox.SelectedIndex);
+            ChartEditor.BakeHold((MathExtensions.HoldEaseType)HoldEaseComboBox.SelectedIndex, false);
+            e.Handled = true;
+            return;
+        }
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorBakeHoldNoRender"]))
+        {
+            ChartEditor.BakeHold((MathExtensions.HoldEaseType)HoldEaseComboBox.SelectedIndex, true);
             e.Handled = true;
             return;
         }
@@ -1907,6 +1913,11 @@ public partial class MainView : UserControl
         ApplySettings();
     }
     
+    private void QuickSettingsShowHiSpeed_OnIsCheckedChanged(object? sender, RoutedEventArgs e)
+    {
+        UserConfig.RenderConfig.ShowHiSpeed = QuickSettingsCheckBoxShowHiSpeed.IsChecked ?? true;
+    }
+    
     private void ButtonEditSelectionShape_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.EditSelection(true, false);
     
     private void ButtonEditSelectionProperties_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.EditSelection(false, true);
@@ -1917,7 +1928,7 @@ public partial class MainView : UserControl
     
     private void ButtonDeleteSelection_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.DeleteSelection();
 
-    private void ButtonBakeHold_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.BakeHold((MathExtensions.HoldEaseType)HoldEaseComboBox.SelectedIndex);
+    private void ButtonBakeHold_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.BakeHold((MathExtensions.HoldEaseType)HoldEaseComboBox.SelectedIndex, false);
 
     private void ButtonStitchHold_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.StitchHold();
     

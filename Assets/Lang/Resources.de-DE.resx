@@ -906,4 +906,7 @@ Fortfahren?</value>
     <data name="Generic_Edit" xml:space="preserve">
         <value>Bearbeiten</value>
     </data>
+    <data name="Editor_BakeHoldNoteNoRender" xml:space="preserve">
+        <value>Hold Vorberechnen [No Render]</value>
+    </data>
 </root>
