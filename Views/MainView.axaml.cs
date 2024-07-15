@@ -1358,7 +1358,6 @@ public partial class MainView : UserControl
     public async void MenuItemExit_OnClick(object? sender, RoutedEventArgs e)
     {
         bool save = await PromptSave();
-        Console.WriteLine($"{save}  // {ChartEditor.Chart.IsNew} {ChartEditor.Chart.IsSaved}");
         if (!save) return;
 
         CanShutdown = true;
@@ -2107,7 +2106,7 @@ public partial class MainView : UserControl
 
         return result switch
         {
-            ContentDialogResult.Primary => await SaveFile(true, ChartEditor.Chart.FilePath),
+            ContentDialogResult.Primary => await SaveFile(false, ChartEditor.Chart.FilePath),
             ContentDialogResult.Secondary => true,
             _ => false
         };
