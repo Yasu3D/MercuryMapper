@@ -1458,7 +1458,7 @@ public class ChartEditor
                 int newPos0 = (int)Math.Round(MathExtensions.ShortLerp(lerpShort, startPos0, endPos0, i));
                 int newPos1 = (int)Math.Round(MathExtensions.ShortLerp(lerpShort, startPos1, endPos1, i));
 
-                bool forceRender = data.FullTick - lastNote.BeatData.FullTick <= 30 && start.Size == end.Size;
+                bool shortInterval = data.FullTick - lastNote.BeatData.FullTick <= 30 && start.Size == end.Size;
                 
                 Note newNote = new()
                 {
@@ -1466,7 +1466,7 @@ public class ChartEditor
                     NoteType = NoteType.HoldSegment,
                     Position = MathExtensions.Modulo(newPos0, 60),
                     Size = int.Clamp(newPos1 - newPos0, 1, 60),
-                    RenderSegment = !forceNoRender && (easeType != MathExtensions.HoldEaseType.Linear || forceRender),
+                    RenderSegment = !forceNoRender && (easeType != MathExtensions.HoldEaseType.Linear || shortInterval),
                     PrevReferencedNote = lastNote,
                     NextReferencedNote = end
                 };
