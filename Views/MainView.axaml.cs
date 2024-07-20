@@ -885,8 +885,8 @@ public partial class MainView : UserControl
         }
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorDelete"])) 
         {
-            ChartEditor.DeleteSelection();
             ChartEditor.DeleteGimmick();
+            ChartEditor.DeleteSelection();
             e.Handled = true;
             return;
         }
