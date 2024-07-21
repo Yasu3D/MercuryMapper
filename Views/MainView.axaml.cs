@@ -498,6 +498,7 @@ public partial class MainView : UserControl
         QuickSettingsSliderMusic.Value = UserConfig.AudioConfig.MusicVolume;
         QuickSettingsNumericBeatDivision.Value = UserConfig.RenderConfig.BeatDivision;
         QuickSettingsNumericNoteSpeed.Value = (decimal?)UserConfig.RenderConfig.NoteSpeed;
+        QuickSettingsCheckBoxShowHiSpeed.IsChecked = UserConfig.RenderConfig.ShowHiSpeed;
     }
     
     public void SetMinNoteSize(NoteType type)
