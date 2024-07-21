@@ -180,6 +180,7 @@ public class RenderEngine(MainView mainView)
     {
         ExcludeCaps,
         IncludeCaps,
+        Hold,
         OutlineNote,
         OutlineHoldSegment,
         OutlineMask
@@ -200,6 +201,13 @@ public class RenderEngine(MainView mainView)
             {
                 data.StartAngle -= 4.5f;
                 data.SweepAngle += 9f;
+                break;
+            }
+            
+            case TruncateMode.Hold:
+            {
+                data.StartAngle -= 4f;
+                data.SweepAngle += 8f;
                 break;
             }
             
@@ -701,8 +709,8 @@ public class RenderEngine(MainView mainView)
                 // Aw, nevermind. It ain't one of them darn damn dangit hold notes where the first segment is behind the camera and the second is outside of vision range.
                 if (chart.GetScaledMeasureDecimal(next.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) <= ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal) continue;
                 
-                ArcData prevData = getArcData(prev);
-                ArcData nextData = getArcData(next);
+                ArcData prevData = getArcData(prev, TruncateMode.Hold);
+                ArcData nextData = getArcData(next, TruncateMode.Hold);
 
                 float ratio = MathExtensions.InverseLerp(CurrentMeasureDecimal, next.BeatData.MeasureDecimal, prev.BeatData.MeasureDecimal);
                 
@@ -723,7 +731,7 @@ public class RenderEngine(MainView mainView)
             for (int i = 0; i < hold.Segments.Count; i++)
             {
                 Note note = hold.Segments[i];
-                ArcData currentData = getArcData(note);
+                ArcData currentData = getArcData(note, TruncateMode.Hold);
                 
                 // First part of the path. Must be an arc.
                 if (i == 0)
@@ -738,7 +746,7 @@ public class RenderEngine(MainView mainView)
                     else if (note.PrevReferencedNote != null)
                     {
                         Note prevNote = note.PrevReferencedNote;
-                        ArcData prevData = getArcData(prevNote);
+                        ArcData prevData = getArcData(prevNote, TruncateMode.Hold);
                         
                         float ratio = MathExtensions.InverseLerp(ScaledCurrentMeasureDecimal, chart.GetScaledMeasureDecimal(note.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed), chart.GetScaledMeasureDecimal(prevNote.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed));
                 
@@ -791,7 +799,7 @@ public class RenderEngine(MainView mainView)
                 // *technically unnecessary to skip, but doing it just for consistency.
                 if (i == 0 && note.NoteType is NoteType.HoldStart or NoteType.HoldStartRNote) continue;
                 
-                ArcData currentData = getArcData(note);
+                ArcData currentData = getArcData(note, TruncateMode.Hold);
                 path.LineTo(RenderMath.GetPointOnArc(canvasCenter, currentData.Rect.Width * 0.5f, currentData.StartAngle));
             }
             
@@ -808,7 +816,7 @@ public class RenderEngine(MainView mainView)
         {
             if (note.NoteType is not NoteType.HoldEnd) continue;
             
-            ArcData currentData = getArcData(note);
+            ArcData currentData = getArcData(note, TruncateMode.Hold);
             
             if (!RenderMath.InRange(currentData.Scale) || note.BeatData.MeasureDecimal < CurrentMeasureDecimal) continue;
             
@@ -823,7 +831,7 @@ public class RenderEngine(MainView mainView)
         {
             if (note.NoteType is NoteType.HoldEnd) continue;
 
-            ArcData currentData = getArcData(note);
+            ArcData currentData = getArcData(note, TruncateMode.ExcludeCaps);
             
             if (!RenderMath.InRange(currentData.Scale) || note.BeatData.MeasureDecimal < CurrentMeasureDecimal) continue;
             
@@ -852,10 +860,10 @@ public class RenderEngine(MainView mainView)
         return;
 
         // Preventing a little bit of code repetition. Not sure if this is cleaner or not :^)
-        ArcData getArcData(Note note)
+        ArcData getArcData(Note note, TruncateMode mode)
         {
             ArcData arc = GetArc(chart, note);
-            if (note.Size != 60) TruncateArc(ref arc, TruncateMode.ExcludeCaps);
+            if (note.Size != 60) TruncateArc(ref arc, mode);
             else TrimCircleArc(ref arc);
 
             return arc;
