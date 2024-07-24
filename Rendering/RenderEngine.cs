@@ -220,8 +220,8 @@ public class RenderEngine(MainView mainView)
             
             case TruncateMode.OutlineHoldSegment:
             {
-                data.StartAngle -= 4.5f;
-                data.SweepAngle += 9f;
+                data.StartAngle -= 2.5f;
+                data.SweepAngle += 5f;
                 break;
             }
 
@@ -850,7 +850,7 @@ public class RenderEngine(MainView mainView)
 
             if (note.NoteType is NoteType.HoldSegment && !IsPlaying)
             {
-                canvas.DrawArc(currentData.Rect, currentData.StartAngle, currentData.SweepAngle, false, brushes.GetNotePen(note, canvasScale * currentData.Scale * 0.5f));
+                canvas.DrawArc(currentData.Rect, currentData.StartAngle + 2f, currentData.SweepAngle - 4f, false, brushes.GetNotePen(note, canvasScale * currentData.Scale * 0.5f));
             }
             
             if (mainView.ChartEditor.SelectedNotes.Contains(note)) DrawSelection(canvas, chart, note);
