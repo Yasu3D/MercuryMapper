@@ -289,16 +289,196 @@ public class Chart
         {
             streamWriter.Write($"{note.BeatData.Measure,4:F0} {note.BeatData.Tick,4:F0} {(int) note.GimmickType,4:F0} {(int) note.NoteType,4:F0} ");
             streamWriter.Write($"{Notes.IndexOf(note),4:F0} {note.Position,4:F0} {note.Size,4:F0} {Convert.ToInt32(note.RenderSegment, CultureInfo.InvariantCulture),4:F0}");
-                
+            
             if (note.IsMask) streamWriter.Write($" {(int)note.MaskDirection,4:F0}");
             if (note.NextReferencedNote != null) streamWriter.Write($" {Notes.IndexOf(note.NextReferencedNote),4:F0}");
-                
+            
             streamWriter.WriteLine();
         }
 
         return true;
     }
 
+    /// <summary>
+    /// Converts a clipboard string to a List of Notes.
+    /// </summary>
+    public List<Note> ReadClipboard(string clipboard)
+    {
+        string[] lines = clipboard.Split(["\r\n", "\r", "\n"], StringSplitOptions.RemoveEmptyEntries);
+        List<Note> notes = [];
+        
+        Dictionary<int, Note> notesByIndex = new();
+        Dictionary<int, int> nextReferencedIndex = new();
+        
+        parseClipboard();
+
+        if (notes.Count != 0)
+        {
+            getHoldReferences();
+            errorCheck();
+        }
+        
+        return notes;
+
+        void parseClipboard()
+        {
+            foreach (string line in lines)
+            {
+                if (line.Contains("```")) continue;
+                string[] split = line.Split(" ", StringSplitOptions.RemoveEmptyEntries);
+                if (split.Length < 8) continue;
+            
+                int measure = Convert.ToInt32(split[0]);
+                int tick = Convert.ToInt32(split[1]);
+                int objectId = Convert.ToInt32(split[2]);
+                
+                if (objectId != 1) continue;
+                
+                int noteTypeId = Convert.ToInt32(split[3]);
+                int noteIndex = Convert.ToInt32(split[4]);
+                int position = Convert.ToInt32(split[5]);
+                int size = Convert.ToInt32(split[6]);
+                bool renderSegment = noteTypeId != 10 || Convert.ToBoolean(Convert.ToInt32(split[7])); // Set to true by default if note is not a hold segment.
+
+                if (noteTypeId is 15 or 17 or 18 or 19 or > 26) continue; // Invalid note type
+                
+                Note tempNote = new(measure, tick, noteTypeId, noteIndex, position, size, renderSegment);
+                
+                // hold start & segments
+                if (noteTypeId is 9 or 10 or 25 && split.Length >= 9)
+                {
+                    nextReferencedIndex[noteIndex] = Convert.ToInt32(split[8]);
+                }
+
+                if (noteTypeId is 12 or 13 && split.Length >= 9)
+                {
+                    int direction = Convert.ToInt32(split[8]);
+                    tempNote.MaskDirection = (MaskDirection)direction;
+                }
+
+                notes.Add(tempNote);
+                notesByIndex[noteIndex] = tempNote;
+            }
+        }
+
+        void getHoldReferences()
+        {
+            foreach (Note note in notes)
+            {
+                if (!nextReferencedIndex.TryGetValue(note.ParsedIndex, value: out int value)) continue;
+                if (!notesByIndex.TryGetValue(value, out Note? referencedNote)) continue;
+                
+                note.NextReferencedNote = referencedNote;
+                referencedNote.PrevReferencedNote = note;
+            }
+        }
+        
+        void errorCheck()
+        {
+            List<Note> garbage = [];
+
+            // Remove negative timestamp notes
+            foreach (Note note in notes)
+            {
+                if (note.BeatData.FullTick < 0) garbage.Add(note);
+            }
+            
+            // Clamp size and position
+            foreach (Note note in notes)
+            {
+                note.Size = int.Clamp(note.Size, Note.MinSize(note.NoteType), 60);
+                note.Position = MathExtensions.Modulo(note.Position, 60);
+            }
+            
+            // Check for incorrect hold note types
+            foreach (Note note in notes)
+            {
+                if (!note.IsHold) continue;
+                
+                // Hold segment without a previous note
+                if (note.NoteType is NoteType.HoldSegment && note.PrevReferencedNote == null)
+                {
+                    note.NoteType = NoteType.HoldStart;
+                }
+                
+                // Hold segment without a next note
+                if (note.NoteType is NoteType.HoldSegment && note.NextReferencedNote == null)
+                {
+                    note.NoteType = NoteType.HoldEnd;
+                }
+                
+                // Hold start with a previous note
+                if (note.NoteType is NoteType.HoldStart && note.PrevReferencedNote != null)
+                {
+                    note.NoteType = NoteType.HoldSegment;
+                }
+                
+                // Hold end with a next note
+                if (note.NoteType is NoteType.HoldEnd && note.NextReferencedNote != null)
+                {
+                    note.NoteType = NoteType.HoldSegment;
+                }
+            }
+            
+            // Check for missing hold references
+            foreach (Note note in notes)
+            {
+                if (!note.IsHold) continue;
+                
+                // Hold end without a previous note
+                if (note.NoteType is NoteType.HoldEnd && note.PrevReferencedNote == null)
+                {
+                    garbage.Add(note);
+                }
+                
+                // Hold start without a next note
+                if (note.NoteType is NoteType.HoldStart or NoteType.HoldStartRNote && note.NextReferencedNote == null)
+                {
+                    garbage.Add(note);
+                }
+            }
+
+            // Remove necessary notes
+            foreach (Note note in garbage)
+            {
+                notes.Remove(note);
+            }
+            
+            // Readjust timestamps if not starting on 0 0
+            if (notes[0].BeatData.FullTick != 0)
+            {
+                int distance = notes[0].BeatData.FullTick;
+                foreach (Note note in notes)
+                {
+                    note.BeatData = new(note.BeatData.FullTick - distance);
+                }
+            }
+        }
+    }
+    
+    /// <summary>
+    /// Converts a List of Notes to a clipboard-friendly string.
+    /// </summary>
+    public string WriteClipboard(List<Note> notes)
+    {
+        string result = "```\n";
+
+        foreach (Note note in notes)
+        {
+            result += $"{note.BeatData.Measure,4:F0} {note.BeatData.Tick,4:F0} {(int)note.GimmickType,4:F0} {(int)note.NoteType,4:F0} ";
+            result += $"{notes.IndexOf(note),4:F0} {note.Position,4:F0} {note.Size,4:F0} {Convert.ToInt32(note.RenderSegment, CultureInfo.InvariantCulture),4:F0}";
+            
+            if (note.IsMask) result += $" {(int)note.MaskDirection,4:F0}";
+            if (note.NextReferencedNote != null) result += $" {notes.IndexOf(note.NextReferencedNote),4:F0}";
+
+            result += "\n";
+        }
+
+        result += "```";
+        
+        return result;
+    }
+    
     public void Clear()
     {
         Notes.Clear();
@@ -565,7 +745,7 @@ public class Chart
     
     public static List<string> ReadLines(Stream stream)
     {
-        List<string> lines = new();
+        List<string> lines = [];
         using StreamReader streamReader = new(stream);
 
         while (!streamReader.EndOfStream)

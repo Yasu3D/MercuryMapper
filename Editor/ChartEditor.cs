@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Avalonia.Controls;
+using Avalonia.Input.Platform;
 using Avalonia.Threading;
 using FluentAvalonia.UI.Controls;
 using MercuryMapper.Data;
@@ -54,7 +55,7 @@ public class ChartEditor
     public ChartElement? HighlightedElement;
     public BoxSelect BoxSelect = new();
 
-    public List<Note> Clipboard { get; private set; } = [];
+    public List<Note> NoteClipboard { get; private set; } = [];
 
     public Note? LastPlacedHold;
     public Note? CurrentHoldStart;
@@ -350,42 +351,60 @@ public class ChartEditor
         if (TopLevel.GetTopLevel(mainView)?.FocusManager?.GetFocusedElement() is TextBox) return;
         if (SelectedNotes.Count == 0) return;
         
-        CopyToClipboard(SelectedNotes);
+        IClipboard? systemClipboard = TopLevel.GetTopLevel(mainView)?.Clipboard;
+        if (systemClipboard is null) return;
+        
+        CopyToNoteClipboard(SelectedNotes);
         DeleteSelection();
         DeselectAllNotes();
+        mainView.SetSelectionInfo();
+        
+        systemClipboard.SetTextAsync(Chart.WriteClipboard(NoteClipboard));
     }
     
     public void Copy()
     {
         if (TopLevel.GetTopLevel(mainView)?.FocusManager?.GetFocusedElement() is TextBox) return;
         if (SelectedNotes.Count == 0) return;
+
+        IClipboard? systemClipboard = TopLevel.GetTopLevel(mainView)?.Clipboard;
+        if (systemClipboard is null) return;
         
-        CopyToClipboard(SelectedNotes);
+        CopyToNoteClipboard(SelectedNotes);
         DeselectAllNotes();
+        mainView.SetSelectionInfo();
+        
+        systemClipboard.SetTextAsync(Chart.WriteClipboard(NoteClipboard));
     }
     
     public void Paste()
     {
         if (TopLevel.GetTopLevel(mainView)?.FocusManager?.GetFocusedElement() is TextBox) return;
-        if (Clipboard.Count == 0) return;
+        if (NoteClipboard.Count == 0) return;
+        
+        IClipboard? systemClipboard = TopLevel.GetTopLevel(mainView)?.Clipboard;
+        if (systemClipboard is null) return;
         
         DeselectAllNotes();
-        List<Note> copy = DeepCloneNotes(Clipboard);
-        List<IOperation> operationList = [];
+        mainView.SetSelectionInfo();
         
-        foreach (Note note in copy)
+        List<IOperation> operationList = [];
+        string clipboardText = systemClipboard.GetTextAsync().Result ?? "";
+        
+        foreach (Note note in Chart.ReadClipboard(clipboardText))
         {
             SelectedNotes.Add(note);
             note.BeatData = new(CurrentBeatData.FullTick + note.BeatData.FullTick);
             operationList.Add(new InsertNote(Chart, SelectedNotes, note));
         }
+
+        if (operationList.Count == 0) return;
         
         UndoRedoManager.InvokeAndPush(new CompositeOperation(operationList));
         Chart.IsSaved = false;
-        mainView.SetSelectionInfo();
     }
 
-    private void CopyToClipboard(List<Note> selectedNotes)
+    private void CopyToNoteClipboard(List<Note> selectedNotes)
     {
         if (selectedNotes.Count == 0) return;
 
@@ -405,10 +424,10 @@ public class ChartEditor
         tempSelected = tempSelected.OrderBy(x => x.BeatData.FullTick).ToList();
         BeatData start = tempSelected[0].BeatData;
         
-        Clipboard.Clear();
-        Clipboard = DeepCloneNotes(tempSelected);
+        NoteClipboard.Clear();
+        NoteClipboard = DeepCloneNotes(tempSelected);
 
-        foreach (Note note in Clipboard)
+        foreach (Note note in NoteClipboard)
         {
             note.BeatData = new(note.BeatData.FullTick - start.FullTick);
         }
