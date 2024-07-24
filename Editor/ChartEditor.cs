@@ -380,7 +380,6 @@ public class ChartEditor
     public void Paste()
     {
         if (TopLevel.GetTopLevel(mainView)?.FocusManager?.GetFocusedElement() is TextBox) return;
-        if (NoteClipboard.Count == 0) return;
         
         IClipboard? systemClipboard = TopLevel.GetTopLevel(mainView)?.Clipboard;
         if (systemClipboard is null) return;
