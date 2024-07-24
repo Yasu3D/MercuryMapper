@@ -410,7 +410,7 @@ public class ChartEditor
 
         foreach (Note note in Clipboard)
         {
-            note.BeatData = new(note.BeatData.MeasureDecimal - start.MeasureDecimal);
+            note.BeatData = new(note.BeatData.FullTick - start.FullTick);
         }
     }
 
