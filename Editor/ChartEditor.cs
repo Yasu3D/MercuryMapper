@@ -346,7 +346,7 @@ public class ChartEditor
         }
     }
     
-    public void Cut()
+    public async void Cut()
     {
         if (TopLevel.GetTopLevel(mainView)?.FocusManager?.GetFocusedElement() is TextBox) return;
         if (SelectedNotes.Count == 0) return;
@@ -359,10 +359,10 @@ public class ChartEditor
         DeselectAllNotes();
         mainView.SetSelectionInfo();
         
-        systemClipboard.SetTextAsync(Chart.WriteClipboard(NoteClipboard));
+        await systemClipboard.SetTextAsync(Chart.WriteClipboard(NoteClipboard));
     }
     
-    public void Copy()
+    public async void Copy()
     {
         if (TopLevel.GetTopLevel(mainView)?.FocusManager?.GetFocusedElement() is TextBox) return;
         if (SelectedNotes.Count == 0) return;
@@ -374,10 +374,10 @@ public class ChartEditor
         DeselectAllNotes();
         mainView.SetSelectionInfo();
         
-        systemClipboard.SetTextAsync(Chart.WriteClipboard(NoteClipboard));
+        await systemClipboard.SetTextAsync(Chart.WriteClipboard(NoteClipboard));
     }
     
-    public void Paste()
+    public async void Paste()
     {
         if (TopLevel.GetTopLevel(mainView)?.FocusManager?.GetFocusedElement() is TextBox) return;
         
@@ -388,7 +388,9 @@ public class ChartEditor
         mainView.SetSelectionInfo();
         
         List<IOperation> operationList = [];
-        string clipboardText = systemClipboard.GetTextAsync().Result ?? "";
+        string? clipboardText = await systemClipboard.GetTextAsync();
+
+        if (clipboardText == null) return;
         
         foreach (Note note in Chart.ReadClipboard(clipboardText))
         {
