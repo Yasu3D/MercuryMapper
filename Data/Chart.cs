@@ -328,36 +328,44 @@ public class Chart
                 string[] split = line.Split(" ", StringSplitOptions.RemoveEmptyEntries);
                 if (split.Length < 8) continue;
             
-                int measure = Convert.ToInt32(split[0]);
-                int tick = Convert.ToInt32(split[1]);
-                int objectId = Convert.ToInt32(split[2]);
-                
-                if (objectId != 1) continue;
-                
-                int noteTypeId = Convert.ToInt32(split[3]);
-                int noteIndex = Convert.ToInt32(split[4]);
-                int position = Convert.ToInt32(split[5]);
-                int size = Convert.ToInt32(split[6]);
-                bool renderSegment = noteTypeId != 10 || Convert.ToBoolean(Convert.ToInt32(split[7])); // Set to true by default if note is not a hold segment.
-
-                if (noteTypeId is 15 or 17 or 18 or 19 or > 26) continue; // Invalid note type
-                
-                Note tempNote = new(measure, tick, noteTypeId, noteIndex, position, size, renderSegment);
-                
-                // hold start & segments
-                if (noteTypeId is 9 or 10 or 25 && split.Length >= 9)
+                try
                 {
-                    nextReferencedIndex[noteIndex] = Convert.ToInt32(split[8]);
-                }
+                    int measure = Convert.ToInt32(split[0]);
+                    int tick = Convert.ToInt32(split[1]);
+                    int objectId = Convert.ToInt32(split[2]);
+                
+                    if (objectId != 1) continue;
+                
+                    int noteTypeId = Convert.ToInt32(split[3]);
+                    int noteIndex = Convert.ToInt32(split[4]);
+                    int position = Convert.ToInt32(split[5]);
+                    int size = Convert.ToInt32(split[6]);
+                    bool renderSegment = noteTypeId != 10 || Convert.ToBoolean(Convert.ToInt32(split[7])); // Set to true by default if note is not a hold segment.
+                    
+                    if (noteTypeId is 15 or 17 or 18 or 19 or > 26) continue; // Invalid note type
+                
+                    Note tempNote = new(measure, tick, noteTypeId, noteIndex, position, size, renderSegment);
+                
+                    // hold start & segments
+                    if (noteTypeId is 9 or 10 or 25 && split.Length >= 9)
+                    {
+                        nextReferencedIndex[noteIndex] = Convert.ToInt32(split[8]);
+                    }
 
-                if (noteTypeId is 12 or 13 && split.Length >= 9)
+                    if (noteTypeId is 12 or 13 && split.Length >= 9)
+                    {
+                        int direction = Convert.ToInt32(split[8]);
+                        tempNote.MaskDirection = (MaskDirection)direction;
+                    }
+
+                    notes.Add(tempNote);
+                    notesByIndex[noteIndex] = tempNote;
+                }
+                catch (Exception e)
                 {
-                    int direction = Convert.ToInt32(split[8]);
-                    tempNote.MaskDirection = (MaskDirection)direction;
+                    // Catch any Convert errors from invalid strings.
+                    Console.WriteLine(e);
                 }
-
-                notes.Add(tempNote);
-                notesByIndex[noteIndex] = tempNote;
             }
         }
 
