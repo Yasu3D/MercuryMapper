@@ -135,6 +135,7 @@ public class ColorConfig
         ["ColorHighlight"] = "80FF0000",
         ["ColorSelection"] = "8000FFFF",
         ["ColorBonus"] = "6500A1FF",
+        ["ColorBonusFill"] = "70FFFFFF",
         ["ColorRNote"] = "DCFFFED9",
         ["ColorNoteCaps"] = "FF2CB5F5",
         ["ColorSync"] = "FF00FFFF",

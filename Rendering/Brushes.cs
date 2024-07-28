@@ -215,6 +215,12 @@ public class Brushes(UserConfig userConfig)
         Style = SKPaintStyle.Fill,
         IsAntialias = true
     };
+
+    public readonly SKPaint BonusFill = new()
+    {
+        Style = SKPaintStyle.Fill,
+        IsAntialias = false
+    };
     
     // ________ Dynamic Brushes
     public SKPaint GetTunnelStripes(float strokeWidth)
@@ -399,6 +405,7 @@ public class Brushes(UserConfig userConfig)
             colorGimmickReverse = SKColor.Parse(colors["ColorGimmickStop"]);
             colorGimmickStop = SKColor.Parse(colors["ColorGimmickReverse"]);
             
+            BonusFill.Color = SKColor.Parse(colors["ColorBonusFill"]);
             syncPen.Color = SKColor.Parse(colors["ColorSync"]);
             holdEndPen.Color = SKColor.Parse(colors["ColorNoteHoldEnd"]);
             rNotePen.Color = SKColor.Parse(colors["ColorRNote"]);

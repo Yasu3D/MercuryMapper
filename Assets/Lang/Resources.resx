@@ -909,4 +909,10 @@ Continue?</value>
     <data name="Editor_BakeHoldNoteNoRender" xml:space="preserve">
         <value>Bake Hold [No Render]</value>
     </data>
+    <data name="Settings_Color_BonusGlow" xml:space="preserve">
+        <value>Bonus Glow</value>
+    </data>
+    <data name="Settings_Color_BonusTriangles" xml:space="preserve">
+        <value>Bonus Triangles</value>
+    </data>
 </root>

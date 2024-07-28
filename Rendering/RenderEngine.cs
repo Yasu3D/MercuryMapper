@@ -665,12 +665,70 @@ public class RenderEngine(MainView mainView)
         float sweep = data.SweepAngle + (note.Size != 60 ? 3.0f : 0);
         canvas.DrawArc(data.Rect, start, sweep, false, brushes.GetRNotePen(canvasScale * data.Scale));
     }
-    
-    private void DrawBonus(SKCanvas canvas, ArcData data)
+
+    private void DrawBonusGlow(SKCanvas canvas, Note note, ArcData data)
     {
-        //float start = data.StartAngle - (note.Size != 60 ? 1.5f : 0);
-        //float sweep = data.SweepAngle + (note.Size != 60 ? 3.0f : 0);
-        //canvas.DrawArc(data.Rect, start, sweep, false, brushes.GetBonusPen(canvasScale * data.Scale));
+        float start = data.StartAngle - (note.Size != 60 ? 1.5f : 0);
+        float sweep = data.SweepAngle + (note.Size != 60 ? 3.0f : 0);
+        canvas.DrawArc(data.Rect, start, sweep, false, brushes.GetBonusPen(canvasScale * data.Scale));
+    }
+    
+    private void DrawBonusFill(SKCanvas canvas, Note note, ArcData data)
+    {
+        SKPath path = new();
+        
+        float radiusInner = 0.5f * (data.Rect.Width - brushes.NoteWidthMultiplier * canvasScale * data.Scale);
+        float radiusOuter = 0.5f * (data.Rect.Width + brushes.NoteWidthMultiplier * canvasScale * data.Scale);
+
+        int triangles = note.Size == 60 ? note.Size : note.Size - 2;
+        float startAngle = note.Size == 60 ? data.StartAngle + 6 : data.StartAngle;
+        
+        for (int i = 0; i < triangles; i++)
+        {
+            SKPoint p0;
+            SKPoint p1;
+            SKPoint p2;
+                
+            // Check if [i] is even or odd to flip the triangle
+            // for every other note segment
+            if ((i & 1) == 0)
+            {
+                //  Outside
+                //
+                //  p1
+                //  |   \
+                //  |       \
+                //  p0 ______ p2
+                //
+                // Inside
+                
+                p0 = RenderMath.GetPointOnArc(canvasCenter, radiusInner, startAngle + i * -6);
+                p1 = RenderMath.GetPointOnArc(canvasCenter, radiusOuter, startAngle + i * -6);
+                p2 = RenderMath.GetPointOnArc(canvasCenter, radiusInner, startAngle + (i + 1) * -6);
+            }
+            
+            else
+            {  
+                // Outside
+                //
+                //            p1
+                //        /    |
+                //     /       |
+                //  p2 _______ p0
+                //
+                //  Inside
+                
+                p0 = RenderMath.GetPointOnArc(canvasCenter, radiusInner, startAngle + (i + 1) * -6);
+                p1 = RenderMath.GetPointOnArc(canvasCenter, radiusOuter, startAngle + (i + 1) * -6);
+                p2 = RenderMath.GetPointOnArc(canvasCenter, radiusInner, startAngle + i * -6);
+            }
+            
+            path.MoveTo(p0);
+            path.LineTo(p1);
+            path.LineTo(p2);
+        }
+
+        canvas.DrawPath(path, brushes.BonusFill);
     }
     
     /// <summary>
@@ -1061,6 +1119,8 @@ public class RenderEngine(MainView mainView)
             
             canvas.DrawArc(data.Rect, data.StartAngle, data.SweepAngle, false, brushes.GetNotePen(note, canvasScale * data.Scale));
 
+            if (note.IsBonus) DrawBonusFill(canvas, note, data);
+            
             if (RenderConfig.ShowChainStripes && note.NoteType is NoteType.Chain or NoteType.ChainRNote)
             {
                 int stripes = note.Size * 2;

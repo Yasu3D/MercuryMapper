@@ -60,8 +60,10 @@
             <Separator/>
             
             <UniformGrid Columns="2">
-                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.BonusType_Bonus}"/>
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_Color_BonusGlow}"/>
                 <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorBonus"/>
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_Color_BonusTriangles}"/>
+                <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorBonusFill"/>
                 <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.BonusType_RNote}"/>
                 <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorRNote"/>
                 <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Editor_NoteCaps}"/>

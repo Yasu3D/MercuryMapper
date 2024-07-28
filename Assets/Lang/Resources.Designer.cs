@@ -1807,6 +1807,24 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Bonus Glow.
+        /// </summary>
+        public static string Settings_Color_BonusGlow {
+            get {
+                return ResourceManager.GetString("Settings_Color_BonusGlow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bonus Triangles.
+        /// </summary>
+        public static string Settings_Color_BonusTriangles {
+            get {
+                return ResourceManager.GetString("Settings_Color_BonusTriangles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Guide Lines.
         /// </summary>
         public static string Settings_Color_GuideLines {

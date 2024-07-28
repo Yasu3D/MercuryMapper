@@ -909,4 +909,10 @@ Fortfahren?</value>
     <data name="Editor_BakeHoldNoteNoRender" xml:space="preserve">
         <value>Hold Vorberechnen [No Render]</value>
     </data>
+    <data name="Settings_Color_BonusGlow" xml:space="preserve">
+        <value>Bonus Licht</value>
+    </data>
+    <data name="Settings_Color_BonusTriangles" xml:space="preserve">
+        <value>Bonus Dreiecke</value>
+    </data>
 </root>
