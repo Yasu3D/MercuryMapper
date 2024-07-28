@@ -685,47 +685,16 @@ public class RenderEngine(MainView mainView)
         
         for (int i = 0; i < triangles; i++)
         {
-            SKPoint p0;
-            SKPoint p1;
-            SKPoint p2;
-                
             // Check if [i] is even or odd to flip the triangle
             // for every other note segment
-            if ((i & 1) == 0)
-            {
-                //  Outside
-                //
-                //  p1
-                //  |   \
-                //  |       \
-                //  p0 ______ p2
-                //
-                // Inside
-                
-                p0 = RenderMath.GetPointOnArc(canvasCenter, radiusInner, startAngle + i * -6);
-                p1 = RenderMath.GetPointOnArc(canvasCenter, radiusOuter, startAngle + i * -6);
-                p2 = RenderMath.GetPointOnArc(canvasCenter, radiusInner, startAngle + (i + 1) * -6);
-            }
+            bool isEven = (i & 1) == 0;
             
-            else
-            {  
-                // Outside
-                //
-                //            p1
-                //        /    |
-                //     /       |
-                //  p2 _______ p0
-                //
-                //  Inside
-                
-                p0 = RenderMath.GetPointOnArc(canvasCenter, radiusInner, startAngle + (i + 1) * -6);
-                p1 = RenderMath.GetPointOnArc(canvasCenter, radiusOuter, startAngle + (i + 1) * -6);
-                p2 = RenderMath.GetPointOnArc(canvasCenter, radiusInner, startAngle + i * -6);
-            }
+            float angleA = startAngle + i * -6;
+            float angleB = startAngle + (i + 1) * -6;
             
-            path.MoveTo(p0);
-            path.LineTo(p1);
-            path.LineTo(p2);
+            path.MoveTo(RenderMath.GetPointOnArc(canvasCenter, radiusInner, isEven ? angleA : angleB));
+            path.LineTo(RenderMath.GetPointOnArc(canvasCenter, radiusOuter, isEven ? angleA : angleB));
+            path.LineTo(RenderMath.GetPointOnArc(canvasCenter, radiusInner, isEven ? angleB : angleA));
         }
 
         canvas.DrawPath(path, brushes.BonusFill);
@@ -1108,7 +1077,7 @@ public class RenderEngine(MainView mainView)
 
             if (note.IsRNote) DrawRNote(canvas, note, data);
 
-            if (note.IsBonus) DrawBonus(canvas, data);
+            if (note.IsBonus) DrawBonusGlow(canvas, note, data);
             
             // Normal Note
             if (note.Size != 60)
