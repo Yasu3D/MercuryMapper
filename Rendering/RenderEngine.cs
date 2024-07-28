@@ -658,6 +658,20 @@ public class RenderEngine(MainView mainView)
     {
         canvas.DrawOval(data.Rect, brushes.GetHighlightPen(canvasScale * data.Scale));
     }
+
+    private void DrawRNote(SKCanvas canvas, Note note, ArcData data)
+    {
+        float start = data.StartAngle - (note.Size != 60 ? 1.5f : 0);
+        float sweep = data.SweepAngle + (note.Size != 60 ? 3.0f : 0);
+        canvas.DrawArc(data.Rect, start, sweep, false, brushes.GetRNotePen(canvasScale * data.Scale));
+    }
+    
+    private void DrawBonus(SKCanvas canvas, ArcData data)
+    {
+        //float start = data.StartAngle - (note.Size != 60 ? 1.5f : 0);
+        //float sweep = data.SweepAngle + (note.Size != 60 ? 3.0f : 0);
+        //canvas.DrawArc(data.Rect, start, sweep, false, brushes.GetBonusPen(canvasScale * data.Scale));
+    }
     
     /// <summary>
     /// Performs better than the original by drawing hold-by-hold, not segment-by-segment. Saves dozens, if not hundreds of calls to SkiaSharp and fixes the tv-static-looking seams on dense holds. <br/>
@@ -834,13 +848,8 @@ public class RenderEngine(MainView mainView)
             ArcData currentData = getArcData(note, TruncateMode.ExcludeCaps);
             
             if (!RenderMath.InRange(currentData.Scale) || note.BeatData.MeasureDecimal < CurrentMeasureDecimal) continue;
-            
-            if (note.IsRNote)
-            {
-                float start = currentData.StartAngle + (note.Size != 60 ? 4.5f : 0);
-                float sweep = currentData.SweepAngle - (note.Size != 60 ? 9.0f : 0);
-                canvas.DrawArc(currentData.Rect, start, sweep, false, brushes.GetRNotePen(canvasScale * currentData.Scale));
-            }
+
+            if (note.IsRNote) DrawRNote(canvas, note, currentData);
             
             if (note.NoteType is NoteType.HoldStart or NoteType.HoldStartRNote)
             {
@@ -994,13 +1003,8 @@ public class RenderEngine(MainView mainView)
             ArcData currentData = getArcData(note);
             
             if (!RenderMath.InRange(currentData.Scale) || note.BeatData.MeasureDecimal < CurrentMeasureDecimal) continue;
-            
-            if (note.IsRNote)
-            {
-                float start = currentData.StartAngle + (note.Size != 60 ? 4.5f : 0);
-                float sweep = currentData.SweepAngle - (note.Size != 60 ? 9.0f : 0);
-                canvas.DrawArc(currentData.Rect, start, sweep, false, brushes.GetRNotePen(canvasScale * currentData.Scale));
-            }
+
+            if (note.IsRNote) DrawRNote(canvas, note, currentData);
             
             if (note.NoteType is NoteType.HoldStart or NoteType.HoldStartRNote)
             {
@@ -1043,20 +1047,10 @@ public class RenderEngine(MainView mainView)
             ArcData data = GetArc(chart, note);
 
             if (!RenderMath.InRange(data.Scale)) continue;
-            
-            if (note.IsRNote)
-            {
-                float start = data.StartAngle - (note.Size != 60 ? 1.5f : 0);
-                float sweep = data.SweepAngle + (note.Size != 60 ? 3.0f : 0);
-                canvas.DrawArc(data.Rect, start, sweep, false, brushes.GetRNotePen(canvasScale * data.Scale));
-            }
-            
-            if (note.IsBonus)
-            {
-                float start = data.StartAngle - (note.Size != 60 ? 1.5f : 0);
-                float sweep = data.SweepAngle + (note.Size != 60 ? 3.0f : 0);
-                canvas.DrawArc(data.Rect, start, sweep, false, brushes.GetBonusPen(canvasScale * data.Scale));
-            }
+
+            if (note.IsRNote) DrawRNote(canvas, note, data);
+
+            if (note.IsBonus) DrawBonus(canvas, data);
             
             // Normal Note
             if (note.Size != 60)
