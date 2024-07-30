@@ -921,4 +921,7 @@ Fortfahren?</value>
     <data name="ToolTip_SplitHold" xml:space="preserve">
         <value>Trennt eine Hold-Note am hervorgehobenen Segment in zwei.</value>
     </data>
+    <data name="Editor_CheckerDeselect" xml:space="preserve">
+        <value>Checker Abwählen</value>
+    </data>
 </root>

@@ -169,6 +169,7 @@ public partial class MainView : UserControl
         MenuItemPaste.InputGesture = UserConfig.KeymapConfig.Keybinds["EditPaste"].ToGesture();
         MenuItemSelectAll.InputGesture = UserConfig.KeymapConfig.Keybinds["EditorSelectAll"].ToGesture();
         MenuItemDeselectAll.InputGesture = UserConfig.KeymapConfig.Keybinds["EditorDeselectAll"].ToGesture();
+        MenuItemCheckerDeselect.InputGesture = UserConfig.KeymapConfig.Keybinds["EditorCheckerDeselect"].ToGesture();
         MenuItemBoxSelect.InputGesture = UserConfig.KeymapConfig.Keybinds["EditorBoxSelect"].ToGesture();
         MenuItemSelectHighlightedNote.InputGesture = UserConfig.KeymapConfig.Keybinds["EditorSelectHighlightedNote"].ToGesture();
         MenuItemSelectHoldReferences.InputGesture = UserConfig.KeymapConfig.Keybinds["EditorSelectHoldReferences"].ToGesture();
@@ -690,6 +691,12 @@ public partial class MainView : UserControl
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorDeselectAll"])) 
         {
             ChartEditor.DeselectAllNotes();
+            e.Handled = true;
+            return;
+        }
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorCheckerDeselect"])) 
+        {
+            ChartEditor.CheckerDeselect();
             e.Handled = true;
             return;
         }
@@ -1382,25 +1389,15 @@ public partial class MainView : UserControl
 
     private void MenuItemPaste_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.Paste();
 
-    private void MenuItemSelectAll_OnClick(object? sender, RoutedEventArgs e)
-    {
-        ChartEditor.SelectAllNotes();
-    }
+    private void MenuItemSelectAll_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.SelectAllNotes();
 
-    private void MenuItemDeselectAll_OnClick(object? sender, RoutedEventArgs e)
-    {
-        ChartEditor.DeselectAllNotes();
-    }
+    private void MenuItemDeselectAll_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.DeselectAllNotes();
 
-    private void MenuItemSelectHoldReferences_OnClick(object? sender, RoutedEventArgs e)
-    {
-        ChartEditor.SelectHoldReferences();
-    }
+    private void MenuItemCheckerDeselect_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.CheckerDeselect();
     
-    private void MenuItemSelectHighlightedNote_OnClick(object? sender, RoutedEventArgs e)
-    {
-        ChartEditor.SelectHighlightedNote();
-    }
+    private void MenuItemSelectHoldReferences_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.SelectHoldReferences();
+    
+    private void MenuItemSelectHighlightedNote_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.SelectHighlightedNote();
 
     private void MenuItemBoxSelect_OnClick(object? sender, RoutedEventArgs e)
     {

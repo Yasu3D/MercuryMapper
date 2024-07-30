@@ -258,6 +258,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Checker Deselect.
+        /// </summary>
+        public static string Editor_CheckerDeselect {
+            get {
+                return ResourceManager.GetString("Editor_CheckerDeselect", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Increase Playback Speed.
         /// </summary>
         public static string Editor_DecreasePlaybackSpeed {

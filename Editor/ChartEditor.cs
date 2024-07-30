@@ -502,6 +502,19 @@ public class ChartEditor
         mainView.SetSelectionInfo();
     }
 
+    public void CheckerDeselect()
+    {
+        List<Note> sorted = SelectedNotes.OrderBy(x => x.BeatData.FullTick).ToList();
+        lock (SelectedNotes)
+        {
+            for (int i = 0; i < sorted.Count; i++)
+            {
+                if ((i & 1) != 0) continue;
+                SelectedNotes.Remove(sorted[i]);
+            }
+        }
+    }
+    
     public void SelectHoldReferences()
     {
         List<Note> tempSelected = SelectedNotes.Where(x => x.IsHold).ToList(); // c# 8 syntax is.. a thing that exists. Looks cool I guess?

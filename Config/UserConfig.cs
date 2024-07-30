@@ -65,6 +65,7 @@ public class KeymapConfig
         ["EditorPlay"] = new(Key.Space),
         ["EditorSelectAll"] = new(Key.A, false, false, false),
         ["EditorDeselectAll"] = new(Key.A, false, false, true),
+        ["EditorCheckerDeselect"] = new(Key.A, false, true, true),
         ["EditorEndHold"] = new(Key.Enter, false, false, false),
         ["EditorEditHold"] = new(Key.Enter, false, true, false),
         ["EditorBakeHold"] = new(Key.B, false, true, false),

@@ -81,6 +81,9 @@
                     <MenuItem Header="{x:Static lang:Resources.Editor_DeselectAll}" Name="MenuItemDeselectAll"
                               Click="MenuItemDeselectAll_OnClick"/>
                     <Separator/>
+                    <MenuItem Header="{x:Static lang:Resources.Editor_CheckerDeselect}" Name="MenuItemCheckerDeselect"
+                              Click="MenuItemCheckerDeselect_OnClick"/>
+                    <Separator/>
                     <MenuItem Header="{x:Static lang:Resources.Editor_BoxSelect}" Name="MenuItemBoxSelect" 
                               Click="MenuItemBoxSelect_OnClick"/>
                     <Separator/>

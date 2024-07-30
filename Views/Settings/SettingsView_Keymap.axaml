@@ -41,6 +41,7 @@
                     <TreeViewItem Name="EditorHighlightNearestNote" Header="{x:Static lang:Resources.Editor_HighlightNearestNote}" />
                     <TreeViewItem Name="EditorSelectAll" Header="{x:Static lang:Resources.Editor_SelectAll}" />
                     <TreeViewItem Name="EditorDeselectAll" Header="{x:Static lang:Resources.Editor_DeselectAll}" />
+                    <TreeViewItem Name="EditorCheckerDeselect" Header="{x:Static lang:Resources.Editor_CheckerDeselect}" />
                     <TreeViewItem Name="EditorBoxSelect" Header="{x:Static lang:Resources.Editor_BoxSelect}" />
                     <TreeViewItem Name="EditorSelectHighlightedNote" Header="{x:Static lang:Resources.Editor_SelectHighlightedNote}" />
                     <TreeViewItem Name="EditorSelectHoldReferences" Header="{x:Static lang:Resources.Editor_SelectHoldReferences}" />
