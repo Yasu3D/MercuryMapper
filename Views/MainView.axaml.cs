@@ -62,7 +62,7 @@ public partial class MainView : UserControl
     }
 
     public bool CanShutdown;
-    public const string AppVersion = "v2.3.1";
+    public const string AppVersion = "v2.4.0";
     private const string ConfigPath = "UserConfig.toml";
     
     public UserConfig UserConfig = new();
