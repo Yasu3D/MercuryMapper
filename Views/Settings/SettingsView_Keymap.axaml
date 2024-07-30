@@ -52,8 +52,8 @@
                     <TreeViewItem Name="EditorBakeHold" Header="{x:Static lang:Resources.Editor_BakeHoldNote}" />
                     <TreeViewItem Name="EditorBakeHoldNoRender" Header="{x:Static lang:Resources.Editor_BakeHoldNoteNoRender}" />
                     <TreeViewItem Name="EditorStitchHold" Header="{x:Static lang:Resources.Editor_StitchHold}" />
-                    <TreeViewItem Name="EditorInsertHoldSegment"
-                                  Header="{x:Static lang:Resources.Editor_InsertHoldSegment}" />
+                    <TreeViewItem Name="EditorSplitHold" Header="{x:Static lang:Resources.Editor_SplitHold}"/>
+                    <TreeViewItem Name="EditorInsertHoldSegment" Header="{x:Static lang:Resources.Editor_InsertHoldSegment}" />
                 </TreeViewItem>
 
                 <TreeViewItem Header="{x:Static lang:Resources.Settings_Header_EditNotes}" Classes="HideKeybind">

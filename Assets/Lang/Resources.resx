@@ -915,4 +915,10 @@ Continue?</value>
     <data name="Settings_Color_BonusTriangles" xml:space="preserve">
         <value>Bonus Triangles</value>
     </data>
+    <data name="Editor_SplitHold" xml:space="preserve">
+        <value>Split Hold</value>
+    </data>
+    <data name="ToolTip_SplitHold" xml:space="preserve">
+        <value>Splits a Hold into two at the highlighted Segment.</value>
+    </data>
 </root>

@@ -915,6 +915,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Split Hold.
+        /// </summary>
+        public static string Editor_SplitHold {
+            get {
+                return ResourceManager.GetString("Editor_SplitHold", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Stitch Hold.
         /// </summary>
         public static string Editor_StitchHold {
@@ -2714,6 +2723,15 @@ namespace MercuryMapper.Assets.Lang {
         public static string ToolTip_SetRenderTrue {
             get {
                 return ResourceManager.GetString("ToolTip_SetRenderTrue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Splits a Hold into two at the highlighted Segment..
+        /// </summary>
+        public static string ToolTip_SplitHold {
+            get {
+                return ResourceManager.GetString("ToolTip_SplitHold", resourceCulture);
             }
         }
         

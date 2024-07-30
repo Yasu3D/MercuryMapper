@@ -723,6 +723,12 @@ public partial class MainView : UserControl
             e.Handled = true;
             return;
         }
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorSplitHold"]))
+        {
+            ChartEditor.SplitHold();
+            e.Handled = true;
+            return;
+        }
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorInsertHoldSegment"]))
         {
             ChartEditor.InsertHoldSegment();
@@ -1932,6 +1938,8 @@ public partial class MainView : UserControl
     private void ButtonBakeHold_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.BakeHold((MathExtensions.HoldEaseType)HoldEaseComboBox.SelectedIndex, false);
 
     private void ButtonStitchHold_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.StitchHold();
+
+    private void ButtonSplitHold_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.SplitHold();
     
     private void ButtonInsertHoldSegment_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.InsertHoldSegment();
     

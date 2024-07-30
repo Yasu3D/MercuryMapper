@@ -915,6 +915,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Hold Trennen.
+        /// </summary>
+        public static string Editor_SplitHold {
+            get {
+                return ResourceManager.GetString("Editor_SplitHold", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Hold Verbinden.
         /// </summary>
         public static string Editor_StitchHold {
@@ -2714,6 +2723,15 @@ namespace MercuryMapper.Assets.Lang {
         public static string ToolTip_SetRenderTrue {
             get {
                 return ResourceManager.GetString("ToolTip_SetRenderTrue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Trennt eine Hold-Note am hervorgehobenen Segment in zwei..
+        /// </summary>
+        public static string ToolTip_SplitHold {
+            get {
+                return ResourceManager.GetString("ToolTip_SplitHold", resourceCulture);
             }
         }
         

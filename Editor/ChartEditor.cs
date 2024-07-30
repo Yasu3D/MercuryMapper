@@ -1560,6 +1560,19 @@ public class ChartEditor
 
         UndoRedoManager.InvokeAndPush(new StitchHold(Chart, first, second));
     }
+
+    public void SplitHold()
+    {
+        // Must not be in hold placement mode.
+        // Must select a Hold Segment note.
+        
+        if (EditorState is ChartEditorState.InsertHold) return;
+        if (HighlightedElement is not Note highlighted) return;
+        if (highlighted.NoteType != NoteType.HoldSegment) return;
+        
+        UndoRedoManager.InvokeAndPush(new SplitHold(Chart, highlighted));
+        HighlightedElement = null;
+    }
     
     public void EditHold()
     {
