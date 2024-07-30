@@ -1862,7 +1862,7 @@ public class ChartEditor
 
             switch (generatorMethod)
             {
-                case 0: holdToHold(hold, firstTick, lastTick); break;
+                case 0: holdToHold(hold, hold.Segments[0].IsRNote, firstTick, lastTick); break;
                 case 1: holdToChain(hold, firstTick, lastTick); break;
             }
             
@@ -1874,7 +1874,7 @@ public class ChartEditor
         Chart.IsSaved = false;
         return;
 
-        void holdToHold(Hold hold, int firstTick, int lastTick)
+        void holdToHold(Hold hold, bool isRNote, int firstTick, int lastTick)
         {
             Note? last = null;
             for (int i = firstTick; i <= lastTick; i += interval)
@@ -1887,7 +1887,7 @@ public class ChartEditor
                     BeatData = new(i),
                     GimmickType = GimmickType.None,
                     MaskDirection = MaskDirection.Center,
-                    NoteType = last == null ? NoteType.HoldStart : NoteType.HoldEnd,
+                    NoteType = last != null ? NoteType.HoldEnd : isRNote ? NoteType.HoldStartRNote : NoteType.HoldStart,
                     Position = pos % 60,
                     Size = int.Max(size, Note.MinSize(last == null ? NoteType.HoldStart : NoteType.HoldEnd)),
                     PrevReferencedNote = last,
