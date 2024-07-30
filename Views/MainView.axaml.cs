@@ -230,28 +230,29 @@ public partial class MainView : UserControl
     
     public void HitsoundTimer_Tick(object? sender, EventArgs e)
     {
-        if (AudioManager.HitsoundNoteIndex == -1 || AudioManager.CurrentSong is null) return;
+        if (AudioManager.CurrentSong == null) return;
         
         float measure = ChartEditor.Chart.Timestamp2MeasureDecimal(AudioManager.CurrentSong.Position + BassSoundEngine.GetLatency() + UserConfig.AudioConfig.HitsoundOffset);
-
-        while (AudioManager.HitsoundNoteIndex < ChartEditor.Chart.Notes.Count && ChartEditor.Chart.Notes[AudioManager.HitsoundNoteIndex].BeatData.MeasureDecimal <= measure)
+        
+        if (AudioManager.HitsoundNoteIndex != -1)
         {
-            AudioManager.PlayHitsound(ChartEditor.Chart.Notes[AudioManager.HitsoundNoteIndex]);
+            while (AudioManager.HitsoundNoteIndex < ChartEditor.Chart.Notes.Count && ChartEditor.Chart.Notes[AudioManager.HitsoundNoteIndex].BeatData.MeasureDecimal <= measure)
+            {
+                AudioManager.PlayHitsound(ChartEditor.Chart.Notes[AudioManager.HitsoundNoteIndex]);
+            }
         }
 
-        
-        if (AudioManager.MetronomeIndex == -1 || ChartEditor.Chart.StartTimeSig is null || measure >= 1) return;
-
-        int clicks = ChartEditor.Chart.StartTimeSig.TimeSig.Upper;
-        float interval = 1.0f / clicks;
-        float nextClick = interval * AudioManager.MetronomeIndex;
-        
-        
-        
-        while (AudioManager.MetronomeIndex < clicks && nextClick <= measure)
+        if (AudioManager.MetronomeIndex != -1 && ChartEditor.Chart.StartTimeSig != null && (measure < 1))
         {
-            AudioManager.PlayMetronome();
-            nextClick = interval * AudioManager.MetronomeIndex;
+            int clicks = ChartEditor.Chart.StartTimeSig.TimeSig.Upper;
+            float interval = 1.0f / clicks;
+            float nextClick = interval * AudioManager.MetronomeIndex;
+
+            while (AudioManager.MetronomeIndex < clicks && nextClick <= measure)
+            {
+                AudioManager.PlayMetronome();
+                nextClick = interval * AudioManager.MetronomeIndex;
+            }
         }
     }
 
