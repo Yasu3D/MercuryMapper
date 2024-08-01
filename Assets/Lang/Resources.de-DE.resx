@@ -924,4 +924,10 @@ Fortfahren?</value>
     <data name="Editor_CheckerDeselect" xml:space="preserve">
         <value>Checker Abwählen</value>
     </data>
+    <data name="Editor_ConvertToInstantMask" xml:space="preserve">
+        <value>Zu Instant-Mask umwandeln</value>
+    </data>
+    <data name="ToolTip_ConvertToInstantMask" xml:space="preserve">
+        <value>Wandelt eine einzelne Mask Note destruktiv in kleinere Noten um, die sofort animieren.</value>
+    </data>
 </root>

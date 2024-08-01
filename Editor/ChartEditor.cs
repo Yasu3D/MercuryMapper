@@ -1992,4 +1992,53 @@ public class ChartEditor
             }
         }
     }
+
+    public void ConvertToInstantMask()
+    {
+        List<IOperation> operationList = [];
+        foreach (Note selected in SelectedNotes)
+        {
+            addOperation(selected);
+        }
+
+        if (SelectedNotes.Count == 0 && HighlightedElement is Note highlighted)
+        {
+            addOperation(highlighted);
+        }
+        
+        if (operationList.Count == 0) return;
+        UndoRedoManager.InvokeAndPush(new CompositeOperation(operationList));
+        Chart.IsSaved = false;
+        DeselectAllNotes(); 
+        return;
+
+        void addOperation(Note note)
+        {
+            if (!note.IsMask) return;
+            if (note is { Size: <= 2, MaskDirection: MaskDirection.Center }) return;
+
+            List<Note> newMasks = [];
+
+            int count = note.Size / 2;
+            bool odd = (note.Size & 1) == 1;
+
+            if (odd) count++;
+
+            for (int i = 0; i < count; i++)
+            {
+                Note newNote = new()
+                {
+                    BeatData = new(note.BeatData),
+                    Position = MathExtensions.Modulo(note.Position + i * 2, 60),
+                    Size = (odd && i == count - 1) ? 1 : 2,
+                    NoteType = note.NoteType,
+                    MaskDirection = MaskDirection.Center
+                };
+
+                newMasks.Add(newNote);
+            }
+            
+            operationList.Add(new ConvertToInstantMask(Chart, note, newMasks));
+        }
+    }
 }

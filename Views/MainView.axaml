@@ -603,6 +603,10 @@
                             <Button Grid.Row="0" Grid.Column="0" HorizontalAlignment="Stretch" Margin="0,0,2,0" Click="ButtonSetRenderTrue_OnClick" Content="{x:Static lang:Resources.Editor_SetRenderTrue}" ToolTip.Tip="{x:Static lang:Resources.ToolTip_SetRenderTrue}"/>
                             <Button Grid.Row="0" Grid.Column="1" HorizontalAlignment="Stretch" Margin="2,0,0,0" Click="ButtonSetRenderFalse_OnClick" Content="{x:Static lang:Resources.Editor_SetRenderFalse}" ToolTip.Tip="{x:Static lang:Resources.ToolTip_SetRenderFalse}"/>
                         </Grid>
+                        
+                        <Separator/>
+                        
+                        <Button HorizontalAlignment="Stretch" Margin="0,2,0,2" Click="ButtonConvertToInstantMask_OnClick" Content="{x:Static lang:Resources.Editor_ConvertToInstantMask}" ToolTip.Tip="{x:Static lang:Resources.ToolTip_ConvertToInstantMask}"/>
                     </StackPanel>
                 </Expander>
                 

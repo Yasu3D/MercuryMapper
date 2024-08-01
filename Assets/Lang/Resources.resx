@@ -924,4 +924,10 @@ Continue?</value>
     <data name="Editor_CheckerDeselect" xml:space="preserve">
         <value>Checker Deselect</value>
     </data>
+    <data name="Editor_ConvertToInstantMask" xml:space="preserve">
+        <value>Convert to Instant Mask</value>
+    </data>
+    <data name="ToolTip_ConvertToInstantMask" xml:space="preserve">
+        <value>Destructively converts a single Mask Note into smaller Notes that animate instantly.</value>
+    </data>
 </root>

@@ -79,6 +79,7 @@ public class KeymapConfig
         ["EditorSelectHighlightedNote"] = new(Key.Space, false, true, false),
         ["EditorSelectHoldReferences"] = new(Key.R, false, true, false),
         ["EditorBoxSelect"] = new(Key.B, true, false, false),
+        ["EditorConvertToInstantMask"] = new(Key.N, true, false, false),
         ["EditorIncreasePlaybackSpeed"] = new(Key.Add),
         ["EditorDecreasePlaybackSpeed"] = new(Key.Subtract),
         ["EditorNoteTypeTouch"] = new(Key.D1),

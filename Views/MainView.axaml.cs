@@ -778,6 +778,12 @@ public partial class MainView : UserControl
             e.Handled = true;
             return;
         }
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorConvertToInstantMask"]))
+        {
+            ChartEditor.ConvertToInstantMask();
+            e.Handled = true;
+            return;
+        }
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorIncreasePlaybackSpeed"]))
         {
             SliderPlaybackSpeed.Value += 10;
@@ -1962,6 +1968,8 @@ public partial class MainView : UserControl
     {
         ChartEditor.SetSelectionRenderFlag(false);
     }
+
+    private void ButtonConvertToInstantMask_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.ConvertToInstantMask();
     
     private void ButtonEditGimmick_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.EditGimmick();
 

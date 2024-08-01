@@ -267,6 +267,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Zu Instant-Mask umwandeln.
+        /// </summary>
+        public static string Editor_ConvertToInstantMask {
+            get {
+                return ResourceManager.GetString("Editor_ConvertToInstantMask", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Wiedergabegeschwindigkeit erhöhen.
         /// </summary>
         public static string Editor_DecreasePlaybackSpeed {
@@ -2417,6 +2426,15 @@ namespace MercuryMapper.Assets.Lang {
         public static string ToolTip_ChartInfo {
             get {
                 return ResourceManager.GetString("ToolTip_ChartInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wandelt eine einzelne Mask Note destruktiv in kleinere Noten um, die sofort animieren..
+        /// </summary>
+        public static string ToolTip_ConvertToInstantMask {
+            get {
+                return ResourceManager.GetString("ToolTip_ConvertToInstantMask", resourceCulture);
             }
         }
         

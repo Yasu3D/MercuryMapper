@@ -72,6 +72,7 @@
                     <TreeViewItem Name="EditorQuickEditDecreaseTimestamp" Header="{x:Static lang:Resources.Editor_QuickEditDecreaseTimestamp}" />
                     <TreeViewItem Name="EditorSetRenderTrue" Header="{x:Static lang:Resources.Editor_SetRenderTrue}" />
                     <TreeViewItem Name="EditorSetRenderFalse" Header="{x:Static lang:Resources.Editor_SetRenderFalse}" />
+                    <TreeViewItem Name="EditorConvertToInstantMask" Header="{x:Static lang:Resources.Editor_ConvertToInstantMask}" />
                 </TreeViewItem>
 
                 <TreeViewItem Header="{x:Static lang:Resources.Settings_Header_NoteTypes}" Classes="HideKeybind">
