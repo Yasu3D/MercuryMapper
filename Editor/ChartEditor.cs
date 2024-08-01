@@ -1550,6 +1550,7 @@ public class ChartEditor
         next.PrevReferencedNote = note;
         
         UndoRedoManager.InvokeAndPush(new InsertHoldSegment(Chart, SelectedNotes, note, previous, next));
+        Chart.IsSaved = false;
     }
 
     public void StitchHold()
@@ -1572,6 +1573,7 @@ public class ChartEditor
         if (second.NoteType is not (NoteType.HoldStart or NoteType.HoldStartRNote)) return;
 
         UndoRedoManager.InvokeAndPush(new StitchHold(Chart, first, second));
+        Chart.IsSaved = false;
     }
 
     public void SplitHold()
@@ -1584,6 +1586,7 @@ public class ChartEditor
         if (highlighted.NoteType != NoteType.HoldSegment) return;
         
         UndoRedoManager.InvokeAndPush(new SplitHold(Chart, highlighted));
+        Chart.IsSaved = false;
         HighlightedElement = null;
     }
     
