@@ -1374,7 +1374,7 @@ public class ChartEditor
             operationList.Add(edit);
             UndoRedoManager.InvokeAndPush(edit);
         }
-    }
+    }   
     
     public void MirrorSelection(int axis = 30)
     {
@@ -1422,6 +1422,14 @@ public class ChartEditor
         }
     }
 
+    private enum HoldDirection
+    {
+        Clockwise,
+        Counterclockwise,
+        Symmetrical,
+        None
+    }
+    
     public void BakeHold(MathExtensions.HoldEaseType easeType, bool forceNoRender)
     {
         List<IOperation> operationList = [];
@@ -1451,71 +1459,141 @@ public class ChartEditor
                 operationList.Add(bakeHold);
             }
         }
-        
-        BakeHold interpolate(Note start, Note end)
+
+        BakeHold interpolate(Note startNote, Note endNote)
         {
-            int startPos0 = start.Position;
-            int startPos1 = start.Position + start.Size;
-            int endPos0 = end.Position;
-            int endPos1 = end.Position + end.Size;
-
-            int distance0 = int.Abs(endPos0 - startPos0);
-            int distance1 = int.Abs(endPos1 - startPos1);
+            // I'm making up coordinate systems here, bear with me.
+            // There's also some code repetition or redundant variables,
+            // just to keep it easier to follow. As I said, bear with me.
             
-            if (distance0 > 30 && distance1 > 30)
+            // Get global position.
+            int startLeftEdge = startNote.Position;
+            int startRightEdge = startNote.Position + startNote.Size;
+
+            int endLeftEdge = endNote.Position;
+            int endRightEdge = endNote.Position + endNote.Size;
+            
+            // Calculate offsets from start note edges.
+            int leftEdgeOffsetCcw = MathExtensions.Modulo(endLeftEdge - startLeftEdge, 60);
+            int leftEdgeOffsetCw = MathExtensions.Modulo(startLeftEdge - endLeftEdge, 60);
+            
+            int rightEdgeOffsetCcw = MathExtensions.Modulo(endRightEdge - startRightEdge, 60);
+            int rightEdgeOffsetCw = MathExtensions.Modulo(startRightEdge - endRightEdge, 60);
+            
+            // Find the shortest direction for each edge.
+            HoldDirection leftDirection = leftEdgeOffsetCcw < leftEdgeOffsetCw ? HoldDirection.Counterclockwise : HoldDirection.Clockwise;
+            HoldDirection rightDirection = rightEdgeOffsetCcw < rightEdgeOffsetCw ? HoldDirection.Counterclockwise : HoldDirection.Clockwise;
+            
+            // Direction with the smallest offset takes priority.
+            // If they're equal, default to left edge's preferred direction.
+            HoldDirection finalDirection = int.Min(leftEdgeOffsetCcw, leftEdgeOffsetCw) < int.Min(rightEdgeOffsetCcw, rightEdgeOffsetCw) ? leftDirection : rightDirection;
+            
+            // If one hold completely encases the other (overlaps),
+            // a special third HoldDirection needs to be used.
+            
+            int posDifference = startNote.Position - endNote.Position;
+            int sizeDifference = startNote.Size - endNote.Size;
+
+            bool isBrokenA = posDifference >= 0 && sizeDifference < 0;
+            bool isBrokenB = posDifference < 0 && sizeDifference >= 0;
+            bool isDefinitelyBroken = isBrokenA || (isBrokenB && leftDirection != rightDirection);
+
+            if (isOverlapping(startLeftEdge, startRightEdge, endLeftEdge, endRightEdge)) finalDirection = HoldDirection.Symmetrical;
+            
+            // Get final signed offsets
+            int signedLeftEdgeOffset = finalDirection switch
             {
-                distance0 = 60 - distance0;
-                distance1 = 60 - distance1;   
-            }
+                HoldDirection.Clockwise => -leftEdgeOffsetCw,
+                HoldDirection.Counterclockwise => leftEdgeOffsetCcw,
+                HoldDirection.Symmetrical => int.Min(leftEdgeOffsetCcw, leftEdgeOffsetCw) * (leftEdgeOffsetCw < leftEdgeOffsetCcw ? -1 : 1), // pick minimum
+                _ => throw new ArgumentOutOfRangeException()
+            };
             
-            int maxDistance = int.Max(distance0, distance1);
-            float interval = 1.0f / maxDistance;
+            int signedRightEdgeOffset = finalDirection switch
+            {
+                HoldDirection.Clockwise => -rightEdgeOffsetCw,
+                HoldDirection.Counterclockwise => rightEdgeOffsetCcw,
+                HoldDirection.Symmetrical => (leftDirection == HoldDirection.Clockwise ? rightEdgeOffsetCcw : -rightEdgeOffsetCw), // pick opposite of left
+                _ => throw new ArgumentOutOfRangeException()
+            };
+            
+            // Create local positions relative to start note.
+            int localStartLeftEdge = startLeftEdge;
+            int localStartRightEdge = startRightEdge;
+            int localEndLeftEdge = startLeftEdge + signedLeftEdgeOffset;
+            int localEndRightEdge = startRightEdge + signedRightEdgeOffset;
+            
+            // Get number of steps between start and end
+            int steps = int.Max(int.Abs(signedLeftEdgeOffset), int.Abs(signedRightEdgeOffset));
 
-            Note lastNote = start;
             List<Note> segments = [];
+            Note previousNote = startNote;
 
-            bool lerpShort = int.Abs(start.Position - end.Position) > 30;
-
-            for (float i = interval; i < 1; i += interval)
+            // Step through and generate interpolated segments.
+            for (int i = 0; i < steps - 1; i++)
             {
-                float scaled = MathExtensions.HoldBakeEase(i, easeType);
-                BeatData data = new(MathExtensions.Lerp(start.BeatData.MeasureDecimal, end.BeatData.MeasureDecimal, scaled));
-                
-                // avoid decimal/floating point errors that would
-                // otherwise cause two segments on the same beat
-                // if i is just *barely* less than endNote.Measure
-                if (data.FullTick == end.BeatData.FullTick) break;
-                
-                // skip if FullTick is the same as previous note.
-                if (data.FullTick == lastNote.BeatData.FullTick) continue;
-                
-                int newPos0 = (int)Math.Round(MathExtensions.ShortLerp(lerpShort, startPos0, endPos0, i));
-                int newPos1 = (int)Math.Round(MathExtensions.ShortLerp(lerpShort, startPos1, endPos1, i));
+                float time = (float)(i + 1) / steps;
+                float scaledTime = MathExtensions.HoldBakeEase(time, easeType);
+                BeatData data = new((int)MathExtensions.Lerp(startNote.BeatData.FullTick, endNote.BeatData.FullTick, scaledTime));
 
-                bool shortInterval = data.FullTick - lastNote.BeatData.FullTick <= 30 && start.Size == end.Size;
+                // To avoid overlapping segments,
+                // stop early if the end note's timestamp is already reached.
+                if (data.FullTick == endNote.BeatData.FullTick) break;
+                
+                // To avoid overlapping segments,
+                // skip if the current timestamp is the same as the previous note's.
+                if (data.FullTick == previousNote.BeatData.FullTick) continue;
+
+                // Decide if a segment should be rendered or not.
+                // Set to true if hold doesn't change size and segments are dense enough.
+                // Set to true if EaseType is not Linear
+                // Always set to false if forceNoRender is true.
+                bool renderSegment = !forceNoRender && (data.FullTick - previousNote.BeatData.FullTick <= 30 && startNote.Size == endNote.Size || easeType != MathExtensions.HoldEaseType.Linear);
+                
+                int leftEdge = (int)float.Round(MathExtensions.Lerp(localStartLeftEdge, localEndLeftEdge, time));
+                int rightEdge = (int)float.Round(MathExtensions.Lerp(localStartRightEdge, localEndRightEdge, time));
+                
+                int position = MathExtensions.Modulo(leftEdge, 60);
+                int size = int.Clamp(rightEdge - leftEdge, 1, 60);
                 
                 Note newNote = new()
                 {
                     BeatData = data,
                     NoteType = NoteType.HoldSegment,
-                    Position = MathExtensions.Modulo(newPos0, 60),
-                    Size = int.Clamp(newPos1 - newPos0, 1, 60),
-                    RenderSegment = !forceNoRender && (easeType != MathExtensions.HoldEaseType.Linear || shortInterval),
-                    PrevReferencedNote = lastNote,
-                    NextReferencedNote = end
+                    Position = position,
+                    Size = size,
+                    RenderSegment = renderSegment,
+                    PrevReferencedNote = previousNote,
+                    NextReferencedNote = endNote
                 };
 
-                lastNote.NextReferencedNote = newNote;
-                end.PrevReferencedNote = newNote;
+                previousNote.NextReferencedNote = newNote;
+                endNote.PrevReferencedNote = newNote;
 
-                lastNote = newNote;
+                previousNote = newNote;
                 segments.Add(newNote);
             }
+            
+            return new(Chart, SelectedNotes, segments, startNote, endNote);
+        }
 
-            return new(Chart, SelectedNotes, segments, start, end);
+        bool isOverlapping(int startLeft, int startRight, int endLeft, int endRight)
+        {
+            startLeft %= 60;
+            startRight %= 60;
+            endLeft %= 60;
+            endRight %= 60;
+            
+            if (startRight < startLeft) startRight += 60;
+            if (endRight < endLeft) endRight += 60;
+
+            bool caseA = startLeft >= endLeft && startRight <= endRight;
+            bool caseB = endLeft >= startLeft && endRight <= startRight;
+            
+            return caseA || caseB;
         }
     }
-
+    
     public void InsertHoldSegment()
     {
         if (HighlightedElement is not Note highlighted) return;
