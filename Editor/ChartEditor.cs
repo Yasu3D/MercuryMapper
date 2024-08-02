@@ -1490,14 +1490,6 @@ public class ChartEditor
             
             // If one hold completely encases the other (overlaps),
             // a special third HoldDirection needs to be used.
-            
-            int posDifference = startNote.Position - endNote.Position;
-            int sizeDifference = startNote.Size - endNote.Size;
-
-            bool isBrokenA = posDifference >= 0 && sizeDifference < 0;
-            bool isBrokenB = posDifference < 0 && sizeDifference >= 0;
-            bool isDefinitelyBroken = isBrokenA || (isBrokenB && leftDirection != rightDirection);
-
             if (isOverlapping(startLeftEdge, startRightEdge, endLeftEdge, endRightEdge)) finalDirection = HoldDirection.Symmetrical;
             
             // Get final signed offsets
