@@ -1490,7 +1490,7 @@ public class ChartEditor
             
             // If one hold completely encases the other (overlaps),
             // a special third HoldDirection needs to be used.
-            if (isOverlapping(startLeftEdge, startRightEdge, endLeftEdge, endRightEdge)) finalDirection = HoldDirection.Symmetrical;
+            if (MathExtensions.IsOverlapping(startLeftEdge, startRightEdge, endLeftEdge, endRightEdge)) finalDirection = HoldDirection.Symmetrical;
             
             // Get final signed offsets
             int signedLeftEdgeOffset = finalDirection switch
@@ -1567,22 +1567,6 @@ public class ChartEditor
             }
             
             return new(Chart, SelectedNotes, segments, startNote, endNote);
-        }
-
-        bool isOverlapping(int startLeft, int startRight, int endLeft, int endRight)
-        {
-            startLeft %= 60;
-            startRight %= 60;
-            endLeft %= 60;
-            endRight %= 60;
-            
-            if (startRight < startLeft) startRight += 60;
-            if (endRight < endLeft) endRight += 60;
-
-            bool caseA = startLeft >= endLeft && startRight <= endRight;
-            bool caseB = endLeft >= startLeft && endRight <= startRight;
-            
-            return caseA || caseB;
         }
     }
     

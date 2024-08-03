@@ -132,4 +132,20 @@ public static class MathExtensions
             _ => x
         };
     }
+
+    public static bool IsOverlapping(int startLeft, int startRight, int endLeft, int endRight)
+    {
+        startLeft %= 60;
+        startRight %= 60;
+        endLeft %= 60;
+        endRight %= 60;
+            
+        if (startRight < startLeft) startRight += 60;
+        if (endRight < endLeft) endRight += 60;
+
+        bool caseA = startLeft >= endLeft && startRight <= endRight;
+        bool caseB = endLeft >= startLeft && endRight <= startRight;
+            
+        return caseA || caseB;
+    }
 }
