@@ -24,6 +24,7 @@ using MercuryMapper.Enums;
 using MercuryMapper.Rendering;
 using MercuryMapper.Utils;
 using MercuryMapper.Views.Gimmicks;
+using MercuryMapper.Views.Online;
 using MercuryMapper.Views.Tools;
 using SkiaSharp;
 using Tomlyn;
@@ -1356,6 +1357,50 @@ public partial class MainView : UserControl
                 {
                     // ignored. most likely caused by: copying a file to itself => file already being used by another process.
                 }
+            }
+        });
+    }
+    
+    private void MenuItemCreateSession_OnClick(object? sender, RoutedEventArgs e)
+    {
+        OnlineView_OnlineSession onlineSessionView = new();
+        ContentDialog dialog = new()
+        {
+            Title = Assets.Lang.Resources.Menu_CreateSession,
+            Content = onlineSessionView,
+            PrimaryButtonText = Assets.Lang.Resources.Generic_Create,
+            CloseButtonText = Assets.Lang.Resources.Generic_Cancel
+        };
+        
+        Dispatcher.UIThread.Post(async () =>
+        {
+            ContentDialogResult result = await dialog.ShowAsync();
+
+            if (result is ContentDialogResult.Primary)
+            {
+                Console.WriteLine($"{onlineSessionView.ServerAddressTextBox.Text ?? ""} {onlineSessionView.UsernameTextbox.Text ?? ""} {onlineSessionView.UserColor.Color.ToUInt32():X8}");
+            }
+        });
+    }
+
+    private void MenuItemJoinSession_OnClick(object? sender, RoutedEventArgs e)
+    {
+        OnlineView_OnlineSession onlineSessionView = new();
+        ContentDialog dialog = new()
+        {
+            Title = Assets.Lang.Resources.Menu_JoinSession,
+            Content = onlineSessionView,
+            PrimaryButtonText = Assets.Lang.Resources.Generic_Join,
+            CloseButtonText = Assets.Lang.Resources.Generic_Cancel
+        };
+        
+        Dispatcher.UIThread.Post(async () =>
+        {
+            ContentDialogResult result = await dialog.ShowAsync();
+
+            if (result is ContentDialogResult.Primary)
+            {
+                Console.WriteLine($"{onlineSessionView.ServerAddressTextBox.Text ?? ""} {onlineSessionView.UsernameTextbox.Text ?? ""} {onlineSessionView.UserColor.Color.ToUInt32():X8}");
             }
         });
     }

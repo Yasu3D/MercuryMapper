@@ -1059,6 +1059,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Beitreten.
+        /// </summary>
+        public static string Generic_Join {
+            get {
+                return ResourceManager.GetString("Generic_Join", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Nein.
         /// </summary>
         public static string Generic_No {
@@ -1258,6 +1267,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Sitzung Erstellen.
+        /// </summary>
+        public static string Menu_CreateSession {
+            get {
+                return ResourceManager.GetString("Menu_CreateSession", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ausschneiden.
         /// </summary>
         public static string Menu_Cut {
@@ -1330,6 +1348,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Sitzung Beitreten.
+        /// </summary>
+        public static string Menu_JoinSession {
+            get {
+                return ResourceManager.GetString("Menu_JoinSession", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Chart Spiegeln.
         /// </summary>
         public static string Menu_MirrorChart {
@@ -1344,6 +1371,15 @@ namespace MercuryMapper.Assets.Lang {
         public static string Menu_New {
             get {
                 return ResourceManager.GetString("Menu_New", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Online.
+        /// </summary>
+        public static string Menu_Online {
+            get {
+                return ResourceManager.GetString("Menu_Online", resourceCulture);
             }
         }
         
@@ -1623,6 +1659,33 @@ namespace MercuryMapper.Assets.Lang {
         public static string Note_Touch {
             get {
                 return ResourceManager.GetString("Note_Touch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Server Addresse.
+        /// </summary>
+        public static string Online_ServerAddress {
+            get {
+                return ResourceManager.GetString("Online_ServerAddress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Benutzer Farbe.
+        /// </summary>
+        public static string Online_UserColor {
+            get {
+                return ResourceManager.GetString("Online_UserColor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Benutzername.
+        /// </summary>
+        public static string Online_Username {
+            get {
+                return ResourceManager.GetString("Online_Username", resourceCulture);
             }
         }
         

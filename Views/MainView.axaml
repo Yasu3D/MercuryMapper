@@ -32,7 +32,6 @@
                         </MenuItem.Icon>
                     </MenuItem>
                     
-                    
                     <MenuItem Header="{x:Static lang:Resources.Menu_SaveAs}" Click="MenuItemSaveAs_OnClick" Name="MenuItemSaveAs" >
                         <MenuItem.Icon>
                             <PathIcon Data="{DynamicResource IconSaveAs}"/>
@@ -50,6 +49,13 @@
                     
                     <Separator/>
                     
+                    <MenuItem Header="{x:Static lang:Resources.Menu_Online}">
+                        <MenuItem Header="{x:Static lang:Resources.Menu_CreateSession}" Click="MenuItemCreateSession_OnClick" Name="MenuItemCreateSession" />
+                        <MenuItem Header="{x:Static lang:Resources.Menu_JoinSession}" Click="MenuItemJoinSession_OnClick" Name="MenuItemJoinSession" />
+                    </MenuItem>
+                    
+                    <Separator/>
+                        
                     <MenuItem Header="{x:Static lang:Resources.Menu_Settings}" Click="MenuItemSettings_OnClick" Name="MenuItemSettings" > 
                         <MenuItem.Icon>
                             <PathIcon Data="{DynamicResource IconSettings}"/>

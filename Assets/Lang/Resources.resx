@@ -129,8 +129,8 @@
     <data name="Menu_Export" xml:space="preserve">
         <value>Export</value>
     </data>
-    <data name="Menu_ExportMercury" xml:space="preserve">
-        <value>Export for Mercury</value>
+    <data name="Generic_Join" xml:space="preserve">
+        <value>Join</value>
     </data>
     <data name="Menu_ExportSaturn" xml:space="preserve">
         <value>Export for Saturn</value>
@@ -929,5 +929,26 @@ Continue?</value>
     </data>
     <data name="ToolTip_ConvertToInstantMask" xml:space="preserve">
         <value>Destructively converts a single Mask Note into smaller Notes that animate instantly.</value>
+    </data>
+    <data name="Menu_Online" xml:space="preserve">
+        <value>Online</value>
+    </data>
+    <data name="Menu_CreateSession" xml:space="preserve">
+        <value>Create Session</value>
+    </data>
+    <data name="Menu_JoinSession" xml:space="preserve">
+        <value>Join Session</value>
+    </data>
+    <data name="Online_Username" xml:space="preserve">
+        <value>Username</value>
+    </data>
+    <data name="Online_UserColor" xml:space="preserve">
+        <value>User Color</value>
+    </data>
+    <data name="Online_ServerAddress" xml:space="preserve">
+        <value>Server Address</value>
+    </data>
+    <data name="Menu_ExportMercury" xml:space="preserve">
+        <value>Export for Mercury</value>
     </data>
 </root>
