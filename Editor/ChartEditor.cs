@@ -1487,25 +1487,34 @@ public class ChartEditor
             // Direction with the smallest offset takes priority.
             // If they're equal, default to left edge's preferred direction.
             HoldDirection finalDirection = int.Min(leftEdgeOffsetCcw, leftEdgeOffsetCw) < int.Min(rightEdgeOffsetCcw, rightEdgeOffsetCw) ? leftDirection : rightDirection;
+
+            bool leftShorterThanRight = int.Min(leftEdgeOffsetCcw, leftEdgeOffsetCw) < int.Min(rightEdgeOffsetCcw, rightEdgeOffsetCw);
             
             // If one hold completely encases the other (overlaps),
             // a special third HoldDirection needs to be used.
-            if (MathExtensions.IsOverlapping(startLeftEdge, startRightEdge, endLeftEdge, endRightEdge)) finalDirection = HoldDirection.Symmetrical;
+            if (leftEdgeOffsetCcw != 0 && leftEdgeOffsetCw != 0 && MathExtensions.IsOverlapping(startLeftEdge, startRightEdge, endLeftEdge, endRightEdge))
+            {
+                finalDirection = HoldDirection.Symmetrical;
+            }
             
             // Get final signed offsets
             int signedLeftEdgeOffset = finalDirection switch
             {
                 HoldDirection.Clockwise => -leftEdgeOffsetCw,
                 HoldDirection.Counterclockwise => leftEdgeOffsetCcw,
-                HoldDirection.Symmetrical => int.Min(leftEdgeOffsetCcw, leftEdgeOffsetCw) * (leftEdgeOffsetCw < leftEdgeOffsetCcw ? -1 : 1), // pick minimum
+                HoldDirection.Symmetrical => leftShorterThanRight 
+                    ? leftDirection == HoldDirection.Clockwise ? -leftEdgeOffsetCw : leftEdgeOffsetCcw
+                    : rightDirection != HoldDirection.Clockwise ? -leftEdgeOffsetCw : leftEdgeOffsetCcw,
                 _ => throw new ArgumentOutOfRangeException()
             };
-            
+
             int signedRightEdgeOffset = finalDirection switch
             {
                 HoldDirection.Clockwise => -rightEdgeOffsetCw,
                 HoldDirection.Counterclockwise => rightEdgeOffsetCcw,
-                HoldDirection.Symmetrical => (leftDirection == HoldDirection.Clockwise ? rightEdgeOffsetCcw : -rightEdgeOffsetCw), // pick opposite of left
+                HoldDirection.Symmetrical => !leftShorterThanRight
+                    ? rightDirection == HoldDirection.Clockwise ? -rightEdgeOffsetCw : rightEdgeOffsetCcw
+                    : leftDirection != HoldDirection.Clockwise ? -rightEdgeOffsetCw : rightEdgeOffsetCcw,
                 _ => throw new ArgumentOutOfRangeException()
             };
             

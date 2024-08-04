@@ -143,6 +143,14 @@ public static class MathExtensions
         if (startRight < startLeft) startRight += 60;
         if (endRight < endLeft) endRight += 60;
 
+        if (startLeft > endLeft && startRight > 60)
+        {
+            endLeft += 60;
+            endRight += 60;
+        }
+        
+        Console.WriteLine($"{startLeft} {startRight} {endLeft} {endRight}");
+        
         bool caseA = startLeft >= endLeft && startRight <= endRight;
         bool caseB = endLeft >= startLeft && endRight <= startRight;
             
