@@ -1429,6 +1429,12 @@ public class ChartEditor
         Symmetrical,
         None
     }
+
+    private enum HoldSide
+    {
+        Left,
+        Right
+    }
     
     public void BakeHold(MathExtensions.HoldEaseType easeType, bool forceNoRender)
     {
@@ -1452,7 +1458,8 @@ public class ChartEditor
         void addOperation(Note note)
         {
             if (note.NoteType is not (NoteType.HoldStart or NoteType.HoldStartRNote or NoteType.HoldSegment) || note.NextReferencedNote is null) return;
-
+            if (note.Position == note.NextReferencedNote.Position && note.Size == note.NextReferencedNote.Size) return;
+            
             BakeHold bakeHold = interpolate(note, note.NextReferencedNote);
             if (bakeHold.Segments.Count != 0)
             {
@@ -1482,29 +1489,55 @@ public class ChartEditor
             
             // Find the shortest direction for each edge.
             HoldDirection leftDirection = leftEdgeOffsetCcw < leftEdgeOffsetCw ? HoldDirection.Counterclockwise : HoldDirection.Clockwise;
-            HoldDirection rightDirection = rightEdgeOffsetCcw < rightEdgeOffsetCw ? HoldDirection.Counterclockwise : HoldDirection.Clockwise;
+            if (leftEdgeOffsetCcw == 0 && leftEdgeOffsetCw == 0) leftDirection = HoldDirection.None;
             
-            // Direction with the smallest offset takes priority.
-            // If they're equal, default to left edge's preferred direction.
-            HoldDirection finalDirection = int.Min(leftEdgeOffsetCcw, leftEdgeOffsetCw) < int.Min(rightEdgeOffsetCcw, rightEdgeOffsetCw) ? leftDirection : rightDirection;
+            HoldDirection rightDirection = rightEdgeOffsetCcw < rightEdgeOffsetCw ? HoldDirection.Counterclockwise : HoldDirection.Clockwise;
+            if (rightEdgeOffsetCcw == 0 && rightEdgeOffsetCw == 0) rightDirection = HoldDirection.None;
 
-            bool leftShorterThanRight = int.Min(leftEdgeOffsetCcw, leftEdgeOffsetCw) < int.Min(rightEdgeOffsetCcw, rightEdgeOffsetCw);
+            // Direction that's NOT set to none with the smallest offset takes priority.
+            // If they're equal, default to left edge's preferred direction.
+            // Again, it's quite verbose and could be simplified, but I'd rather
+            // keep the logic very readable.
+            int leftEdgeOffsetMin = int.Min(leftEdgeOffsetCcw, leftEdgeOffsetCw);
+            int rightEdgeOffsetMin = int.Min(rightEdgeOffsetCcw, rightEdgeOffsetCw);
+            
+            HoldDirection shortestDirection;
+            HoldSide shortestSide;
+
+            if (leftDirection == HoldDirection.None)
+            {
+                shortestDirection = startNote.Size > endNote.Size ? HoldDirection.Clockwise : HoldDirection.Counterclockwise;
+                shortestSide = HoldSide.Right;
+            }
+            else if (rightDirection == HoldDirection.None)
+            {
+                shortestDirection = startNote.Size > endNote.Size ? HoldDirection.Counterclockwise : HoldDirection.Clockwise;
+                shortestSide = HoldSide.Left;
+            }
+            else if (leftEdgeOffsetMin < rightEdgeOffsetMin)
+            {
+                shortestDirection = leftDirection;
+                shortestSide = HoldSide.Left;
+            }
+            else
+            {
+                shortestDirection = rightDirection;
+                shortestSide = HoldSide.Right;
+            }
             
             // If one hold completely encases the other (overlaps),
             // a special third HoldDirection needs to be used.
-            if (leftEdgeOffsetCcw != 0 && leftEdgeOffsetCw != 0 && MathExtensions.IsOverlapping(startLeftEdge, startRightEdge, endLeftEdge, endRightEdge))
-            {
-                finalDirection = HoldDirection.Symmetrical;
-            }
+            bool isOverlapping = MathExtensions.IsOverlapping(startLeftEdge, startRightEdge, endLeftEdge, endRightEdge);
+            HoldDirection finalDirection = isOverlapping ? HoldDirection.Symmetrical : shortestDirection;
             
             // Get final signed offsets
             int signedLeftEdgeOffset = finalDirection switch
             {
                 HoldDirection.Clockwise => -leftEdgeOffsetCw,
                 HoldDirection.Counterclockwise => leftEdgeOffsetCcw,
-                HoldDirection.Symmetrical => leftShorterThanRight 
-                    ? leftDirection == HoldDirection.Clockwise ? -leftEdgeOffsetCw : leftEdgeOffsetCcw
-                    : rightDirection != HoldDirection.Clockwise ? -leftEdgeOffsetCw : leftEdgeOffsetCcw,
+                HoldDirection.Symmetrical => shortestSide == HoldSide.Left
+                ? shortestDirection == HoldDirection.Counterclockwise ? leftEdgeOffsetCcw : -leftEdgeOffsetCw
+                : shortestDirection != HoldDirection.Counterclockwise ? leftEdgeOffsetCcw : -leftEdgeOffsetCw,
                 _ => throw new ArgumentOutOfRangeException()
             };
 
@@ -1512,9 +1545,9 @@ public class ChartEditor
             {
                 HoldDirection.Clockwise => -rightEdgeOffsetCw,
                 HoldDirection.Counterclockwise => rightEdgeOffsetCcw,
-                HoldDirection.Symmetrical => !leftShorterThanRight
-                    ? rightDirection == HoldDirection.Clockwise ? -rightEdgeOffsetCw : rightEdgeOffsetCcw
-                    : leftDirection != HoldDirection.Clockwise ? -rightEdgeOffsetCw : rightEdgeOffsetCcw,
+                HoldDirection.Symmetrical => shortestSide == HoldSide.Right
+                ? shortestDirection == HoldDirection.Counterclockwise ? rightEdgeOffsetCcw : -rightEdgeOffsetCw
+                : shortestDirection != HoldDirection.Counterclockwise ? rightEdgeOffsetCcw : -rightEdgeOffsetCw,
                 _ => throw new ArgumentOutOfRangeException()
             };
             
