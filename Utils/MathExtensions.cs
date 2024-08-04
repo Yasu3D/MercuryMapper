@@ -150,41 +150,20 @@ public static class MathExtensions
             endRightEdge -= 1;
         }
         
-        Console.WriteLine($"Before Re-Scaling | {startLeftEdge} {startRightEdge} | {endLeftEdge} {endRightEdge}");
-        
         // Start overflows - End does not overflow
         if (startRightEdge >= 60 && endRightEdge < 60 && int.Abs(startRightEdge - endRightEdge) >= 60)
         {
-            Console.WriteLine($"Start overflows and i gotta do something about it");
             endLeftEdge += 60;
         }
         
         // End overflows - Start does not overflow
         else if (endRightEdge >= 60 && startRightEdge < 60 && int.Abs(startRightEdge - endRightEdge) >= 60)
         {
-            Console.WriteLine($"End overflows and i gotta do something about it");
             startLeftEdge += 60;
         }
         
-        // Both overflow
-        else if (startRightEdge >= 60 && endRightEdge >= 60)
-        {
-            Console.WriteLine($"BBoth overflow");
-        }
-        
-        // Neither overflow
-        else if (endRightEdge < 60 && startRightEdge < 60)
-        {
-            Console.WriteLine($"Neither overflow");
-        }
-        
-        Console.WriteLine($"After Re-Scaling | {startLeftEdge} {startRightEdge} | {endLeftEdge} {endRightEdge}");
-
         bool caseA = startLeftEdge >= endLeftEdge && startRightEdge <= endRightEdge; // start smaller than end
         bool caseB = startLeftEdge <= endLeftEdge && startRightEdge >= endRightEdge; // start bigger than end
-        
-        Console.WriteLine($"Case A | {startLeftEdge} >= {endLeftEdge} | {startRightEdge} <= {endRightEdge} == {caseA}");
-        Console.WriteLine($"Case B | {startLeftEdge} <= {endLeftEdge} | {startRightEdge} >= {endRightEdge} == {caseB}");
         
         return caseA || caseB;
     }
