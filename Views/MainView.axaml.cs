@@ -2054,7 +2054,7 @@ public partial class MainView : UserControl
     
     // ________________ UI Dialogs & Misc
     
-    // This should probably be sorted but I can't be arsed rn.
+    // This should probably be sorted, but I can't be arsed rn.
     private void OnSettingsClose(ContentDialog sender, ContentDialogButtonClickEventArgs args)
     {
         ApplySettings();
