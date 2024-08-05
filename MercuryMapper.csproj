@@ -73,6 +73,10 @@
         <DependentUpon>SaturnFolderExportView.axaml</DependentUpon>
         <SubType>Code</SubType>
       </Compile>
+      <Compile Update="Views\Online\OnlineView_CreateSession.axaml.cs">
+        <DependentUpon>OnlineView_CreateSession.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
     </ItemGroup>
 
     <ItemGroup>
@@ -159,5 +163,8 @@
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <TargetPath>libbassflac.so</TargetPath>
         </ContentWithTargetPath>
+    </ItemGroup>
+    <ItemGroup>
+      <None Remove="Views\Online\OnlineView_CreateSession.axaml.cs~" />
     </ItemGroup>
 </Project>

@@ -4,8 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:lang="clr-namespace:MercuryMapper.Assets.Lang"
              Width="300" Height="150"
-             mc:Ignorable="d" d:DesignWidth="300" d:DesignHeight="125"
-             x:Class="MercuryMapper.Views.Online.OnlineView_OnlineSession">
+             mc:Ignorable="d" d:DesignWidth="300" d:DesignHeight="150"
+             x:Class="MercuryMapper.Views.Online.OnlineView_CreateSession">
     <UserControl.Styles>
         <Style Selector="TextBlock">
             <Setter Property="HorizontalAlignment" Value="Left"/>

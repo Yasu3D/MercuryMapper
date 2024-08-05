@@ -4,9 +4,9 @@ using Avalonia.Markup.Xaml;
 
 namespace MercuryMapper.Views.Online;
 
-public partial class OnlineView_OnlineSession : UserControl
+public partial class OnlineView_JoinSession : UserControl
 {
-    public OnlineView_OnlineSession()
+    public OnlineView_JoinSession()
     {
         InitializeComponent();
     }

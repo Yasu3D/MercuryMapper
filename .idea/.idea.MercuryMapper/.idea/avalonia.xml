@@ -20,7 +20,9 @@
         <entry key="Views/MainView/MainView_OperationDrawer.axaml" value="MercuryMapper.csproj" />
         <entry key="Views/MainView/MainView_SongControls.axaml" value="MercuryMapper.csproj" />
         <entry key="Views/NewChartView.axaml" value="MercuryMapper.csproj" />
+        <entry key="Views/Online/OnlineView_CreateSession.axaml" value="MercuryMapper.csproj" />
         <entry key="Views/Online/OnlineView_JoinSession.axaml" value="MercuryMapper.csproj" />
+        <entry key="Views/Online/OnlineView_OnlineSession.axaml" value="MercuryMapper.csproj" />
         <entry key="Views/Online/OnlineView_OpenSession.axaml" value="MercuryMapper.csproj" />
         <entry key="Views/SaturnFolderExportView.axaml" value="MercuryMapper.csproj" />
         <entry key="Views/Settings/SettingsView_Audio.axaml" value="MercuryMapper.csproj" />

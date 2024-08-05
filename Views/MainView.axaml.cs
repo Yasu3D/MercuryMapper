@@ -1363,11 +1363,11 @@ public partial class MainView : UserControl
     
     private void MenuItemCreateSession_OnClick(object? sender, RoutedEventArgs e)
     {
-        OnlineView_OnlineSession onlineSessionView = new();
+        OnlineView_CreateSession createSessionView = new();
         ContentDialog dialog = new()
         {
             Title = Assets.Lang.Resources.Menu_CreateSession,
-            Content = onlineSessionView,
+            Content = createSessionView,
             PrimaryButtonText = Assets.Lang.Resources.Generic_Create,
             CloseButtonText = Assets.Lang.Resources.Generic_Cancel
         };
@@ -1378,18 +1378,18 @@ public partial class MainView : UserControl
 
             if (result is ContentDialogResult.Primary)
             {
-                Console.WriteLine($"{onlineSessionView.ServerAddressTextBox.Text ?? ""} {onlineSessionView.UsernameTextbox.Text ?? ""} {onlineSessionView.UserColor.Color.ToUInt32():X8}");
+                Console.WriteLine($"{createSessionView.ServerAddressTextBox.Text ?? ""} {createSessionView.UsernameTextbox.Text ?? ""} {createSessionView.UserColor.Color.ToUInt32():X8}");
             }
         });
     }
 
     private void MenuItemJoinSession_OnClick(object? sender, RoutedEventArgs e)
     {
-        OnlineView_OnlineSession onlineSessionView = new();
+        OnlineView_JoinSession joinSessionView = new();
         ContentDialog dialog = new()
         {
             Title = Assets.Lang.Resources.Menu_JoinSession,
-            Content = onlineSessionView,
+            Content = joinSessionView,
             PrimaryButtonText = Assets.Lang.Resources.Generic_Join,
             CloseButtonText = Assets.Lang.Resources.Generic_Cancel
         };
@@ -1400,7 +1400,7 @@ public partial class MainView : UserControl
 
             if (result is ContentDialogResult.Primary)
             {
-                Console.WriteLine($"{onlineSessionView.ServerAddressTextBox.Text ?? ""} {onlineSessionView.UsernameTextbox.Text ?? ""} {onlineSessionView.UserColor.Color.ToUInt32():X8}");
+                Console.WriteLine($"{joinSessionView.ServerAddressTextBox.Text ?? ""} {joinSessionView.UsernameTextbox.Text ?? ""} {joinSessionView.UserColor.Color.ToUInt32():X8}");
             }
         });
     }

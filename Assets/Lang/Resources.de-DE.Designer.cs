@@ -1672,6 +1672,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Session Code.
+        /// </summary>
+        public static string Online_SessionCode {
+            get {
+                return ResourceManager.GetString("Online_SessionCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Benutzer Farbe.
         /// </summary>
         public static string Online_UserColor {

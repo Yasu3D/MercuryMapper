@@ -951,4 +951,7 @@ Fortfahren?</value>
     <data name="Menu_ExportMercury" xml:space="preserve">
         <value>Exportieren für Mercury</value>
     </data>
+    <data name="Online_SessionCode" xml:space="preserve">
+        <value>Session Code</value>
+    </data>
 </root>
