@@ -24,6 +24,7 @@ public class Brushes(UserConfig userConfig)
     private const float SyncPenStrokeWidth = 6;
     private const float RNotePenStrokeWidth = 17;
     private const float BoxSelectOutlinePenStrokeWidth = 4;
+    private const float PeerPenStrokeWidth = 15;
     
     public float NoteWidthMultiplier = 1;
     private float cursorWidthMultiplier = 1;
@@ -142,6 +143,13 @@ public class Brushes(UserConfig userConfig)
     private readonly SKPaint bonusPen = new()
     {
         StrokeWidth = RNotePenStrokeWidth,
+        Style = SKPaintStyle.Stroke,
+        IsAntialias = true
+    };
+
+    private readonly SKPaint peerPen = new()
+    {
+        StrokeWidth = PeerPenStrokeWidth,
         Style = SKPaintStyle.Stroke,
         IsAntialias = true
     };
@@ -326,6 +334,13 @@ public class Brushes(UserConfig userConfig)
     {
         bonusPen.StrokeWidth = rNoteWidthMultiplier * scale;
         return bonusPen;
+    }
+
+    public SKPaint GetPeerPen(SKColor color, float scale)
+    {
+        peerPen.StrokeWidth = PeerPenStrokeWidth * scale;
+        peerPen.Color = color;
+        return peerPen;
     }
     
     // ________ Other

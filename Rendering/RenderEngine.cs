@@ -5,6 +5,7 @@ using MercuryMapper.Config;
 using MercuryMapper.Data;
 using MercuryMapper.Editor;
 using MercuryMapper.Enums;
+using MercuryMapper.MultiCharting;
 using MercuryMapper.Utils;
 using MercuryMapper.Views;
 using SkiaSharp;
@@ -62,6 +63,8 @@ public class RenderEngine(MainView mainView)
         if (mainView.ChartEditor.EditorState is ChartEditorState.BoxSelectEnd) DrawBoxSelectArea(canvas, Chart);
         
         DrawMeasureLines(canvas, Chart);
+        
+        DrawPeers(canvas, Chart);
         
         if ((!IsPlaying || (IsPlaying && RenderConfig.ShowGimmickNotesDuringPlayback)) && mainView.ChartEditor.LayerGimmickActive) DrawGimmickNotes(canvas, Chart);
         if ((!IsPlaying || (IsPlaying && RenderConfig.ShowMaskDuringPlayback)) && mainView.ChartEditor.LayerMaskActive) DrawMaskNotes(canvas, Chart);
@@ -486,6 +489,20 @@ public class RenderEngine(MainView mainView)
         SKPoint p1 = RenderMath.GetPointOnArc(canvasCenter, canvasMaxRadius, angle + 180);
         
         canvas.DrawLine(p0, p1, brushes.AngleTickPen);
+    }
+
+    private void DrawPeers(SKCanvas canvas, Chart chart)
+    {
+        foreach (KeyValuePair<int, Peer> peer in mainView.PeerManager.Peers)
+        {
+            float measureDecimal = chart.Timestamp2MeasureDecimal(peer.Value.Timestamp);
+            if (!MathExtensions.GreaterAlmostEqual(measureDecimal, CurrentMeasureDecimal) || chart.GetScaledMeasureDecimal(measureDecimal, RenderConfig.ShowHiSpeed) > ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal) return;
+            
+            float scale = GetNoteScale(chart, measureDecimal);
+            SKRect rect = GetRect(scale);
+            
+            canvas.DrawOval(rect, brushes.GetPeerPen(peer.Value.SkiaColor, scale));
+        }
     }
     
     // ____ NOTES

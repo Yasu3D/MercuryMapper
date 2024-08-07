@@ -21,6 +21,7 @@ using MercuryMapper.Config;
 using MercuryMapper.Data;
 using MercuryMapper.Editor;
 using MercuryMapper.Enums;
+using MercuryMapper.MultiCharting;
 using MercuryMapper.Rendering;
 using MercuryMapper.Utils;
 using MercuryMapper.Views.Gimmicks;
@@ -43,6 +44,9 @@ public partial class MainView : UserControl
         KeybindEditor = new(UserConfig);
         AudioManager = new(this);
         RenderEngine = new(this);
+
+        PeerManager = new(this);
+        PeerBroadcaster = new(this);
         
         updateInterval = TimeSpan.FromSeconds(1.0 / UserConfig.RenderConfig.RefreshRate);
         UpdateTimer = new(UpdateTimer_Tick, null, Timeout.Infinite, Timeout.Infinite);
@@ -72,6 +76,9 @@ public partial class MainView : UserControl
     public readonly AudioManager AudioManager;
     public readonly RenderEngine RenderEngine;
 
+    public readonly PeerManager PeerManager;
+    public readonly PeerBroadcaster PeerBroadcaster;
+    
     private TimeSpan updateInterval;
     public readonly Timer UpdateTimer;
     public readonly DispatcherTimer HitsoundTimer;
@@ -606,6 +613,29 @@ public partial class MainView : UserControl
         }
         
         Keybind keybind = new(e);
+
+        if (Keybind.Compare(keybind, new(Key.G, true, false, false)))
+        {
+            PeerManager.AddPeer(0, "ya boi", "#AA00FFFF");
+            e.Handled = true;
+            return;
+        }
+        
+        if (Keybind.Compare(keybind, new(Key.G, false, true, false)))
+        {
+            if (AudioManager.CurrentSong == null) return;
+            
+            PeerManager.SetPeerMarkerTimestamp(0, AudioManager.CurrentSong.Position);
+            e.Handled = true;
+            return;
+        }
+        
+        if (Keybind.Compare(keybind, new(Key.G, false, false, true)))
+        {
+            PeerManager.RemovePeer(0);
+            e.Handled = true;
+            return;
+        }
         
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["FileNew"]))
         {
@@ -1196,6 +1226,7 @@ public partial class MainView : UserControl
         RenderEngine.UpdateBrushes();
         
         UpdateLoopMarkerPosition();
+        PeerManager.UpdatePeerMarkers();
     }
     
     public async void DragDrop(string path)

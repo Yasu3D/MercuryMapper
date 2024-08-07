@@ -30,6 +30,6 @@
         <TextBox Grid.Row="2" Grid.Column="1" Name="UsernameTextbox"/>
 
         <TextBlock Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Text="{x:Static lang:Resources.Online_UserColor}"/>
-        <ColorPicker Grid.Row="3" Grid.Column="1" HorizontalAlignment="Right" Margin="5" Name="UserColor" IsAlphaEnabled="False"/>
+        <ColorPicker Grid.Row="3" Grid.Column="1" HorizontalAlignment="Right" Margin="5" Name="UserColor" IsAlphaVisible="False" IsAlphaEnabled="False"/>
     </Grid>
 </UserControl>
