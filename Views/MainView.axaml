@@ -402,7 +402,7 @@
             <Grid Grid.Column="1" RowDefinitions="Auto, Auto" ColumnDefinitions="Auto, Auto, *">
                 
                 <Slider Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Classes="Compact" Margin="10,0,15,0"
-                        Name="SliderSongPosition" ValueChanged="SliderSongPosition_OnValueChanged"/>
+                        Name="SliderSongPosition" ValueChanged="SliderSongPosition_OnValueChanged" IsEnabled="False"/>
                 
                 <Panel Grid.Row="0" Grid.Column="0" VerticalAlignment="Stretch" Grid.ColumnSpan="3" Margin="10,10,0,0">
                     <Rectangle VerticalAlignment="Stretch" IsVisible="False" HorizontalAlignment="Left" Width="2" Fill="MediumSeaGreen" Name="LoopMarkerStart" IsHitTestVisible="False"/>

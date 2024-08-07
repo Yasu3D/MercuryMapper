@@ -192,14 +192,15 @@ public partial class MainView : UserControl
         ButtonEndHold.IsEnabled = state is ChartEditorState.InsertNote or ChartEditorState.InsertHold;
     }
 
-    public void SetSongPositionSliderMaximum()
+    public void SetSongPositionSliderValues()
     {
         SliderSongPosition.Value = 0;
-        
+        SliderSongPosition.IsEnabled = true;
+
         if (AudioManager.CurrentSong == null) return;
         SliderSongPosition.Maximum = AudioManager.CurrentSong.Length;
     }
-    
+
     public void UpdateTimer_Tick(object? sender)
     {
         Dispatcher.UIThread.Post(() =>
@@ -1282,7 +1283,7 @@ public partial class MainView : UserControl
                 
                 ChartEditor.NewChart(filepath, author, bpm, timeSigUpper, timeSigLower);
                 AudioManager.SetSong(filepath, (float)UserConfig.AudioConfig.MusicVolume * 0.01f, (int)SliderPlaybackSpeed.Value);
-                SetSongPositionSliderMaximum();
+                SetSongPositionSliderValues();
                 UpdateAudioFilepath();
                 RenderEngine.UpdateVisibleTime();
                 ClearAutosaves();
@@ -1916,7 +1917,7 @@ public partial class MainView : UserControl
         ChartEditor.Chart.AudioFilePath = audioFile.Path.LocalPath;
         
         AudioManager.SetSong(ChartEditor.Chart.AudioFilePath, (float)(UserConfig.AudioConfig.MusicVolume * 0.01), (int)SliderPlaybackSpeed.Value);
-        SetSongPositionSliderMaximum();
+        SetSongPositionSliderValues();
         UpdateAudioFilepath();
         RenderEngine.UpdateVisibleTime();
     }
@@ -2352,6 +2353,11 @@ public partial class MainView : UserControl
             {
                 // User said no, clear chart again and return.
                 ChartEditor.Chart.Clear();
+                UpdateAudioFilepath();
+                SetChartInfo();
+                SetSelectionInfo();
+                ResetLoopMarkers(AudioManager.CurrentSong?.Length ?? 0);
+                SliderSongPosition.IsEnabled = false;
                 return;
             }
             
@@ -2368,7 +2374,7 @@ public partial class MainView : UserControl
         }
         
         AudioManager.SetSong(ChartEditor.Chart.AudioFilePath, (float)(UserConfig.AudioConfig.MusicVolume * 0.01), (int)SliderPlaybackSpeed.Value);
-        SetSongPositionSliderMaximum();
+        SetSongPositionSliderValues();
         UpdateAudioFilepath();
         RenderEngine.UpdateVisibleTime();
         ResetLoopMarkers(AudioManager.CurrentSong?.Length ?? 0);
