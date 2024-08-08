@@ -21,8 +21,9 @@ public class PeerBroadcaster
     {
         if (mainView.AudioManager.CurrentSong == null) return;
         if (mainView.AudioManager.CurrentSong.Position == lastTimestamp) return;
-        
-        Console.WriteLine("Yo");
+
+        ConnectionManager.SendTimestamp(mainView.AudioManager.CurrentSong.Position);
+
         lastTimestamp = mainView.AudioManager.CurrentSong.Position;
     }
 }
