@@ -47,6 +47,7 @@ public partial class MainView : UserControl
 
         PeerManager = new(this);
         PeerBroadcaster = new(this);
+        ConnectionManager = new(this);
         
         updateInterval = TimeSpan.FromSeconds(1.0 / UserConfig.RenderConfig.RefreshRate);
         UpdateTimer = new(UpdateTimer_Tick, null, Timeout.Infinite, Timeout.Infinite);
@@ -78,12 +79,13 @@ public partial class MainView : UserControl
 
     public readonly PeerManager PeerManager;
     public readonly PeerBroadcaster PeerBroadcaster;
-    
+    public readonly ConnectionManager ConnectionManager;
+
     private TimeSpan updateInterval;
     public readonly Timer UpdateTimer;
     public readonly DispatcherTimer HitsoundTimer;
     public readonly DispatcherTimer AutosaveTimer;
-    
+
     private TimeUpdateSource timeUpdateSource = TimeUpdateSource.None;
     private enum TimeUpdateSource
     {

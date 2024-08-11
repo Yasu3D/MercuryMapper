@@ -13,7 +13,7 @@ public class PeerBroadcaster
     }
 
     private readonly MainView mainView;
-    private const int TimestampTickrate = 200;
+    private const int TimestampTickrate = 100; // Update 10 times a second
     private Timer timestampTimer;
     private uint lastTimestamp;
 
@@ -22,7 +22,7 @@ public class PeerBroadcaster
         if (mainView.AudioManager.CurrentSong == null) return;
         if (mainView.AudioManager.CurrentSong.Position == lastTimestamp) return;
 
-        ConnectionManager.SendTimestamp(mainView.AudioManager.CurrentSong.Position);
+        mainView.ConnectionManager.SendTimestamp(mainView.AudioManager.CurrentSong.Position);
 
         lastTimestamp = mainView.AudioManager.CurrentSong.Position;
     }

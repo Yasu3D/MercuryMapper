@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Avalonia.Threading;
+using MercuryMapper.Editor;
+using MercuryMapper.Views;
+using System;
 using System.IO;
 using System.Net.WebSockets;
 using Websocket.Client;
@@ -44,16 +47,24 @@ enum RequestTypes : uint
 
 namespace MercuryMapper.MultiCharting
 {
-    internal static class ConnectionManager
+    public class ConnectionManager
     {
-        private static readonly string RequestTypeFormat = "000";
-        private static readonly int RequestTypeLength = 3;
-        private static readonly int HexColorLength = 9;
+        private readonly string requestTypeFormat = "000";
+        private readonly int requestTypeLength = 3;
+        private readonly int hexColorLength = 9;
 
-        private static WebsocketClient? WebSocketClient;
-        private static bool connectionGood = false;
+        private WebsocketClient? webSocketClient;
+        private bool connectionGood = false;
+        private MainView mainView;
+        private PeerManager peerManager => mainView.PeerManager;
+        private ChartEditor chartEditor => mainView.ChartEditor;
 
-        public static void CreateLobby(string Address, string Username, string Color)
+        public ConnectionManager(MainView main)
+        {
+            mainView = main;
+        }
+
+        public void CreateLobby(string Address, string Username, string Color)
         {
             Console.WriteLine("Attempting to create a lobby...");
 
@@ -64,7 +75,7 @@ namespace MercuryMapper.MultiCharting
             SendMessage(RequestTypes.CreateLobby, Color + Username);
         }
 
-        public static void JoinLobby(string Address, string Username, string Color, string LobbyCode)
+        public void JoinLobby(string Address, string Username, string Color, string LobbyCode)
         {
             Console.WriteLine("Attempting to join a lobby...");
 
@@ -75,14 +86,14 @@ namespace MercuryMapper.MultiCharting
             SendMessage(RequestTypes.JoinLobby, LobbyCode + Color + Username);
         }
 
-        public static void SendTimestamp(uint Timestamp)
+        public void SendTimestamp(uint Timestamp)
         {
             SendMessage(RequestTypes.ClientTimestamp, Timestamp.ToString());
         }
 
-        private static string CheckConnectionOrConnect(string ServerUrl)
+        private string CheckConnectionOrConnect(string ServerUrl)
         {
-            if (WebSocketClient != null)
+            if (webSocketClient != null)
             {
                 Console.WriteLine("WebSocket client already connected!");
                 return "connected";
@@ -102,32 +113,32 @@ namespace MercuryMapper.MultiCharting
             Uri ServerUri = new(ServerUrl);
 
             // Create client using Uri and client factory
-            WebSocketClient = new(ServerUri, factory);
+            webSocketClient = new(ServerUri, factory);
 
             // Disable message timeout
-            WebSocketClient.ReconnectTimeout = null;
+            webSocketClient.ReconnectTimeout = null;
 
             // Log reconnects for now
-            WebSocketClient.ReconnectionHappened.Subscribe(info => Console.WriteLine($"Reconnection happened, type: {info.Type}"));
+            webSocketClient.ReconnectionHappened.Subscribe(info => Console.WriteLine($"Reconnection happened, type: {info.Type}"));
 
             // Log disconnects and destroy/clean up after disconnection
-            WebSocketClient.DisconnectionHappened.Subscribe(_ =>
+            webSocketClient.DisconnectionHappened.Subscribe(_ =>
             {
                 Console.WriteLine("WebSocket connection closed.");
                 connectionGood = false;
-                WebSocketClient.Dispose();
-                WebSocketClient = null;
+                webSocketClient.Dispose();
+                webSocketClient = null;
             });
 
             // Set up to handle incoming messages
-            WebSocketClient.MessageReceived.Subscribe(Message => HandleMessage(Message));
+            webSocketClient.MessageReceived.Subscribe(Message => HandleMessage(Message));
 
             // Attempt client to server connection
             Console.WriteLine("Attempting connection...");
 
             try
             {
-                WebSocketClient.Start().Wait();
+                webSocketClient.Start().Wait();
 
                 // Announce connection to server
                 SendMessage(null, "Hello MercuryMultiMapperServer!");
@@ -141,39 +152,63 @@ namespace MercuryMapper.MultiCharting
             }
         }
 
-        private static void SendMessage(RequestTypes? ReqType, string ReqData)
+        private void SendMessage(RequestTypes? ReqType, string ReqData)
         {
-            if (WebSocketClient == null) return;
+            if (webSocketClient == null) return;
 
             if (ReqType != null)
             {
-                WebSocketClient.Send(((uint)ReqType.Value).ToString(RequestTypeFormat) + ReqData);
+                webSocketClient.Send(((uint)ReqType.Value).ToString(requestTypeFormat) + ReqData);
             } else
             {
-                WebSocketClient.Send(ReqData);
+                webSocketClient.Send(ReqData);
             }
         }
 
-        private static void SendSongFile(string RecievingClientID)
+        private void SendSongFile(string RecievingClientID)
         {
-            Byte[] bytes = File.ReadAllBytes(""); // Song file path needed
+            Byte[] bytes = File.ReadAllBytes(chartEditor.Chart.AudioFilePath);
             String fileData = Convert.ToBase64String(bytes);
-            SendMessage(RequestTypes.SongFile, RecievingClientID + "|" + fileData);
-        }
-        private static void SendChartFile(string RecievingClientID)
-        {
-            Byte[] bytes = File.ReadAllBytes(""); // Chart file path needed
-            String fileData = Convert.ToBase64String(bytes);
-            SendMessage(RequestTypes.ChartFile, RecievingClientID + "|" + fileData);
+
+            // I swear - if someone uses pipes in file names - they're insane.
+            SendMessage(RequestTypes.SongFile, RecievingClientID + "|" + Path.GetFileName(chartEditor.Chart.AudioFilePath) + "|" + fileData);
         }
 
-        private static void SyncWithClient(string recievingClientID)
+        private void SendChartFile(string RecievingClientID)
+        {
+            Byte[] bytes = File.ReadAllBytes(chartEditor.Chart.FilePath);
+            String fileData = Convert.ToBase64String(bytes);
+
+            // I swear - if someone uses pipes in file names - they're insane.
+            SendMessage(RequestTypes.ChartFile, RecievingClientID + "|" + Path.GetFileName(chartEditor.Chart.FilePath) + "|" + fileData);
+        }
+
+        private void RecieveSongFile(string songData)
+        {
+            string fileName = songData.Substring(0, songData.IndexOf('|') - 1);
+            string songFileData = songData.Substring(songData.IndexOf('|'));
+
+            Byte[] fileData = Convert.FromBase64String(songFileData);
+            File.WriteAllBytes("tmp/" + fileName, fileData);
+
+            //SendMessage(RequestTypes.SongFile, RecievingClientID + "|" + fileData);
+        }
+
+        private void RecieveChartFile(string chartData)
+        {
+            Byte[] fileData = Convert.FromBase64String(chartData);
+            File.WriteAllBytes("tempFilePath", fileData);
+
+            //SendMessage(RequestTypes.ChartFile, RecievingClientID + "|" + fileData);
+        }
+
+        private void SyncWithClient(string recievingClientID)
         {
             SendSongFile(recievingClientID);
             SendChartFile(recievingClientID);
         }
 
-        private static void HandleMessage(ResponseMessage Message)
+        private void HandleMessage(ResponseMessage Message)
         {
             // Verify message type is the kind expected
             if (Message.MessageType != WebSocketMessageType.Text || Message.Text == null)
@@ -194,17 +229,19 @@ namespace MercuryMapper.MultiCharting
                 return;
             }
 
-            RequestTypes RequestType = (RequestTypes)uint.Parse(Message.Text.Substring(0, RequestTypeLength));
+            RequestTypes RequestType = (RequestTypes)uint.Parse(Message.Text.Substring(0, requestTypeLength));
 
-            string TrimmedMessage = Message.Text.Substring(RequestTypeLength);
+            string TrimmedMessage = Message.Text.Substring(requestTypeLength);
 
-            switch(RequestType)
+            Console.WriteLine(RequestType);
+
+            switch (RequestType)
             {
                 case RequestTypes.LobbyCreated:
                     Console.WriteLine("Lobby created.");
                     break;
                 case RequestTypes.JoinLobby:
-                    //AddClientTimestamp(TrimmedMessage);
+                    AddClientTimestamp(TrimmedMessage);
                     Console.WriteLine("Got new peer data.");
                     break;
                 case RequestTypes.SyncRequest:
@@ -212,7 +249,7 @@ namespace MercuryMapper.MultiCharting
                     Console.WriteLine("Got sync request.");
                     break;
                 case RequestTypes.ClientTimestamp:
-                    //SetClientTimestamp(TrimmedMessage);
+                    SetClientTimestamp(TrimmedMessage);
                     Console.WriteLine("Got timestamp data.");
                     break;
                 default:
@@ -221,16 +258,18 @@ namespace MercuryMapper.MultiCharting
             }
         }
 
-        /*private static void SetClientTimestamp(string Message)
+        private void SetClientTimestamp(string Message)
         {
             string[] SplitMessage = Message.Split('|');
 
-            PeerManager.SetPeerMarkerTimestamp(int.Parse(SplitMessage[0]), uint.Parse(SplitMessage[1]));
+            Dispatcher.UIThread.Post(() => peerManager.SetPeerMarkerTimestamp(int.Parse(SplitMessage[0]), uint.Parse(SplitMessage[1])));
         }
-        private static void AddClientTimestamp(string Message)
+
+        private void AddClientTimestamp(string Message)
         {
             string[] SplitMessage = Message.Split('|');
-            PeerManager.AddPeer(int.Parse(SplitMessage[0]), SplitMessage[1].Substring(0, HexColorLength), SplitMessage[1].Substring(HexColorLength));
-        }*/
+
+            Dispatcher.UIThread.Post(() => peerManager.AddPeer(int.Parse(SplitMessage[0]), SplitMessage[1].Substring(hexColorLength), SplitMessage[1].Substring(0, hexColorLength)));
+        }
     }
 }
