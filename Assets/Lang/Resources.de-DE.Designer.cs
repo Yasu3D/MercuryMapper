@@ -1285,6 +1285,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Verbindung Trennen.
+        /// </summary>
+        public static string Menu_Disconnect {
+            get {
+                return ResourceManager.GetString("Menu_Disconnect", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Schließen.
         /// </summary>
         public static string Menu_Exit {
@@ -1677,6 +1686,15 @@ namespace MercuryMapper.Assets.Lang {
         public static string Online_SessionCode {
             get {
                 return ResourceManager.GetString("Online_SessionCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Session Offen. Code:.
+        /// </summary>
+        public static string Online_SessionOpened {
+            get {
+                return ResourceManager.GetString("Online_SessionOpened", resourceCulture);
             }
         }
         

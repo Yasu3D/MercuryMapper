@@ -614,29 +614,6 @@ public partial class MainView : UserControl
         }
         
         Keybind keybind = new(e);
-
-        if (Keybind.Compare(keybind, new(Key.G, true, false, false)))
-        {
-            PeerManager.AddPeer(0, "ya boi", "#AA00FFFF");
-            e.Handled = true;
-            return;
-        }
-        
-        if (Keybind.Compare(keybind, new(Key.G, false, true, false)))
-        {
-            if (AudioManager.CurrentSong == null) return;
-            
-            PeerManager.SetPeerMarkerTimestamp(0, AudioManager.CurrentSong.Position);
-            e.Handled = true;
-            return;
-        }
-        
-        if (Keybind.Compare(keybind, new(Key.G, false, false, true)))
-        {
-            PeerManager.RemovePeer(0);
-            e.Handled = true;
-            return;
-        }
         
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["FileNew"]))
         {
@@ -699,7 +676,7 @@ public partial class MainView : UserControl
             e.Handled = true;
             return;
         }
-        
+            
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorInsert"]))
         {
             if (!ButtonInsert.IsEnabled) return;
@@ -1395,6 +1372,14 @@ public partial class MainView : UserControl
     
     private void MenuItemCreateSession_OnClick(object? sender, RoutedEventArgs e)
     {
+        string code = "12345678";
+        
+        //if (SessionOpen)
+        //{
+        //    ShowWarningMessage($"{Assets.Lang.Resources.Online_SessionOpened} {code}");
+        //    return;
+        //}
+        
         OnlineView_CreateSession createSessionView = new();
         ContentDialog dialog = new()
         {
@@ -1411,6 +1396,8 @@ public partial class MainView : UserControl
             if (result is ContentDialogResult.Primary)
             {
                 Console.WriteLine($"{createSessionView.ServerAddressTextBox.Text ?? ""} {createSessionView.UsernameTextbox.Text ?? ""} {createSessionView.UserColor.Color.ToUInt32():X8}");
+                
+                ShowWarningMessage($"{Assets.Lang.Resources.Online_SessionOpened} {code}");
             }
         });
     }
@@ -1435,6 +1422,11 @@ public partial class MainView : UserControl
                 Console.WriteLine($"{joinSessionView.ServerAddressTextBox.Text ?? ""} {joinSessionView.UsernameTextbox.Text ?? ""} {joinSessionView.UserColor.Color.ToUInt32():X8}");
             }
         });
+    }
+    
+    private void MenuItemDisconnect_OnClick(object? sender, RoutedEventArgs e)
+    {
+        
     }
     
     private void MenuItemSettings_OnClick(object? sender, RoutedEventArgs e)

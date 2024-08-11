@@ -954,4 +954,10 @@ Fortfahren?</value>
     <data name="Online_SessionCode" xml:space="preserve">
         <value>Session Code</value>
     </data>
+    <data name="Menu_Disconnect" xml:space="preserve">
+        <value>Verbindung Trennen</value>
+    </data>
+    <data name="Online_SessionOpened" xml:space="preserve">
+        <value>Session Offen. Code:</value>
+    </data>
 </root>

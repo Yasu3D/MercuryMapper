@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Input.Platform;
@@ -1369,7 +1370,7 @@ public class ChartEditor
                 BeatData = new(float.Clamp(gimmick.BeatData.MeasureDecimal + divisor, min, max))
             };
 
-            QuickEditGimmick edit = new(Chart, gimmick, newGimmick);
+            EditGimmick edit = new(Chart, gimmick, newGimmick);
 
             operationList.Add(edit);
             UndoRedoManager.InvokeAndPush(edit);

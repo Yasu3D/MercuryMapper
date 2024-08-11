@@ -77,6 +77,7 @@ public class ChartElement
 {
     public BeatData BeatData { get; set; } = new(-1, 0);
     public GimmickType GimmickType { get; set; } = GimmickType.None;
+    public Guid Guid { get; set; }
 }
 
 public class Gimmick : ChartElement
@@ -88,14 +89,16 @@ public class Gimmick : ChartElement
 
     public Gimmick() { }
     
-    public Gimmick(BeatData beatData, GimmickType gimmickType)
+    public Gimmick(BeatData beatData, GimmickType gimmickType, Guid? guid = null)
     {
+        Guid = guid ?? Guid.NewGuid();
         BeatData = beatData;
         GimmickType = gimmickType;
     }
 
-    public Gimmick(Gimmick gimmick) : this(gimmick.BeatData, gimmick.GimmickType)
+    public Gimmick(Gimmick gimmick, Guid? guid = null) : this(gimmick.BeatData, gimmick.GimmickType)
     {
+        Guid = guid ?? Guid.NewGuid();
         switch (GimmickType)
         {
             case GimmickType.BpmChange: Bpm = gimmick.Bpm; break;
@@ -104,8 +107,9 @@ public class Gimmick : ChartElement
         }
     }
 
-    public Gimmick(int measure, int tick, int objectId, string value1, string value2)
+    public Gimmick(int measure, int tick, int objectId, string value1, string value2, Guid? guid = null)
     {
+        Guid = guid ?? Guid.NewGuid();
         BeatData = new(measure, tick);
         GimmickType = (GimmickType)objectId;
 
@@ -142,13 +146,15 @@ public class Note : ChartElement
 
     public Note() { }
 
-    public Note(BeatData beatData)
+    public Note(BeatData beatData, Guid? guid = null)
     {
+        Guid = guid ?? Guid.NewGuid();
         BeatData = beatData;
     }
 
-    public Note(Note note) : this(note.BeatData)
+    public Note(Note note, Guid? guid = null) : this(note.BeatData)
     {
+        Guid = guid ?? Guid.NewGuid();
         Position = note.Position;
         Size = note.Size;
         NoteType = note.NoteType;
@@ -159,8 +165,9 @@ public class Note : ChartElement
         PrevReferencedNote = note.PrevReferencedNote;
     }
 
-    public Note(int measure, int tick, int noteTypeId, int noteIndex, int position, int size, bool renderSegment)
+    public Note(int measure, int tick, int noteTypeId, int noteIndex, int position, int size, bool renderSegment, Guid? guid = null)
     {
+        Guid = guid ?? Guid.NewGuid();
         BeatData = new(measure, tick);
         GimmickType = GimmickType.None;
         NoteType = (NoteType)noteTypeId;

@@ -486,6 +486,227 @@ public class Chart
         
         return result;
     }
+
+    public void LoadChartFromNetwork(string data)
+    {
+        string[] merFile = data.Split(["\r\n", "\r", "\n"], StringSplitOptions.RemoveEmptyEntries);
+        if (merFile.Length == 0) return;
+
+        int readerIndex = 0;
+        Dictionary<int, Note> notesByIndex = new();
+        Dictionary<int, int> nextReferencedIndex = new();
+
+        lock (this)
+        {
+            Clear();
+
+            FilePath = "";
+            
+            readTags(merFile);
+            readChartElements(merFile);
+            getHoldReferences();
+            repairNotes();
+            getStartTimeEvents();
+            
+            GenerateTimeEvents();
+            GenerateTimeScales();
+        }
+        
+        IsSaved = true;
+        IsNew = true;
+        return;
+        
+        void readTags(string[] lines)
+        {
+            do
+            {
+                string line = lines[readerIndex];
+
+                string? level = getTag(line, "#LEVEL") ?? getTag(line, "#EDITOR_LEVEL");
+                if (level != null) Level = Convert.ToDecimal(level, CultureInfo.InvariantCulture);
+
+                string? clearThreshold = getTag(line, "#CLEAR_THRESHOLD") ?? getTag(line, "#EDITOR_CLEAR_THRESHOLD");
+                if (clearThreshold != null) ClearThreshold = Convert.ToDecimal(clearThreshold, CultureInfo.InvariantCulture);
+
+                string? author = getTag(line, "#AUTHOR") ?? getTag(line, "#EDITOR_AUTHOR");
+                if (author != null) Author = author;
+                
+                string? previewTime = getTag(line, "#PREVIEW_TIME") ?? getTag(line, "#EDITOR_PREVIEW_TIME");
+                if (previewTime != null) PreviewTime = Convert.ToDecimal(previewTime, CultureInfo.InvariantCulture);
+                
+                string? previewLength = getTag(line, "#PREVIEW_LENGTH") ?? getTag(line, "#EDITOR_PREVIEW_LENGTH");
+                if (previewLength != null) PreviewLength = Convert.ToDecimal(previewLength, CultureInfo.InvariantCulture);
+                
+                string? offset = getTag(line, "#OFFSET") ?? getTag(line, "EDITOR_OFFSET");
+                if (offset != null) Offset = Convert.ToDecimal(offset, CultureInfo.InvariantCulture);
+            
+                string? movieOffset = getTag(line, "#MOVIEOFFSET") ?? getTag(line, "EDITOR_MOVIEOFFSET");
+                if (movieOffset != null) MovieOffset = Convert.ToDecimal(movieOffset, CultureInfo.InvariantCulture);
+
+                if (!line.Contains("#BODY")) continue;
+                
+                readerIndex++;
+                break;
+
+            } while (++readerIndex < lines.Length);
+
+            return;
+
+            static string? getTag(string input, string tag)
+            {
+                return input.Contains(tag) ? input[(input.IndexOf(tag, StringComparison.Ordinal) + tag.Length)..].TrimStart() : null;
+            }
+        }
+
+        void readChartElements(string[] lines)
+        {
+            const string separator = " ";
+            for (int i = readerIndex; i < lines.Length; i++)
+            {
+                if (string.IsNullOrWhiteSpace(merFile[i])) continue;
+                string[] parsed = merFile[i].Split(separator, StringSplitOptions.RemoveEmptyEntries);
+                if (parsed.Length < 4) continue;
+
+                Guid guid = Guid.Parse(parsed[0]);
+                
+                int measure = Convert.ToInt32(parsed[1]);
+                int tick = Convert.ToInt32(parsed[2]);
+                int objectId = Convert.ToInt32(parsed[3]);
+                
+                // Invalid
+                if (objectId == 0) continue;
+
+                // Note
+                if (objectId == 1)
+                {
+                    int noteTypeId = Convert.ToInt32(parsed[4]);
+                    int noteIndex = Convert.ToInt32(parsed[5]);
+                    int position = Convert.ToInt32(parsed[6]);
+                    int size = Convert.ToInt32(parsed[7]);
+                    bool renderSegment = noteTypeId != 10 || Convert.ToBoolean(Convert.ToInt32(parsed[8])); // Set to true by default if note is not a hold segment.
+
+                    Note tempNote = new(measure, tick, noteTypeId, noteIndex, position, size, renderSegment, guid);
+                    
+                    // hold start & segments
+                    if (noteTypeId is 9 or 10 or 25 && parsed.Length >= 10)
+                    {
+                        nextReferencedIndex[noteIndex] = Convert.ToInt32(parsed[9]);
+                    }
+
+                    if (noteTypeId is 12 or 13 && parsed.Length >= 10)
+                    {
+                        int direction = Convert.ToInt32(parsed[9]);
+                        tempNote.MaskDirection = (MaskDirection)direction;
+                    }
+
+                    Notes.Add(tempNote);
+                    notesByIndex[noteIndex] = tempNote;
+                }
+
+                // Gimmick
+                else
+                {
+                    string value1 = "";
+                    string value2 = "";
+                    
+                    // avoid IndexOutOfRangeExceptions :]
+                    if (objectId is 3 && parsed.Length > 5)
+                    {
+                        value1 = parsed[4];
+                        value2 = parsed[5];
+                    }
+                    
+                    // Edge case. some old charts apparently have broken time sigs.
+                    if (objectId is 3 && parsed.Length == 5)
+                    {
+                        value1 = parsed[4];
+                        value2 = parsed[4];
+                    }
+                    
+                    if (objectId is 2 or 5 && parsed.Length > 4)
+                    {
+                        value1 = parsed[4];
+                    }
+
+                    Gimmick tempGimmick = new(measure, tick, objectId, value1, value2, guid);
+                    Gimmicks.Add(tempGimmick);
+                }
+            }
+        }
+
+        void getHoldReferences()
+        {
+            foreach (Note note in Notes)
+            {
+                if (!nextReferencedIndex.ContainsKey(note.ParsedIndex)) continue;
+                if (!notesByIndex.TryGetValue(nextReferencedIndex[note.ParsedIndex], out Note? referencedNote)) continue;
+                
+                note.NextReferencedNote = referencedNote;
+                referencedNote.PrevReferencedNote = note;
+            }
+        }
+
+        void repairNotes()
+        {
+            foreach (Note note in Notes)
+            {
+                if (note.Position is < 0 or >= 60)
+                    note.Position = MathExtensions.Modulo(note.Position, 60);
+
+                note.Size = int.Clamp(note.Size, 1, 60);
+            }
+        }
+
+        void getStartTimeEvents()
+        {
+            StartBpm = Gimmicks.LastOrDefault(x => x.BeatData.FullTick == 0 && x.GimmickType is GimmickType.BpmChange);
+            StartTimeSig = Gimmicks.LastOrDefault(x => x.BeatData.FullTick == 0 && x.GimmickType is GimmickType.TimeSigChange);
+        }
+    }
+
+    public string WriteChartToNetwork()
+    {
+        string result = "";
+        
+        result += $"#EDITOR_AUDIO {Path.GetFileName(AudioFilePath)}\n";
+        result += $"#EDITOR_LEVEL {Level.ToString("F6", CultureInfo.InvariantCulture)}\n";
+        result += $"#EDITOR_CLEAR_THRESHOLD {ClearThreshold.ToString("F6", CultureInfo.InvariantCulture)}\n";
+        result += $"#EDITOR_AUTHOR {Author}\n";
+        result += $"#EDITOR_PREVIEW_TIME {PreviewTime.ToString("F6", CultureInfo.InvariantCulture)}\n";
+        result += $"#EDITOR_PREVIEW_LENGTH {PreviewLength.ToString("F6", CultureInfo.InvariantCulture)}\n";
+        result += $"#EDITOR_OFFSET {Offset.ToString("F6", CultureInfo.InvariantCulture)}\n";
+        result += $"#EDITOR_MOVIEOFFSET {MovieOffset.ToString("F6", CultureInfo.InvariantCulture)}\n";
+        result += $"#BODY\n";
+        
+        foreach (Gimmick gimmick in Gimmicks)
+        {
+            result += $"{gimmick.Guid} {gimmick.BeatData.Measure,4:F0} {gimmick.BeatData.Tick,4:F0} {(int)gimmick.GimmickType,4:F0}";
+            result += gimmick.GimmickType switch
+            {
+                GimmickType.BpmChange => $" {gimmick.Bpm.ToString("F6", CultureInfo.InvariantCulture)}\n",
+                GimmickType.HiSpeedChange => $" {gimmick.HiSpeed.ToString("F6", CultureInfo.InvariantCulture)}\n",
+                GimmickType.TimeSigChange => $"{gimmick.TimeSig.Upper,5:F0}{gimmick.TimeSig.Lower,5:F0}\n",
+                _ => "\n"
+            };
+        }
+
+        foreach (Note note in Notes)
+        {
+            result += $"{note.Guid} {note.BeatData.Measure,4:F0} {note.BeatData.Tick,4:F0} {(int) note.GimmickType,4:F0} {(int) note.NoteType,4:F0} ";
+            result += $"{Notes.IndexOf(note),4:F0} {note.Position,4:F0} {note.Size,4:F0} {Convert.ToInt32(note.RenderSegment, CultureInfo.InvariantCulture),4:F0}";
+            
+            if (note.IsMask) result += ($" {(int)note.MaskDirection,4:F0}");
+            if (note.NextReferencedNote != null) result += ($" {Notes.IndexOf(note.NextReferencedNote),4:F0}");
+            
+            result += "\n";
+        }
+        
+        Console.WriteLine(result);
+        
+        File.WriteAllText("X:/test.mer", result);
+        
+        return result;
+    }
     
     public void Clear()
     {

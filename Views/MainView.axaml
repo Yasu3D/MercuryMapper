@@ -52,6 +52,8 @@
                     <MenuItem Header="{x:Static lang:Resources.Menu_Online}">
                         <MenuItem Header="{x:Static lang:Resources.Menu_CreateSession}" Click="MenuItemCreateSession_OnClick" Name="MenuItemCreateSession" />
                         <MenuItem Header="{x:Static lang:Resources.Menu_JoinSession}" Click="MenuItemJoinSession_OnClick" Name="MenuItemJoinSession" />
+                        <Separator/>
+                        <MenuItem Header="{x:Static lang:Resources.Menu_Disconnect}" Click="MenuItemDisconnect_OnClick" Name="MenuItemDisconnect" IsEnabled="False"/>
                     </MenuItem>
                     
                     <Separator/>
