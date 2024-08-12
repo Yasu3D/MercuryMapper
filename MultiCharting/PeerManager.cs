@@ -47,7 +47,9 @@ public class PeerManager(MainView main)
 
     public void RemovePeer(int id)
     {
-        mainView.PanelClientMarker.Children.Remove(Peers[id].Marker);
+        if (!Peers.TryGetValue(id, out Peer? peer)) return;
+        
+        mainView.PanelClientMarker.Children.Remove(peer.Marker);
         Peers.Remove(id);
     }
 

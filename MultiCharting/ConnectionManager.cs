@@ -102,7 +102,7 @@ namespace MercuryMapper.MultiCharting
             
                     case NetworkConnectionState.Host:
                     {
-                        mainView.MenuItemCreateSession.IsEnabled = false;
+                        mainView.MenuItemCreateSession.IsEnabled = true;
                         mainView.MenuItemJoinSession.IsEnabled = false;
                         mainView.MenuItemDisconnect.IsEnabled = true;
                         
@@ -151,8 +151,6 @@ namespace MercuryMapper.MultiCharting
             LobbyCode = lobbyCode;
 
             SendMessage(MessageTypes.JoinLobby, lobbyCode + color + username);
-            
-            mainView.ShowReceivingDataMessage();
         }
 
         public void LeaveLobby()
@@ -296,6 +294,7 @@ namespace MercuryMapper.MultiCharting
                 mainView.UpdateAudioFilepath();
                 mainView.RenderEngine.UpdateVisibleTime();
                 mainView.ResetLoopMarkers(mainView.AudioManager.CurrentSong?.Length ?? 0);
+                mainView.SetUiLockState(MainView.UiLockState.Loaded);
             });
 
             SendMessage(MessageTypes.SyncDone, "");
@@ -364,6 +363,7 @@ namespace MercuryMapper.MultiCharting
                 case MessageTypes.GoodLobbyCode:
                     SetNetworkConnectionState(NetworkConnectionState.Client);
                     SendMessage(MessageTypes.SyncRequest, "");
+                    mainView.ShowReceivingDataMessage();
                     break;
                 case MessageTypes.SyncRequest:
                     SendChartData(trimmedMessage);
