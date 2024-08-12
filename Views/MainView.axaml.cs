@@ -2440,8 +2440,4 @@ public partial class MainView : UserControl
         if (string.IsNullOrEmpty(filepath)) return;
         ChartEditor.Chart.WriteFile(filepath, chartWriteType);
     }
-
-    public void LoadNetworkChart(string chartData, string songFile)
-    {
-    }
 }
