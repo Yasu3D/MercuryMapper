@@ -1326,16 +1326,19 @@ public partial class MainView : UserControl
     
     private async void MenuItemSave_OnClick(object? sender, RoutedEventArgs e)
     {
+        if (uiLockState == UiLockState.Empty) return;
         await SaveFile(ChartEditor.Chart.IsNew, ChartEditor.Chart.FilePath);
     }
 
     private async void MenuItemSaveAs_OnClick(object? sender, RoutedEventArgs e)
     {
+        if (uiLockState == UiLockState.Empty) return;
         await SaveFile(true, ChartEditor.Chart.FilePath);
     }
 
     private async void MenuItemExportMercury_OnClick(object? sender, RoutedEventArgs e)
     {
+        if (uiLockState == UiLockState.Empty) return;
         if (ChartEditor.Chart.EndOfChart == null)
         {
             ShowWarningMessage(Assets.Lang.Resources.Generic_EndOfChartWarning, Assets.Lang.Resources.Generic_EndOfChartWarningExplanation);
@@ -1347,6 +1350,7 @@ public partial class MainView : UserControl
 
     private async void MenuItemExportSaturn_OnClick(object? sender, RoutedEventArgs e)
     {
+        if (uiLockState == UiLockState.Empty) return;
         if (ChartEditor.Chart.EndOfChart == null)
         {
             ShowWarningMessage(Assets.Lang.Resources.Generic_EndOfChartWarning, Assets.Lang.Resources.Generic_EndOfChartWarningExplanation);
