@@ -701,10 +701,6 @@ public class Chart
             result += "\n";
         }
         
-        Console.WriteLine(result);
-        
-        File.WriteAllText("X:/test.mer", result);
-        
         return result;
     }
     

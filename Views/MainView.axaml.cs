@@ -1,4 +1,4 @@
-using System;
+ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -540,7 +540,7 @@ public partial class MainView : UserControl
         LoopMarkerEnd.Margin = new(end, 0, 0, 0);
     }
 
-    private void ResetLoopMarkers(uint length)
+    public void ResetLoopMarkers(uint length)
     {
         AudioManager.LoopStart = 0;
         AudioManager.LoopEnd = length;
@@ -1374,13 +1374,11 @@ public partial class MainView : UserControl
     
     private void MenuItemCreateSession_OnClick(object? sender, RoutedEventArgs e)
     {
-        string code = "12345678";
-        
-        //if (SessionOpen)
-        //{
-        //    ShowWarningMessage($"{Assets.Lang.Resources.Online_SessionOpened} {code}");
-        //    return;
-        //}
+        if (ConnectionManager.lobbyCode != "")
+        {
+            ShowWarningMessage($"{Assets.Lang.Resources.Online_SessionOpened} {ConnectionManager.lobbyCode}");
+            return;
+        }
         
         OnlineView_CreateSession createSessionView = new();
         ContentDialog dialog = new()
@@ -1430,7 +1428,7 @@ public partial class MainView : UserControl
     
     private void MenuItemDisconnect_OnClick(object? sender, RoutedEventArgs e)
     {
-        
+        ConnectionManager.LeaveLobby();
     }
     
     private void MenuItemSettings_OnClick(object? sender, RoutedEventArgs e)
@@ -1922,27 +1920,52 @@ public partial class MainView : UserControl
     {
         ChartEditor.Chart.Author = ChartInfoAuthor.Text ?? "";
     }
+
+    private void ChartInfoAuthor_LostFocus(object? sender, RoutedEventArgs e)
+    {
+        ConnectionManager.SendMessage(ConnectionManager.MessageTypes.ChartAuthorChange, ChartEditor.Chart.Author);
+    }
     
     private void ChartInfoLevel_OnValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
     {
         ChartEditor.Chart.Level = (decimal)ChartInfoLevel.Value;
     }
-    
+
+    private void ChartInfoLevel_LostFocus(object? sender, RoutedEventArgs e)
+    {
+        ConnectionManager.SendMessage(ConnectionManager.MessageTypes.LevelChange, ChartEditor.Chart.Level.ToString(CultureInfo.InvariantCulture));
+    }
+
     private void ChartInfoClearThreshold_OnValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
     {
         ChartEditor.Chart.ClearThreshold = (decimal)ChartInfoClearThreshold.Value;
     }
-    
+
+    private void ChartInfoClearThreshold_LostFocus(object? sender, RoutedEventArgs e)
+    {
+        ConnectionManager.SendMessage(ConnectionManager.MessageTypes.ClearThresholdChange, ChartEditor.Chart.ClearThreshold.ToString(CultureInfo.InvariantCulture));
+    }
+
     private void ChartInfoPreviewTime_OnValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
     {
         ChartEditor.Chart.PreviewTime = (decimal)ChartInfoPreviewTime.Value;
     }
-    
+
+    private void ChartInfoPreviewTime_LostFocus(object? sender, RoutedEventArgs e)
+    {
+        ConnectionManager.SendMessage(ConnectionManager.MessageTypes.PreviewStartChange, ChartEditor.Chart.PreviewTime.ToString(CultureInfo.InvariantCulture));
+    }
+
     private void ChartInfoPreviewLength_OnValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
     {
         ChartEditor.Chart.PreviewLength = (decimal)ChartInfoPreviewLength.Value;
     }
-    
+
+    private void ChartInfoPreviewLength_LostFocus(object? sender, RoutedEventArgs e)
+    {
+        ConnectionManager.SendMessage(ConnectionManager.MessageTypes.PreviewLengthChange, ChartEditor.Chart.PreviewLength.ToString(CultureInfo.InvariantCulture));
+    }
+
     private void ChartInfoPlayPreview_OnClick(object? sender, RoutedEventArgs e)
     {
         if (ChartEditor.Chart.PreviewLength == 0 || AudioManager.CurrentSong == null) return;
@@ -1956,12 +1979,22 @@ public partial class MainView : UserControl
     {
         ChartEditor.Chart.Offset = (decimal)ChartInfoOffset.Value;
     }
-    
+
+    private void ChartInfoOffset_LostFocus(object? sender, RoutedEventArgs e)
+    {
+        ConnectionManager.SendMessage(ConnectionManager.MessageTypes.AudioOffsetChange, ChartEditor.Chart.Offset.ToString(CultureInfo.InvariantCulture));
+    }
+
     private void ChartInfoMovieOffset_OnValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
     {
         ChartEditor.Chart.MovieOffset = (decimal)ChartInfoMovieOffset.Value;
     }
-    
+
+    private void ChartInfoMovieOffset_LostFocus(object? sender, RoutedEventArgs e)
+    {
+        ConnectionManager.SendMessage(ConnectionManager.MessageTypes.MovieOffsetChange, ChartEditor.Chart.MovieOffset.ToString(CultureInfo.InvariantCulture));
+    }
+
     private void SelectionInfoHighlightNext_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.HighlightNextElement();
     
     private void SelectionInfoHighlightPrev_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.HighlightPrevElement();
@@ -2406,5 +2439,9 @@ public partial class MainView : UserControl
         
         if (string.IsNullOrEmpty(filepath)) return;
         ChartEditor.Chart.WriteFile(filepath, chartWriteType);
+    }
+
+    public void LoadNetworkChart(string chartData, string songFile)
+    {
     }
 }
