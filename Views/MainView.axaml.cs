@@ -110,6 +110,13 @@ public partial class MainView : UserControl
         Playing,
         Preview
     }
+
+    private UiLockState uiLockState = UiLockState.Empty;
+    public enum UiLockState
+    {
+        Empty,
+        Loaded
+    }
     
     // ________________ Setup & UI Updates
 
@@ -564,6 +571,35 @@ public partial class MainView : UserControl
         AudioManager.LoopEnd = AudioManager.CurrentSong.Position;
         LoopMarkerEnd.Margin = new(AudioManager.LoopEnd * (SliderSongPosition.Bounds.Width - 25) / AudioManager.CurrentSong.Length + 12.5, 0, 0, 0);
     }
+
+    public void SetUiLockState(UiLockState lockState)
+    {
+        switch (lockState)
+        {
+            case UiLockState.Loaded:
+            {
+                UiLock.IsVisible = false;
+                
+                MenuItemEdit.IsEnabled = true;
+                MenuItemSelect.IsEnabled = true;
+                MenuItemTools.IsEnabled = true;
+                break;
+            }
+            
+            case UiLockState.Empty:
+            {
+                UiLock.IsVisible = true;
+                SetPlayState(PlayerState.Paused);
+
+                MenuItemEdit.IsEnabled = false;
+                MenuItemSelect.IsEnabled = false;
+                MenuItemTools.IsEnabled = false;
+                break;
+            }
+        }
+
+        uiLockState = lockState;
+    }
     
     // ________________ Input
     
@@ -648,6 +684,8 @@ public partial class MainView : UserControl
             return;
         }
 
+        if (uiLockState == UiLockState.Empty) return;
+        
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditUndo"])) 
         {
             ChartEditor.Undo();
@@ -1267,6 +1305,7 @@ public partial class MainView : UserControl
                 RenderEngine.UpdateVisibleTime();
                 ClearAutosaves();
                 ResetLoopMarkers(AudioManager.CurrentSong?.Length ?? 0);
+                SetUiLockState(UiLockState.Loaded);
             }
         });
     }
@@ -1274,6 +1313,8 @@ public partial class MainView : UserControl
     private async void MenuItemOpen_OnClick(object? sender, RoutedEventArgs e)
     {
         if (!await PromptSave()) return;
+        
+        SetUiLockState(UiLockState.Empty);
         
         // Get .mer file
         IStorageFile? file = await OpenChartFilePicker();
@@ -2387,6 +2428,7 @@ public partial class MainView : UserControl
                 SetSelectionInfo();
                 ResetLoopMarkers(AudioManager.CurrentSong?.Length ?? 0);
                 SliderSongPosition.IsEnabled = false;
+                SetUiLockState(UiLockState.Empty);
                 return;
             }
             
@@ -2407,6 +2449,7 @@ public partial class MainView : UserControl
         UpdateAudioFilepath();
         RenderEngine.UpdateVisibleTime();
         ResetLoopMarkers(AudioManager.CurrentSong?.Length ?? 0);
+        SetUiLockState(UiLockState.Loaded);
     }
     
     public async Task<bool> SaveFile(bool openFilePicker, string filepath)

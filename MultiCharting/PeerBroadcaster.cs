@@ -13,7 +13,7 @@ public class PeerBroadcaster
     }
 
     private readonly MainView mainView;
-    private const int TimestampTickrate = 100; // Update 10 times a second
+    private const int TimestampTickrate = 50; // Update 20 times a second
     private Timer timestampTimer;
     private uint lastTimestamp;
 

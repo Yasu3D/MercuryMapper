@@ -1065,4 +1065,7 @@ Continue?</value>
   <data name="Online_InvalidSessionCode" xml:space="preserve">
     <value>Invalid session code!</value>
   </data>
+  <data name="Generic_NoChartLoaded" xml:space="preserve">
+    <value>No Chart Loaded :]</value>
+  </data>
 </root>

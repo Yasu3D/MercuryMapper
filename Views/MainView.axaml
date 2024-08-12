@@ -50,8 +50,8 @@
                     <Separator/>
                     
                     <MenuItem Header="{x:Static lang:Resources.Menu_Online}">
-                        <MenuItem Header="{x:Static lang:Resources.Menu_CreateSession}" Click="MenuItemCreateSession_OnClick" Name="MenuItemCreateSession" />
-                        <MenuItem Header="{x:Static lang:Resources.Menu_JoinSession}" Click="MenuItemJoinSession_OnClick" Name="MenuItemJoinSession" />
+                        <MenuItem Header="{x:Static lang:Resources.Menu_CreateSession}" Click="MenuItemCreateSession_OnClick" Name="MenuItemCreateSession" IsEnabled="False"/>
+                        <MenuItem Header="{x:Static lang:Resources.Menu_JoinSession}" Click="MenuItemJoinSession_OnClick" Name="MenuItemJoinSession" IsEnabled="False"/>
                         <Separator/>
                         <MenuItem Header="{x:Static lang:Resources.Menu_Disconnect}" Click="MenuItemDisconnect_OnClick" Name="MenuItemDisconnect" IsEnabled="False"/>
                     </MenuItem>
@@ -69,7 +69,7 @@
                     <MenuItem Header="{x:Static lang:Resources.Menu_Exit}" Click="MenuItemExit_OnClick"/>
                 </MenuItem>
                 
-                <MenuItem Header="{x:Static lang:Resources.MenuHeader_Edit}">
+                <MenuItem Header="{x:Static lang:Resources.MenuHeader_Edit}" Name="MenuItemEdit" IsEnabled="False">
                     <MenuItem Header="{x:Static lang:Resources.Menu_Undo}" Name="MenuItemUndo"
                               Click="MenuItemUndo_OnClick"/>
                     <MenuItem Header="{x:Static lang:Resources.Menu_Redo}" Name="MenuItemRedo"
@@ -83,7 +83,7 @@
                               Click="MenuItemPaste_OnClick"/>
                 </MenuItem>
                 
-                <MenuItem Header="{x:Static lang:Resources.MenuHeader_Select}">
+                <MenuItem Header="{x:Static lang:Resources.MenuHeader_Select}" Name="MenuItemSelect" IsEnabled="False">
                     <MenuItem Header="{x:Static lang:Resources.Editor_SelectAll}" Name="MenuItemSelectAll"
                               Click="MenuItemSelectAll_OnClick"/>
                     <MenuItem Header="{x:Static lang:Resources.Editor_DeselectAll}" Name="MenuItemDeselectAll"
@@ -102,7 +102,7 @@
                     
                 </MenuItem>
                 
-                <MenuItem Header="{x:Static lang:Resources.MenuHeader_Tools}">
+                <MenuItem Header="{x:Static lang:Resources.MenuHeader_Tools}" Name="MenuItemTools" IsEnabled="False">
                     <MenuItem Header="{x:Static lang:Resources.Menu_MirrorChart}" Name="MenuItemMirrorChart"
                               Click="MenuItemMirrorChart_OnClick"/>
                     <MenuItem Header="{x:Static lang:Resources.Menu_ShiftChart}" Name="MenuItemShiftChart"
@@ -118,6 +118,14 @@
                 </MenuItem>
             </Menu>
             <Panel Grid.Column="1" Background="{DynamicResource TitleBar}" IsHitTestVisible="False"/>
+        </Grid>
+        
+        <!-- UI Lock -->
+        <Grid ColumnDefinitions="*,300" RowDefinitions="*" Grid.Row="1" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="3" ZIndex="99999" Name="UiLock">
+            <Rectangle Grid.Column="0" Fill="{DynamicResource DarkBrush}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+            <TextBlock Grid.Column="0" Text="{x:Static lang:Resources.Generic_NoChartLoaded}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" Foreground="Gray"/>
+            
+            <Rectangle Grid.Column="1" Fill="{DynamicResource LightBrush}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
         </Grid>
         
         <!-- Left Panel -->

@@ -1077,6 +1077,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Keine Chart geöffnet :].
+        /// </summary>
+        public static string Generic_NoChartLoaded {
+            get {
+                return ResourceManager.GetString("Generic_NoChartLoaded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Keine.
         /// </summary>
         public static string Generic_None {
@@ -1672,11 +1681,29 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ungültiger Session Code!.
+        /// </summary>
+        public static string Online_InvalidSessionCode {
+            get {
+                return ResourceManager.GetString("Online_InvalidSessionCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Server Addresse.
         /// </summary>
         public static string Online_ServerAddress {
             get {
                 return ResourceManager.GetString("Online_ServerAddress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Session geschlossen..
+        /// </summary>
+        public static string Online_SessionClosed {
+            get {
+                return ResourceManager.GetString("Online_SessionClosed", resourceCulture);
             }
         }
         

@@ -62,9 +62,71 @@ namespace MercuryMapper.MultiCharting
         public string lobbyCode = "";
         private PeerManager PeerManager => mainView.PeerManager;
         private ChartEditor ChartEditor => mainView.ChartEditor;
-        private bool recievedOneOfTwoFiles = false;
+        private bool recievedOneOfTwoFiles;
         private string songFilePath = "";
         private string recievedChartData = "";
+        
+        public NetworkConnectionState NetworkState = NetworkConnectionState.Local;
+        public enum NetworkConnectionState
+        {
+            Local,
+            Host,
+            Client 
+        }
+        
+        public void SetNetworkConnectionState(NetworkConnectionState connectionState)
+        {
+            NetworkState = connectionState;
+
+            Dispatcher.UIThread.Post(() =>
+            {
+                switch (connectionState)
+                {
+                    case NetworkConnectionState.Local:
+                    {
+                        mainView.MenuItemCreateSession.IsEnabled = true;
+                        mainView.MenuItemMirrorChart.IsEnabled = true;
+                        mainView.MenuItemShiftChart.IsEnabled = true;
+                        mainView.MenuItemJoinSession.IsEnabled = true;
+                        mainView.MenuItemDisconnect.IsEnabled = false;
+                        mainView.MenuItemNew.IsEnabled = true;
+                        mainView.MenuItemOpen.IsEnabled = true;
+                    
+                        break;
+                    }
+            
+                    case NetworkConnectionState.Host:
+                    {
+                        mainView.MenuItemCreateSession.IsEnabled = false;
+                        mainView.MenuItemJoinSession.IsEnabled = false;
+                        mainView.MenuItemDisconnect.IsEnabled = true;
+                        
+                        mainView.MenuItemMirrorChart.IsEnabled = true;
+                        mainView.MenuItemShiftChart.IsEnabled = true;
+                        
+                        mainView.MenuItemNew.IsEnabled = false;
+                        mainView.MenuItemOpen.IsEnabled = false;
+                        
+                        break;
+                    }
+            
+                    case NetworkConnectionState.Client:
+                    {
+                        mainView.MenuItemCreateSession.IsEnabled = false;
+                        mainView.MenuItemJoinSession.IsEnabled = false;
+                        mainView.MenuItemDisconnect.IsEnabled = true;
+                        
+                        mainView.MenuItemMirrorChart.IsEnabled = false;
+                        mainView.MenuItemShiftChart.IsEnabled = false;
+                        
+                        mainView.MenuItemNew.IsEnabled = false;
+                        mainView.MenuItemOpen.IsEnabled = false;
+                        
+                        break;
+                    }
+                }
+            });
+        }
 
         public void CreateLobby(string Address, string Username, string Color)
         {
@@ -250,38 +312,7 @@ namespace MercuryMapper.MultiCharting
                 Dispatcher.UIThread.Post(() => PeerManager.RemoveAllPeers());
             });
 
-            EnableButtons();
-        }
-
-        private void DisableButtons(bool notHosting)
-        {
-            Dispatcher.UIThread.Post(() =>
-            {
-                if (notHosting)
-                {
-                    mainView.MenuItemCreateSession.IsEnabled = false;
-                    mainView.MenuItemMirrorChart.IsEnabled = false;
-                    mainView.MenuItemShiftChart.IsEnabled = false;
-                }
-                mainView.MenuItemJoinSession.IsEnabled = false;
-                mainView.MenuItemDisconnect.IsEnabled = true;
-                mainView.MenuItemNew.IsEnabled = false;
-                mainView.MenuItemOpen.IsEnabled = false;
-            });
-        }
-
-        private void EnableButtons()
-        {
-            Dispatcher.UIThread.Post(() =>
-            {
-                mainView.MenuItemCreateSession.IsEnabled = true;
-                mainView.MenuItemMirrorChart.IsEnabled = true;
-                mainView.MenuItemShiftChart.IsEnabled = true;
-                mainView.MenuItemJoinSession.IsEnabled = true;
-                mainView.MenuItemDisconnect.IsEnabled = false;
-                mainView.MenuItemNew.IsEnabled = true;
-                mainView.MenuItemOpen.IsEnabled = true;
-            });
+            SetNetworkConnectionState(NetworkConnectionState.Local);
         }
 
         private void HandleMessage(ResponseMessage Message)
@@ -310,7 +341,7 @@ namespace MercuryMapper.MultiCharting
                     Dispatcher.UIThread.Post(() => {
                         mainView.ShowWarningMessage($"{Assets.Lang.Resources.Online_SessionOpened} {lobbyCode}");
                     });
-                    DisableButtons(false);
+                    SetNetworkConnectionState(NetworkConnectionState.Host);
                     break;
                 case MessageTypes.JoinLobby:
                     string[] JoinSplitMessage = TrimmedMessage.Split('|');
@@ -325,7 +356,7 @@ namespace MercuryMapper.MultiCharting
                     webSocketClient?.Dispose();
                     break;
                 case MessageTypes.GoodLobbyCode:
-                    DisableButtons(true);
+                    SetNetworkConnectionState(NetworkConnectionState.Client);
                     SendMessage(MessageTypes.SyncRequest, "");
                     break;
                 case MessageTypes.SyncRequest:

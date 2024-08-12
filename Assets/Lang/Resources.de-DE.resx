@@ -1060,9 +1060,12 @@ Fortfahren?</value>
     <value>Session Offen. Code:</value>
   </data>
   <data name="Online_InvalidSessionCode" xml:space="preserve">
-    <value />
+    <value>Ungültiger Session Code!</value>
   </data>
   <data name="Online_SessionClosed" xml:space="preserve">
-    <value />
+    <value>Session geschlossen.</value>
+  </data>
+  <data name="Generic_NoChartLoaded" xml:space="preserve">
+    <value>Keine Chart geöffnet :]</value>
   </data>
 </root>
