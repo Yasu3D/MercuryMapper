@@ -579,6 +579,11 @@ public partial class MainView : UserControl
             case UiLockState.Loaded:
             {
                 UiLock.IsVisible = false;
+
+                if (ConnectionManager.NetworkState == ConnectionManager.NetworkConnectionState.Local)
+                {
+                    MenuItemCreateSession.IsEnabled = true;
+                }
                 
                 MenuItemEdit.IsEnabled = true;
                 MenuItemSelect.IsEnabled = true;
@@ -1419,9 +1424,9 @@ public partial class MainView : UserControl
     
     private void MenuItemCreateSession_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (ConnectionManager.lobbyCode != "")
+        if (ConnectionManager.LobbyCode != "")
         {
-            ShowWarningMessage($"{Assets.Lang.Resources.Online_SessionOpened} {ConnectionManager.lobbyCode}");
+            ShowWarningMessage($"{Assets.Lang.Resources.Online_SessionOpened} {ConnectionManager.LobbyCode}");
             return;
         }
         
@@ -2217,6 +2222,15 @@ public partial class MainView : UserControl
         dialog.ShowAsync();
     }
     
+    private readonly ContentDialog receivingDataDialog = new()
+    {
+        Title = Assets.Lang.Resources.Online_ReceivingData
+    };
+
+    public void ShowReceivingDataMessage() => Dispatcher.UIThread.Post(() => receivingDataDialog.ShowAsync());
+
+    public void HideReceivingDataMessage() => Dispatcher.UIThread.Post(() => receivingDataDialog.Hide());
+
     public void SetPlayState(PlayerState state)
     {
         if (AudioManager.CurrentSong == null)

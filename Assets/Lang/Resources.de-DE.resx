@@ -1068,4 +1068,7 @@ Fortfahren?</value>
   <data name="Generic_NoChartLoaded" xml:space="preserve">
     <value>Keine Chart geöffnet :]</value>
   </data>
+  <data name="Online_ReceivingData" xml:space="preserve">
+    <value>Erhalte Daten...</value>
+  </data>
 </root>

@@ -5,12 +5,17 @@ using System;
 using System.Globalization;
 using System.IO;
 using System.Net.WebSockets;
+using FluentAvalonia.UI.Controls;
 using Websocket.Client;
 
 namespace MercuryMapper.MultiCharting
 {
     public class ConnectionManager(MainView main)
     {
+        private readonly MainView mainView = main;
+        private PeerManager PeerManager => mainView.PeerManager;
+        private ChartEditor ChartEditor => mainView.ChartEditor;
+        
         public enum MessageTypes : uint
         {
             // 0XX - Host, Join, and Sync
@@ -52,19 +57,17 @@ namespace MercuryMapper.MultiCharting
             ClientTimestamp = 213
         }
 
-        private readonly string requestTypeFormat = "000";
-        private readonly int requestTypeLength = 3;
-        private readonly int hexColorLength = 9;
+        private const string RequestTypeFormat = "000";
+        private const int RequestTypeLength = 3;
+        private const int HexColorLength = 9;
 
         private WebsocketClient? webSocketClient;
-        private bool connectionGood = false;
-        private readonly MainView mainView = main;
-        public string lobbyCode = "";
-        private PeerManager PeerManager => mainView.PeerManager;
-        private ChartEditor ChartEditor => mainView.ChartEditor;
-        private bool recievedOneOfTwoFiles;
+        private bool connectionGood;
+        private bool receivedOneOfTwoFiles;
+        
+        public string LobbyCode = "";
         private string songFilePath = "";
-        private string recievedChartData = "";
+        private string receivedChartData = "";
         
         public NetworkConnectionState NetworkState = NetworkConnectionState.Local;
         public enum NetworkConnectionState
@@ -85,10 +88,12 @@ namespace MercuryMapper.MultiCharting
                     case NetworkConnectionState.Local:
                     {
                         mainView.MenuItemCreateSession.IsEnabled = true;
-                        mainView.MenuItemMirrorChart.IsEnabled = true;
-                        mainView.MenuItemShiftChart.IsEnabled = true;
                         mainView.MenuItemJoinSession.IsEnabled = true;
                         mainView.MenuItemDisconnect.IsEnabled = false;
+                        
+                        mainView.MenuItemMirrorChart.IsEnabled = true;
+                        mainView.MenuItemShiftChart.IsEnabled = true;
+                        
                         mainView.MenuItemNew.IsEnabled = true;
                         mainView.MenuItemOpen.IsEnabled = true;
                     
@@ -128,24 +133,26 @@ namespace MercuryMapper.MultiCharting
             });
         }
 
-        public void CreateLobby(string Address, string Username, string Color)
+        public void CreateLobby(string address, string username, string color)
         {
-            string Connection = CheckConnectionOrConnect(Address);
+            string connection = CheckConnectionOrConnect(address);
 
-            if (Connection == "failed") return;
+            if (connection == "failed") return;
 
-            SendMessage(MessageTypes.CreateLobby, Color + Username);
+            SendMessage(MessageTypes.CreateLobby, color + username);
         }
 
-        public void JoinLobby(string Address, string Username, string Color, string LobbyCode)
+        public void JoinLobby(string address, string username, string color, string lobbyCode)
         {
-            string Connection = CheckConnectionOrConnect(Address);
+            string connection = CheckConnectionOrConnect(address);
 
-            if (Connection == "failed") return;
+            if (connection == "failed") return;
 
-            lobbyCode = LobbyCode;
+            LobbyCode = lobbyCode;
 
-            SendMessage(MessageTypes.JoinLobby, LobbyCode + Color + Username);
+            SendMessage(MessageTypes.JoinLobby, lobbyCode + color + username);
+            
+            mainView.ShowReceivingDataMessage();
         }
 
         public void LeaveLobby()
@@ -154,17 +161,17 @@ namespace MercuryMapper.MultiCharting
 
             SendMessage(MessageTypes.LeaveLobby, "");
 
-            lobbyCode = "";
+            LobbyCode = "";
 
             webSocketClient.Dispose();
         }
 
-        public void SendTimestamp(uint Timestamp)
+        public void SendTimestamp(uint timestamp)
         {
-            SendMessage(MessageTypes.ClientTimestamp, Timestamp.ToString());
+            SendMessage(MessageTypes.ClientTimestamp, timestamp.ToString());
         }
 
-        private string CheckConnectionOrConnect(string ServerUrl)
+        private string CheckConnectionOrConnect(string serverUrl)
         {
             if (webSocketClient != null)
             {
@@ -182,10 +189,10 @@ namespace MercuryMapper.MultiCharting
             });
 
             // Prep server Uri
-            Uri ServerUri = new(ServerUrl);
+            Uri serverUri = new(serverUrl);
 
             // Create client using Uri and client factory
-            webSocketClient = new(ServerUri, factory)
+            webSocketClient = new(serverUri, factory)
             {
                 // Disable message timeout
                 ReconnectTimeout = null,
@@ -201,7 +208,7 @@ namespace MercuryMapper.MultiCharting
             });
 
             // Set up to handle incoming messages
-            webSocketClient.MessageReceived.Subscribe(Message => HandleMessage(Message));
+            webSocketClient.MessageReceived.Subscribe(HandleMessage);
 
             try
             {
@@ -218,72 +225,71 @@ namespace MercuryMapper.MultiCharting
             }
         }
 
-        public void SendMessage(MessageTypes? ReqType, string ReqData)
+        public void SendMessage(MessageTypes? reqType, string reqData)
         {
             if (webSocketClient == null) return;
-
-            if (ReqType == null && ReqData == null) return;
-
-            if (ReqType == null)
+            
+            if (reqType == null)
             {
-                webSocketClient.Send(ReqData);
+                webSocketClient.Send(reqData);
                 return;
             }
 
-            webSocketClient.Send(((uint)ReqType.Value).ToString(requestTypeFormat) + ReqData);
+            webSocketClient.Send(((uint)reqType.Value).ToString(RequestTypeFormat) + reqData);
         }
 
-        private void SendSongFile(string RecievingClientID)
+        private void SendSongFile(string receivingClientId)
         {
-            Byte[] bytes = File.ReadAllBytes(ChartEditor.Chart.AudioFilePath);
-            String fileData = Convert.ToBase64String(bytes);
+            byte[] bytes = File.ReadAllBytes(ChartEditor.Chart.AudioFilePath);
+            string fileData = Convert.ToBase64String(bytes);
 
             // I swear - if someone uses pipes in file names - they're insane.
-            SendMessage(MessageTypes.SongFile, RecievingClientID + "|" + Path.GetFileName(ChartEditor.Chart.AudioFilePath) + "|" + fileData);
+            SendMessage(MessageTypes.SongFile, receivingClientId + "|" + Path.GetFileName(ChartEditor.Chart.AudioFilePath) + "|" + fileData);
         }
 
-        private void SendChartData(string RecievingClientID)
+        private void SendChartData(string receivingClientId)
         {
-            String chartData = mainView.ChartEditor.Chart.WriteChartToNetwork();
+            string chartData = mainView.ChartEditor.Chart.WriteChartToNetwork();
 
-            SendMessage(MessageTypes.ChartData, RecievingClientID + "|" + chartData);
+            SendMessage(MessageTypes.ChartData, receivingClientId + "|" + chartData);
         }
 
-        private void RecieveSongFile(string songData)
+        private async void ReceiveSongFile(string songData)
         {
             string fileName = songData[..songData.IndexOf('|')];
-            string songFileData = songData[(songData.IndexOf('|') + 1)..];
-
             songFilePath = Path.GetFullPath("tmp/" + fileName);
-
-            Byte[] fileData = Convert.FromBase64String(songFileData);
-
+            
+            string songFileData = songData[(songData.IndexOf('|') + 1)..];
+            byte[] fileData = Convert.FromBase64String(songFileData);
+            
             if (!Directory.Exists("tmp")) Directory.CreateDirectory("tmp");
+            
+            await File.WriteAllBytesAsync(songFilePath, fileData);
+            
+            mainView.HideReceivingDataMessage();
 
-            File.WriteAllBytes(songFilePath, fileData);
-
-            TryToLoadRecievedMap();
+            TryToLoadReceivedChart();
         }
 
-        private void RecieveChartData(string chartData)
+        private void ReceiveChartData(string chartData)
         {
-            recievedChartData = chartData;
+            receivedChartData = chartData;
 
-            TryToLoadRecievedMap();
+            TryToLoadReceivedChart();
         }
 
-        private void TryToLoadRecievedMap()
+        private void TryToLoadReceivedChart()
         {
-            if (recievedOneOfTwoFiles == false)
+            if (receivedOneOfTwoFiles == false)
             {
-                recievedOneOfTwoFiles = true;
+                receivedOneOfTwoFiles = true;
                 return;
             }
 
-            recievedOneOfTwoFiles = false;
+            receivedOneOfTwoFiles = false;
 
             Dispatcher.UIThread.Post(() => {
-                mainView.ChartEditor.LoadChartNetwork(recievedChartData);
+                mainView.ChartEditor.LoadChartNetwork(receivedChartData);
                 mainView.ChartEditor.Chart.AudioFilePath = songFilePath;
                 mainView.AudioManager.SetSong(mainView.ChartEditor.Chart.AudioFilePath, (float)(mainView.UserConfig.AudioConfig.MusicVolume * 0.01), (int)mainView.SliderPlaybackSpeed.Value);
                 mainView.SetSongPositionSliderValues();
@@ -303,10 +309,10 @@ namespace MercuryMapper.MultiCharting
             webSocketClient = null;
 
             Dispatcher.UIThread.Post(() => {
-                if (lobbyCode != "")
+                if (LobbyCode != "")
                 {
                     mainView.ShowWarningMessage($"{Assets.Lang.Resources.Online_SessionClosed}");
-                    lobbyCode = "";
+                    LobbyCode = "";
                 }
 
                 Dispatcher.UIThread.Post(() => PeerManager.RemoveAllPeers());
@@ -315,44 +321,44 @@ namespace MercuryMapper.MultiCharting
             SetNetworkConnectionState(NetworkConnectionState.Local);
         }
 
-        private void HandleMessage(ResponseMessage Message)
+        private void HandleMessage(ResponseMessage message)
         {
             // Verify message type is the kind expected
-            if (Message.MessageType != WebSocketMessageType.Text || Message.Text == null) return;
+            if (message.MessageType != WebSocketMessageType.Text || message.Text == null) return;
 
             // Check for intial valid response and ignore data until it's recieved
             if (connectionGood == false)
             {
-                if (Message.Text == "Hello MercuryMapper Client!") connectionGood = true;
+                if (message.Text == "Hello MercuryMapper Client!") connectionGood = true;
 
                 return;
             }
 
-            MessageTypes RequestType = (MessageTypes)uint.Parse(Message.Text[..requestTypeLength]);
+            MessageTypes requestType = (MessageTypes)uint.Parse(message.Text[..RequestTypeLength]);
 
-            string TrimmedMessage = Message.Text[requestTypeLength..];
+            string trimmedMessage = message.Text[RequestTypeLength..];
 
-            Console.WriteLine(RequestType);
+            Console.WriteLine(requestType);
 
-            switch (RequestType)
+            switch (requestType)
             {
                 case MessageTypes.LobbyCreated:
-                    lobbyCode = TrimmedMessage;
+                    LobbyCode = trimmedMessage;
                     Dispatcher.UIThread.Post(() => {
-                        mainView.ShowWarningMessage($"{Assets.Lang.Resources.Online_SessionOpened} {lobbyCode}");
+                        mainView.ShowWarningMessage($"{Assets.Lang.Resources.Online_SessionOpened} {LobbyCode}");
                     });
                     SetNetworkConnectionState(NetworkConnectionState.Host);
                     break;
                 case MessageTypes.JoinLobby:
-                    string[] JoinSplitMessage = TrimmedMessage.Split('|');
-                    Dispatcher.UIThread.Post(() => PeerManager.AddPeer(int.Parse(JoinSplitMessage[0]), JoinSplitMessage[1][hexColorLength..], JoinSplitMessage[1][..hexColorLength]));
+                    string[] joinSplitMessage = trimmedMessage.Split('|');
+                    Dispatcher.UIThread.Post(() => PeerManager.AddPeer(int.Parse(joinSplitMessage[0]), joinSplitMessage[1][HexColorLength..], joinSplitMessage[1][..HexColorLength]));
                     break;
                 case MessageTypes.LeaveLobby:
-                    Dispatcher.UIThread.Post(() => PeerManager.RemovePeer(int.Parse(TrimmedMessage)));
+                    Dispatcher.UIThread.Post(() => PeerManager.RemovePeer(int.Parse(trimmedMessage)));
                     break;
                 case MessageTypes.BadLobbyCode:
                     Dispatcher.UIThread.Post(() => mainView.ShowWarningMessage($"{Assets.Lang.Resources.Online_InvalidSessionCode}"));
-                    lobbyCode = "";
+                    LobbyCode = "";
                     webSocketClient?.Dispose();
                     break;
                 case MessageTypes.GoodLobbyCode:
@@ -360,60 +366,60 @@ namespace MercuryMapper.MultiCharting
                     SendMessage(MessageTypes.SyncRequest, "");
                     break;
                 case MessageTypes.SyncRequest:
-                    SendChartData(TrimmedMessage);
-                    SendSongFile(TrimmedMessage);
+                    SendChartData(trimmedMessage);
+                    SendSongFile(trimmedMessage);
                     break;
                 case MessageTypes.ChartData:
-                    RecieveChartData(TrimmedMessage);
+                    ReceiveChartData(trimmedMessage);
                     break;
                 case MessageTypes.SongFile:
-                    RecieveSongFile(TrimmedMessage);
+                    ReceiveSongFile(trimmedMessage);
                     break;
                 case MessageTypes.ChartAuthorChange:
                     Dispatcher.UIThread.Post(() => {
-                        mainView.ChartEditor.Chart.Author = TrimmedMessage;
+                        mainView.ChartEditor.Chart.Author = trimmedMessage;
                         mainView.SetChartInfo();
                     });
                     break;
                 case MessageTypes.LevelChange:
                     Dispatcher.UIThread.Post(() => {
-                        mainView.ChartEditor.Chart.Level = Convert.ToDecimal(TrimmedMessage, CultureInfo.InvariantCulture);
+                        mainView.ChartEditor.Chart.Level = Convert.ToDecimal(trimmedMessage, CultureInfo.InvariantCulture);
                         mainView.SetChartInfo();
                     });
                     break;
                 case MessageTypes.ClearThresholdChange:
                     Dispatcher.UIThread.Post(() => {
-                        mainView.ChartEditor.Chart.ClearThreshold = Convert.ToDecimal(TrimmedMessage, CultureInfo.InvariantCulture);
+                        mainView.ChartEditor.Chart.ClearThreshold = Convert.ToDecimal(trimmedMessage, CultureInfo.InvariantCulture);
                         mainView.SetChartInfo();
                     });
                     break;
                 case MessageTypes.PreviewStartChange:
                     Dispatcher.UIThread.Post(() => {
-                        mainView.ChartEditor.Chart.PreviewTime = Convert.ToDecimal(TrimmedMessage, CultureInfo.InvariantCulture);
+                        mainView.ChartEditor.Chart.PreviewTime = Convert.ToDecimal(trimmedMessage, CultureInfo.InvariantCulture);
                         mainView.SetChartInfo();
                     });
                     break;
                 case MessageTypes.PreviewLengthChange:
                     Dispatcher.UIThread.Post(() => {
-                        mainView.ChartEditor.Chart.PreviewLength = Convert.ToDecimal(TrimmedMessage, CultureInfo.InvariantCulture);
+                        mainView.ChartEditor.Chart.PreviewLength = Convert.ToDecimal(trimmedMessage, CultureInfo.InvariantCulture);
                         mainView.SetChartInfo();
                     });
                     break;
                 case MessageTypes.AudioOffsetChange:
                     Dispatcher.UIThread.Post(() => {
-                        mainView.ChartEditor.Chart.Offset = Convert.ToDecimal(TrimmedMessage, CultureInfo.InvariantCulture);
+                        mainView.ChartEditor.Chart.Offset = Convert.ToDecimal(trimmedMessage, CultureInfo.InvariantCulture);
                         mainView.SetChartInfo();
                     });
                     break;
                 case MessageTypes.MovieOffsetChange:
                     Dispatcher.UIThread.Post(() => {
-                        mainView.ChartEditor.Chart.MovieOffset = Convert.ToDecimal(TrimmedMessage, CultureInfo.InvariantCulture);
+                        mainView.ChartEditor.Chart.MovieOffset = Convert.ToDecimal(trimmedMessage, CultureInfo.InvariantCulture);
                         mainView.SetChartInfo();
                     });
                     break;
                 case MessageTypes.ClientTimestamp:
-                    string[] TimestampSplitMessage = TrimmedMessage.Split('|');
-                    Dispatcher.UIThread.Post(() => PeerManager.SetPeerMarkerTimestamp(int.Parse(TimestampSplitMessage[0]), uint.Parse(TimestampSplitMessage[1])));
+                    string[] timestampSplitMessage = trimmedMessage.Split('|');
+                    Dispatcher.UIThread.Post(() => PeerManager.SetPeerMarkerTimestamp(int.Parse(timestampSplitMessage[0]), uint.Parse(timestampSplitMessage[1])));
                     break;
                 case MessageTypes.LobbyClosed:
                     webSocketClient?.Dispose();

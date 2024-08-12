@@ -1690,6 +1690,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Receiving Data....
+        /// </summary>
+        public static string Online_ReceivingData {
+            get {
+                return ResourceManager.GetString("Online_ReceivingData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Server Address.
         /// </summary>
         public static string Online_ServerAddress {

@@ -1068,4 +1068,7 @@ Continue?</value>
   <data name="Generic_NoChartLoaded" xml:space="preserve">
     <value>No Chart Loaded :]</value>
   </data>
+  <data name="Online_ReceivingData" xml:space="preserve">
+    <value>Receiving Data...</value>
+  </data>
 </root>
