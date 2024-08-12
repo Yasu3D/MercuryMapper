@@ -15,17 +15,20 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Avalonia" Version="11.0.10" />
-        <PackageReference Include="Avalonia.Desktop" Version="11.0.10" />
-        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.10" />
-        <PackageReference Include="Avalonia.Fonts.Inter" Version="11.0.10" />
+        <PackageReference Include="Avalonia" Version="11.1.2" />
+        <PackageReference Include="Avalonia.Desktop" Version="11.1.2" />
+        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.1.2" />
+        <PackageReference Include="Avalonia.Fonts.Inter" Version="11.1.2" />
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.10" />
-        <PackageReference Include="FluentAvaloniaUI" Version="2.0.5" />
+        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.1.2" />
+        <PackageReference Include="FluentAvaloniaUI" Version="2.1.0" />
         <PackageReference Include="ManagedBass" Version="3.1.1" />
         <PackageReference Include="ManagedBass.Flac" Version="3.1.1" />
         <PackageReference Include="ManagedBass.Fx" Version="3.1.1" />
+        <PackageReference Include="System.Net.Http" Version="4.3.4" />
+        <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
         <PackageReference Include="Tomlyn" Version="0.17.0" />
+        <PackageReference Include="Websocket.Client" Version="5.1.2" />
     </ItemGroup>
 
     <ItemGroup>

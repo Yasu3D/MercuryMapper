@@ -452,27 +452,27 @@
                         
                         <UniformGrid Columns="2">
                             <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.ChartProperties_Author}" Margin="0,2,0,2"/>
-                            <TextBox Text="" Name="ChartInfoAuthor" TextChanged="ChartInfoAuthor_OnTextChanged" HorizontalAlignment="Right" Margin="0,2,0,2" Width="130"/>
+                            <TextBox Text="" Name="ChartInfoAuthor" TextChanged="ChartInfoAuthor_OnTextChanged" LostFocus="ChartInfoAuthor_LostFocus" HorizontalAlignment="Right" Margin="0,2,0,2" Width="130"/>
                         </UniformGrid>
                         
                         <Separator/>
                         
                         <UniformGrid Columns="2">
                             <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.ChartProperties_Level}" Margin="0,2,0,2"/>
-                            <fluent:NumberBox Value="0" Name="ChartInfoLevel" ValueChanged="ChartInfoLevel_OnValueChanged" HorizontalAlignment="Right" Margin="0,2,0,2" Width="130"/>
+                            <fluent:NumberBox Value="0" Name="ChartInfoLevel" ValueChanged="ChartInfoLevel_OnValueChanged" LostFocus="ChartInfoLevel_LostFocus" HorizontalAlignment="Right" Margin="0,2,0,2" Width="130"/>
                             
                             <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.ChartProperties_ClearThreshold}" Margin="0,2,0,2"/>
-                            <fluent:NumberBox Value="0" Name="ChartInfoClearThreshold" ValueChanged="ChartInfoClearThreshold_OnValueChanged" HorizontalAlignment="Right" Margin="0,2,0,2" Width="130"/>
+                            <fluent:NumberBox Value="0" Name="ChartInfoClearThreshold" ValueChanged="ChartInfoClearThreshold_OnValueChanged" LostFocus="ChartInfoClearThreshold_LostFocus" HorizontalAlignment="Right" Margin="0,2,0,2" Width="130"/>
                         </UniformGrid>
                         
                         <Separator/>
                         
                         <UniformGrid Columns="2">
                             <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.ChartProperties_PreviewTime}" Margin="0,2,0,2"/>
-                            <fluent:NumberBox Value="0" Name="ChartInfoPreviewTime" ValueChanged="ChartInfoPreviewTime_OnValueChanged" HorizontalAlignment="Right" Margin="0,2,0,2" Width="130"/>
+                            <fluent:NumberBox Value="0" Name="ChartInfoPreviewTime" ValueChanged="ChartInfoPreviewTime_OnValueChanged" LostFocus="ChartInfoPreviewTime_LostFocus" HorizontalAlignment="Right" Margin="0,2,0,2" Width="130"/>
                             
                             <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.ChartProperties_PreviewLength}" Margin="0,2,0,2"/>
-                            <fluent:NumberBox Value="10" Name="ChartInfoPreviewLength" ValueChanged="ChartInfoPreviewLength_OnValueChanged" HorizontalAlignment="Right" Margin="0,2,0,2" Width="130"/>
+                            <fluent:NumberBox Value="10" Name="ChartInfoPreviewLength" ValueChanged="ChartInfoPreviewLength_OnValueChanged" LostFocus="ChartInfoPreviewLength_LostFocus" HorizontalAlignment="Right" Margin="0,2,0,2" Width="130"/>
                         </UniformGrid>
                         
                         <Button Content="{x:Static lang:Resources.ChartProperties_PlayPreview}" HorizontalAlignment="Stretch" Name="ChartInfoPlayPreview" Margin="0,2,0,0" Click="ChartInfoPlayPreview_OnClick"/>
@@ -481,10 +481,10 @@
                         
                         <UniformGrid Columns="2">
                             <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.ChartProperties_Offset}" Margin="0,2,0,2"/>
-                            <fluent:NumberBox Value="0" Name="ChartInfoOffset" ValueChanged="ChartInfoOffset_OnValueChanged" HorizontalAlignment="Right" Margin="0,2,0,2" Width="130"/>
+                            <fluent:NumberBox Value="0" Name="ChartInfoOffset" ValueChanged="ChartInfoOffset_OnValueChanged" LostFocus="ChartInfoOffset_LostFocus" HorizontalAlignment="Right" Margin="0,2,0,2" Width="130"/>
                             
                             <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.ChartProperties_MovieOffset}" Margin="0,2,0,2"/>
-                            <fluent:NumberBox Value="0" Name="ChartInfoMovieOffset" ValueChanged="ChartInfoMovieOffset_OnValueChanged" HorizontalAlignment="Right" Margin="0,2,0,2" Width="130"/>
+                            <fluent:NumberBox Value="0" Name="ChartInfoMovieOffset" ValueChanged="ChartInfoMovieOffset_OnValueChanged" LostFocus="ChartInfoMovieOffset_LostFocus" HorizontalAlignment="Right" Margin="0,2,0,2" Width="130"/>
                         </UniformGrid>
                     </StackPanel>
                 </Expander>

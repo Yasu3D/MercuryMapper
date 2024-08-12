@@ -135,7 +135,22 @@ public class ChartEditor
         mainView.SetChartInfo();
         mainView.SetSelectionInfo();
     }
-    
+
+    public void LoadChartNetwork(string chartData)
+    {
+        LastSelectedNote = null;
+        LastPlacedHold = null;
+        HighlightedElement = null;
+        EndHold(true);
+        EditorState = ChartEditorState.InsertNote; // manually reset state one more time
+        UndoRedoManager.Clear();
+        SelectedNotes.Clear();
+
+        Chart.LoadChartFromNetwork(chartData);
+        mainView.SetChartInfo();
+        mainView.SetSelectionInfo();
+    }
+
     public void UpdateCursorNoteType()
     {
         switch (CurrentNoteType)

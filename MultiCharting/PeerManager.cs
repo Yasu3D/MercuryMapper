@@ -51,6 +51,15 @@ public class PeerManager(MainView main)
         Peers.Remove(id);
     }
 
+    public void RemoveAllPeers()
+    {
+        foreach (KeyValuePair<int, Peer> peer in Peers)
+        {
+            mainView.PanelClientMarker.Children.Remove(Peers[peer.Key].Marker);
+            Peers.Remove(peer.Key);
+        }
+    }
+
     public void UpdatePeerMarkers()
     {
         if (mainView.AudioManager.CurrentSong == null) return;
