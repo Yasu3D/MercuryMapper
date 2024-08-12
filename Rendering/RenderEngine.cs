@@ -1247,13 +1247,13 @@ public class RenderEngine(MainView mainView)
                 _ => 0
             };
 
-            if (note.IsSnap) drawSnap(note, rect, scale, arrowDirection);
+            if (note.IsSnap) drawSnap(note, rect, arrowDirection);
             else drawSlide(note, rect, scale, arrowDirection);
         }
 
         return;
         
-        void drawSnap(Note note, SKRect rect, float scale, int arrowDirection)
+        void drawSnap(Note note, SKRect rect, int arrowDirection)
         {
             int arrowCount = note.Size / 3;
             float radius = rect.Width * 0.53f;
@@ -1349,10 +1349,10 @@ public class RenderEngine(MainView mainView)
                 float t0 = loopedPosition / arrowCount;
                 float t1 = (loopedPosition + 0.5f) / arrowCount;
                 
-                float radiusOutside0 = float.Max(radiusCenter + (arrowWidth * maskFunction(t0) * scale), radiusCenter);
-                float radiusOutside1 = float.Max(radiusCenter + (arrowWidth * maskFunction(t1) * scale), radiusCenter);
-                float radiusInside0 = float.Min(radiusCenter - (arrowWidth * maskFunction(t0) * scale), radiusCenter);
-                float radiusInside1 = float.Min(radiusCenter - (arrowWidth * maskFunction(t1) * scale), radiusCenter);
+                float radiusOutside0 = float.Max(radiusCenter + (arrowWidth * maskFunction(t0) * scale * canvasScale), radiusCenter);
+                float radiusOutside1 = float.Max(radiusCenter + (arrowWidth * maskFunction(t1) * scale * canvasScale), radiusCenter);
+                float radiusInside0 = float.Min(radiusCenter - (arrowWidth * maskFunction(t0) * scale * canvasScale), radiusCenter);
+                float radiusInside1 = float.Min(radiusCenter - (arrowWidth * maskFunction(t1) * scale * canvasScale), radiusCenter);
 
                 SKPoint p1;
                 SKPoint p2;
