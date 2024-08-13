@@ -325,7 +325,7 @@ namespace MercuryMapper.MultiCharting
             // Verify message type is the kind expected
             if (message.MessageType != WebSocketMessageType.Text || message.Text == null) return;
 
-            // Check for intial valid response and ignore data until it's recieved
+            // Check for initial valid response and ignore data until it's received
             if (connectionGood == false)
             {
                 if (message.Text == "Hello MercuryMapper Client!") connectionGood = true;
@@ -342,91 +342,144 @@ namespace MercuryMapper.MultiCharting
             switch (requestType)
             {
                 case MessageTypes.LobbyCreated:
+                {
                     LobbyCode = trimmedMessage;
                     Dispatcher.UIThread.Post(() => {
                         mainView.ShowWarningMessage($"{Assets.Lang.Resources.Online_SessionOpened} {LobbyCode}");
                     });
                     SetNetworkConnectionState(NetworkConnectionState.Host);
                     break;
+                }
+
                 case MessageTypes.JoinLobby:
+                {
                     string[] joinSplitMessage = trimmedMessage.Split('|');
                     Dispatcher.UIThread.Post(() => PeerManager.AddPeer(int.Parse(joinSplitMessage[0]), joinSplitMessage[1][HexColorLength..], joinSplitMessage[1][..HexColorLength]));
                     break;
+                }
+                
                 case MessageTypes.LeaveLobby:
+                {
                     Dispatcher.UIThread.Post(() => PeerManager.RemovePeer(int.Parse(trimmedMessage)));
                     break;
+                }
+                
                 case MessageTypes.BadLobbyCode:
+                {
                     Dispatcher.UIThread.Post(() => mainView.ShowWarningMessage($"{Assets.Lang.Resources.Online_InvalidSessionCode}"));
                     LobbyCode = "";
                     webSocketClient?.Dispose();
                     break;
+                }
+                
                 case MessageTypes.GoodLobbyCode:
+                {
                     SetNetworkConnectionState(NetworkConnectionState.Client);
                     SendMessage(MessageTypes.SyncRequest, "");
                     mainView.ShowReceivingDataMessage();
                     break;
+                }
+                
                 case MessageTypes.SyncRequest:
+                {
                     SendChartData(trimmedMessage);
                     SendSongFile(trimmedMessage);
                     break;
+                }
+                
                 case MessageTypes.ChartData:
+                {
                     ReceiveChartData(trimmedMessage);
                     break;
+                }
+                
                 case MessageTypes.SongFile:
+                {
                     ReceiveSongFile(trimmedMessage);
                     break;
+                }
+                
                 case MessageTypes.ChartAuthorChange:
+                {
                     Dispatcher.UIThread.Post(() => {
                         mainView.ChartEditor.Chart.Author = trimmedMessage;
                         mainView.SetChartInfo();
                     });
                     break;
+                }
+                
                 case MessageTypes.LevelChange:
+                {
                     Dispatcher.UIThread.Post(() => {
                         mainView.ChartEditor.Chart.Level = Convert.ToDecimal(trimmedMessage, CultureInfo.InvariantCulture);
                         mainView.SetChartInfo();
                     });
                     break;
+                }
+                
                 case MessageTypes.ClearThresholdChange:
+                {
                     Dispatcher.UIThread.Post(() => {
                         mainView.ChartEditor.Chart.ClearThreshold = Convert.ToDecimal(trimmedMessage, CultureInfo.InvariantCulture);
                         mainView.SetChartInfo();
                     });
                     break;
+                }
+                
                 case MessageTypes.PreviewStartChange:
+                {
                     Dispatcher.UIThread.Post(() => {
                         mainView.ChartEditor.Chart.PreviewTime = Convert.ToDecimal(trimmedMessage, CultureInfo.InvariantCulture);
                         mainView.SetChartInfo();
                     });
                     break;
+                }
+                
                 case MessageTypes.PreviewLengthChange:
+                {
                     Dispatcher.UIThread.Post(() => {
                         mainView.ChartEditor.Chart.PreviewLength = Convert.ToDecimal(trimmedMessage, CultureInfo.InvariantCulture);
                         mainView.SetChartInfo();
                     });
                     break;
+                }
+                
                 case MessageTypes.AudioOffsetChange:
+                {
                     Dispatcher.UIThread.Post(() => {
                         mainView.ChartEditor.Chart.Offset = Convert.ToDecimal(trimmedMessage, CultureInfo.InvariantCulture);
                         mainView.SetChartInfo();
                     });
                     break;
+                }
+                
                 case MessageTypes.MovieOffsetChange:
+                {
                     Dispatcher.UIThread.Post(() => {
                         mainView.ChartEditor.Chart.MovieOffset = Convert.ToDecimal(trimmedMessage, CultureInfo.InvariantCulture);
                         mainView.SetChartInfo();
                     });
                     break;
+                }
+                
                 case MessageTypes.ClientTimestamp:
+                {
                     string[] timestampSplitMessage = trimmedMessage.Split('|');
                     Dispatcher.UIThread.Post(() => PeerManager.SetPeerMarkerTimestamp(int.Parse(timestampSplitMessage[0]), uint.Parse(timestampSplitMessage[1])));
                     break;
+                }
+                
                 case MessageTypes.LobbyClosed:
+                {
                     webSocketClient?.Dispose();
                     break;
+                }
+                
                 default:
-                    Console.WriteLine("^ Got an unknown request type???");
+                {
+                    Console.WriteLine($"^ Got an unknown or unhandled request type: {requestType}");
                     break;
+                }
             }
         }
     }
