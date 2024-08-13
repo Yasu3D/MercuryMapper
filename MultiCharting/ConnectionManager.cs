@@ -5,7 +5,6 @@ using System;
 using System.Globalization;
 using System.IO;
 using System.Net.WebSockets;
-using FluentAvalonia.UI.Controls;
 using Websocket.Client;
 
 namespace MercuryMapper.MultiCharting
@@ -156,9 +155,9 @@ namespace MercuryMapper.MultiCharting
 
             if (connection == "failed") return;
 
-            LobbyCode = lobbyCode;
+            LobbyCode = lobbyCode.ToUpperInvariant();
 
-            SendMessage(MessageTypes.JoinLobby, lobbyCode + color + username);
+            SendMessage(MessageTypes.JoinLobby, LobbyCode + color + username);
         }
 
         public void LeaveLobby()
