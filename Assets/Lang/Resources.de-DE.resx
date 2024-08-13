@@ -1071,4 +1071,10 @@ Fortfahren?</value>
   <data name="Online_ReceivingData" xml:space="preserve">
     <value>Erhalte Daten...</value>
   </data>
+  <data name="Online_ConnectionFailed" xml:space="preserve">
+    <value>Verbindung Fehlgeschlagen.</value>
+  </data>
+  <data name="Online_ConnectionFailedDetails" xml:space="preserve">
+    <value>Vergewissern Sie sich, dass die angegebene Adresse korrekt ist und dass der Server läuft.</value>
+  </data>
 </root>

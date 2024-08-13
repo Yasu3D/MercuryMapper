@@ -27,7 +27,7 @@
         <Separator Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"/>
         
         <TextBlock Grid.Row="2" Grid.Column="0" Text="{x:Static lang:Resources.Online_Username}"/>
-        <TextBox Grid.Row="2" Grid.Column="1" Name="UsernameTextbox"/>
+        <TextBox Grid.Row="2" Grid.Column="1" Name="UsernameTextbox" MaxLength="32"/>
 
         <TextBlock Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Text="{x:Static lang:Resources.Online_UserColor}"/>
         <ColorPicker Grid.Row="3" Grid.Column="1" HorizontalAlignment="Right" Margin="5" Name="UserColor" IsAlphaVisible="False" IsAlphaEnabled="False"/>

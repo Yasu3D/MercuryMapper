@@ -63,11 +63,13 @@ namespace MercuryMapper.MultiCharting
 
         private WebsocketClient? webSocketClient;
         private bool connectionGood;
-        private bool receivedOneOfTwoFiles;
         
         public string LobbyCode = "";
-        private string songFilePath = "";
+        private string audioFilePath = "";
         private string receivedChartData = "";
+
+        private bool audioReceived;
+        private bool chartReceived;
         
         public NetworkConnectionState NetworkState = NetworkConnectionState.Local;
         public enum NetworkConnectionState
@@ -77,6 +79,7 @@ namespace MercuryMapper.MultiCharting
             Client 
         }
         
+        // UI
         public void SetNetworkConnectionState(NetworkConnectionState connectionState)
         {
             NetworkState = connectionState;
@@ -133,11 +136,16 @@ namespace MercuryMapper.MultiCharting
             });
         }
 
+        // Lobby Setup
         public void CreateLobby(string address, string username, string color)
         {
             string connection = CheckConnectionOrConnect(address);
 
-            if (connection == "failed") return;
+            if (connection == "failed")
+            {
+                Dispatcher.UIThread.Post(() => mainView.ShowWarningMessage(Assets.Lang.Resources.Online_ConnectionFailed, Assets.Lang.Resources.Online_ConnectionFailedDetails));
+                return;
+            }
 
             SendMessage(MessageTypes.CreateLobby, color + username);
         }
@@ -164,11 +172,26 @@ namespace MercuryMapper.MultiCharting
             webSocketClient.Dispose();
         }
 
-        public void SendTimestamp(uint timestamp)
+        private void HandleDisconnect()
         {
-            SendMessage(MessageTypes.ClientTimestamp, timestamp.ToString());
-        }
+            if (webSocketClient == null) return;
 
+            connectionGood = false;
+            webSocketClient = null;
+
+            Dispatcher.UIThread.Post(() => {
+                if (LobbyCode != "")
+                {
+                    mainView.ShowWarningMessage($"{Assets.Lang.Resources.Online_SessionClosed}");
+                    LobbyCode = "";
+                }
+
+                PeerManager.RemoveAllPeers();
+            });
+
+            SetNetworkConnectionState(NetworkConnectionState.Local);
+        }
+        
         private string CheckConnectionOrConnect(string serverUrl)
         {
             if (webSocketClient != null)
@@ -185,9 +208,18 @@ namespace MercuryMapper.MultiCharting
 
                 return client;
             });
-
-            // Prep server Uri
-            Uri serverUri = new(serverUrl);
+            
+            // Prep server Uri and return false if it's invalid.
+            Uri serverUri;
+            
+            try
+            {
+                serverUri = new(serverUrl);
+            }
+            catch
+            {
+                return "failed";
+            }
 
             // Create client using Uri and client factory
             webSocketClient = new(serverUri, factory)
@@ -223,19 +255,7 @@ namespace MercuryMapper.MultiCharting
             }
         }
 
-        public void SendMessage(MessageTypes? reqType, string reqData)
-        {
-            if (webSocketClient == null) return;
-            
-            if (reqType == null)
-            {
-                webSocketClient.Send(reqData);
-                return;
-            }
-
-            webSocketClient.Send(((uint)reqType.Value).ToString(RequestTypeFormat) + reqData);
-        }
-
+        // File Transfer
         private void SendSongFile(string receivingClientId)
         {
             byte[] bytes = File.ReadAllBytes(ChartEditor.Chart.AudioFilePath);
@@ -252,74 +272,28 @@ namespace MercuryMapper.MultiCharting
             SendMessage(MessageTypes.ChartData, receivingClientId + "|" + chartData);
         }
 
-        private async void ReceiveSongFile(string songData)
+        private void LoadChartAndAudio()
         {
-            string fileName = songData[..songData.IndexOf('|')];
-            songFilePath = Path.GetFullPath("tmp/" + fileName);
-            
-            string songFileData = songData[(songData.IndexOf('|') + 1)..];
-            byte[] fileData = Convert.FromBase64String(songFileData);
-            
-            if (!Directory.Exists("tmp")) Directory.CreateDirectory("tmp");
-            
-            await File.WriteAllBytesAsync(songFilePath, fileData);
+            Dispatcher.UIThread.Post(() => mainView.OpenChartFromNetwork(receivedChartData, audioFilePath));
             
             mainView.HideReceivingDataMessage();
-
-            TryToLoadReceivedChart();
+            SendMessage(MessageTypes.SyncDone, "");
         }
-
-        private void ReceiveChartData(string chartData)
+        
+        // Messages
+        public void SendMessage(MessageTypes? messageType, string messageData)
         {
-            receivedChartData = chartData;
-
-            TryToLoadReceivedChart();
-        }
-
-        private void TryToLoadReceivedChart()
-        {
-            if (receivedOneOfTwoFiles == false)
+            if (webSocketClient == null) return;
+            
+            if (messageType == null)
             {
-                receivedOneOfTwoFiles = true;
+                webSocketClient.Send(messageData);
                 return;
             }
 
-            receivedOneOfTwoFiles = false;
-
-            Dispatcher.UIThread.Post(() => {
-                mainView.ChartEditor.LoadChartNetwork(receivedChartData);
-                mainView.ChartEditor.Chart.AudioFilePath = songFilePath;
-                mainView.AudioManager.SetSong(mainView.ChartEditor.Chart.AudioFilePath, (float)(mainView.UserConfig.AudioConfig.MusicVolume * 0.01), (int)mainView.SliderPlaybackSpeed.Value);
-                mainView.SetSongPositionSliderValues();
-                mainView.UpdateAudioFilepath();
-                mainView.RenderEngine.UpdateVisibleTime();
-                mainView.ResetLoopMarkers(mainView.AudioManager.CurrentSong?.Length ?? 0);
-                mainView.SetUiLockState(MainView.UiLockState.Loaded);
-            });
-
-            SendMessage(MessageTypes.SyncDone, "");
+            webSocketClient.Send(((uint)messageType.Value).ToString(RequestTypeFormat) + messageData);
         }
-
-        private void HandleDisconnect()
-        {
-            if (webSocketClient == null) return;
-
-            connectionGood = false;
-            webSocketClient = null;
-
-            Dispatcher.UIThread.Post(() => {
-                if (LobbyCode != "")
-                {
-                    mainView.ShowWarningMessage($"{Assets.Lang.Resources.Online_SessionClosed}");
-                    LobbyCode = "";
-                }
-
-                Dispatcher.UIThread.Post(() => PeerManager.RemoveAllPeers());
-            });
-
-            SetNetworkConnectionState(NetworkConnectionState.Local);
-        }
-
+        
         private void HandleMessage(ResponseMessage message)
         {
             // Verify message type is the kind expected
@@ -341,6 +315,7 @@ namespace MercuryMapper.MultiCharting
 
             switch (requestType)
             {
+                // Host, Join, Sync
                 case MessageTypes.LobbyCreated:
                 {
                     LobbyCode = trimmedMessage;
@@ -389,16 +364,35 @@ namespace MercuryMapper.MultiCharting
                 
                 case MessageTypes.ChartData:
                 {
-                    ReceiveChartData(trimmedMessage);
+                    receivedChartData = trimmedMessage;
+
+                    // Report back that this data has been received.
+                    // Then check if the other was received, and begin loading if it was.
+                    chartReceived = true;
+                    if (audioReceived) LoadChartAndAudio();
                     break;
                 }
                 
                 case MessageTypes.SongFile:
                 {
-                    ReceiveSongFile(trimmedMessage);
+                    string fileName = trimmedMessage[..trimmedMessage.IndexOf('|')];
+                    audioFilePath = Path.GetFullPath("tmp/" + fileName);
+            
+                    string audioFileData = trimmedMessage[(trimmedMessage.IndexOf('|') + 1)..];
+                    byte[] fileData = Convert.FromBase64String(audioFileData);
+            
+                    if (!Directory.Exists("tmp")) Directory.CreateDirectory("tmp");
+            
+                    File.WriteAllBytes(audioFilePath, fileData);
+
+                    // Report back that this data has been received.
+                    // Then check if the other was received, and begin loading if it was.
+                    audioReceived = true;
+                    if (chartReceived) LoadChartAndAudio();
                     break;
                 }
                 
+                // Metadata
                 case MessageTypes.ChartAuthorChange:
                 {
                     Dispatcher.UIThread.Post(() => {
@@ -472,6 +466,72 @@ namespace MercuryMapper.MultiCharting
                 case MessageTypes.LobbyClosed:
                 {
                     webSocketClient?.Dispose();
+                    break;
+                }
+                
+                // Realtime Changes
+                case MessageTypes.InsertNote:
+                {
+                    break;
+                }
+                
+                case MessageTypes.InsertHoldNote:
+                {
+                    break;
+                }
+                
+                case MessageTypes.InsertHoldSegment:
+                {
+                    break;
+                }
+                
+                case MessageTypes.DeleteNote:
+                {
+                    break;
+                }
+                
+                case MessageTypes.DeleteHoldNote:
+                {
+                    break;
+                }
+                
+                case MessageTypes.EditNote:
+                {
+                    break;
+                }
+                
+                case MessageTypes.BakeHold:
+                {
+                    break;
+                }
+                
+                case MessageTypes.SplitHold:
+                {
+                    break;
+                }
+                
+                case MessageTypes.StitchHold:
+                {
+                    break;
+                }
+                
+                case MessageTypes.ConvertToInstantMask:
+                {
+                    break;
+                }
+                
+                case MessageTypes.InsertGimmick:
+                {
+                    break;
+                }
+                
+                case MessageTypes.EditGimmick:
+                {
+                    break;
+                }
+                
+                case MessageTypes.DeleteGimmick:
+                {
                     break;
                 }
                 

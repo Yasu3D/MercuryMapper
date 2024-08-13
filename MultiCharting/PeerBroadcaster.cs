@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Threading;
 using MercuryMapper.Views;
 
@@ -22,7 +23,7 @@ public class PeerBroadcaster
         if (mainView.AudioManager.CurrentSong == null) return;
         if (mainView.AudioManager.CurrentSong.Position == lastTimestamp) return;
 
-        mainView.ConnectionManager.SendTimestamp(mainView.AudioManager.CurrentSong.Position);
+        mainView.ConnectionManager.SendMessage(ConnectionManager.MessageTypes.ClientTimestamp, mainView.AudioManager.CurrentSong.Position.ToString(CultureInfo.InvariantCulture));
 
         lastTimestamp = mainView.AudioManager.CurrentSong.Position;
     }

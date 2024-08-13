@@ -531,7 +531,7 @@ public partial class MainView : UserControl
         SliderNoteSize.Value = double.Max(SliderNoteSize.Value, minimum);
     }
 
-    public void UpdateAudioFilepath()
+    public void UpdateAudioFilepathUi()
     {
         ChartInfoAudioFilepath.Text = Path.GetFileName(ChartEditor.Chart.AudioFilePath);
     }
@@ -1306,7 +1306,7 @@ public partial class MainView : UserControl
                 ChartEditor.NewChart(filepath, author, bpm, timeSigUpper, timeSigLower);
                 AudioManager.SetSong(filepath, (float)UserConfig.AudioConfig.MusicVolume * 0.01f, (int)SliderPlaybackSpeed.Value);
                 SetSongPositionSliderValues();
-                UpdateAudioFilepath();
+                UpdateAudioFilepathUi();
                 RenderEngine.UpdateVisibleTime();
                 ClearAutosaves();
                 ResetLoopMarkers(AudioManager.CurrentSong?.Length ?? 0);
@@ -1962,7 +1962,7 @@ public partial class MainView : UserControl
         
         AudioManager.SetSong(ChartEditor.Chart.AudioFilePath, (float)(UserConfig.AudioConfig.MusicVolume * 0.01), (int)SliderPlaybackSpeed.Value);
         SetSongPositionSliderValues();
-        UpdateAudioFilepath();
+        UpdateAudioFilepathUi();
         RenderEngine.UpdateVisibleTime();
     }
     
@@ -2224,10 +2224,25 @@ public partial class MainView : UserControl
     
     private readonly ContentDialog receivingDataDialog = new()
     {
-        Title = Assets.Lang.Resources.Online_ReceivingData
+        Title = Assets.Lang.Resources.Online_ReceivingData,
+        PrimaryButtonText = Assets.Lang.Resources.Menu_Disconnect
     };
 
-    public void ShowReceivingDataMessage() => Dispatcher.UIThread.Post(() => receivingDataDialog.ShowAsync());
+    public async void ShowReceivingDataMessage()
+    {
+        Dispatcher.UIThread.Post(async () =>
+        {
+            ContentDialogResult result = await showReceivingDataDialog();
+            if (result is ContentDialogResult.Primary) ConnectionManager.LeaveLobby();
+        });
+        return;
+
+
+        Task<ContentDialogResult> showReceivingDataDialog()
+        {
+            return receivingDataDialog.ShowAsync();
+        }
+    }
 
     public void HideReceivingDataMessage() => Dispatcher.UIThread.Post(() => receivingDataDialog.Hide());
 
@@ -2441,7 +2456,7 @@ public partial class MainView : UserControl
             {
                 // User said no, clear chart again and return.
                 ChartEditor.Chart.Clear();
-                UpdateAudioFilepath();
+                UpdateAudioFilepathUi();
                 SetChartInfo();
                 SetSelectionInfo();
                 ResetLoopMarkers(AudioManager.CurrentSong?.Length ?? 0);
@@ -2464,7 +2479,19 @@ public partial class MainView : UserControl
         
         AudioManager.SetSong(ChartEditor.Chart.AudioFilePath, (float)(UserConfig.AudioConfig.MusicVolume * 0.01), (int)SliderPlaybackSpeed.Value);
         SetSongPositionSliderValues();
-        UpdateAudioFilepath();
+        UpdateAudioFilepathUi();
+        RenderEngine.UpdateVisibleTime();
+        ResetLoopMarkers(AudioManager.CurrentSong?.Length ?? 0);
+        SetUiLockState(UiLockState.Loaded);
+    }
+
+    public void OpenChartFromNetwork(string data, string audioFilePath)
+    {
+        ChartEditor.LoadChartNetwork(data);
+        ChartEditor.Chart.AudioFilePath = audioFilePath;
+        AudioManager.SetSong(ChartEditor.Chart.AudioFilePath, (float)(UserConfig.AudioConfig.MusicVolume * 0.01), (int)SliderPlaybackSpeed.Value);
+        SetSongPositionSliderValues();
+        UpdateAudioFilepathUi();
         RenderEngine.UpdateVisibleTime();
         ResetLoopMarkers(AudioManager.CurrentSong?.Length ?? 0);
         SetUiLockState(UiLockState.Loaded);

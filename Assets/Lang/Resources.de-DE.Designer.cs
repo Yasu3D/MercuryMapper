@@ -1681,6 +1681,24 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Verbindung Fehlgeschlagen..
+        /// </summary>
+        public static string Online_ConnectionFailed {
+            get {
+                return ResourceManager.GetString("Online_ConnectionFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Vergewissern Sie sich, dass die angegebene Adresse korrekt ist und dass der Server läuft..
+        /// </summary>
+        public static string Online_ConnectionFailedDetails {
+            get {
+                return ResourceManager.GetString("Online_ConnectionFailedDetails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ungültiger Session Code!.
         /// </summary>
         public static string Online_InvalidSessionCode {
