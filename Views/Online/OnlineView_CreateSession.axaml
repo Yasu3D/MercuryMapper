@@ -22,7 +22,7 @@
     <Grid RowDefinitions="Auto, Auto, Auto, Auto"
           ColumnDefinitions="Auto,*" Margin="10">
         <TextBlock Grid.Row="0" Grid.Column="0" Text="{x:Static lang:Resources.Online_ServerAddress}"/>
-        <TextBox Grid.Row="0" Grid.Column="1" Text="wss://12b3.pw/mmms" Name="ServerAddressTextBox"/>
+        <TextBox Grid.Row="0" Grid.Column="1" Text="ws://localhost:5390" Name="ServerAddressTextBox"/>
         
         <Separator Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"/>
         

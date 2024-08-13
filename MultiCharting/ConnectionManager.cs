@@ -4,7 +4,13 @@ using MercuryMapper.Views;
 using System;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Net.WebSockets;
+using System.Threading;
+using MercuryMapper.Data;
+using MercuryMapper.Enums;
+using MercuryMapper.UndoRedo;
+using MercuryMapper.UndoRedo.NoteOperations;
 using Websocket.Client;
 
 namespace MercuryMapper.MultiCharting
@@ -14,6 +20,7 @@ namespace MercuryMapper.MultiCharting
         private readonly MainView mainView = main;
         private PeerManager PeerManager => mainView.PeerManager;
         private ChartEditor ChartEditor => mainView.ChartEditor;
+        private Chart Chart => mainView.ChartEditor.Chart;
         
         public enum MessageTypes : uint
         {
@@ -56,6 +63,12 @@ namespace MercuryMapper.MultiCharting
             ClientTimestamp = 213
         }
 
+        public enum OperationDirection
+        {
+            Undo = 0,
+            Redo = 1
+        }
+        
         private const string RequestTypeFormat = "000";
         private const int RequestTypeLength = 3;
         private const int HexColorLength = 9;
@@ -292,6 +305,99 @@ namespace MercuryMapper.MultiCharting
 
             webSocketClient.Send(((uint)messageType.Value).ToString(RequestTypeFormat) + messageData);
         }
+
+        public void SendOperationMessage(IOperation operation, OperationDirection operationDirection)
+        {
+            string opDir = operationDirection == OperationDirection.Redo ? "1\n" : "0\n";
+            
+            switch (operation)
+            {
+                case CompositeOperation compositeOperation:
+                {
+                    foreach (IOperation op in compositeOperation.Operations)
+                    {
+                        SendOperationMessage(op, operationDirection);
+                    }
+                    break;
+                }
+                
+                case InsertNote insertNote:
+                {
+                    string opData = insertNote.Note.ToNetworkString();
+                    SendMessage(MessageTypes.InsertNote, opDir + opData);
+                    break;
+                }
+                
+                case InsertHoldNote insertHoldNote:
+                {
+                    string opData = $"{insertHoldNote.Note.ToNetworkString()}\n" +
+                                      $"{insertHoldNote.LastPlacedNote.ToNetworkString()}";
+                    SendMessage(MessageTypes.InsertHoldNote, opDir + opData);
+                    break;
+                }
+                
+                case InsertHoldSegment insertHoldSegment:
+                {
+                    string opData = $"{insertHoldSegment.NewNote.ToNetworkString()}\n" +
+                                    $"{insertHoldSegment.Previous.ToNetworkString()}\n" +
+                                    $"{insertHoldSegment.Next.ToNetworkString()}";
+                    SendMessage(MessageTypes.InsertHoldSegment, opDir + opData);
+                    break;
+                }
+                
+                case DeleteNote deleteNote:
+                {
+                    string opData = deleteNote.Note.ToNetworkString();
+                    SendMessage(MessageTypes.DeleteNote, opDir + opData);
+                    break;
+                }
+                
+                case DeleteHoldNote deleteHoldNote:
+                {
+                    break;
+                }
+                
+                case EditNote editNote:
+                {
+                    break;
+                }
+                
+                case BakeHold bakeHold:
+                {
+                    break;
+                }
+                
+                case SplitHold splitHold:
+                {
+                    break;
+                }
+
+                case StitchHold stitchHold:
+                {
+                    break;
+                }
+                
+                case ConvertToInstantMask convertToInstantMask:
+                {
+                    break;
+                }
+
+                case InsertGimmick insertGimmick:
+                {
+                    break;
+                }
+                
+                case DeleteGimmick deleteGimmick:
+                {
+                    break;
+                }
+
+                case EditGimmick editGimmick:
+                {
+                    break;
+                }
+            }
+        }
         
         private void HandleMessage(ResponseMessage message)
         {
@@ -309,6 +415,7 @@ namespace MercuryMapper.MultiCharting
             MessageTypes requestType = (MessageTypes)uint.Parse(message.Text[..RequestTypeLength]);
 
             string trimmedMessage = message.Text[RequestTypeLength..];
+            string[] operationData = trimmedMessage.Split(["\r\n", "\r", "\n"], StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
 
             Console.WriteLine(requestType);
 
@@ -471,21 +578,125 @@ namespace MercuryMapper.MultiCharting
                 // Realtime Changes
                 case MessageTypes.InsertNote:
                 {
+                    Dispatcher.UIThread.Post(() =>
+                    {
+                        string[] noteData = operationData[1].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                    
+                        if (operationData[0] == "0")
+                        {
+                            // Undo
+                            Note? note = Chart.FindNoteByGuid(noteData[0]);
+                            if (note == null) return;
+                        
+                            InsertNote operation = new(Chart, ChartEditor.SelectedNotes, note);
+                            operation.Undo();
+                            ChartEditor.UndoRedoManager.Invoke();
+                        }
+                        else
+                        {
+                            // Redo
+                            InsertNote operation = new(Chart, ChartEditor.SelectedNotes, Note.ParseNetworkString(Chart, noteData));
+                            operation.Redo();
+                            ChartEditor.UndoRedoManager.Invoke();
+                        }
+                    });
+                    
                     break;
                 }
                 
                 case MessageTypes.InsertHoldNote:
                 {
+                    Dispatcher.UIThread.Post(() =>
+                    {
+                        string[] noteData = operationData[1].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                        string[] lastPlacedNoteData = operationData[2].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                        
+                        if (operationData[0] == "0")
+                        {
+                            // Undo
+                            Note? note = Chart.FindNoteByGuid(noteData[0]);
+                            Note? lastPlacedNote = Chart.FindNoteByGuid(lastPlacedNoteData[0]);
+                            if (note == null || lastPlacedNote == null) return;
+                            
+                            InsertHoldNote operation = new(Chart, ChartEditor.SelectedNotes, note, lastPlacedNote);
+                            operation.Undo();
+                            ChartEditor.UndoRedoManager.Invoke();
+                        }
+                        else
+                        {
+                            // Redo
+                            Note note = Note.ParseNetworkString(Chart, noteData);
+                            Note? lastPlacedNote = Chart.FindNoteByGuid(lastPlacedNoteData[0]) ?? Note.ParseNetworkString(Chart, lastPlacedNoteData);
+
+                            InsertHoldNote operation = new(Chart, ChartEditor.SelectedNotes, note, lastPlacedNote);
+                            operation.Redo();
+                            ChartEditor.UndoRedoManager.Invoke();
+                        }
+                    });
                     break;
                 }
                 
                 case MessageTypes.InsertHoldSegment:
                 {
+                    Dispatcher.UIThread.Post(() =>
+                    {
+                        string[] noteData = operationData[1].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                        string[] prevReferencedNoteData = operationData[2].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                        string[] nextReferencedNoteData = operationData[3].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                        
+                        if (operationData[0] == "0")
+                        {
+                            // Undo
+                            Note? note = Chart.FindNoteByGuid(noteData[0]);
+                            Note? prevNote = Chart.FindNoteByGuid(prevReferencedNoteData[0]);
+                            Note? nextNote = Chart.FindNoteByGuid(nextReferencedNoteData[0]);
+                            if (note == null || prevNote == null || nextNote == null) return;
+                            
+                            InsertHoldSegment operation = new(Chart, ChartEditor.SelectedNotes, note, prevNote, nextNote);
+                            operation.Undo();
+                            ChartEditor.UndoRedoManager.Invoke();
+                        }
+                        else
+                        {
+                            // Redo
+                            Note note = Note.ParseNetworkString(Chart, noteData);
+                            Note? prevNote = Chart.FindNoteByGuid(prevReferencedNoteData[0]);
+                            Note? nextNote = Chart.FindNoteByGuid(nextReferencedNoteData[0]);
+                            if (prevNote == null || nextNote == null) return;
+
+                            InsertHoldSegment operation = new(Chart, ChartEditor.SelectedNotes, note, prevNote, nextNote);
+                            operation.Redo();
+                            ChartEditor.UndoRedoManager.Invoke();
+                        }
+                    });
                     break;
                 }
                 
                 case MessageTypes.DeleteNote:
                 {
+                    Dispatcher.UIThread.Post(() =>
+                    {
+                        string[] data = trimmedMessage.Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                    
+                        if (data[0] == "0")
+                        {
+                            // Undo
+                            DeleteNote operation = new(Chart, ChartEditor.SelectedNotes, Note.ParseNetworkString(Chart, data));
+                            operation.Undo();
+                            ChartEditor.UndoRedoManager.Invoke();
+                        }
+                        else
+                        {
+                            // Redo
+                            Note? note = Chart.FindNoteByGuid(data[1]);
+                            if (note == null) return;
+                        
+                            DeleteNote operation = new(Chart, ChartEditor.SelectedNotes, note);
+                            operation.Redo();
+                            ChartEditor.UndoRedoManager.Invoke();
+                        }
+                    });
+                    
                     break;
                 }
                 

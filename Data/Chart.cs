@@ -967,6 +967,15 @@ public class Chart
     {
         return MeasureDecimal2Timestamp(data.MeasureDecimal);
     }
+
+    /// <summary>
+    /// Returns Note with matching GUID, otherwise returns null.
+    /// </summary>
+    /// <returns></returns>
+    public Note? FindNoteByGuid(string guid)
+    {
+        return Notes.LastOrDefault(x => x.Guid.ToString() == guid);
+    }
     
     public static List<string> ReadLines(Stream stream)
     {

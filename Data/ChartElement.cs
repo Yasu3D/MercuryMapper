@@ -77,7 +77,7 @@ public class ChartElement
 {
     public BeatData BeatData { get; set; } = new(-1, 0);
     public GimmickType GimmickType { get; set; } = GimmickType.None;
-    public Guid Guid { get; set; }
+    public Guid Guid { get; set; } = Guid.NewGuid();
 }
 
 public class Gimmick : ChartElement
@@ -91,14 +91,14 @@ public class Gimmick : ChartElement
     
     public Gimmick(BeatData beatData, GimmickType gimmickType, Guid? guid = null)
     {
-        Guid = guid ?? Guid.NewGuid();
+        Guid = guid ?? Guid;
         BeatData = beatData;
         GimmickType = gimmickType;
     }
 
     public Gimmick(Gimmick gimmick, Guid? guid = null) : this(gimmick.BeatData, gimmick.GimmickType)
     {
-        Guid = guid ?? Guid.NewGuid();
+        Guid = guid ?? Guid;
         switch (GimmickType)
         {
             case GimmickType.BpmChange: Bpm = gimmick.Bpm; break;
@@ -109,7 +109,7 @@ public class Gimmick : ChartElement
 
     public Gimmick(int measure, int tick, int objectId, string value1, string value2, Guid? guid = null)
     {
-        Guid = guid ?? Guid.NewGuid();
+        Guid = guid ?? Guid;
         BeatData = new(measure, tick);
         GimmickType = (GimmickType)objectId;
 
@@ -148,13 +148,13 @@ public class Note : ChartElement
 
     public Note(BeatData beatData, Guid? guid = null)
     {
-        Guid = guid ?? Guid.NewGuid();
+        Guid = guid ?? Guid;
         BeatData = beatData;
     }
 
     public Note(Note note, Guid? guid = null) : this(note.BeatData)
     {
-        Guid = guid ?? Guid.NewGuid();
+        Guid = guid ?? Guid;
         Position = note.Position;
         Size = note.Size;
         NoteType = note.NoteType;
@@ -167,7 +167,7 @@ public class Note : ChartElement
 
     public Note(int measure, int tick, int noteTypeId, int noteIndex, int position, int size, bool renderSegment, Guid? guid = null)
     {
-        Guid = guid ?? Guid.NewGuid();
+        Guid = guid ?? Guid;
         BeatData = new(measure, tick);
         GimmickType = GimmickType.None;
         NoteType = (NoteType)noteTypeId;
@@ -292,6 +292,36 @@ public class Note : ChartElement
         }
 
         return first;
+    }
+
+    public string ToNetworkString()
+    {
+        string result = $"{Guid} {BeatData.Measure:F0} {BeatData.Tick:F0} {(int)NoteType:F0} {Position:F0} {Size:F0} {(RenderSegment ? 1 : 0)}";
+        if (IsMask) result += $" {(int)MaskDirection:F0}";
+        if (NextReferencedNote != null) result += $" {NextReferencedNote.Guid}";
+        
+        return result;
+    }
+    
+    public static Note ParseNetworkString(Chart chart, string[] data)
+    {
+        Note note = new()
+        {
+            Guid = Guid.Parse(data[0]),
+            BeatData = new(Convert.ToInt32(data[1]), Convert.ToInt32(data[2])),
+            NoteType = (NoteType)Convert.ToInt32(data[3]),
+            Position = Convert.ToInt32(data[4]),
+            Size = Convert.ToInt32(data[5]),
+            RenderSegment = data[6] != "0",
+        };
+
+        if (data.Length == 8)
+        {
+            if (note.IsMask) note.MaskDirection = (MaskDirection)Convert.ToInt32(data[7]);
+            else note.NextReferencedNote = chart.FindNoteByGuid(data[7]);
+        }
+
+        return note;
     }
 }
 

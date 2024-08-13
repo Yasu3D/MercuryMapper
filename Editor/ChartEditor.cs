@@ -21,6 +21,8 @@ public class ChartEditor
     public ChartEditor(MainView main)
     {
         mainView = main;
+        UndoRedoManager = new(mainView);
+        
         UndoRedoManager.OperationHistoryChanged += (_, _) =>
         {
             Chart.Notes = Chart.Notes.OrderBy(x => x.BeatData.FullTick).ToList();
@@ -29,13 +31,15 @@ public class ChartEditor
             
             mainView.ToggleInsertButton();
             mainView.SetSelectionInfo();
+            
+            UpdateLastPlacedHold();
         };
     }
     
     private readonly MainView mainView;
     
     public readonly Cursor Cursor = new();
-    public readonly UndoRedoManager UndoRedoManager = new();
+    public readonly UndoRedoManager UndoRedoManager;
     public Chart Chart { get; private set; } = new();
     
     public ChartEditorState EditorState { get; private set; }
@@ -691,6 +695,13 @@ public class ChartEditor
     {
         if (HighlightedElement is null or Gimmick) return;
         SelectNote((Note)HighlightedElement);
+    }
+    
+    // ________________ Misc
+    public void UpdateLastPlacedHold()
+    {
+        if (EditorState != ChartEditorState.InsertHold) return;
+        LastPlacedHold = LastPlacedHold?.References().LastOrDefault();
     }
     
     // ________________ ChartElement Operations
