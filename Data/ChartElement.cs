@@ -148,12 +148,14 @@ public class Note : ChartElement
 
     public Note(BeatData beatData, Guid? guid = null)
     {
+        if (guid == null) Console.WriteLine("Creating New GUID");
         Guid = guid ?? Guid;
         BeatData = beatData;
     }
 
     public Note(Note note, Guid? guid = null) : this(note.BeatData)
     {
+        if (guid == null) Console.WriteLine("Creating New GUID");
         Guid = guid ?? Guid;
         Position = note.Position;
         Size = note.Size;
@@ -167,6 +169,7 @@ public class Note : ChartElement
 
     public Note(int measure, int tick, int noteTypeId, int noteIndex, int position, int size, bool renderSegment, Guid? guid = null)
     {
+        if (guid == null) Console.WriteLine("Creating New GUID");
         Guid = guid ?? Guid;
         BeatData = new(measure, tick);
         GimmickType = GimmickType.None;

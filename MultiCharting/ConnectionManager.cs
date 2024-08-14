@@ -332,7 +332,7 @@ namespace MercuryMapper.MultiCharting
                 case InsertHoldNote insertHoldNote:
                 {
                     string opData = $"{insertHoldNote.Note.ToNetworkString()}\n" +
-                                      $"{insertHoldNote.LastPlacedNote.ToNetworkString()}";
+                                    $"{insertHoldNote.LastPlacedNote.ToNetworkString()}";
                     SendMessage(MessageTypes.InsertHoldNote, opDir + opData);
                     break;
                 }
@@ -362,21 +362,41 @@ namespace MercuryMapper.MultiCharting
                 
                 case EditNote editNote:
                 {
+                    string opData = $"{editNote.BaseNote.ToNetworkString()}\n" +
+                                    $"{editNote.OldNote.ToNetworkString()}\n" + 
+                                    $"{editNote.NewNote.ToNetworkString()}";
+                    SendMessage(MessageTypes.EditNote, opDir + opData);
                     break;
                 }
                 
                 case BakeHold bakeHold:
                 {
+                    string opData = $"{bakeHold.Start.ToNetworkString()}\n" +
+                                    $"{bakeHold.End.ToNetworkString()}\n";
+                    foreach (Note note in bakeHold.Segments)
+                    {
+                        opData += $"{note.ToNetworkString()}\n";
+                    }
+                    
+                    SendMessage(MessageTypes.BakeHold, opDir + opData);
                     break;
                 }
                 
                 case SplitHold splitHold:
                 {
+                    string opData = $"{splitHold.Segment.ToNetworkString()}\n" +
+                                    $"{splitHold.NewStart.ToNetworkString()}\n" + 
+                                    $"{splitHold.NewEnd.ToNetworkString()}";
+                    SendMessage(MessageTypes.SplitHold, opDir + opData);
                     break;
                 }
 
                 case StitchHold stitchHold:
                 {
+                    string opData = $"{stitchHold.First.ToNetworkString()}\n" +
+                                    $"{stitchHold.Second.ToNetworkString()}\n" + 
+                                    $"{(int)stitchHold.SecondType}";
+                    SendMessage(MessageTypes.StitchHold, opDir + opData);
                     break;
                 }
                 
@@ -629,13 +649,23 @@ namespace MercuryMapper.MultiCharting
                         {
                             // Redo
                             Note note = Note.ParseNetworkString(Chart, noteData);
-                            Note? lastPlacedNote = Chart.FindNoteByGuid(lastPlacedNoteData[0]) ?? Note.ParseNetworkString(Chart, lastPlacedNoteData);
+                            Note lastPlacedNote = Chart.FindNoteByGuid(lastPlacedNoteData[0]) ?? Note.ParseNetworkString(Chart, lastPlacedNoteData);
 
                             InsertHoldNote operation = new(Chart, ChartEditor.SelectedNotes, note, lastPlacedNote);
                             operation.Redo();
                             ChartEditor.UndoRedoManager.Invoke();
                         }
+                        
+                        // Clear UndoRedoHistory, because otherwise this action FUCKS SHIT UP. REAL BAD.
+                        // Hold notes are painfully complicated :]
+                        // TODO: Current vulnerabilities:
+                        // - A stitches hold
+                        // - A hits undo
+                        // - B continues hold
+                        // - A hits redo
+                        ChartEditor.UndoRedoManager.Clear();
                     });
+                    
                     break;
                 }
                 
@@ -726,6 +756,14 @@ namespace MercuryMapper.MultiCharting
                             operation.Redo();
                             ChartEditor.UndoRedoManager.Invoke();
                         }
+                        
+                        // Clear UndoRedoHistory, because otherwise this action FUCKS SHIT UP. REAL BAD.
+                        // Hold notes are painfully complicated :]
+                        // TODO: Current vulnerabilities:
+                        // - A bakes hold
+                        // - B deletes part of baked hold
+                        // - A hits undo
+                        ChartEditor.UndoRedoManager.Clear();
                     });
                     
                     break;
@@ -733,21 +771,181 @@ namespace MercuryMapper.MultiCharting
                 
                 case MessageTypes.EditNote:
                 {
+                    Dispatcher.UIThread.Post(() =>
+                    {
+                        string[] noteData = operationData[1].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                        string[] oldNoteData = operationData[2].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                        string[] newNoteData = operationData[3].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                    
+                        if (operationData[0] == "0")
+                        {
+                            // Undo
+                            Note? note = Chart.FindNoteByGuid(noteData[0]);
+                            if (note == null) return;
+
+                            Note oldNote = Note.ParseNetworkString(Chart, oldNoteData);
+                            
+                            EditNote operation = new(note, oldNote);
+                            operation.Redo();
+                            ChartEditor.UndoRedoManager.Invoke();
+                        }
+                        else
+                        {
+                            // Redo
+                            Note? note = Chart.FindNoteByGuid(noteData[0]);
+                            if (note == null) return;
+
+                            Note newNote = Note.ParseNetworkString(Chart, newNoteData);
+                        
+                            EditNote operation = new(note, newNote);
+                            operation.Redo();
+                            ChartEditor.UndoRedoManager.Invoke();
+                        }
+                    });
+                    
                     break;
                 }
                 
                 case MessageTypes.BakeHold:
                 {
+                    Dispatcher.UIThread.Post(() =>
+                    {
+                        string[] startData = operationData[1].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                        string[] endData = operationData[2].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                        List<string[]> segmentData = [];
+                        
+                        for (int i = 3; i < operationData.Length; i++)
+                        {
+                            segmentData.Add(operationData[i].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries));
+                        }
+
+                        if (operationData[0] == "0")
+                        {
+                            // Undo
+                            Note? start = Chart.FindNoteByGuid(startData[0]);
+                            Note? end = Chart.FindNoteByGuid(endData[0]);
+                            if (start == null || end == null) return;
+
+                            List<Note> segments = [];
+                            foreach (string[] data in segmentData)
+                            {
+                                Note? note = Chart.FindNoteByGuid(data[0]);
+                                if (note == null) continue;
+                                
+                                segments.Add(note);
+                            }
+
+                            BakeHold operation = new(Chart, ChartEditor.SelectedNotes, segments, start, end);
+                            operation.Undo();
+                            ChartEditor.UndoRedoManager.Invoke();
+                        }
+                        else
+                        {
+                            // Redo
+                            Note? start = Chart.FindNoteByGuid(startData[0]);
+                            Note? end = Chart.FindNoteByGuid(endData[0]);
+                            if (start == null || end == null) return;
+
+                            List<Note> segments = [];
+                            foreach (string[] data in segmentData)
+                            {
+                                segments.Add(Note.ParseNetworkString(Chart, data));
+                            }
+
+                            for (int i = 0; i < segments.Count; i++)
+                            {
+                                Note segment = segments[i];
+                                string[] data = segmentData[i];
+
+                                // Repair references that weren't picked up by Note.ParseNetworkString
+                                if (data[7] != "null" && segment.NextReferencedNote == null ) segment.NextReferencedNote = segments.LastOrDefault(x => x.Guid.ToString() == data[7]);
+                                if (data[8] != "null" && segment.PrevReferencedNote == null ) segment.PrevReferencedNote = segments.LastOrDefault(x => x.Guid.ToString() == data[8]);
+                            }
+
+                            BakeHold operation = new(Chart, ChartEditor.SelectedNotes, segments, start, end);
+                            operation.Redo();
+                            ChartEditor.UndoRedoManager.Invoke();
+                        }
+                    });
+                    
                     break;
                 }
                 
                 case MessageTypes.SplitHold:
                 {
+                    Dispatcher.UIThread.Post(() =>
+                    {
+                        string[] segmentData = operationData[1].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                        string[] newStartData = operationData[2].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                        string[] newEndData = operationData[3].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                    
+                        if (operationData[0] == "0")
+                        {
+                            // Undo
+                            Note? newStart = Chart.FindNoteByGuid(newStartData[0]);
+                            Note? newEnd = Chart.FindNoteByGuid(newEndData[0]);
+                            if (newStart == null || newEnd == null) return;
+
+                            Note segment = Note.ParseNetworkString(Chart, segmentData);
+                            
+                            SplitHold operation = new(Chart, segment, newStart, newEnd);
+                            operation.Undo();
+                            ChartEditor.UndoRedoManager.Invoke();
+                        }
+                        else
+                        {
+                            // Redo
+                            Note? segment = Chart.FindNoteByGuid(segmentData[0]);
+                            if (segment == null) return;
+
+                            Note newStart = Note.ParseNetworkString(Chart, newStartData);
+                            Note newEnd = Note.ParseNetworkString(Chart, newEndData);
+                            
+                            SplitHold operation = new(Chart, segment, newStart, newEnd);
+                            operation.Redo();
+                            ChartEditor.UndoRedoManager.Invoke();
+                        }
+                    });
+                    
                     break;
                 }
                 
                 case MessageTypes.StitchHold:
                 {
+                    Dispatcher.UIThread.Post(() =>
+                    {
+                        string[] firstData = operationData[1].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                        string[] secondData = operationData[2].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+
+                        if (operationData[0] == "0")
+                        {
+                            // Undo
+                            Note? first = Chart.FindNoteByGuid(firstData[0]);
+                            Note? second = Chart.FindNoteByGuid(secondData[0]);
+                            if (first == null || second == null) return;
+
+                            NoteType secondType = (NoteType)Convert.ToInt32(operationData[3], CultureInfo.InvariantCulture);
+
+                            StitchHold operation = new(Chart, first, second, secondType);
+                            operation.Undo();
+                            ChartEditor.UndoRedoManager.Invoke();
+                        }
+                        else
+                        {
+                            // Redo
+                            Note? first = Chart.FindNoteByGuid(firstData[0]);
+                            Note? second = Chart.FindNoteByGuid(secondData[0]);
+                            if (first == null || second == null) return;
+
+                            NoteType secondType = (NoteType)Convert.ToInt32(operationData[3], CultureInfo.InvariantCulture);
+
+                            StitchHold operation = new(Chart, first, second, secondType);
+
+                            operation.Redo();
+                            ChartEditor.UndoRedoManager.Invoke();
+                        }
+                    });
+                    
                     break;
                 }
                 

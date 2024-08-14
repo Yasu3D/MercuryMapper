@@ -1,29 +1,25 @@
 using MercuryMapper.Data;
-using MercuryMapper.Enums;
 
 namespace MercuryMapper.UndoRedo.NoteOperations;
 
-public class SplitHold(Chart chart, Note segment) : IOperation
+public class SplitHold(Chart chart, Note segment, Note newStart, Note newEnd) : IOperation
 {
     public readonly Chart Chart = chart;
-    public readonly Note Hold = segment;
-
-    private readonly Note newEnd = new(segment);
-    private readonly Note newStart = new(segment);
+    public readonly Note Segment = segment;
     
-    private readonly Note? prevSegment = segment.PrevReferencedNote;
-    private readonly Note? nextSegment = segment.NextReferencedNote;
+    public readonly Note NewStart = newStart;
+    public readonly Note NewEnd = newEnd;
 
     public void Undo()
     {
         lock (Chart)
         {
-            Chart.Notes.Remove(newEnd);
-            Chart.Notes.Remove(newStart);
-            Chart.Notes.Add(Hold);
+            Chart.Notes.Remove(NewEnd);
+            Chart.Notes.Remove(NewStart);
+            Chart.Notes.Add(Segment);
             
-            if (prevSegment != null) prevSegment.NextReferencedNote = Hold;
-            if (nextSegment != null) nextSegment.PrevReferencedNote = Hold;
+            if (Segment.PrevReferencedNote != null) Segment.PrevReferencedNote.NextReferencedNote = Segment;
+            if (Segment.NextReferencedNote != null) Segment.NextReferencedNote.PrevReferencedNote = Segment;
         }
     }
  
@@ -31,20 +27,12 @@ public class SplitHold(Chart chart, Note segment) : IOperation
     {
         lock (Chart)
         {
-            Chart.Notes.Remove(Hold);
+            Chart.Notes.Remove(Segment);
+            Chart.Notes.Add(NewEnd);
+            Chart.Notes.Add(NewStart);
 
-            newEnd.PrevReferencedNote = prevSegment;
-            newEnd.NextReferencedNote = null;
-            newEnd.NoteType = NoteType.HoldEnd;
-            Chart.Notes.Add(newEnd);
-
-            newStart.PrevReferencedNote = null;
-            newStart.NextReferencedNote = nextSegment;
-            newStart.NoteType = NoteType.HoldStart;
-            Chart.Notes.Add(newStart);
-
-            if (prevSegment != null) prevSegment.NextReferencedNote = newEnd;
-            if (nextSegment != null) nextSegment.PrevReferencedNote = newStart;
+            if (Segment.PrevReferencedNote != null) Segment.PrevReferencedNote.NextReferencedNote = NewEnd;
+            if (Segment.NextReferencedNote != null) Segment.NextReferencedNote.PrevReferencedNote = NewStart;
         }
     }
 }

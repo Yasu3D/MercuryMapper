@@ -5,7 +5,7 @@ namespace MercuryMapper.UndoRedo.NoteOperations;
 public class EditNote(Note note, Note newNote) : IOperation
 {
     public Note BaseNote { get; } = note;
-    public Note OldNote { get; } = new(note);
+    public Note OldNote { get; } = new(note, note.Guid);
     public Note NewNote { get; } = newNote;
     
     public void Undo()

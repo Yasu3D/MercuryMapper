@@ -1167,8 +1167,8 @@ public class ChartEditor
             int newSize = shape ? Cursor.Size : note.Size;
             NoteType newType = properties ? editNoteType(note, CurrentNoteType) : note.NoteType;
             MaskDirection newDirection = properties ? CurrentMaskDirection : note.MaskDirection;
-            
-            Note newNote = new(note)
+
+            Note newNote = new(note, note.Guid)
             {
                 Position = newPosition,
                 Size = int.Max(newSize, Note.MinSize(newType)),
@@ -1218,7 +1218,7 @@ public class ChartEditor
 
         void addOperation(Note note)
         {
-            Note newNote = new(note)
+            Note newNote = new(note, note.Guid)
             {
                 RenderSegment = render
             };
@@ -1247,7 +1247,7 @@ public class ChartEditor
 
         void addOperation(Note note)
         {
-            Note newNote = new(note)
+            Note newNote = new(note, note.Guid)
             {
                 Position = note.Position,
                 Size = int.Clamp(note.Size + delta, Note.MinSize(note.NoteType), 60)
@@ -1277,7 +1277,7 @@ public class ChartEditor
 
         void addOperation(Note note)
         {
-            Note newNote = new(note)
+            Note newNote = new(note, note.Guid)
             {
                 Position = MathExtensions.Modulo(note.Position + delta, 60),
                 Size = note.Size
@@ -1325,7 +1325,7 @@ public class ChartEditor
 
         void addOperation(Note note)
         {
-            Note newNote = new(note)
+            Note newNote = new(note, note.Guid)
             {
                 BeatData = new(float.Clamp(note.BeatData.MeasureDecimal + divisor, 0, endOfChartMeasureDecimal))
             };
@@ -1435,7 +1435,7 @@ public class ChartEditor
 
         void addOperation(Note note)
         {
-            Note newNote = new(note)
+            Note newNote = new(note, note.Guid)
             {
                 Position = MathExtensions.Modulo(axis - note.Size - note.Position, 60),
                 NoteType = note.NoteType switch
@@ -1707,7 +1707,7 @@ public class ChartEditor
         if (first.NoteType is not NoteType.HoldEnd) return;
         if (second.NoteType is not (NoteType.HoldStart or NoteType.HoldStartRNote)) return;
 
-        UndoRedoManager.InvokeAndPush(new StitchHold(Chart, first, second));
+        UndoRedoManager.InvokeAndPush(new StitchHold(Chart, first, second, second.NoteType));
         Chart.IsSaved = false;
     }
 
@@ -1719,8 +1719,22 @@ public class ChartEditor
         if (EditorState is ChartEditorState.InsertHold) return;
         if (HighlightedElement is not Note highlighted) return;
         if (highlighted.NoteType != NoteType.HoldSegment) return;
+
+        Note newStart = new(highlighted, Guid.NewGuid())
+        {
+            PrevReferencedNote = null,
+            NextReferencedNote = highlighted.NextReferencedNote,
+            NoteType = NoteType.HoldStart
+        };
+
+        Note newEnd = new(highlighted, Guid.NewGuid())
+        {
+            PrevReferencedNote = highlighted.PrevReferencedNote,
+            NextReferencedNote = null,
+            NoteType = NoteType.HoldEnd
+        };
         
-        UndoRedoManager.InvokeAndPush(new SplitHold(Chart, highlighted));
+        UndoRedoManager.InvokeAndPush(new SplitHold(Chart, highlighted, newStart, newEnd));
         Chart.IsSaved = false;
         HighlightedElement = null;
     }
@@ -1790,7 +1804,7 @@ public class ChartEditor
         
         void addOperationNote(Note note)
         {
-            Note newNote = new(note)
+            Note newNote = new(note, note.Guid)
             {
                 BeatData = new(note.BeatData.FullTick + ticks)
             };
@@ -1826,7 +1840,7 @@ public class ChartEditor
 
         void addOperation(Note note)
         {
-            Note newNote = new(note)
+            Note newNote = new(note, note.Guid)
             {
                 Position = MathExtensions.Modulo(axis - note.Size - note.Position, 60),
                 NoteType = note.NoteType switch
@@ -1868,7 +1882,7 @@ public class ChartEditor
 
         void addOperationNote(Note note)
         {
-            Note newNote = new(note) { BeatData = new(quantize(note)) };
+            Note newNote = new(note, note.Guid) { BeatData = new(quantize(note)) };
             operationList.Add(new EditNote(note, newNote));
         }
 
@@ -1920,7 +1934,7 @@ public class ChartEditor
                 int position = (note.Position - left) % 60;
                 int size = int.Clamp(note.Size + left + right, Note.MinSize(note.NoteType), 60);
                 
-                Note newNote = new(note)
+                Note newNote = new(note, note.Guid)
                 {
                     Position = position,
                     Size = size
@@ -1979,7 +1993,7 @@ public class ChartEditor
                 int position = (note.Position - left) % 60;
                 int size = int.Clamp(note.Size + left + right, Note.MinSize(note.NoteType), 60);
                 
-                Note newNote = new(note)
+                Note newNote = new(note, note.Guid)
                 {
                     Position = position,
                     Size = size
