@@ -1452,8 +1452,10 @@ public partial class MainView : UserControl
         });
     }
 
-    private void MenuItemJoinSession_OnClick(object? sender, RoutedEventArgs e)
+    private async void MenuItemJoinSession_OnClick(object? sender, RoutedEventArgs e)
     {
+        if (!await PromptSave()) return;
+        
         OnlineView_JoinSession joinSessionView = new();
         ContentDialog dialog = new()
         {
