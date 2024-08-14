@@ -685,7 +685,7 @@ public class Chart
             {
                 GimmickType.BpmChange => $" {gimmick.Bpm.ToString("F6", CultureInfo.InvariantCulture)}\n",
                 GimmickType.HiSpeedChange => $" {gimmick.HiSpeed.ToString("F6", CultureInfo.InvariantCulture)}\n",
-                GimmickType.TimeSigChange => $"{gimmick.TimeSig.Upper,5:F0}{gimmick.TimeSig.Lower,5:F0}\n",
+                GimmickType.TimeSigChange => $" {gimmick.TimeSig.Upper,5:F0}{gimmick.TimeSig.Lower,5:F0}\n",
                 _ => "\n"
             };
         }
@@ -975,6 +975,15 @@ public class Chart
     public Note? FindNoteByGuid(string guid)
     {
         return Notes.LastOrDefault(x => x.Guid.ToString() == guid);
+    }
+
+    /// <summary>
+    /// Returns Gimmick with matching GUID, otherwise returns null.
+    /// </summary>
+    /// <returns></returns>
+    public Gimmick? FindGimmickByGuid(string guid)
+    {
+        return Gimmicks.LastOrDefault(x => x.Guid.ToString() == guid);
     }
     
     public static List<string> ReadLines(Stream stream)

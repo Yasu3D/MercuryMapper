@@ -32,7 +32,7 @@ public class EditGimmick(Chart chart, Gimmick gimmick, Gimmick newGimmick) : IOp
 {
     public Chart Chart { get; } = chart;
     public Gimmick BaseGimmick { get; } = gimmick;
-    public Gimmick OldGimmick { get; } = new(gimmick);
+    public Gimmick OldGimmick { get; } = new(gimmick, gimmick.Guid);
     public Gimmick NewGimmick { get; } = newGimmick;
     
     public void Undo()

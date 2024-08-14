@@ -57,7 +57,7 @@ namespace MercuryMapper.MultiCharting
             BakeHold = 206,
             SplitHold = 207,
             StitchHold = 208,
-            ConvertToInstantMask = 209,
+            ConvertToInstantMask = 209, // Obsolete and Unused. TODO: remove from backend.
             InsertGimmick = 210,
             EditGimmick = 211,
             DeleteGimmick = 212,
@@ -213,15 +213,15 @@ namespace MercuryMapper.MultiCharting
             }
 
             // Set up WebSocket client factory for custom protocol
-            Func<ClientWebSocket> factory = new(() =>
+            ClientWebSocket factory()
             {
                 ClientWebSocket client = new();
 
                 client.Options.AddSubProtocol("mercury-multi-mapper");
 
                 return client;
-            });
-            
+            }
+
             // Prep server Uri and return false if it's invalid.
             Uri serverUri;
             
@@ -399,24 +399,27 @@ namespace MercuryMapper.MultiCharting
                     SendMessage(MessageTypes.StitchHold, opDir + opData);
                     break;
                 }
-                
-                case ConvertToInstantMask convertToInstantMask:
-                {
-                    break;
-                }
 
                 case InsertGimmick insertGimmick:
                 {
+                    string opData = $"{insertGimmick.Gimmick.ToNetworkString()}";
+                    SendMessage(MessageTypes.InsertGimmick, opDir + opData);
                     break;
                 }
                 
                 case DeleteGimmick deleteGimmick:
                 {
+                    string opData = $"{deleteGimmick.Gimmick.ToNetworkString()}";
+                    SendMessage(MessageTypes.DeleteGimmick, opDir + opData);
                     break;
                 }
 
                 case EditGimmick editGimmick:
                 {
+                    string opData = $"{editGimmick.BaseGimmick.ToNetworkString()}\n" +
+                                    $"{editGimmick.OldGimmick.ToNetworkString()}\n" + 
+                                    $"{editGimmick.NewGimmick.ToNetworkString()}";
+                    SendMessage(MessageTypes.EditGimmick, opDir + opData);
                     break;
                 }
             }
@@ -949,23 +952,95 @@ namespace MercuryMapper.MultiCharting
                     break;
                 }
                 
-                case MessageTypes.ConvertToInstantMask:
-                {
-                    break;
-                }
-                
                 case MessageTypes.InsertGimmick:
                 {
+                    Dispatcher.UIThread.Post(() =>
+                    {
+                        string[] gimmickData = operationData[1].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                        
+                        if (operationData[0] == "0")
+                        {
+                            // Undo
+                            Gimmick? gimmick = Chart.FindGimmickByGuid(gimmickData[0]);
+                            if (gimmick == null) return;
+                            
+                            InsertGimmick operation = new(Chart, gimmick);
+                            operation.Undo();
+                            ChartEditor.UndoRedoManager.Invoke();
+                        }
+                        else
+                        {
+                            // Redo
+                            InsertGimmick operation = new(Chart, Gimmick.ParseNetworkString(gimmickData));
+                            operation.Redo();
+                            ChartEditor.UndoRedoManager.Invoke();
+                        }
+                    });
                     break;
                 }
                 
                 case MessageTypes.EditGimmick:
                 {
+                    Dispatcher.UIThread.Post(() =>
+                    {
+                        string[] gimmickData = operationData[1].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                        string[] oldGimmickData = operationData[2].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                        string[] newGimmickData = operationData[3].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                    
+                        if (operationData[0] == "0")
+                        {
+                            // Undo
+                            Gimmick? gimmick = Chart.FindGimmickByGuid(gimmickData[0]);
+                            if (gimmick == null) return;
+
+                            Gimmick oldGimmick = Gimmick.ParseNetworkString(oldGimmickData);
+                            
+                            EditGimmick operation = new(Chart, gimmick, oldGimmick);
+                            operation.Redo();
+                            ChartEditor.UndoRedoManager.Invoke();
+                        }
+                        else
+                        {
+                            // Redo
+                            Gimmick? gimmick = Chart.FindGimmickByGuid(gimmickData[0]);
+                            if (gimmick == null) return;
+
+                            Gimmick newGimmick = Gimmick.ParseNetworkString(newGimmickData);
+                        
+                            EditGimmick operation = new(Chart, gimmick, newGimmick);
+                            operation.Redo();
+                            ChartEditor.UndoRedoManager.Invoke();
+                        }
+                    });
+                    
                     break;
                 }
                 
                 case MessageTypes.DeleteGimmick:
                 {
+                    Dispatcher.UIThread.Post(() =>
+                    {
+                        string[] gimmickData = operationData[1].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                    
+                        if (operationData[0] == "0")
+                        {
+                            // Undo
+                            DeleteGimmick operation = new(Chart, Gimmick.ParseNetworkString(gimmickData));
+                            operation.Undo();
+                            ChartEditor.UndoRedoManager.Invoke();
+                        }
+                        else
+                        {
+                            // Redo
+                            Gimmick? gimmick = Chart.FindGimmickByGuid(gimmickData[0]);
+                            if (gimmick == null) return;
+                        
+                            DeleteGimmick operation = new(Chart, gimmick);
+                            operation.Redo();
+                            ChartEditor.UndoRedoManager.Invoke();
+                        }
+                    });
+                    
                     break;
                 }
                 

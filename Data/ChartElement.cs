@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Metrics;
 using System.Globalization;
 using System.Linq;
 using MercuryMapper.Enums;
@@ -129,6 +130,37 @@ public class Gimmick : ChartElement
 
     public bool IsReverse => GimmickType is GimmickType.ReverseEffectStart or GimmickType.ReverseEffectEnd or GimmickType.ReverseNoteEnd;
     public bool IsStop => GimmickType is GimmickType.StopStart or GimmickType.StopEnd;
+
+    public string ToNetworkString()
+    {
+        string result = $"{Guid} {BeatData.Measure:F0} {BeatData.Tick:F0} {(int)GimmickType:F0}";
+        
+        result += GimmickType switch
+        {
+            GimmickType.BpmChange => $" {Bpm.ToString("F6", CultureInfo.InvariantCulture)}\n",
+            GimmickType.HiSpeedChange => $" {HiSpeed.ToString("F6", CultureInfo.InvariantCulture)}\n",
+            GimmickType.TimeSigChange => $" {TimeSig.Upper:F0} {TimeSig.Lower:F0}\n",
+            _ => "\n"
+        };
+        
+        return result;
+    }
+    
+    public static Gimmick ParseNetworkString(string[] data)
+    {
+        Gimmick gimmick = new()
+        {
+            Guid = Guid.Parse(data[0]),
+            BeatData = new(Convert.ToInt32(data[1]), Convert.ToInt32(data[2])),
+            GimmickType = (GimmickType)Convert.ToInt32(data[3]),
+        };
+
+        if (gimmick.GimmickType == GimmickType.BpmChange && data.Length == 5) gimmick.Bpm = Convert.ToSingle(data[4]);
+        if (gimmick.GimmickType == GimmickType.HiSpeedChange && data.Length == 5) gimmick.HiSpeed = Convert.ToSingle(data[4]);
+        if (gimmick.GimmickType == GimmickType.TimeSigChange && data.Length == 6) gimmick.TimeSig = new(Convert.ToInt32(data[4]), Convert.ToInt32(data[5]));
+
+        return gimmick;
+    }
 }
 
 public class Note : ChartElement
