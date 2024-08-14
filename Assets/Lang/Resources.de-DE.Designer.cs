@@ -2365,6 +2365,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Zeige andere Nutzer während Playback in Multi-Charting.
+        /// </summary>
+        public static string Settings_ShowOtherUsersDuringPlayback {
+            get {
+                return ResourceManager.GetString("Settings_ShowOtherUsersDuringPlayback", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Zeige Speed-Changes.
         /// </summary>
         public static string Settings_ShowSpeedChanges {

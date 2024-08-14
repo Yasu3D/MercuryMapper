@@ -29,6 +29,7 @@ public partial class SettingsView_Rendering : UserControl
         NumericBeatDivision.Value = RenderConfig.BeatDivision;
         CheckBoxShowMaskDuringPlayback.IsChecked = RenderConfig.ShowMaskDuringPlayback;
         CheckBoxShowGimmickNotesDuringPlayback.IsChecked = RenderConfig.ShowGimmickNotesDuringPlayback;
+        CheckBoxShowOtherUsersDuringPlayback.IsChecked = RenderConfig.ShowOtherUsersDuringPlayback;
         CheckBoxShowChainStripes.IsChecked = RenderConfig.ShowChainStripes;
     }
     
@@ -72,6 +73,11 @@ public partial class SettingsView_Rendering : UserControl
     private void CheckBoxShowGimmickNotesDuringPlayback_OnIsCheckedChanged(object? sender, RoutedEventArgs e)
     {
         RenderConfig.ShowGimmickNotesDuringPlayback = CheckBoxShowGimmickNotesDuringPlayback.IsChecked ?? false;
+    }
+    
+    private void CheckBoxShowOtherUsersDuringPlayback_OnIsCheckedChanged(object? sender, RoutedEventArgs e)
+    {
+        RenderConfig.ShowOtherUsersDuringPlayback = CheckBoxShowOtherUsersDuringPlayback.IsChecked ?? false;
     }
 
     private void ComboHoldRenderMethod_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)

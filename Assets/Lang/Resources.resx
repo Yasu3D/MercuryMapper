@@ -1077,4 +1077,7 @@ Continue?</value>
   <data name="Online_ConnectionFailedDetails" xml:space="preserve">
     <value>Ensure that the specified address is correct and that the server is running.</value>
   </data>
+  <data name="Settings_ShowOtherUsersDuringPlayback" xml:space="preserve">
+    <value>Show other Users during Playback in Multi-Charting</value>
+  </data>
 </root>

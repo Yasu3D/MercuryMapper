@@ -69,6 +69,9 @@
                 
                 <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_ShowGimmickNotesDuringPlayback}"/>
                 <CheckBox Name="CheckBoxShowGimmickNotesDuringPlayback" HorizontalAlignment="Right" IsCheckedChanged="CheckBoxShowGimmickNotesDuringPlayback_OnIsCheckedChanged"/>
+                
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_ShowOtherUsersDuringPlayback}"/>
+                <CheckBox Name="CheckBoxShowOtherUsersDuringPlayback" HorizontalAlignment="Right" IsCheckedChanged="CheckBoxShowOtherUsersDuringPlayback_OnIsCheckedChanged"/>
             </UniformGrid>
         </StackPanel>
     </ScrollViewer>

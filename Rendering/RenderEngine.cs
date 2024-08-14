@@ -64,7 +64,7 @@ public class RenderEngine(MainView mainView)
         
         DrawMeasureLines(canvas, Chart);
         
-        DrawPeers(canvas, Chart);
+        if (!IsPlaying || (IsPlaying && RenderConfig.ShowOtherUsersDuringPlayback)) DrawPeers(canvas, Chart);
         
         if ((!IsPlaying || (IsPlaying && RenderConfig.ShowGimmickNotesDuringPlayback)) && mainView.ChartEditor.LayerGimmickActive) DrawGimmickNotes(canvas, Chart);
         if ((!IsPlaying || (IsPlaying && RenderConfig.ShowMaskDuringPlayback)) && mainView.ChartEditor.LayerMaskActive) DrawMaskNotes(canvas, Chart);
