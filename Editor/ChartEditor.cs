@@ -1066,7 +1066,7 @@ public class ChartEditor
         // Temporarily undo all hold operations, then add them to the operationList
         foreach (DeleteHoldNote deleteHoldOp in holdOperationList)
         {
-            UndoRedoManager.Undo();
+            UndoRedoManager.Undo(false);
             operationList.Add(deleteHoldOp);
         }
         

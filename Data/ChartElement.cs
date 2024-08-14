@@ -297,8 +297,15 @@ public class Note : ChartElement
     public string ToNetworkString()
     {
         string result = $"{Guid} {BeatData.Measure:F0} {BeatData.Tick:F0} {(int)NoteType:F0} {Position:F0} {Size:F0} {(RenderSegment ? 1 : 0)}";
-        if (IsMask) result += $" {(int)MaskDirection:F0}";
-        if (NextReferencedNote != null) result += $" {NextReferencedNote.Guid}";
+        if (IsMask)
+        {
+            result += $" {(int)MaskDirection:F0}";
+        }
+        else
+        {
+            result += $" {(NextReferencedNote != null ? NextReferencedNote.Guid : "null")}";
+            result += $" {(PrevReferencedNote != null ? PrevReferencedNote.Guid : "null")}";
+        }
         
         return result;
     }
@@ -315,10 +322,12 @@ public class Note : ChartElement
             RenderSegment = data[6] != "0",
         };
 
-        if (data.Length == 8)
+        if (note.IsMask && data.Length == 8) note.MaskDirection = (MaskDirection)Convert.ToInt32(data[7]);
+
+        if (data.Length == 9)
         {
-            if (note.IsMask) note.MaskDirection = (MaskDirection)Convert.ToInt32(data[7]);
-            else note.NextReferencedNote = chart.FindNoteByGuid(data[7]);
+            if (data[7] != "null") note.NextReferencedNote = chart.FindNoteByGuid(data[7]);
+            if (data[8] != "null") note.PrevReferencedNote = chart.FindNoteByGuid(data[8]);
         }
 
         return note;

@@ -676,19 +676,19 @@ namespace MercuryMapper.MultiCharting
                 {
                     Dispatcher.UIThread.Post(() =>
                     {
-                        string[] data = trimmedMessage.Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                        string[] noteData = operationData[1].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
                     
-                        if (data[0] == "0")
+                        if (operationData[0] == "0")
                         {
                             // Undo
-                            DeleteNote operation = new(Chart, ChartEditor.SelectedNotes, Note.ParseNetworkString(Chart, data));
+                            DeleteNote operation = new(Chart, ChartEditor.SelectedNotes, Note.ParseNetworkString(Chart, noteData));
                             operation.Undo();
                             ChartEditor.UndoRedoManager.Invoke();
                         }
                         else
                         {
                             // Redo
-                            Note? note = Chart.FindNoteByGuid(data[1]);
+                            Note? note = Chart.FindNoteByGuid(noteData[0]);
                             if (note == null) return;
                         
                             DeleteNote operation = new(Chart, ChartEditor.SelectedNotes, note);
@@ -702,6 +702,11 @@ namespace MercuryMapper.MultiCharting
                 
                 case MessageTypes.DeleteHoldNote:
                 {
+                    Dispatcher.UIThread.Post(() =>
+                    {
+                        
+                    });
+                    
                     break;
                 }
                 

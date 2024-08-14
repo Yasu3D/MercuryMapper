@@ -1446,8 +1446,8 @@ public partial class MainView : UserControl
             if (result is ContentDialogResult.Primary)
             {
                 // TODO: Validate user input.
-
-                ConnectionManager.CreateLobby(createSessionView.ServerAddressTextBox.Text, createSessionView.UsernameTextbox.Text, createSessionView.UserColor.Color.ToString());
+                Color color = createSessionView.UserColor.Color;
+                ConnectionManager.CreateLobby(createSessionView.ServerAddressTextBox.Text ?? "", createSessionView.UsernameTextbox.Text ?? "", $"#{color.A:X2}{color.R:X2}{color.G:X2}{color.B:X2}");
             }
         });
     }
@@ -1470,8 +1470,8 @@ public partial class MainView : UserControl
             if (result is ContentDialogResult.Primary)
             {
                 // TODO: Validate user input.
-
-                ConnectionManager.JoinLobby(joinSessionView.ServerAddressTextBox.Text, joinSessionView.UsernameTextbox.Text, joinSessionView.UserColor.Color.ToString(), joinSessionView.SessionCodeTextBox.Text);
+                Color color = joinSessionView.UserColor.Color;
+                ConnectionManager.JoinLobby(joinSessionView.ServerAddressTextBox.Text ?? "", joinSessionView.UsernameTextbox.Text ?? "", $"#{color.A:X2}{color.R:X2}{color.G:X2}{color.B:X2}", joinSessionView.SessionCodeTextBox.Text ?? "");
             }
         });
     }
