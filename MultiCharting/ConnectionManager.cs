@@ -2,6 +2,7 @@
 using MercuryMapper.Editor;
 using MercuryMapper.Views;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -314,7 +315,7 @@ namespace MercuryMapper.MultiCharting
             {
                 case CompositeOperation compositeOperation:
                 {
-                    foreach (IOperation op in compositeOperation.Operations)
+                    foreach (IOperation op in compositeOperation.Operations.Reverse())
                     {
                         SendOperationMessage(op, operationDirection);
                     }
@@ -354,6 +355,8 @@ namespace MercuryMapper.MultiCharting
                 
                 case DeleteHoldNote deleteHoldNote:
                 {
+                    string opData = $"{deleteHoldNote.DeletedNote.ToNetworkString()}";
+                    SendMessage(MessageTypes.DeleteHoldNote, opDir + opData);
                     break;
                 }
                 
@@ -704,7 +707,25 @@ namespace MercuryMapper.MultiCharting
                 {
                     Dispatcher.UIThread.Post(() =>
                     {
+                        string[] noteData = operationData[1].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+
+                        if (operationData[0] == "0")
+                        {
+                            // Undo
+                            DeleteHoldNote operation = new(Chart, ChartEditor.SelectedNotes, Note.ParseNetworkString(Chart, noteData));
+                            operation.Undo();
+                            ChartEditor.UndoRedoManager.Invoke();
+                        }
+                        else
+                        {
+                            // Redo
+                            Note? note = Chart.FindNoteByGuid(noteData[0]);
+                            if (note == null) return;
                         
+                            DeleteHoldNote operation = new(Chart, ChartEditor.SelectedNotes, note);
+                            operation.Redo();
+                            ChartEditor.UndoRedoManager.Invoke();
+                        }
                     });
                     
                     break;

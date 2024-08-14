@@ -1049,20 +1049,53 @@ public class ChartEditor
             EndHold(true);
         }
 
-        List<Note> checkedHolds = [];
+        HashSet<Note> checkedHolds = [];
         List<Note> checkedCurrentHolds = [];
         
         if (SelectedNotes.Count == 0 && HighlightedElement is Note highlighted)
         {
-            addOperation(highlighted);
+            // If deleting all but one, add the last as well.
+            Note[] references = highlighted.References().ToArray();
+            if (references.Length == 2)
+            {
+                addOperation(references[0]);
+                addOperation(references[1]);
+            }
+            else
+            {
+                addOperation(highlighted);
+            }
             HighlightedElement = Chart.Notes.LastOrDefault(x => x.BeatData.FullTick <= highlighted.BeatData.FullTick && x != highlighted);
         }
         
         foreach (Note selected in SelectedNotes.OrderByDescending(x => x.BeatData.FullTick))
         {
-            addOperation(selected);
-        }
+            // Segment was already added previously, skip.
+            if (checkedHolds.Contains(selected)) continue;
 
+            if (selected.IsHold)
+            {
+                // Compare how many references the hold has to how many of those references are in SelectedNotes.
+                // If refsInSelected is one less than refsTotal, then add the entire list including the missing one.
+                // Then continue to avoid adding segments twice.
+                Note[] referencesTotal = selected.References().ToArray();
+                Note[] referencesInSelected = SelectedNotes.Intersect(referencesTotal).ToArray();
+
+                if (referencesTotal.Length == referencesInSelected.Length + 1)
+                {
+                    foreach (Note reference in referencesTotal)
+                    {
+                        addOperation(reference);
+                        checkedHolds.Add(reference);
+                    }
+
+                    continue;
+                }
+            }
+            
+            addOperation(selected);   
+        }
+        
         // Temporarily undo all hold operations, then add them to the operationList
         foreach (DeleteHoldNote deleteHoldOp in holdOperationList)
         {
@@ -1071,6 +1104,12 @@ public class ChartEditor
         }
         
         if (operationList.Count == 0) return;
+
+        // Move LastPlacedHold back and let UpdateLastPlacedHold() reset it properly, otherwise UpdateLastPlacedHold() loses reference and gets stuck.
+        if (EditorState == ChartEditorState.InsertHold && LastPlacedHold != null)
+        {
+            LastPlacedHold = LastPlacedHold.FirstReference();
+        }
         UndoRedoManager.InvokeAndPush(new CompositeOperation(operationList));
         Chart.IsSaved = false;
         return;
@@ -1079,8 +1118,6 @@ public class ChartEditor
         {
             if (note.IsHold)
             {
-                Note? newLastPlacedHold = null;
-                
                 if (LastPlacedHold != null && EditorState is ChartEditorState.InsertHold)
                 {
                     // If user is currently inserting a hold and trying to delete all segments (or all but one) of the hold they're currently deleting, then end hold.
@@ -1090,37 +1127,12 @@ public class ChartEditor
                         if (unselectedCurrentReferences.Count <= 1) EndHold(true);
                         checkedCurrentHolds.AddRange(LastPlacedHold.References());
                     }
-                    
-                    // Update LastPlacedHold to previous if it's being deleted.
-                    if (LastPlacedHold == note)
-                    {
-                        newLastPlacedHold = note.PrevReferencedNote;
-                    }
                 }
                 
-                DeleteHoldNote holdOp = new(Chart, this, SelectedNotes, note, newLastPlacedHold);
+                DeleteHoldNote holdOp = new(Chart, SelectedNotes, note);
                 holdOperationList.Add(holdOp);
                 
-                DeleteHoldNote? holdOp2 = null;
-                
-                // If deleting all but one segment, delete the last one too.
-                // Creating holdOp2 early and null checking is just to preserve order of operations.
-                if (!checkedHolds.Contains(note))
-                {
-                    List<Note> unselectedReferences = SelectedNotes.Count != 0
-                        ? note.References().Where(x => !SelectedNotes.Contains(x)).ToList()
-                        : note.References().Where(x => x != HighlightedElement).ToList();
-                    
-                    if (unselectedReferences.Count == 1)
-                    {
-                        holdOp2 = new(Chart, this, SelectedNotes, unselectedReferences[0], newLastPlacedHold);
-                        holdOperationList.Add(holdOp2);
-                    }
-                    checkedHolds.AddRange(note.References());
-                }
-                
                 UndoRedoManager.InvokeAndPush(holdOp);
-                if (holdOp2 != null) UndoRedoManager.InvokeAndPush(holdOp2);
             }
             else
             {
@@ -2099,9 +2111,7 @@ public class ChartEditor
             
             foreach (Note note in hold.Segments.OrderByDescending(x => x.BeatData.FullTick))
             {
-                Note? newLastPlacedHold = null;
-                
-                DeleteHoldNote holdOp = new(Chart, this, SelectedNotes, note, newLastPlacedHold);
+                DeleteHoldNote holdOp = new(Chart, SelectedNotes, note);
                 holdOperationList.Add(holdOp);
                 
                 UndoRedoManager.InvokeAndPush(holdOp);

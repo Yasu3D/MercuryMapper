@@ -29,77 +29,64 @@ public class DeleteNote(Chart chart, List<Note> selected, Note note) : IOperatio
     }
 }
 
-public class DeleteHoldNote(Chart chart, ChartEditor editor, List<Note> selected, Note note, Note? newLastPlacedHold) : IOperation
+public class DeleteHoldNote(Chart chart, List<Note> selected, Note deletedNote) : IOperation
 {
     public Chart Chart { get; } = chart;
-    public Note Note { get; } = note;
-    public Note? NextNote { get; } = note.NextReferencedNote;
-    public Note? PrevNote { get; } = note.PrevReferencedNote;
-    public Note? NewLastPlacedHold { get; } = newLastPlacedHold;
-    public NoteType NextNoteType { get; } = note.NextReferencedNote?.NoteType ?? NoteType.Touch;
-    public NoteType PrevNoteType { get; } = note.PrevReferencedNote?.NoteType ?? NoteType.Touch;
+    public Note DeletedNote { get; } = deletedNote;
+    public Note? NextNote => DeletedNote.NextReferencedNote;
+    public Note? PrevNote => DeletedNote.PrevReferencedNote;
     public List<Note> Selected { get; } = selected;
-    
+
     public void Undo()
     {
-        switch (Note.NoteType)
-        {
-            case NoteType.HoldStart:
-            case NoteType.HoldStartRNote:
-                if (NextNote == null) break;
-                NextNote.PrevReferencedNote = Note;
-                NextNote.NoteType = NextNoteType;
-                break;
-            
-            case NoteType.HoldSegment:
-                if (PrevNote != null) PrevNote.NextReferencedNote = Note;
-                if (NextNote != null) NextNote.PrevReferencedNote = Note;
-                break;
-            
-            case NoteType.HoldEnd:
-                if (PrevNote == null) break;
-                PrevNote.NextReferencedNote = Note;
-                PrevNote.NoteType = PrevNoteType;
-                break;
-        }
-        
+        // Add note back.
         lock (Chart)
         {
-            Chart.Notes.Add(Note);
+            Chart.Notes.Add(DeletedNote);
         }
-
-        editor.LastPlacedHold = Note;
+        
+        // Set neighbor references to point back at re-added note.
+        // Re-added note maintained it's original references from when it was deleted.
+        if (NextNote != null) NextNote.PrevReferencedNote = DeletedNote;
+        if (PrevNote != null) PrevNote.NextReferencedNote = DeletedNote;
+        
+        // Safety Check that's relevant to Multi-Charting only:
+        // Make sure the re-added note's neighbors are still in the Note list. If they are not, unlink them.
+        // This persists throughout the rest of the code, so further checks if any of them are null will reflect this change.
+        if (NextNote != null && !Chart.Notes.Contains(NextNote)) DeletedNote.NextReferencedNote = null;
+        if (PrevNote != null && !Chart.Notes.Contains(PrevNote)) DeletedNote.PrevReferencedNote = null;
+        
+        // Repair Hold Types by brute force.
+        foreach (Note reference in DeletedNote.References())
+        {
+            if (reference is { PrevReferencedNote: null, NextReferencedNote: null }) reference.NoteType = NoteType.HoldStart;
+            if (reference is { PrevReferencedNote: not null, NextReferencedNote: null }) reference.NoteType = NoteType.HoldEnd;
+            if (reference is { PrevReferencedNote: null, NextReferencedNote: not null }) reference.NoteType = NoteType.HoldStart;
+            if (reference is { PrevReferencedNote: not null, NextReferencedNote: not null }) reference.NoteType = NoteType.HoldSegment;
+        }
     }
-    
+
     public void Redo()
     {
-        switch (Note.NoteType)
-        {
-            case NoteType.HoldStart:
-            case NoteType.HoldStartRNote:
-                if (NextNote == null) break;
-                NextNote.PrevReferencedNote = null;
-                if (NextNote.NoteType == NoteType.HoldSegment) NextNote.NoteType = Note.NoteType;
-                break;
-            
-            case NoteType.HoldSegment:
-                if (PrevNote != null) PrevNote.NextReferencedNote = NextNote;
-                if (NextNote != null) NextNote.PrevReferencedNote = PrevNote;
-                break;
-            
-            case NoteType.HoldEnd:
-                if (PrevNote == null) break;
-                PrevNote.NextReferencedNote = null;
-                PrevNote.NoteType = PrevNote.IsSegment ? NoteType.HoldEnd : PrevNote.NoteType;
-                break;
-        }
+        // Make references "pass through" deleted note, effectively unlinking it.
+        // Deleted note itself keeps its original references!
+        if (NextNote != null) NextNote.PrevReferencedNote = DeletedNote.PrevReferencedNote;
+        if (PrevNote != null) PrevNote.NextReferencedNote = DeletedNote.NextReferencedNote;
         
+        // Three cases.
+        // One: Deleted note is a Segment. Do nothing.
+        
+        // Two: Deleted note is a HoldStart. Convert Next to HoldStart. TODO: R NOTE CHECK.
+        if (NextNote is { PrevReferencedNote: null }) NextNote.NoteType = NoteType.HoldStart;
+        
+        // Three: Deleted note is a HoldEnd. Convert Prev to HoldEnd.
+        if (PrevNote is { NextReferencedNote: null }) PrevNote.NoteType = NoteType.HoldEnd;
+        
+        // Remove note.
         lock (Chart)
         {
-            Chart.Notes.Remove(Note);
-            Selected.Remove(Note);
+            Chart.Notes.Remove(DeletedNote);
+            Selected.Remove(DeletedNote);
         }
-
-        editor.LastPlacedHold = NewLastPlacedHold;
     }
 }
