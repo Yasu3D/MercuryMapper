@@ -8,6 +8,7 @@ using Avalonia.Threading;
 using FluentAvalonia.UI.Controls;
 using MercuryMapper.Data;
 using MercuryMapper.Enums;
+using MercuryMapper.MultiCharting;
 using MercuryMapper.UndoRedo;
 using MercuryMapper.UndoRedo.NoteOperations;
 using MercuryMapper.Utils;
@@ -33,6 +34,9 @@ public class ChartEditor
             mainView.SetSelectionInfo();
             
             UpdateLastPlacedHold();
+            
+            // Repair holds after every operation to make sure forward references don't get mangled.
+            if (mainView.ConnectionManager.NetworkState != ConnectionManager.NetworkConnectionState.Local) RepairHoldsForward();
         };
     }
     
@@ -703,6 +707,15 @@ public class ChartEditor
         if (EditorState != ChartEditorState.InsertHold) return;
         LastPlacedHold = LastPlacedHold?.References().LastOrDefault();
     }
+
+    public void RepairHoldsForward()
+    {
+        foreach (Note note in Chart.Notes)
+        {
+            if (!note.IsHold) continue;
+            if (note.NextReferencedNote != null) note.NextReferencedNote.PrevReferencedNote = note;
+        }
+    }
     
     // ________________ ChartElement Operations
     public void InsertNote()
@@ -1128,8 +1141,8 @@ public class ChartEditor
                         checkedCurrentHolds.AddRange(LastPlacedHold.References());
                     }
                 }
-                
-                DeleteHoldNote holdOp = new(Chart, SelectedNotes, note);
+
+                DeleteHoldNote holdOp = new(Chart, SelectedNotes, note, note.FirstReference()?.NoteType is NoteType.HoldStartRNote);
                 holdOperationList.Add(holdOp);
                 
                 UndoRedoManager.InvokeAndPush(holdOp);
@@ -2125,7 +2138,7 @@ public class ChartEditor
             
             foreach (Note note in hold.Segments.OrderByDescending(x => x.BeatData.FullTick))
             {
-                DeleteHoldNote holdOp = new(Chart, SelectedNotes, note);
+                DeleteHoldNote holdOp = new(Chart, SelectedNotes, note, hold.Segments[0].NoteType is NoteType.HoldStartRNote);
                 holdOperationList.Add(holdOp);
                 
                 UndoRedoManager.InvokeAndPush(holdOp);

@@ -7,7 +7,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net.WebSockets;
-using System.Threading;
 using MercuryMapper.Data;
 using MercuryMapper.Enums;
 using MercuryMapper.UndoRedo;
@@ -355,7 +354,7 @@ namespace MercuryMapper.MultiCharting
                 
                 case DeleteHoldNote deleteHoldNote:
                 {
-                    string opData = $"{deleteHoldNote.DeletedNote.ToNetworkString()}";
+                    string opData = $"{deleteHoldNote.DeletedNote.ToNetworkString()}\n{(deleteHoldNote.RNote ? "1" : "0")}";
                     SendMessage(MessageTypes.DeleteHoldNote, opDir + opData);
                     break;
                 }
@@ -741,11 +740,12 @@ namespace MercuryMapper.MultiCharting
                     Dispatcher.UIThread.Post(() =>
                     {
                         string[] noteData = operationData[1].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                        bool rNote = operationData[2] == "1";
 
                         if (operationData[0] == "0")
                         {
                             // Undo
-                            DeleteHoldNote operation = new(Chart, ChartEditor.SelectedNotes, Note.ParseNetworkString(Chart, noteData));
+                            DeleteHoldNote operation = new(Chart, ChartEditor.SelectedNotes, Note.ParseNetworkString(Chart, noteData), rNote);
                             operation.Undo();
                             ChartEditor.UndoRedoManager.Invoke();
                         }
@@ -755,7 +755,7 @@ namespace MercuryMapper.MultiCharting
                             Note? note = Chart.FindNoteByGuid(noteData[0]);
                             if (note == null) return;
                         
-                            DeleteHoldNote operation = new(Chart, ChartEditor.SelectedNotes, note);
+                            DeleteHoldNote operation = new(Chart, ChartEditor.SelectedNotes, note, rNote);
                             operation.Redo();
                             ChartEditor.UndoRedoManager.Invoke();
                         }

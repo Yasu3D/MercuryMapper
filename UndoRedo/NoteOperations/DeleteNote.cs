@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using MercuryMapper.Data;
 using MercuryMapper.Editor;
@@ -29,13 +30,14 @@ public class DeleteNote(Chart chart, List<Note> selected, Note note) : IOperatio
     }
 }
 
-public class DeleteHoldNote(Chart chart, List<Note> selected, Note deletedNote) : IOperation
+public class DeleteHoldNote(Chart chart, List<Note> selected, Note deletedNote, bool rNote) : IOperation
 {
     public Chart Chart { get; } = chart;
     public Note DeletedNote { get; } = deletedNote;
     public Note? NextNote => DeletedNote.NextReferencedNote;
     public Note? PrevNote => DeletedNote.PrevReferencedNote;
     public List<Note> Selected { get; } = selected;
+    public bool RNote { get;  }= rNote;
 
     public void Undo()
     {
@@ -59,15 +61,17 @@ public class DeleteHoldNote(Chart chart, List<Note> selected, Note deletedNote) 
         // Repair Hold Types by brute force.
         foreach (Note reference in DeletedNote.References())
         {
-            if (reference is { PrevReferencedNote: null, NextReferencedNote: null }) reference.NoteType = NoteType.HoldStart;
+            if (reference is { PrevReferencedNote: null, NextReferencedNote: null }) reference.NoteType = RNote ? NoteType.HoldStartRNote : NoteType.HoldStart;
             if (reference is { PrevReferencedNote: not null, NextReferencedNote: null }) reference.NoteType = NoteType.HoldEnd;
-            if (reference is { PrevReferencedNote: null, NextReferencedNote: not null }) reference.NoteType = NoteType.HoldStart;
+            if (reference is { PrevReferencedNote: null, NextReferencedNote: not null }) reference.NoteType = RNote ? NoteType.HoldStartRNote : NoteType.HoldStart;
             if (reference is { PrevReferencedNote: not null, NextReferencedNote: not null }) reference.NoteType = NoteType.HoldSegment;
         }
     }
 
     public void Redo()
     {
+        Console.WriteLine(DeletedNote.FirstReference()?.NoteType);
+        
         // Make references "pass through" deleted note, effectively unlinking it.
         // Deleted note itself keeps its original references!
         if (NextNote != null) NextNote.PrevReferencedNote = DeletedNote.PrevReferencedNote;
@@ -76,8 +80,8 @@ public class DeleteHoldNote(Chart chart, List<Note> selected, Note deletedNote) 
         // Three cases.
         // One: Deleted note is a Segment. Do nothing.
         
-        // Two: Deleted note is a HoldStart. Convert Next to HoldStart. TODO: R NOTE CHECK.
-        if (NextNote is { PrevReferencedNote: null }) NextNote.NoteType = NoteType.HoldStart;
+        // Two: Deleted note is a HoldStart. Convert Next to HoldStart.
+        if (NextNote is { PrevReferencedNote: null }) NextNote.NoteType = RNote ? NoteType.HoldStartRNote : NoteType.HoldStart;
         
         // Three: Deleted note is a HoldEnd. Convert Prev to HoldEnd.
         if (PrevNote is { NextReferencedNote: null }) PrevNote.NoteType = NoteType.HoldEnd;
