@@ -2164,8 +2164,6 @@ public class ChartEditor
             if (!note.IsMask) return;
             if (note is { Size: <= 2, MaskDirection: MaskDirection.Center }) return;
 
-            List<Note> newMasks = [];
-
             int count = note.Size / 2;
             bool odd = (note.Size & 1) == 1;
 
@@ -2182,10 +2180,10 @@ public class ChartEditor
                     MaskDirection = MaskDirection.Center
                 };
 
-                newMasks.Add(newNote);
+                operationList.Add(new InsertNote(Chart, SelectedNotes, newNote));
             }
             
-            operationList.Add(new ConvertToInstantMask(Chart, note, newMasks));
+            operationList.Add(new DeleteNote(Chart, SelectedNotes, note));
         }
     }
 }
