@@ -270,11 +270,11 @@ namespace MercuryMapper.MultiCharting
         // File Transfer
         private void SendSongFile(string receivingClientId)
         {
-            byte[] bytes = File.ReadAllBytes(ChartEditor.Chart.AudioFilePath);
+            byte[] bytes = File.ReadAllBytes(ChartEditor.Chart.BgmFilepath);
             string fileData = Convert.ToBase64String(bytes);
 
             // I swear - if someone uses pipes in file names - they're insane.
-            SendMessage(MessageTypes.SongFile, receivingClientId + "|" + Path.GetFileName(ChartEditor.Chart.AudioFilePath) + "|" + fileData);
+            SendMessage(MessageTypes.SongFile, receivingClientId + "|" + Path.GetFileName(ChartEditor.Chart.BgmFilepath) + "|" + fileData);
         }
 
         private void SendChartData(string receivingClientId)
@@ -554,7 +554,7 @@ namespace MercuryMapper.MultiCharting
                 case MessageTypes.PreviewStartChange:
                 {
                     Dispatcher.UIThread.Post(() => {
-                        mainView.ChartEditor.Chart.PreviewTime = Convert.ToDecimal(trimmedMessage, CultureInfo.InvariantCulture);
+                        mainView.ChartEditor.Chart.PreviewStart = Convert.ToDecimal(trimmedMessage, CultureInfo.InvariantCulture);
                         mainView.SetChartInfo();
                     });
                     break;
@@ -563,7 +563,7 @@ namespace MercuryMapper.MultiCharting
                 case MessageTypes.PreviewLengthChange:
                 {
                     Dispatcher.UIThread.Post(() => {
-                        mainView.ChartEditor.Chart.PreviewLength = Convert.ToDecimal(trimmedMessage, CultureInfo.InvariantCulture);
+                        mainView.ChartEditor.Chart.PreviewTime = Convert.ToDecimal(trimmedMessage, CultureInfo.InvariantCulture);
                         mainView.SetChartInfo();
                     });
                     break;
@@ -572,7 +572,7 @@ namespace MercuryMapper.MultiCharting
                 case MessageTypes.AudioOffsetChange:
                 {
                     Dispatcher.UIThread.Post(() => {
-                        mainView.ChartEditor.Chart.Offset = Convert.ToDecimal(trimmedMessage, CultureInfo.InvariantCulture);
+                        mainView.ChartEditor.Chart.BgmOffset = Convert.ToDecimal(trimmedMessage, CultureInfo.InvariantCulture);
                         mainView.SetChartInfo();
                     });
                     break;
@@ -581,7 +581,7 @@ namespace MercuryMapper.MultiCharting
                 case MessageTypes.MovieOffsetChange:
                 {
                     Dispatcher.UIThread.Post(() => {
-                        mainView.ChartEditor.Chart.MovieOffset = Convert.ToDecimal(trimmedMessage, CultureInfo.InvariantCulture);
+                        mainView.ChartEditor.Chart.BgaOffset = Convert.ToDecimal(trimmedMessage, CultureInfo.InvariantCulture);
                         mainView.SetChartInfo();
                     });
                     break;

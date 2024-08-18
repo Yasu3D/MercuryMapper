@@ -25,280 +25,28 @@ public class Chart
     private List<Gimmick>? TimeEvents { get; set; }
     public List<TimeScaleData> TimeScales { get; } = [];
 
-    public string FilePath { get; set; } = "";
+    public string Filepath { get; set; } = "";
+    
+    public string Version = "";
+    public string Title = "";
+    public string Rubi = "";
+    public string Artist = "";
+    public string Author = "";
 
-    public string AudioFilePath { get; set; } = "";
-    public decimal Level { get; set; }
-    public decimal ClearThreshold { get; set; } = 0.83m;
-    public string Author { get; set; } = "";
-    public decimal PreviewTime { get; set; } // in seconds
-    public decimal PreviewLength { get; set; } = 10; // in seconds
-    public decimal Offset { get; set; } // in seconds
-    public decimal MovieOffset { get; set; } // in seconds
+    public int Diff;
+    public decimal Level;
+    public decimal ClearThreshold;
+    public string BpmText = "";
 
-    /// <summary>
-    /// Loads a Chart from a .mer file.
-    /// </summary>
-    public bool LoadFile(string filepath)
-    {
-        if (filepath == "") return false;
-        bool isMer = Path.GetExtension(filepath) == ".mer";
-        
-        Stream stream = File.OpenRead(filepath);
+    public decimal PreviewStart;
+    public decimal PreviewTime;
 
-        List<string> merFile = ReadLines(stream);
-        if (merFile.Count == 0) return false;
-
-        int readerIndex = 0;
-        Dictionary<int, Note> notesByIndex = new();
-        Dictionary<int, int> nextReferencedIndex = new();
-
-        lock (this)
-        {
-            Clear();
-
-            FilePath = isMer ? "" : filepath;
-            
-            readTags(merFile);
-            readChartElements(merFile);
-            getHoldReferences();
-            repairNotes();
-            getStartTimeEvents();
-            
-            GenerateTimeEvents();
-            GenerateTimeScales();
-        }
-        
-        IsSaved = true;
-        IsNew = isMer;
-        return true;
-        
-        void readTags(List<string> lines)
-        {
-            do
-            {
-                string line = lines[readerIndex];
-
-                string? audioFilePath = getTag(line, "#MUSIC_FILE_PATH") ?? getTag(line, "#EDITOR_AUDIO") ?? getTag(line, "#AUDIO");
-                if (audioFilePath != null) AudioFilePath = Path.Combine(Path.GetDirectoryName(filepath) ?? "", audioFilePath);
-
-                string? level = getTag(line, "#LEVEL") ?? getTag(line, "#EDITOR_LEVEL");
-                if (level != null) Level = Convert.ToDecimal(level, CultureInfo.InvariantCulture);
-
-                string? clearThreshold = getTag(line, "#CLEAR_THRESHOLD") ?? getTag(line, "#EDITOR_CLEAR_THRESHOLD");
-                if (clearThreshold != null) ClearThreshold = Convert.ToDecimal(clearThreshold, CultureInfo.InvariantCulture);
-
-                string? author = getTag(line, "#AUTHOR") ?? getTag(line, "#EDITOR_AUTHOR");
-                if (author != null) Author = author;
-                
-                string? previewTime = getTag(line, "#PREVIEW_TIME") ?? getTag(line, "#EDITOR_PREVIEW_TIME");
-                if (previewTime != null) PreviewTime = Convert.ToDecimal(previewTime, CultureInfo.InvariantCulture);
-                
-                string? previewLength = getTag(line, "#PREVIEW_LENGTH") ?? getTag(line, "#EDITOR_PREVIEW_LENGTH");
-                if (previewLength != null) PreviewLength = Convert.ToDecimal(previewLength, CultureInfo.InvariantCulture);
-                
-                string? offset = getTag(line, "#OFFSET") ?? getTag(line, "EDITOR_OFFSET");
-                if (offset != null) Offset = Convert.ToDecimal(offset, CultureInfo.InvariantCulture);
-            
-                string? movieOffset = getTag(line, "#MOVIEOFFSET") ?? getTag(line, "EDITOR_MOVIEOFFSET");
-                if (movieOffset != null) MovieOffset = Convert.ToDecimal(movieOffset, CultureInfo.InvariantCulture);
-
-                if (!line.Contains("#BODY")) continue;
-                
-                readerIndex++;
-                break;
-
-            } while (++readerIndex < lines.Count);
-
-            return;
-
-            static string? getTag(string input, string tag)
-            {
-                return input.Contains(tag) ? input[(input.IndexOf(tag, StringComparison.Ordinal) + tag.Length)..].TrimStart() : null;
-            }
-        }
-
-        void readChartElements(List<string> lines)
-        {
-            const string separator = " ";
-            for (int i = readerIndex; i < lines.Count; i++)
-            {
-                if (string.IsNullOrWhiteSpace(merFile[i])) continue;
-                string[] parsed = merFile[i].Split(separator, StringSplitOptions.RemoveEmptyEntries);
-                if (parsed.Length < 3) continue;
-
-                int measure = Convert.ToInt32(parsed[0]);
-                int tick = Convert.ToInt32(parsed[1]);
-                int objectId = Convert.ToInt32(parsed[2]);
-                
-                // Invalid
-                if (objectId == 0) continue;
-
-                // Note
-                if (objectId == 1)
-                {
-                    int noteTypeId = Convert.ToInt32(parsed[3]);
-                    int noteIndex = Convert.ToInt32(parsed[4]);
-                    int position = Convert.ToInt32(parsed[5]);
-                    int size = Convert.ToInt32(parsed[6]);
-                    bool renderSegment = noteTypeId != 10 || Convert.ToBoolean(Convert.ToInt32(parsed[7])); // Set to true by default if note is not a hold segment.
-
-                    Note tempNote = new(measure, tick, noteTypeId, noteIndex, position, size, renderSegment);
-                    
-                    // hold start & segments
-                    if (noteTypeId is 9 or 10 or 25 && parsed.Length >= 9)
-                    {
-                        nextReferencedIndex[noteIndex] = Convert.ToInt32(parsed[8]);
-                    }
-
-                    if (noteTypeId is 12 or 13 && parsed.Length >= 9)
-                    {
-                        int direction = Convert.ToInt32(parsed[8]);
-                        tempNote.MaskDirection = (MaskDirection)direction;
-                    }
-
-                    Notes.Add(tempNote);
-                    notesByIndex[noteIndex] = tempNote;
-                }
-
-                // Gimmick
-                else
-                {
-                    string value1 = "";
-                    string value2 = "";
-                    
-                    // avoid IndexOutOfRangeExceptions :]
-                    if (objectId is 3 && parsed.Length > 4)
-                    {
-                        value1 = parsed[3];
-                        value2 = parsed[4];
-                    }
-                    
-                    // Edge case. some old charts apparently have broken time sigs.
-                    if (objectId is 3 && parsed.Length == 4)
-                    {
-                        value1 = parsed[3];
-                        value2 = parsed[3];
-                    }
-                    
-                    if (objectId is 2 or 5 && parsed.Length > 3)
-                    {
-                        value1 = parsed[3];
-                    }
-
-                    Gimmick tempGimmick = new(measure, tick, objectId, value1, value2);
-                    Gimmicks.Add(tempGimmick);
-                }
-            }
-        }
-
-        void getHoldReferences()
-        {
-            foreach (Note note in Notes)
-            {
-                if (!nextReferencedIndex.ContainsKey(note.ParsedIndex)) continue;
-                if (!notesByIndex.TryGetValue(nextReferencedIndex[note.ParsedIndex], out Note? referencedNote)) continue;
-                
-                note.NextReferencedNote = referencedNote;
-                referencedNote.PrevReferencedNote = note;
-            }
-        }
-
-        void repairNotes()
-        {
-            foreach (Note note in Notes)
-            {
-                if (note.Position is < 0 or >= 60)
-                    note.Position = MathExtensions.Modulo(note.Position, 60);
-
-                note.Size = int.Clamp(note.Size, 1, 60);
-            }
-        }
-
-        void getStartTimeEvents()
-        {
-            StartBpm = Gimmicks.LastOrDefault(x => x.BeatData.FullTick == 0 && x.GimmickType is GimmickType.BpmChange);
-            StartTimeSig = Gimmicks.LastOrDefault(x => x.BeatData.FullTick == 0 && x.GimmickType is GimmickType.TimeSigChange);
-        }
-    }
-
-    public bool WriteFile(string filepath, ChartWriteType writeType)
-    {
-        if (filepath == "") return false;
-        
-        Stream stream = File.OpenWrite(filepath);
-        
-        stream.SetLength(0);
-        using StreamWriter streamWriter = new(stream, new UTF8Encoding(false));
-        streamWriter.NewLine = "\n";
-
-        if (writeType is ChartWriteType.Editor)
-        {
-            streamWriter.WriteLine($"#EDITOR_AUDIO {Path.GetFileName(AudioFilePath)}");
-            streamWriter.WriteLine($"#EDITOR_LEVEL {Level.ToString("F6", CultureInfo.InvariantCulture)}");
-            streamWriter.WriteLine($"#EDITOR_CLEAR_THRESHOLD {ClearThreshold.ToString("F6", CultureInfo.InvariantCulture)}");
-            streamWriter.WriteLine($"#EDITOR_AUTHOR {Author}");
-            streamWriter.WriteLine($"#EDITOR_PREVIEW_TIME {PreviewTime.ToString("F6", CultureInfo.InvariantCulture)}");
-            streamWriter.WriteLine($"#EDITOR_PREVIEW_LENGTH {PreviewLength.ToString("F6", CultureInfo.InvariantCulture)}");
-            streamWriter.WriteLine($"#EDITOR_OFFSET {Offset.ToString("F6", CultureInfo.InvariantCulture)}");
-            streamWriter.WriteLine($"#EDITOR_MOVIEOFFSET {MovieOffset.ToString("F6", CultureInfo.InvariantCulture)}");
-        }
-            
-        if (writeType is ChartWriteType.Saturn)
-        {
-            streamWriter.WriteLine($"#LEVEL {Level.ToString("F6", CultureInfo.InvariantCulture)}");
-            streamWriter.WriteLine($"#AUDIO {Path.GetFileName(AudioFilePath)}");
-            streamWriter.WriteLine($"#CLEAR_THRESHOLD {ClearThreshold.ToString("F6", CultureInfo.InvariantCulture)}");
-            streamWriter.WriteLine($"#AUTHOR {Author}");
-            streamWriter.WriteLine($"#PREVIEW_TIME {PreviewTime.ToString("F6", CultureInfo.InvariantCulture)}");
-            streamWriter.WriteLine($"#PREVIEW_LENGTH {PreviewLength.ToString("F6", CultureInfo.InvariantCulture)}");
-            streamWriter.WriteLine($"#OFFSET {Offset.ToString("F6", CultureInfo.InvariantCulture)}");
-            streamWriter.WriteLine($"#MOVIEOFFSET {MovieOffset.ToString("F6", CultureInfo.InvariantCulture)}");
-        }
-            
-        if (writeType is ChartWriteType.Mercury)
-        {
-            streamWriter.WriteLine("#MUSIC_SCORE_ID 0");
-            streamWriter.WriteLine("#MUSIC_SCORE_VERSION 0");
-            streamWriter.WriteLine("#GAME_VERSION");
-            streamWriter.WriteLine($"#MUSIC_FILE_PATH");
-            streamWriter.WriteLine($"#OFFSET {Offset.ToString("F6", CultureInfo.InvariantCulture)}");
-            streamWriter.WriteLine($"#MOVIEOFFSET {MovieOffset.ToString("F6", CultureInfo.InvariantCulture)}");
-        }
-            
-        streamWriter.WriteLine("#BODY");
-
-        foreach (Gimmick gimmick in Gimmicks)
-        {
-            streamWriter.Write($"{gimmick.BeatData.Measure,4:F0} {gimmick.BeatData.Tick,4:F0} {(int)gimmick.GimmickType,4:F0}");
-            switch (gimmick.GimmickType)
-            {
-                case GimmickType.BpmChange: streamWriter.WriteLine($" {gimmick.Bpm.ToString("F6", CultureInfo.InvariantCulture)}");
-                    break;
-                case GimmickType.HiSpeedChange: streamWriter.WriteLine($" {gimmick.HiSpeed.ToString("F6", CultureInfo.InvariantCulture)}");
-                    break;
-                case GimmickType.TimeSigChange: streamWriter.WriteLine($"{gimmick.TimeSig.Upper,5:F0}{gimmick.TimeSig.Lower,5:F0}");
-                    break;
-                default:
-                    streamWriter.WriteLine();
-                    break;
-            }
-        }
-
-        foreach (Note note in Notes)
-        {
-            streamWriter.Write($"{note.BeatData.Measure,4:F0} {note.BeatData.Tick,4:F0} {(int) note.GimmickType,4:F0} {(int) note.NoteType,4:F0} ");
-            streamWriter.Write($"{Notes.IndexOf(note),4:F0} {note.Position,4:F0} {note.Size,4:F0} {Convert.ToInt32(note.RenderSegment, CultureInfo.InvariantCulture),4:F0}");
-            
-            if (note.IsMask) streamWriter.Write($" {(int)note.MaskDirection,4:F0}");
-            if (note.NextReferencedNote != null) streamWriter.Write($" {Notes.IndexOf(note.NextReferencedNote),4:F0}");
-            
-            streamWriter.WriteLine();
-        }
-
-        return true;
-    }
-
+    public string BgmFilepath = "";
+    public decimal BgmOffset;
+    public string BgaFilepath = "";
+    public decimal BgaOffset;
+    public string JacketFilepath = "";
+    
     /// <summary>
     /// Converts a clipboard string to a List of Notes.
     /// </summary>
@@ -500,7 +248,7 @@ public class Chart
         {
             Clear();
 
-            FilePath = "";
+            Filepath = "";
             
             readTags(merFile);
             readChartElements(merFile);
@@ -532,16 +280,16 @@ public class Chart
                 if (author != null) Author = author;
                 
                 string? previewTime = getTag(line, "#PREVIEW_TIME") ?? getTag(line, "#EDITOR_PREVIEW_TIME");
-                if (previewTime != null) PreviewTime = Convert.ToDecimal(previewTime, CultureInfo.InvariantCulture);
+                if (previewTime != null) PreviewStart = Convert.ToDecimal(previewTime, CultureInfo.InvariantCulture);
                 
                 string? previewLength = getTag(line, "#PREVIEW_LENGTH") ?? getTag(line, "#EDITOR_PREVIEW_LENGTH");
-                if (previewLength != null) PreviewLength = Convert.ToDecimal(previewLength, CultureInfo.InvariantCulture);
+                if (previewLength != null) PreviewTime = Convert.ToDecimal(previewLength, CultureInfo.InvariantCulture);
                 
                 string? offset = getTag(line, "#OFFSET") ?? getTag(line, "EDITOR_OFFSET");
-                if (offset != null) Offset = Convert.ToDecimal(offset, CultureInfo.InvariantCulture);
+                if (offset != null) BgmOffset = Convert.ToDecimal(offset, CultureInfo.InvariantCulture);
             
                 string? movieOffset = getTag(line, "#MOVIEOFFSET") ?? getTag(line, "EDITOR_MOVIEOFFSET");
-                if (movieOffset != null) MovieOffset = Convert.ToDecimal(movieOffset, CultureInfo.InvariantCulture);
+                if (movieOffset != null) BgaOffset = Convert.ToDecimal(movieOffset, CultureInfo.InvariantCulture);
 
                 if (!line.Contains("#BODY")) continue;
                 
@@ -668,14 +416,14 @@ public class Chart
     {
         string result = "";
         
-        result += $"#EDITOR_AUDIO {Path.GetFileName(AudioFilePath)}\n";
+        result += $"#EDITOR_AUDIO {Path.GetFileName(BgmFilepath)}\n";
         result += $"#EDITOR_LEVEL {Level.ToString("F6", CultureInfo.InvariantCulture)}\n";
         result += $"#EDITOR_CLEAR_THRESHOLD {ClearThreshold.ToString("F6", CultureInfo.InvariantCulture)}\n";
         result += $"#EDITOR_AUTHOR {Author}\n";
-        result += $"#EDITOR_PREVIEW_TIME {PreviewTime.ToString("F6", CultureInfo.InvariantCulture)}\n";
-        result += $"#EDITOR_PREVIEW_LENGTH {PreviewLength.ToString("F6", CultureInfo.InvariantCulture)}\n";
-        result += $"#EDITOR_OFFSET {Offset.ToString("F6", CultureInfo.InvariantCulture)}\n";
-        result += $"#EDITOR_MOVIEOFFSET {MovieOffset.ToString("F6", CultureInfo.InvariantCulture)}\n";
+        result += $"#EDITOR_PREVIEW_TIME {PreviewStart.ToString("F6", CultureInfo.InvariantCulture)}\n";
+        result += $"#EDITOR_PREVIEW_LENGTH {PreviewTime.ToString("F6", CultureInfo.InvariantCulture)}\n";
+        result += $"#EDITOR_OFFSET {BgmOffset.ToString("F6", CultureInfo.InvariantCulture)}\n";
+        result += $"#EDITOR_MOVIEOFFSET {BgaOffset.ToString("F6", CultureInfo.InvariantCulture)}\n";
         result += $"#BODY\n";
         
         foreach (Gimmick gimmick in Gimmicks)
@@ -711,15 +459,38 @@ public class Chart
         TimeEvents?.Clear();
         TimeScales.Clear();
 
-        FilePath = "";
-        AudioFilePath = "";
+        Filepath = "";
+        
+        Version = "";
+        Title = "";
+        Rubi = "";
+        Artist = "";
+        Author = "";
+
+        Diff = 0;
         Level = 0;
         ClearThreshold = 0.83m;
-        Author = "";
-        PreviewTime = 0;
-        PreviewLength = 10;
-        Offset = 0;
-        MovieOffset = 0;
+        BpmText = "";
+
+        PreviewStart = 0;
+        PreviewTime = 10;
+
+        BgmFilepath = "";
+        BgmOffset = 0;
+        BgaFilepath = "";
+        BgaOffset = 0;
+        JacketFilepath = "";
+    }
+    
+    public void RepairNotes()
+    {
+        foreach (Note note in Notes)
+        {
+            if (note.Position is < 0 or >= 60)
+                note.Position = MathExtensions.Modulo(note.Position, 60);
+
+            note.Size = int.Clamp(note.Size, 1, 60);
+        }
     }
     
     /// <summary>

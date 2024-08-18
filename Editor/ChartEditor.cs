@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Input.Platform;
@@ -81,7 +80,7 @@ public class ChartEditor
         
         Chart = new()
         {
-            AudioFilePath = musicFilePath,
+            BgmFilepath = musicFilePath,
             Author = author
         };
 
@@ -139,7 +138,7 @@ public class ChartEditor
         UndoRedoManager.Clear();
         SelectedNotes.Clear();
         
-        Chart.LoadFile(path);
+        FormatHandler.LoadFile(Chart, path);
         mainView.SetChartInfo();
         mainView.SetSelectionInfo();
     }

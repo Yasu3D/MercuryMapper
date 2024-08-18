@@ -236,7 +236,7 @@ public partial class MainView : UserControl
                 AudioManager.CurrentSong.Position = 0;
             }
 
-            if (playerState is PlayerState.Preview && AudioManager.CurrentSong.Position >= (int)((ChartEditor.Chart.PreviewTime + ChartEditor.Chart.PreviewLength) * 1000))
+            if (playerState is PlayerState.Preview && AudioManager.CurrentSong.Position >= (int)((ChartEditor.Chart.PreviewTime + ChartEditor.Chart.PreviewTime) * 1000))
             {
                 SetPlayState(PlayerState.Paused);
                 AudioManager.CurrentSong.Position = (uint)(ChartEditor.Chart.PreviewTime * 1000);
@@ -281,7 +281,7 @@ public partial class MainView : UserControl
         if (ChartEditor.Chart.IsSaved) return;
         
         string filepath = Path.GetTempFileName().Replace(".tmp",".autosave.mer");
-        ChartEditor.Chart.WriteFile(filepath, ChartWriteType.Editor);
+        FormatHandler.WriteFile(ChartEditor.Chart, filepath, ChartFormatType.Saturn);
         
         Console.WriteLine(filepath);
     }
@@ -297,7 +297,7 @@ public partial class MainView : UserControl
         OpenChart(autosaves[0]);
         ChartEditor.Chart.IsSaved = false; // Force saved prompt
         ChartEditor.Chart.IsNew = true; // Set new to force a new save.
-        ChartEditor.Chart.FilePath = ""; // Clear path to not overwrite temp file.
+        ChartEditor.Chart.Filepath = ""; // Clear path to not overwrite temp file.
         
         ClearAutosaves();
         return;
@@ -501,16 +501,16 @@ public partial class MainView : UserControl
 
     public void SetChartInfo()
     {
-        ChartInfoChartFilepath.Text = Path.GetFileName(ChartEditor.Chart.FilePath);
-        ChartInfoAudioFilepath.Text = Path.GetFileName(ChartEditor.Chart.AudioFilePath);
+        ChartInfoChartFilepath.Text = Path.GetFileName(ChartEditor.Chart.Filepath);
+        ChartInfoAudioFilepath.Text = Path.GetFileName(ChartEditor.Chart.BgmFilepath);
         
         ChartInfoAuthor.Text = ChartEditor.Chart.Author;
         ChartInfoLevel.Value = (double)ChartEditor.Chart.Level;
         ChartInfoClearThreshold.Value = (double)ChartEditor.Chart.ClearThreshold;
-        ChartInfoPreviewTime.Value = (double)ChartEditor.Chart.PreviewTime;
-        ChartInfoPreviewLength.Value = (double)ChartEditor.Chart.PreviewLength;
-        ChartInfoOffset.Value = (double)ChartEditor.Chart.Offset;
-        ChartInfoMovieOffset.Value = (double)ChartEditor.Chart.MovieOffset;
+        ChartInfoPreviewTime.Value = (double)ChartEditor.Chart.PreviewStart;
+        ChartInfoPreviewLength.Value = (double)ChartEditor.Chart.PreviewTime;
+        ChartInfoOffset.Value = (double)ChartEditor.Chart.BgmOffset;
+        ChartInfoMovieOffset.Value = (double)ChartEditor.Chart.BgaOffset;
     }
 
     public void SetQuickSettings()
@@ -534,7 +534,7 @@ public partial class MainView : UserControl
 
     public void UpdateAudioFilepathUi()
     {
-        ChartInfoAudioFilepath.Text = Path.GetFileName(ChartEditor.Chart.AudioFilePath);
+        ChartInfoAudioFilepath.Text = Path.GetFileName(ChartEditor.Chart.BgmFilepath);
     }
     
     private void UpdateLoopMarkerPosition()
@@ -1333,13 +1333,13 @@ public partial class MainView : UserControl
     private async void MenuItemSave_OnClick(object? sender, RoutedEventArgs e)
     {
         if (LockState == UiLockState.Empty) return;
-        await SaveFile(ChartEditor.Chart.IsNew, ChartEditor.Chart.FilePath);
+        await SaveFile(ChartEditor.Chart.IsNew, ChartEditor.Chart.Filepath);
     }
 
     private async void MenuItemSaveAs_OnClick(object? sender, RoutedEventArgs e)
     {
         if (LockState == UiLockState.Empty) return;
-        await SaveFile(true, ChartEditor.Chart.FilePath);
+        await SaveFile(true, ChartEditor.Chart.Filepath);
     }
 
     private async void MenuItemExportMercury_OnClick(object? sender, RoutedEventArgs e)
@@ -1351,7 +1351,7 @@ public partial class MainView : UserControl
             return;
         }
         
-        await ExportFile(ChartWriteType.Mercury);
+        await ExportFile(ChartFormatType.Mercury);
     }
 
     private async void MenuItemExportSaturn_OnClick(object? sender, RoutedEventArgs e)
@@ -1363,7 +1363,7 @@ public partial class MainView : UserControl
             return;
         }
         
-        await ExportFile(ChartWriteType.Saturn);
+        await ExportFile(ChartFormatType.Saturn);
     }
 
     private void MenuItemExportSaturnFolder_OnClick(object? sender, RoutedEventArgs e)
@@ -1961,9 +1961,9 @@ public partial class MainView : UserControl
             return;
         }
 
-        ChartEditor.Chart.AudioFilePath = audioFile.Path.LocalPath;
+        ChartEditor.Chart.BgmFilepath = audioFile.Path.LocalPath;
         
-        AudioManager.SetSong(ChartEditor.Chart.AudioFilePath, (float)(UserConfig.AudioConfig.MusicVolume * 0.01), (int)SliderPlaybackSpeed.Value);
+        AudioManager.SetSong(ChartEditor.Chart.BgmFilepath, (float)(UserConfig.AudioConfig.MusicVolume * 0.01), (int)SliderPlaybackSpeed.Value);
         SetSongPositionSliderValues();
         UpdateAudioFilepathUi();
         RenderEngine.UpdateVisibleTime();
@@ -1999,53 +1999,53 @@ public partial class MainView : UserControl
         ConnectionManager.SendMessage(ConnectionManager.MessageTypes.ClearThresholdChange, ChartEditor.Chart.ClearThreshold.ToString(CultureInfo.InvariantCulture));
     }
 
+    private void ChartInfoPreviewStart_OnValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
+    {
+        ChartEditor.Chart.PreviewStart = (decimal)ChartInfoPreviewTime.Value;
+    }
+
+    private void ChartInfoPreviewStart_LostFocus(object? sender, RoutedEventArgs e)
+    {
+        ConnectionManager.SendMessage(ConnectionManager.MessageTypes.PreviewStartChange, ChartEditor.Chart.PreviewStart.ToString(CultureInfo.InvariantCulture));
+    }
+
     private void ChartInfoPreviewTime_OnValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
     {
-        ChartEditor.Chart.PreviewTime = (decimal)ChartInfoPreviewTime.Value;
+        ChartEditor.Chart.PreviewTime = (decimal)ChartInfoPreviewLength.Value;
     }
 
     private void ChartInfoPreviewTime_LostFocus(object? sender, RoutedEventArgs e)
     {
-        ConnectionManager.SendMessage(ConnectionManager.MessageTypes.PreviewStartChange, ChartEditor.Chart.PreviewTime.ToString(CultureInfo.InvariantCulture));
-    }
-
-    private void ChartInfoPreviewLength_OnValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
-    {
-        ChartEditor.Chart.PreviewLength = (decimal)ChartInfoPreviewLength.Value;
-    }
-
-    private void ChartInfoPreviewLength_LostFocus(object? sender, RoutedEventArgs e)
-    {
-        ConnectionManager.SendMessage(ConnectionManager.MessageTypes.PreviewLengthChange, ChartEditor.Chart.PreviewLength.ToString(CultureInfo.InvariantCulture));
+        ConnectionManager.SendMessage(ConnectionManager.MessageTypes.PreviewLengthChange, ChartEditor.Chart.PreviewTime.ToString(CultureInfo.InvariantCulture));
     }
 
     private void ChartInfoPlayPreview_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (ChartEditor.Chart.PreviewLength == 0 || AudioManager.CurrentSong == null) return;
+        if (ChartEditor.Chart.PreviewTime == 0 || AudioManager.CurrentSong == null) return;
         
-        AudioManager.CurrentSong.Position = (uint)(ChartEditor.Chart.PreviewTime * 1000);
+        AudioManager.CurrentSong.Position = (uint)(ChartEditor.Chart.PreviewStart * 1000);
         UpdateTime(TimeUpdateSource.Timer);
         SetPlayState(PlayerState.Preview);
     }
     
     private void ChartInfoOffset_OnValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
     {
-        ChartEditor.Chart.Offset = (decimal)ChartInfoOffset.Value;
+        ChartEditor.Chart.BgmOffset = (decimal)ChartInfoOffset.Value;
     }
 
     private void ChartInfoOffset_LostFocus(object? sender, RoutedEventArgs e)
     {
-        ConnectionManager.SendMessage(ConnectionManager.MessageTypes.AudioOffsetChange, ChartEditor.Chart.Offset.ToString(CultureInfo.InvariantCulture));
+        ConnectionManager.SendMessage(ConnectionManager.MessageTypes.AudioOffsetChange, ChartEditor.Chart.BgmOffset.ToString(CultureInfo.InvariantCulture));
     }
 
     private void ChartInfoMovieOffset_OnValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
     {
-        ChartEditor.Chart.MovieOffset = (decimal)ChartInfoMovieOffset.Value;
+        ChartEditor.Chart.BgaOffset = (decimal)ChartInfoMovieOffset.Value;
     }
 
     private void ChartInfoMovieOffset_LostFocus(object? sender, RoutedEventArgs e)
     {
-        ConnectionManager.SendMessage(ConnectionManager.MessageTypes.MovieOffsetChange, ChartEditor.Chart.MovieOffset.ToString(CultureInfo.InvariantCulture));
+        ConnectionManager.SendMessage(ConnectionManager.MessageTypes.MovieOffsetChange, ChartEditor.Chart.BgaOffset.ToString(CultureInfo.InvariantCulture));
     }
 
     private void SelectionInfoHighlightNext_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.HighlightNextElement();
@@ -2299,12 +2299,13 @@ public partial class MainView : UserControl
     private async Task<bool> PromptSave()
     {
         if (ChartEditor.Chart.IsSaved) return true;
+        if (LockState is UiLockState.Empty) return true;
 
         ContentDialogResult result = await showSavePrompt();
 
         return result switch
         {
-            ContentDialogResult.Primary => await SaveFile(false, ChartEditor.Chart.FilePath),
+            ContentDialogResult.Primary => await SaveFile(false, ChartEditor.Chart.Filepath),
             ContentDialogResult.Secondary => true,
             _ => false
         };
@@ -2373,9 +2374,9 @@ public partial class MainView : UserControl
             AllowMultiple = false,
             FileTypeFilter = new List<FilePickerFileType>
             {
-                new("Mercury Chart files")
+                new("Chart files")
                 {
-                    Patterns = new[] {"*.mer", "*.map"},
+                    Patterns = new[] {"*.mer", "*.map", "*.sat"},
                     AppleUniformTypeIdentifiers = new[] {"public.item"}
                 }
             }
@@ -2412,32 +2413,32 @@ public partial class MainView : UserControl
         return result.Count != 1 ? null : result[0];
     }
     
-    private async Task<IStorageFile?> SaveChartFilePicker(ChartWriteType writeType)
+    private async Task<IStorageFile?> SaveChartFilePicker(ChartFormatType formatType)
     {
         return await GetStorageProvider().SaveFilePickerAsync(new()
         {
-            DefaultExtension = writeType switch
+            DefaultExtension = formatType switch
             {
-                ChartWriteType.Editor => ".map",
-                ChartWriteType.Mercury => ".mer",
-                ChartWriteType.Saturn => ".mer",
+                ChartFormatType.Editor => ".map",
+                ChartFormatType.Mercury => ".mer",
+                ChartFormatType.Saturn => ".sat",
                 _ => ""
             },
             FileTypeChoices = new[]
             {
-                new FilePickerFileType(writeType switch
+                new FilePickerFileType(formatType switch
                 {
-                    ChartWriteType.Editor => "Editor Chart File",
-                    ChartWriteType.Mercury => "Mercury Chart File",
-                    ChartWriteType.Saturn => "Saturn Chart File",
+                    ChartFormatType.Editor => "Editor Chart File",
+                    ChartFormatType.Mercury => "Mercury Chart File",
+                    ChartFormatType.Saturn => "Saturn Chart File",
                     _ => ""
                 })
                 {
-                    Patterns = writeType switch
+                    Patterns = formatType switch
                     {
-                        ChartWriteType.Editor => ["*.map"],
-                        ChartWriteType.Mercury => ["*.mer"],
-                        ChartWriteType.Saturn => ["*.mer"],
+                        ChartFormatType.Editor => ["*.map"],
+                        ChartFormatType.Mercury => ["*.mer"],
+                        ChartFormatType.Saturn => ["*.sat"],
                         _ => []
                     },
                     AppleUniformTypeIdentifiers = ["public.item"]
@@ -2452,7 +2453,7 @@ public partial class MainView : UserControl
         ChartEditor.LoadChart(path);
         
         // Oopsie, audio not found.
-        if (!File.Exists(ChartEditor.Chart.AudioFilePath))
+        if (!File.Exists(ChartEditor.Chart.BgmFilepath))
         {
             // Prompt user to select audio.
             if (!await PromptSelectAudio())
@@ -2477,10 +2478,10 @@ public partial class MainView : UserControl
                 return;
             }
 
-            ChartEditor.Chart.AudioFilePath = audioFile.Path.LocalPath;
+            ChartEditor.Chart.BgmFilepath = audioFile.Path.LocalPath;
         }
         
-        AudioManager.SetSong(ChartEditor.Chart.AudioFilePath, (float)(UserConfig.AudioConfig.MusicVolume * 0.01), (int)SliderPlaybackSpeed.Value);
+        AudioManager.SetSong(ChartEditor.Chart.BgmFilepath, (float)(UserConfig.AudioConfig.MusicVolume * 0.01), (int)SliderPlaybackSpeed.Value);
         SetSongPositionSliderValues();
         UpdateAudioFilepathUi();
         RenderEngine.UpdateVisibleTime();
@@ -2488,11 +2489,11 @@ public partial class MainView : UserControl
         SetUiLockState(UiLockState.Loaded);
     }
 
-    public void OpenChartFromNetwork(string data, string audioFilePath)
+    public void OpenChartFromNetwork(string data, string bgmFilepath)
     {
         ChartEditor.LoadChartNetwork(data);
-        ChartEditor.Chart.AudioFilePath = audioFilePath;
-        AudioManager.SetSong(ChartEditor.Chart.AudioFilePath, (float)(UserConfig.AudioConfig.MusicVolume * 0.01), (int)SliderPlaybackSpeed.Value);
+        ChartEditor.Chart.BgmFilepath = bgmFilepath;
+        AudioManager.SetSong(ChartEditor.Chart.BgmFilepath, (float)(UserConfig.AudioConfig.MusicVolume * 0.01), (int)SliderPlaybackSpeed.Value);
         SetSongPositionSliderValues();
         UpdateAudioFilepathUi();
         RenderEngine.UpdateVisibleTime();
@@ -2504,7 +2505,7 @@ public partial class MainView : UserControl
     {
         if (openFilePicker || string.IsNullOrEmpty(filepath))
         {
-            IStorageFile? file = await SaveChartFilePicker(ChartWriteType.Editor);
+            IStorageFile? file = await SaveChartFilePicker(ChartFormatType.Editor);
 
             if (file == null) return false;
             filepath = file.Path.LocalPath;
@@ -2512,8 +2513,8 @@ public partial class MainView : UserControl
 
         if (string.IsNullOrEmpty(filepath)) return false;
 
-        ChartEditor.Chart.WriteFile(filepath, ChartWriteType.Editor);
-        ChartEditor.Chart.FilePath = filepath;
+        FormatHandler.WriteFile(ChartEditor.Chart, filepath, ChartFormatType.Editor);
+        ChartEditor.Chart.Filepath = filepath;
         ChartEditor.Chart.IsNew = false;
         ChartEditor.Chart.IsSaved = true;
         ClearAutosaves();
@@ -2521,14 +2522,14 @@ public partial class MainView : UserControl
         return true;
     }
 
-    public async Task ExportFile(ChartWriteType chartWriteType)
+    public async Task ExportFile(ChartFormatType chartFormatType)
     {
-        IStorageFile? file = await SaveChartFilePicker(chartWriteType);
+        IStorageFile? file = await SaveChartFilePicker(chartFormatType);
 
         if (file == null) return;
         string filepath = file.Path.LocalPath;
         
         if (string.IsNullOrEmpty(filepath)) return;
-        ChartEditor.Chart.WriteFile(filepath, chartWriteType);
+        FormatHandler.WriteFile(ChartEditor.Chart, filepath, chartFormatType);
     }
 }
