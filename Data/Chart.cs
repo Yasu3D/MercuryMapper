@@ -92,7 +92,7 @@ public class Chart
                     
                     if (noteTypeId is 15 or 17 or 18 or 19 or > 26) continue; // Invalid note type
                 
-                    Note tempNote = new(measure, tick, noteTypeId, noteIndex, position, size, renderSegment);
+                    Note tempNote = new(measure, tick, (NoteType)noteTypeId, noteIndex, position, size, renderSegment);
                 
                     // hold start & segments
                     if (noteTypeId is 9 or 10 or 25 && split.Length >= 9)
@@ -333,7 +333,7 @@ public class Chart
                     int size = Convert.ToInt32(parsed[7]);
                     bool renderSegment = noteTypeId != 10 || Convert.ToBoolean(Convert.ToInt32(parsed[8])); // Set to true by default if note is not a hold segment.
 
-                    Note tempNote = new(measure, tick, noteTypeId, noteIndex, position, size, renderSegment, guid);
+                    Note tempNote = new(measure, tick, (NoteType)noteTypeId, noteIndex, position, size, renderSegment, guid);
                     
                     // hold start & segments
                     if (noteTypeId is 9 or 10 or 25 && parsed.Length >= 10)
@@ -376,7 +376,7 @@ public class Chart
                         value1 = parsed[4];
                     }
 
-                    Gimmick tempGimmick = new(measure, tick, objectId, value1, value2, guid);
+                    Gimmick tempGimmick = new(measure, tick, (GimmickType)objectId, value1, value2, guid);
                     Gimmicks.Add(tempGimmick);
                 }
             }

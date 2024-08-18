@@ -108,11 +108,11 @@ public class Gimmick : ChartElement
         }
     }
 
-    public Gimmick(int measure, int tick, int objectId, string value1, string value2, Guid? guid = null)
+    public Gimmick(int measure, int tick, GimmickType gimmickType, string value1, string value2, Guid? guid = null)
     {
         Guid = guid ?? Guid;
         BeatData = new(measure, tick);
-        GimmickType = (GimmickType)objectId;
+        GimmickType = gimmickType;
 
         switch (GimmickType)
         {
@@ -197,12 +197,12 @@ public class Note : ChartElement
         PrevReferencedNote = note.PrevReferencedNote;
     }
 
-    public Note(int measure, int tick, int noteTypeId, int noteIndex, int position, int size, bool renderSegment, Guid? guid = null)
+    public Note(int measure, int tick, NoteType noteType, int noteIndex, int position, int size, bool renderSegment, Guid? guid = null)
     {
         Guid = guid ?? Guid;
         BeatData = new(measure, tick);
         GimmickType = GimmickType.None;
-        NoteType = (NoteType)noteTypeId;
+        NoteType = noteType;
         Position = position;
         Size = size;
         RenderSegment = renderSegment;
