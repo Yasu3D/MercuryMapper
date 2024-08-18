@@ -250,6 +250,7 @@ public partial class MainView : UserControl
     public void HitsoundTimer_Tick(object? sender, EventArgs e)
     {
         if (AudioManager.CurrentSong == null) return;
+        if (playerState is PlayerState.Preview && UserConfig.AudioConfig.MuteHitsoundsOnPreview) return;
         
         float measure = ChartEditor.Chart.Timestamp2MeasureDecimal(AudioManager.CurrentSong.Position + BassSoundEngine.GetLatency() + UserConfig.AudioConfig.HitsoundOffset);
         

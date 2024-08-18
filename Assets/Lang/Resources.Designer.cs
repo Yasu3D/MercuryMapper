@@ -2293,6 +2293,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Mute Hitsounds on preview.
+        /// </summary>
+        public static string Settings_MuteHitsoundsOnPreview {
+            get {
+                return ResourceManager.GetString("Settings_MuteHitsoundsOnPreview", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Note Thickness.
         /// </summary>
         public static string Settings_NoteSize {

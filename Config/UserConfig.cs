@@ -179,6 +179,8 @@ public class AudioConfig
     public string MetronomePath { get; set; } = "";
 
     public float HitsoundOffset { get; set; } = 25;
+
+    public bool MuteHitsoundsOnPreview { get; set; } = false;
 }
 
 public class EditorConfig

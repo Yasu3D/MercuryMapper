@@ -1080,4 +1080,7 @@ Continue?</value>
   <data name="Settings_ShowOtherUsersDuringPlayback" xml:space="preserve">
     <value>Show other Users during Playback in Multi-Charting</value>
   </data>
+  <data name="Settings_MuteHitsoundsOnPreview" xml:space="preserve">
+    <value>Mute Hitsounds on preview</value>
+  </data>
 </root>
