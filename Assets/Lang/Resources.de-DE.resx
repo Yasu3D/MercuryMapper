@@ -706,7 +706,7 @@ Fortfahren?</value>
     <value>Genre</value>
   </data>
   <data name="SaturnExport_Rubi" xml:space="preserve">
-    <value>Rubi</value>
+    <value>Ruby</value>
   </data>
   <data name="SaturnExport_Title" xml:space="preserve">
     <value>Titel</value>
@@ -1087,7 +1087,7 @@ Fortfahren?</value>
     <value>Vorschau Länge</value>
   </data>
   <data name="ChartInfo_Rubi" xml:space="preserve">
-    <value>Rubi</value>
+    <value>Ruby</value>
   </data>
   <data name="ChartInfo_Title" xml:space="preserve">
     <value>Titel</value>

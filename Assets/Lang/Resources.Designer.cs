@@ -213,7 +213,7 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Rubi.
+        ///   Looks up a localized string similar to Ruby.
         /// </summary>
         public static string ChartInfo_Rubi {
             get {
@@ -1924,7 +1924,7 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Rubi.
+        ///   Looks up a localized string similar to Ruby.
         /// </summary>
         public static string SaturnExport_Rubi {
             get {

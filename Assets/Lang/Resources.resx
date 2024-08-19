@@ -700,7 +700,7 @@ Continue?</value>
     <value>Title</value>
   </data>
   <data name="SaturnExport_Rubi" xml:space="preserve">
-    <value>Rubi</value>
+    <value>Ruby</value>
   </data>
   <data name="SaturnExport_Artist" xml:space="preserve">
     <value>Artist</value>
@@ -1054,7 +1054,7 @@ Continue?</value>
     <value>Title</value>
   </data>
   <data name="ChartInfo_Rubi" xml:space="preserve">
-    <value>Rubi</value>
+    <value>Ruby</value>
   </data>
   <data name="ChartInfo_Artist" xml:space="preserve">
     <value>Artist</value>
