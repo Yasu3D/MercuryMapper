@@ -1,21 +1,23 @@
-using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
+using MercuryMapper.Editor;
 using MercuryMapper.Enums;
 using MercuryMapper.Utils;
 
 namespace MercuryMapper.Data;
 
-public class Chart
+public class Chart(ChartEditor editor)
 {
+    private ChartEditor chartEditor = editor;
+    
     public bool IsSaved { get; set; } = true;
     public bool IsNew { get; set; } = true;
 
     public List<Note> Notes { get; set; } = [];
     public List<Gimmick> Gimmicks { get; set; } = [];
+
+    public Dictionary<string, Comment> Comments { get; set; } = [];
 
     public Gimmick? StartBpm { get; set; }
     public Gimmick? StartTimeSig { get; set; }
@@ -49,6 +51,8 @@ public class Chart
     
     public void Clear()
     {
+        chartEditor.ClearCommentMarkers();
+        
         Notes.Clear();
         Gimmicks.Clear();
         TimeEvents?.Clear();

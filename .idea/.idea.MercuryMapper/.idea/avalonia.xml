@@ -8,6 +8,8 @@
         <entry key="MainWindow.axaml" value="MercuryMapper.csproj" />
         <entry key="Styles/CustomMenuItem.axaml" value="MercuryMapper.csproj" />
         <entry key="Styles/ThemeColors.axaml" value="MercuryMapper.csproj" />
+        <entry key="Views/GimmickView_BPM.axaml" value="MercuryMapper.csproj" />
+        <entry key="Views/Gimmicks/GimmickView_BPM.axaml" value="MercuryMapper.csproj" />
         <entry key="Views/Gimmicks/GimmickView_HiSpeed.axaml" value="MercuryMapper.csproj" />
         <entry key="Views/Gimmicks/GimmickView_HiSpeee.axaml" value="MercuryMapper.csproj" />
         <entry key="Views/Gimmicks/GimmickView_Reverse.axaml" value="MercuryMapper.csproj" />

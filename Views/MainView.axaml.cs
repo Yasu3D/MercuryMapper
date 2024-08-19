@@ -87,8 +87,8 @@ public partial class MainView : UserControl
     public readonly DispatcherTimer HitsoundTimer;
     public readonly DispatcherTimer AutosaveTimer;
 
-    private TimeUpdateSource timeUpdateSource = TimeUpdateSource.None;
-    private enum TimeUpdateSource
+    public TimeUpdateSource UpdateSource = TimeUpdateSource.None;
+    public enum TimeUpdateSource
     {
         None,
         Slider,
@@ -243,7 +243,7 @@ public partial class MainView : UserControl
                 AudioManager.CurrentSong.Position = (uint)(ChartEditor.Chart.PreviewTime * 1000);
             }
         
-            if (timeUpdateSource == TimeUpdateSource.None) 
+            if (UpdateSource == TimeUpdateSource.None) 
                 UpdateTime(TimeUpdateSource.Timer);
         });
     }
@@ -332,10 +332,10 @@ public partial class MainView : UserControl
     /// OnValueChanged events firing at each other causes an exponential
     /// chain reaction that turns your computer into a nuclear reactor.
     /// </summary>
-    private void UpdateTime(TimeUpdateSource source)
+    public void UpdateTime(TimeUpdateSource source)
     {
         if (AudioManager.CurrentSong == null) return;
-        timeUpdateSource = source;
+        UpdateSource = source;
         
         // Update Audio Position
         if (source is not TimeUpdateSource.Timer && !AudioManager.CurrentSong.IsPlaying)
@@ -361,7 +361,7 @@ public partial class MainView : UserControl
         
         // Avoid imprecision from Timestamp2BeatData when paused.
         // This was causing a lot of off-by-one errors on BeatData.Tick values. >:[
-        BeatData data = timeUpdateSource is TimeUpdateSource.Timer or TimeUpdateSource.Slider || NumericMeasure.Value is null || NumericBeatValue.Value is null || NumericBeatDivisor.Value is null
+        BeatData data = UpdateSource is TimeUpdateSource.Timer or TimeUpdateSource.Slider or TimeUpdateSource.MeasureDecimal || NumericMeasure.Value is null || NumericBeatValue.Value is null || NumericBeatDivisor.Value is null
             ? ChartEditor.Chart.Timestamp2BeatData(AudioManager.CurrentSong.Position)
             : new((int)NumericMeasure.Value, (int)(NumericBeatValue.Value / NumericBeatDivisor.Value * 1920));
         
@@ -370,7 +370,7 @@ public partial class MainView : UserControl
         {
             // The + 0.002f is a hacky "fix". There's some weird rounding issue that has carried over from BAKKA,
             // most likely caused by ManagedBass or AvaloniaUI jank. If you increment NumericBeatValue up,
-            // it's often not quite enough and it falls back to the value it was before.
+            // it's often not quite enough, and it falls back to the value it was before.
             NumericMeasure.Value = data.Measure;
             NumericBeatValue.Value = (int)((data.MeasureDecimal - data.Measure + 0.002f) * (float)NumericBeatDivisor.Value);
         }
@@ -386,7 +386,7 @@ public partial class MainView : UserControl
         TimestampSeconds.Text = $"{AudioManager.CurrentSong.Position * 0.001f:F3}";
         ToggleInsertButton();
         
-        timeUpdateSource = TimeUpdateSource.None;
+        UpdateSource = TimeUpdateSource.None;
     }
 
     public void ToggleInsertButton()
@@ -686,6 +686,13 @@ public partial class MainView : UserControl
         }
         
         Keybind keybind = new(e);
+
+        if (Keybind.Compare(keybind, new(Key.G, false, false, false)))
+        {
+            AddComment();
+            e.Handled = true;
+            return;
+        }
         
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["FileNew"]))
         {
@@ -1279,6 +1286,7 @@ public partial class MainView : UserControl
         
         UpdateLoopMarkerPosition();
         PeerManager.UpdatePeerMarkers();
+        ChartEditor.UpdateCommentMarkers();
     }
     
     public async void DragDrop(string path)
@@ -1907,7 +1915,7 @@ public partial class MainView : UserControl
         if (e.NewValue == null || NumericMeasure?.Value == null) return;
         NumericMeasure.Value = Math.Clamp((decimal)e.NewValue, NumericMeasure.Minimum, NumericMeasure.Maximum);
         
-        if (timeUpdateSource is TimeUpdateSource.None)
+        if (UpdateSource is TimeUpdateSource.None)
             UpdateTime(TimeUpdateSource.Numeric);
     }
     
@@ -1938,7 +1946,7 @@ public partial class MainView : UserControl
             }
         }
         
-        if (timeUpdateSource is TimeUpdateSource.None)
+        if (UpdateSource is TimeUpdateSource.None)
             UpdateTime(TimeUpdateSource.Numeric);
     }
 
@@ -1960,7 +1968,7 @@ public partial class MainView : UserControl
     
     private void SliderSongPosition_OnValueChanged(object? sender, RangeBaseValueChangedEventArgs e)
     {
-        if (timeUpdateSource is TimeUpdateSource.None)
+        if (UpdateSource is TimeUpdateSource.None)
             UpdateTime(TimeUpdateSource.Slider);
     }
     
@@ -2653,5 +2661,21 @@ public partial class MainView : UserControl
         
         if (string.IsNullOrEmpty(filepath)) return;
         FormatHandler.WriteFile(ChartEditor.Chart, filepath, chartFormatType);
+    }
+
+    public async void AddComment()
+    {
+        AddCommentView addCommentView = new();
+            
+        ContentDialog dialog = new()
+        {
+            Content = addCommentView,
+            Title = Assets.Lang.Resources.Editor_AddComment,
+            CloseButtonText = Assets.Lang.Resources.Generic_Cancel,
+            PrimaryButtonText = Assets.Lang.Resources.Generic_Add,
+        };
+        
+        ContentDialogResult result = await dialog.ShowAsync();
+        if (result is ContentDialogResult.Primary) ChartEditor.AddComment(ChartEditor.CurrentBeatData, addCommentView.CommentTextBox.Text ?? "");
     }
 }

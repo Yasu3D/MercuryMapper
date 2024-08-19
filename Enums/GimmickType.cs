@@ -2,6 +2,7 @@ namespace MercuryMapper.Enums;
 
 public enum GimmickType
 {
+    Comment = -1,
     None = 1,
     BpmChange = 2,
     TimeSigChange = 3,

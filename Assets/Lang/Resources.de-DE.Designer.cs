@@ -240,6 +240,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Kommentar Hinzufügen.
+        /// </summary>
+        public static string Editor_AddComment {
+            get {
+                return ResourceManager.GetString("Editor_AddComment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Gimmick Hinzufügen.
         /// </summary>
         public static string Editor_AddGimmick {
@@ -299,6 +308,15 @@ namespace MercuryMapper.Assets.Lang {
         public static string Editor_CheckerDeselect {
             get {
                 return ResourceManager.GetString("Editor_CheckerDeselect", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Kommentar.
+        /// </summary>
+        public static string Editor_Comment {
+            get {
+                return ResourceManager.GetString("Editor_Comment", resourceCulture);
             }
         }
         
@@ -1014,6 +1032,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Hinzufügen.
+        /// </summary>
+        public static string Generic_Add {
+            get {
+                return ResourceManager.GetString("Generic_Add", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Autosave gefunden. Zeitstempel:.
         /// </summary>
         public static string Generic_AutosaveFound {
@@ -1055,6 +1082,15 @@ namespace MercuryMapper.Assets.Lang {
         public static string Generic_Create {
             get {
                 return ResourceManager.GetString("Generic_Create", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Kommentar Löschen?.
+        /// </summary>
+        public static string Generic_DeleteComment {
+            get {
+                return ResourceManager.GetString("Generic_DeleteComment", resourceCulture);
             }
         }
         

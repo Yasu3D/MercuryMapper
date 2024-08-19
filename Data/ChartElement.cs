@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Metrics;
 using System.Globalization;
 using System.Linq;
+using Avalonia.Controls.Shapes;
 using MercuryMapper.Enums;
 using MercuryMapper.Utils;
 
@@ -444,4 +445,12 @@ public class Note : ChartElement
 public struct Hold()
 {
     public List<Note> Segments = [];
+}
+
+public class Comment(Guid guid, BeatData beatData, string text, Rectangle marker)
+{
+    public Guid Guid = guid;
+    public BeatData BeatData = beatData;
+    public string Text = text;
+    public Rectangle Marker = marker;
 }

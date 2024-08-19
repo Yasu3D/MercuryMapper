@@ -2,7 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Avalonia.Controls;
+using Avalonia.Controls.Shapes;
+using Avalonia.Input;
 using Avalonia.Input.Platform;
+using Avalonia.Layout;
+using Avalonia.Media;
 using Avalonia.Threading;
 using FluentAvalonia.UI.Controls;
 using MercuryMapper.Data;
@@ -22,7 +26,8 @@ public class ChartEditor
     {
         mainView = main;
         UndoRedoManager = new(mainView);
-        
+        Chart = new(this);
+
         UndoRedoManager.OperationHistoryChanged += (_, _) =>
         {
             Chart.Notes = Chart.Notes.OrderBy(x => x.BeatData.FullTick).ToList();
@@ -43,7 +48,7 @@ public class ChartEditor
     
     public readonly Cursor Cursor = new();
     public readonly UndoRedoManager UndoRedoManager;
-    public Chart Chart { get; private set; } = new();
+    public Chart Chart { get; private set; }
     
     public ChartEditorState EditorState { get; private set; }
     
@@ -68,7 +73,7 @@ public class ChartEditor
     public Note? LastPlacedHold;
     public Note? CurrentHoldStart;
     
-    public void NewChart(string musicFilePath, string author, float bpm, int timeSigUpper, int timeSigLower)
+    public void NewChart(string bgmFilepath, string author, float bpm, int timeSigUpper, int timeSigLower)
     {
         LastSelectedNote = null;
         LastPlacedHold = null;
@@ -77,15 +82,13 @@ public class ChartEditor
         EditorState = ChartEditorState.InsertNote; // manually reset state one more time
         UndoRedoManager.Clear();
         SelectedNotes.Clear();
-        
-        Chart = new()
-        {
-            BgmFilepath = musicFilePath,
-            Author = author
-        };
+        Chart.Clear();
 
         lock (Chart)
         {
+            Chart.BgmFilepath = bgmFilepath;
+            Chart.Author = author;
+            
             Gimmick startBpm = new()
             {
                 BeatData = new(0, 0),
@@ -2070,6 +2073,116 @@ public class ChartEditor
             }
             
             operationList.Add(new DeleteNote(Chart, SelectedNotes, note));
+        }
+    }
+    
+    // ________________ Comments
+    private readonly Color[] commentColors =
+    [
+        Colors.Red,
+        Colors.OrangeRed,
+        Colors.DarkOrange,
+        Colors.Yellow, 
+        Colors.GreenYellow, 
+        Colors.Lime, 
+        Colors.LimeGreen, 
+        Colors.SpringGreen, 
+        Colors.Aquamarine, 
+        Colors.Aqua, 
+        Colors.DeepSkyBlue, 
+        Colors.DodgerBlue, 
+        Colors.RoyalBlue,
+        Colors.SlateBlue, 
+        Colors.BlueViolet, 
+        Colors.MediumPurple, 
+        Colors.DeepPink
+    ];
+    
+    public void AddComment(BeatData beatData, string text)
+    {
+        if (mainView.AudioManager.CurrentSong == null) return;
+        
+        Random random = new();
+        
+        Guid guid = Guid.NewGuid();
+        Rectangle marker = new()
+        {
+            Name = guid.ToString(),
+            VerticalAlignment = VerticalAlignment.Stretch,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            Width = 3,
+            RadiusX = 1.5,
+            RadiusY = 1.5,
+            Fill = new SolidColorBrush { Color = commentColors[random.Next(commentColors.Length)] },
+        };
+
+        marker.PointerPressed += Comment_PointerPressed;
+        marker.Margin = new(Chart.BeatData2Timestamp(beatData) * (mainView.SliderSongPosition.Bounds.Width - 25) / mainView.AudioManager.CurrentSong.Length + 12.5, 0, 0, 0);
+        
+        Comment newComment = new(guid, beatData, text, marker);
+        
+        Chart.Comments.Add(newComment.Guid.ToString(), newComment);
+        mainView.PanelCommentMarker.Children.Add(marker);
+        ToolTip.SetTip(marker, text);
+        ToolTip.SetShowDelay(marker, 10);
+    }
+
+    public void RemoveComment(string name)
+    {
+        if (!Chart.Comments.TryGetValue(name, out Comment? comment)) return;
+
+        comment.Marker.PointerPressed -= Comment_PointerPressed;
+        mainView.PanelCommentMarker.Children.Remove(comment.Marker);
+        Chart.Comments.Remove(comment.Guid.ToString());
+    }
+
+    public void ClearCommentMarkers()
+    {
+        List<KeyValuePair<string,Comment>> comments = Chart.Comments.ToList();
+        foreach (KeyValuePair<string, Comment> comment in comments)
+        {
+            RemoveComment(comment.Key);
+        }
+    }
+    
+    public void UpdateCommentMarkers()
+    {
+        if (mainView.AudioManager.CurrentSong == null) return;
+        
+        foreach (KeyValuePair<string, Comment> comment in Chart.Comments)
+        {
+            comment.Value.Marker.Margin = new(Chart.BeatData2Timestamp(comment.Value.BeatData) * (mainView.SliderSongPosition.Bounds.Width - 25) / mainView.AudioManager.CurrentSong.Length + 12.5, 0, 0, 0);
+        }
+    }
+
+    private async void Comment_PointerPressed(object? sender, PointerPressedEventArgs e)
+    {
+        if (sender is not Rectangle marker) return;
+        if (marker.Name == null) return;
+        if (!Chart.Comments.TryGetValue(marker.Name, out Comment? comment)) return;
+        
+        if (e.KeyModifiers.HasFlag(KeyModifiers.Alt))
+        {
+            // Delete
+            ContentDialog deleteCommentDialog = new()
+            {
+                Title = Assets.Lang.Resources.Generic_DeleteComment,
+                PrimaryButtonText = Assets.Lang.Resources.Generic_Yes,
+                CloseButtonText = Assets.Lang.Resources.Generic_No
+            };
+
+            ContentDialogResult result = await deleteCommentDialog.ShowAsync();
+            
+            if (result == ContentDialogResult.Primary) RemoveComment(marker.Name);
+        }
+        else
+        {
+            // Jump to comment
+            if (mainView.UpdateSource == MainView.TimeUpdateSource.None)
+            {
+                CurrentMeasureDecimal = comment.BeatData.MeasureDecimal;
+                mainView.UpdateTime(MainView.TimeUpdateSource.MeasureDecimal);
+            }
         }
     }
 }

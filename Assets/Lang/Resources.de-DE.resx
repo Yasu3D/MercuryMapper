@@ -1101,4 +1101,16 @@ Fortfahren?</value>
   <data name="Editor_InvalidJacket" xml:space="preserve">
     <value>Die ausgewählte Bilddatei konnte nicht gefunden werden.</value>
   </data>
+  <data name="Generic_DeleteComment" xml:space="preserve">
+    <value>Kommentar Löschen?</value>
+  </data>
+  <data name="Editor_AddComment" xml:space="preserve">
+    <value>Kommentar Hinzufügen</value>
+  </data>
+  <data name="Generic_Add" xml:space="preserve">
+    <value>Hinzufügen</value>
+  </data>
+  <data name="Editor_Comment" xml:space="preserve">
+    <value>Kommentar</value>
+  </data>
 </root>

@@ -1101,4 +1101,16 @@ Continue?</value>
   <data name="Editor_InvalidJacket" xml:space="preserve">
     <value>Selected image file couldn't be found.</value>
   </data>
+  <data name="Generic_DeleteComment" xml:space="preserve">
+    <value>Delete Comment?</value>
+  </data>
+  <data name="Generic_Add" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="Editor_AddComment" xml:space="preserve">
+    <value>Add Comment</value>
+  </data>
+  <data name="Editor_Comment" xml:space="preserve">
+    <value>Comment</value>
+  </data>
 </root>

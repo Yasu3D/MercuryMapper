@@ -1,0 +1,26 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:lang="clr-namespace:MercuryMapper.Assets.Lang"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="MercuryMapper.Views.AddCommentView">
+    <UserControl.Styles>
+        <Style Selector="TextBlock">
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="10"/>
+        </Style>
+        
+        <Style Selector="TextBox">
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Height" Value="30"/>
+        </Style>
+    </UserControl.Styles>
+    
+    <Grid RowDefinitions="Auto"
+          ColumnDefinitions="Auto,*,*">
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="{x:Static lang:Resources.Editor_Comment}"/>
+        <TextBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" Name="CommentTextBox" AcceptsReturn="False" AcceptsTab="False"/>
+    </Grid>
+</UserControl>
