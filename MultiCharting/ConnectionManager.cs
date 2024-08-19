@@ -285,7 +285,7 @@ namespace MercuryMapper.MultiCharting
 
         private void SendChartData(string receivingClientId)
         {
-            string chartData = mainView.ChartEditor.Chart.WriteChartToNetwork();
+            string chartData = FormatHandler.WriteFileToNetwork(mainView.ChartEditor.Chart);
 
             SendMessage(MessageTypes.ChartData, receivingClientId + "|" + chartData);
         }

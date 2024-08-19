@@ -152,8 +152,8 @@ public class ChartEditor
         EditorState = ChartEditorState.InsertNote; // manually reset state one more time
         UndoRedoManager.Clear();
         SelectedNotes.Clear();
-
-        Chart.LoadChartFromNetwork(chartData);
+        
+        FormatHandler.LoadFileFromNetwork(Chart, chartData);
         mainView.SetChartInfo();
         mainView.SetSelectionInfo();
     }
