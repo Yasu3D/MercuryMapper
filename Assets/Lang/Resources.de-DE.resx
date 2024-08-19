@@ -343,7 +343,7 @@
     <value>Wertungslinie Sekundär</value>
   </data>
   <data name="Generic_SelectAudioPrompt" xml:space="preserve">
-    <value>Chart hat entweder kein Audio oder die angegebene Audiodatei wurde nicht gefunden.
+    <value>Chart hat entweder kein Audio oder die angegebene Audiodatei wurde nicht gefunden. 
 Möchten Sie eine Datei manuell auswählen?</value>
   </data>
   <data name="Generic_InvalidAudioWarning" xml:space="preserve">
@@ -656,7 +656,7 @@ Möchten Sie eine Datei manuell auswählen?</value>
     <value>Autosave gefunden. Zeitstempel:</value>
   </data>
   <data name="Generic_AutosavePrompt" xml:space="preserve">
-    <value>Möchten sie diesen öffnen?</value>
+    <value>Möchten Sie diesen öffnen?</value>
   </data>
   <data name="Menu_FixOffByOneErrors" xml:space="preserve">
     <value>Off-By-One Fehler korrigieren</value>

@@ -1059,7 +1059,7 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Möchten sie diesen öffnen?.
+        ///   Looks up a localized string similar to Möchten Sie diesen öffnen?.
         /// </summary>
         public static string Generic_AutosavePrompt {
             get {
@@ -1221,7 +1221,7 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Chart hat entweder kein Audio oder die angegebene Audiodatei wurde nicht gefunden.
+        ///   Looks up a localized string similar to Chart hat entweder kein Audio oder die angegebene Audiodatei wurde nicht gefunden. 
         ///Möchten Sie eine Datei manuell auswählen?.
         /// </summary>
         public static string Generic_SelectAudioPrompt {
