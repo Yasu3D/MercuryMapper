@@ -132,23 +132,23 @@ internal static class MerHandler
                 if (string.IsNullOrWhiteSpace(line)) continue;
                 string result;
 
-                if (FormatHandler.ContainsTag(line, "#EDITOR_AUDIO", out result)) chart.BgmFilepath = Path.Combine(Path.GetDirectoryName(chart.Filepath) ?? "", result);
-                if (FormatHandler.ContainsTag(line, "#EDITOR_AUTHOR", out result)) chart.Author = result;
-                if (FormatHandler.ContainsTag(line, "#EDITOR_LEVEL", out result)) chart.Level = Convert.ToDecimal(result);
-                if (FormatHandler.ContainsTag(line, "#EDITOR_CLEAR_THRESHOLD", out result)) chart.ClearThreshold = Convert.ToDecimal(result);
-                if (FormatHandler.ContainsTag(line, "#EDITOR_PREVIEW_TIME", out result)) chart.PreviewStart = Convert.ToDecimal(result);
-                if (FormatHandler.ContainsTag(line, "#EDITOR_PREVIEW_LENGTH", out result)) chart.PreviewTime = Convert.ToDecimal(result);
-                if (FormatHandler.ContainsTag(line, "#EDITOR_OFFSET", out result)) chart.BgmOffset = Convert.ToDecimal(result);
-                if (FormatHandler.ContainsTag(line, "#EDITOR_MOVIEOFFSET", out result)) chart.BgaOffset = Convert.ToDecimal(result);
+                if (FormatHandler.ContainsTag(line, "#EDITOR_AUDIO ", out result)) chart.BgmFilepath = Path.Combine(Path.GetDirectoryName(chart.Filepath) ?? "", result);
+                if (FormatHandler.ContainsTag(line, "#EDITOR_AUTHOR ", out result)) chart.Author = result;
+                if (FormatHandler.ContainsTag(line, "#EDITOR_LEVEL ", out result)) chart.Level = Convert.ToDecimal(result);
+                if (FormatHandler.ContainsTag(line, "#EDITOR_CLEAR_THRESHOLD ", out result)) chart.ClearThreshold = Convert.ToDecimal(result);
+                if (FormatHandler.ContainsTag(line, "#EDITOR_PREVIEW_TIME ", out result)) chart.PreviewStart = Convert.ToDecimal(result);
+                if (FormatHandler.ContainsTag(line, "#EDITOR_PREVIEW_LENGTH ", out result)) chart.PreviewTime = Convert.ToDecimal(result);
+                if (FormatHandler.ContainsTag(line, "#EDITOR_OFFSET ", out result)) chart.BgmOffset = Convert.ToDecimal(result);
+                if (FormatHandler.ContainsTag(line, "#EDITOR_MOVIEOFFSET ", out result)) chart.BgaOffset = Convert.ToDecimal(result);
 
-                if (FormatHandler.ContainsTag(line, "#AUDIO", out result)) chart.BgmFilepath = Path.Combine(Path.GetDirectoryName(chart.Filepath) ?? "", result);
-                if (FormatHandler.ContainsTag(line, "#AUTHOR", out result)) chart.Author = result;
-                if (FormatHandler.ContainsTag(line, "#LEVEL", out result)) chart.Level = Convert.ToDecimal(result);
-                if (FormatHandler.ContainsTag(line, "#CLEAR_THRESHOLD", out result)) chart.ClearThreshold = Convert.ToDecimal(result);
-                if (FormatHandler.ContainsTag(line, "#PREVIEW_TIME", out result)) chart.PreviewStart = Convert.ToDecimal(result);
-                if (FormatHandler.ContainsTag(line, "#PREVIEW_LENGTH", out result)) chart.PreviewTime = Convert.ToDecimal(result);
-                if (FormatHandler.ContainsTag(line, "#OFFSET", out result)) chart.BgmOffset = Convert.ToDecimal(result);
-                if (FormatHandler.ContainsTag(line, "#MOVIEOFFSET", out result)) chart.BgaOffset = Convert.ToDecimal(result);
+                if (FormatHandler.ContainsTag(line, "#AUDIO ", out result)) chart.BgmFilepath = Path.Combine(Path.GetDirectoryName(chart.Filepath) ?? "", result);
+                if (FormatHandler.ContainsTag(line, "#AUTHOR ", out result)) chart.Author = result;
+                if (FormatHandler.ContainsTag(line, "#LEVEL ", out result)) chart.Level = Convert.ToDecimal(result);
+                if (FormatHandler.ContainsTag(line, "#CLEAR_THRESHOLD ", out result)) chart.ClearThreshold = Convert.ToDecimal(result);
+                if (FormatHandler.ContainsTag(line, "#PREVIEW_TIME ", out result)) chart.PreviewStart = Convert.ToDecimal(result);
+                if (FormatHandler.ContainsTag(line, "#PREVIEW_LENGTH ", out result)) chart.PreviewTime = Convert.ToDecimal(result);
+                if (FormatHandler.ContainsTag(line, "#OFFSET ", out result)) chart.BgmOffset = Convert.ToDecimal(result);
+                if (FormatHandler.ContainsTag(line, "#MOVIEOFFSET ", out result)) chart.BgaOffset = Convert.ToDecimal(result);
             }
         }
 
@@ -332,8 +332,11 @@ internal static class SatHandler
             chart.GenerateTimeEvents();
             chart.GenerateTimeScales();
 
-            chart.IsSaved = false;
-            chart.IsNew = true;
+            chart.IsSaved = true;
+            chart.IsNew = false;
+            
+            Console.WriteLine(chart.Filepath);
+            Console.WriteLine(chart.BgmFilepath);
         }
 
         return;
@@ -345,25 +348,25 @@ internal static class SatHandler
                 if (string.IsNullOrWhiteSpace(line)) continue;
                 string result;
                 
-                if (FormatHandler.ContainsTag(line, "@VERSION", out result)) chart.Version = result;
-                if (FormatHandler.ContainsTag(line, "@TITLE", out result)) chart.Title = result;
-                if (FormatHandler.ContainsTag(line, "@RUBI", out result)) chart.Rubi = result;
-                if (FormatHandler.ContainsTag(line, "@ARTIST", out result)) chart.Artist = result;
-                if (FormatHandler.ContainsTag(line, "@AUTHOR", out result)) chart.Author = result;
+                if (FormatHandler.ContainsTag(line, "@VERSION ", out result)) chart.Version = result;
+                if (FormatHandler.ContainsTag(line, "@TITLE ", out result)) chart.Title = result;
+                if (FormatHandler.ContainsTag(line, "@RUBI ", out result)) chart.Rubi = result;
+                if (FormatHandler.ContainsTag(line, "@ARTIST ", out result)) chart.Artist = result;
+                if (FormatHandler.ContainsTag(line, "@AUTHOR ", out result)) chart.Author = result;
                 
-                if (FormatHandler.ContainsTag(line, "@DIFF", out result)) chart.Diff = Convert.ToInt32(result);
-                if (FormatHandler.ContainsTag(line, "@LEVEL", out result)) chart.Level = Convert.ToDecimal(result);
-                if (FormatHandler.ContainsTag(line, "@CLEAR", out result)) chart.ClearThreshold = Convert.ToDecimal(result);
-                if (FormatHandler.ContainsTag(line, "@BPM_TEXT", out result)) chart.BpmText = result;
+                if (FormatHandler.ContainsTag(line, "@DIFF ", out result)) chart.Diff = Convert.ToInt32(result);
+                if (FormatHandler.ContainsTag(line, "@LEVEL ", out result)) chart.Level = Convert.ToDecimal(result);
+                if (FormatHandler.ContainsTag(line, "@CLEAR ", out result)) chart.ClearThreshold = Convert.ToDecimal(result);
+                if (FormatHandler.ContainsTag(line, "@BPM_TEXT ", out result)) chart.BpmText = result;
                 
-                if (FormatHandler.ContainsTag(line, "@PREVIEW_START", out result)) chart.PreviewStart = Convert.ToDecimal(result);
-                if (FormatHandler.ContainsTag(line, "@PREVIEW_TIME", out result)) chart.PreviewTime = Convert.ToDecimal(result);
+                if (FormatHandler.ContainsTag(line, "@PREVIEW_START ", out result)) chart.PreviewStart = Convert.ToDecimal(result);
+                if (FormatHandler.ContainsTag(line, "@PREVIEW_TIME ", out result)) chart.PreviewTime = Convert.ToDecimal(result);
                 
-                if (FormatHandler.ContainsTag(line, "@BGM", out result)) chart.BgmFilepath = Path.Combine(Path.GetDirectoryName(chart.Filepath) ?? "", result);
-                if (FormatHandler.ContainsTag(line, "@BGM_OFFSET", out result)) chart.BgmOffset = Convert.ToDecimal(result);
-                if (FormatHandler.ContainsTag(line, "@BGA", out result)) chart.BgaFilepath = Path.Combine(Path.GetDirectoryName(chart.Filepath) ?? "", result);
-                if (FormatHandler.ContainsTag(line, "@BGA_OFFSET", out result)) chart.BgaOffset = Convert.ToDecimal(result);
-                if (FormatHandler.ContainsTag(line, "@JACKET", out result)) chart.JacketFilepath = result;
+                if (FormatHandler.ContainsTag(line, "@BGM ", out result)) chart.BgmFilepath = Path.Combine(Path.GetDirectoryName(chart.Filepath) ?? "", result);
+                if (FormatHandler.ContainsTag(line, "@BGM_OFFSET ", out result)) chart.BgmOffset = Convert.ToDecimal(result);
+                if (FormatHandler.ContainsTag(line, "@BGA ", out result)) chart.BgaFilepath = Path.Combine(Path.GetDirectoryName(chart.Filepath) ?? "", result);
+                if (FormatHandler.ContainsTag(line, "@BGA_OFFSET ", out result)) chart.BgaOffset = Convert.ToDecimal(result);
+                if (FormatHandler.ContainsTag(line, "@JACKET ", out result)) chart.JacketFilepath = result;
             }
         }
         
@@ -429,15 +432,17 @@ internal static class SatHandler
                 int position = Convert.ToInt32(split[3]);
                 int size = Convert.ToInt32(split[4]);
                 
-                string[] attributes = split[5].Split('.',StringSplitOptions.RemoveEmptyEntries);
+                string[] modifiers = split[5].Split('.',StringSplitOptions.RemoveEmptyEntries);
                 
-                NoteType noteType = getNoteType(attributes);
-                BonusType bonusType = getBonusType(attributes);
-                MaskDirection maskDirection = getMaskDirection(attributes);
-                bool renderSegment = attributes is [_, not "NR"];
+                NoteType noteType = getNoteType(modifiers);
+                BonusType bonusType = getBonusType(modifiers);
+                MaskDirection maskDirection = getMaskDirection(modifiers);
+                bool renderSegment = modifiers is not [_, "NR"];
                 
                 Note note = new(measure, tick, noteType, bonusType, index, position, size, renderSegment);
 
+                if (note.IsMask) note.MaskDirection = maskDirection;
+                
                 if (noteType is NoteType.HoldSegment or NoteType.HoldEnd)
                 {
                     note.PrevReferencedNote = previousNote;
@@ -619,21 +624,17 @@ internal static class SatHandler
 
         string getModifiers(Note note)
         {
-            string result = "";
+            string modifiers = "";
             
-            result += note.BonusType switch
+            modifiers += note.BonusType switch
             {
                 BonusType.None => "",
-                BonusType.Bonus => ".Bonus",
-                BonusType.RNote => ".RNote",
+                BonusType.Bonus => ".BONUS",
+                BonusType.RNote => ".RNOTE",
                 _ => ""
             };
 
-            if (!note.RenderSegment) result += ".NR";
-            
-            Console.WriteLine(Convert.ToInt32(note.RenderSegment));
-
-            if (note.IsMask) result += note.MaskDirection switch
+            if (note.IsMask) modifiers += note.MaskDirection switch
             {
                 MaskDirection.Center => ".CENTER",
                 MaskDirection.Clockwise => ".CW",
@@ -641,8 +642,10 @@ internal static class SatHandler
                 MaskDirection.None => "",
                 _ => ""
             };
-
-            return result;
+            
+            if (!note.RenderSegment) modifiers += ".NR";
+            
+            return modifiers;
         }
         
         string getGimmickName(GimmickType gimmickType)
