@@ -73,7 +73,7 @@ public class ChartEditor
     public Note? LastPlacedHold;
     public Note? CurrentHoldStart;
     
-    public void NewChart(string bgmFilepath, string author, float bpm, int timeSigUpper, int timeSigLower)
+    public void NewChart(string bgmFilepath, float bpm, int timeSigUpper, int timeSigLower)
     {
         LastSelectedNote = null;
         LastPlacedHold = null;
@@ -87,7 +87,6 @@ public class ChartEditor
         lock (Chart)
         {
             Chart.BgmFilepath = bgmFilepath;
-            Chart.Author = author;
             
             Gimmick startBpm = new()
             {

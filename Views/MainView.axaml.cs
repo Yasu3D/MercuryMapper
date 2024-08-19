@@ -1315,7 +1315,6 @@ public partial class MainView : UserControl
             if (result is ContentDialogResult.Primary)
             {
                 string filepath = newChartView.MusicFilePath;
-                string author = newChartView.AuthorTextBox.Text ?? "";
                 float bpm = (float)newChartView.BpmNumberBox.Value;
                 int timeSigUpper = (int)newChartView.TimeSigUpperNumberBox.Value;
                 int timeSigLower = (int)newChartView.TimeSigLowerNumberBox.Value;
@@ -1340,7 +1339,7 @@ public partial class MainView : UserControl
                 
                 AudioManager.ResetSong();
                 
-                ChartEditor.NewChart(filepath, author, bpm, timeSigUpper, timeSigLower);
+                ChartEditor.NewChart(filepath, bpm, timeSigUpper, timeSigLower);
                 AudioManager.SetSong(filepath, (float)UserConfig.AudioConfig.MusicVolume * 0.01f, (int)SliderPlaybackSpeed.Value);
                 SetSongPositionSliderValues();
                 UpdateFilepathsInUi();
