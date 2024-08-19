@@ -276,11 +276,11 @@ public class Note : ChartElement
             (NoteType.HoldStart, BonusType.Bonus) => 2,
             (NoteType.HoldStart, BonusType.RNote) => 8,
             
-            (NoteType.HoldSegment, _) => 4,
-            (NoteType.HoldEnd, _) => 4,
+            (NoteType.HoldSegment, _) => 1,
+            (NoteType.HoldEnd, _) => 1,
             
-            (NoteType.MaskAdd, _) => 4,
-            (NoteType.MaskRemove, _) => 4,
+            (NoteType.MaskAdd, _) => 1,
+            (NoteType.MaskRemove, _) => 1,
             
             (NoteType.EndOfChart, _) => 60,
             
