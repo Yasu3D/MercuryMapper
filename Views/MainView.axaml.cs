@@ -26,6 +26,7 @@ using MercuryMapper.MultiCharting;
 using MercuryMapper.Rendering;
 using MercuryMapper.Utils;
 using MercuryMapper.Views.Gimmicks;
+using MercuryMapper.Views.Misc;
 using MercuryMapper.Views.Online;
 using MercuryMapper.Views.Tools;
 using SkiaSharp;
@@ -1379,11 +1380,6 @@ public partial class MainView : UserControl
     private async void MenuItemExportMercury_OnClick(object? sender, RoutedEventArgs e)
     {
         if (LockState == UiLockState.Empty) return;
-        if (ChartEditor.Chart.EndOfChart == null)
-        {
-            ShowWarningMessage(Assets.Lang.Resources.Generic_EndOfChartWarning, Assets.Lang.Resources.Generic_EndOfChartWarningExplanation);
-            return;
-        }
         
         await ExportFile(ChartFormatType.Mercury);
     }
@@ -1674,6 +1670,26 @@ public partial class MainView : UserControl
             
             ChartEditor.ReconstructHold(reconstructView.GeneratorMethod.SelectedIndex, (int?)reconstructView.Interval.Value ?? 0);
         });
+    }
+    
+    private void MenuItemProofread_OnClick(object? sender, RoutedEventArgs e)
+    {
+        MiscView_Proofread proofreadView = new();
+        Proofreader.Proofread(proofreadView.TextBlockProofreadResults, ChartEditor.Chart);
+
+        if (proofreadView.TextBlockProofreadResults.Inlines?.Count == 0)
+        {
+            Dispatcher.UIThread.Invoke(() => proofreadView.TextBlockProofreadResults.Inlines.Add(new Avalonia.Controls.Documents.Run("No issues found! :]") { FontWeight = FontWeight.Bold, Foreground = Avalonia.Media.Brushes.Turquoise }));
+        }
+        
+        ContentDialog dialog = new()
+        {
+            Content = proofreadView,
+            Title = Assets.Lang.Resources.Menu_Proofread,
+            CloseButtonText = Assets.Lang.Resources.Generic_Ok
+        };
+        
+        dialog.ShowAsync();
     }
     
     private void RadioNoteType_IsCheckedChanged(object? sender, RoutedEventArgs e)
@@ -2341,7 +2357,7 @@ public partial class MainView : UserControl
         PrimaryButtonText = Assets.Lang.Resources.Menu_Disconnect
     };
 
-    public async void ShowReceivingDataMessage()
+    public void ShowReceivingDataMessage()
     {
         Dispatcher.UIThread.Post(async () =>
         {
@@ -2349,8 +2365,7 @@ public partial class MainView : UserControl
             if (result is ContentDialogResult.Primary) ConnectionManager.LeaveLobby();
         });
         return;
-
-
+        
         Task<ContentDialogResult> showReceivingDataDialog()
         {
             return receivingDataDialog.ShowAsync();
@@ -2659,6 +2674,22 @@ public partial class MainView : UserControl
         string filepath = file.Path.LocalPath;
         
         if (string.IsNullOrEmpty(filepath)) return;
+        
+        MiscView_Proofread proofreadView = new();
+        Proofreader.Proofread(proofreadView.TextBlockProofreadResults, ChartEditor.Chart);
+
+        if (proofreadView.TextBlockProofreadResults.Inlines?.Count != 0)
+        {
+            ContentDialog dialog = new()
+            {
+                Content = proofreadView,
+                Title = Assets.Lang.Resources.Menu_Proofread,
+                CloseButtonText = Assets.Lang.Resources.Generic_Ok
+            };
+        
+            await dialog.ShowAsync();
+        }
+        
         FormatHandler.WriteFile(ChartEditor.Chart, filepath, chartFormatType);
     }
 
@@ -2666,7 +2697,7 @@ public partial class MainView : UserControl
     {
         if (AudioManager.CurrentSong == null) return;
         
-        AddCommentView addCommentView = new();
+        MiscView_AddComment addCommentView = new();
             
         ContentDialog dialog = new()
         {

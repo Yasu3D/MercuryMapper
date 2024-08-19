@@ -1113,7 +1113,10 @@ Continue?</value>
   <data name="Editor_Comment" xml:space="preserve">
     <value>Comment</value>
   </data>
-  <data name="Editor_CommentTip" xml:space="preserve">
-    <value>Tip: You can delete a comment by holding Alt and clicking it!</value>
+  <data name="Editor_CommentHint" xml:space="preserve">
+    <value>Hint: You can delete a comment by holding Alt and clicking it!</value>
+  </data>
+  <data name="Menu_Proofread" xml:space="preserve">
+    <value>Proofread</value>
   </data>
 </root>

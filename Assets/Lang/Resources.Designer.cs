@@ -321,11 +321,11 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Tip: You can delete a comment by holding Alt and clicking it!.
+        ///   Looks up a localized string similar to Hint: You can delete a comment by holding Alt and clicking it!.
         /// </summary>
-        public static string Editor_CommentTip {
+        public static string Editor_CommentHint {
             get {
-                return ResourceManager.GetString("Editor_CommentTip", resourceCulture);
+                return ResourceManager.GetString("Editor_CommentHint", resourceCulture);
             }
         }
         
@@ -1515,6 +1515,15 @@ namespace MercuryMapper.Assets.Lang {
         public static string Menu_Paste {
             get {
                 return ResourceManager.GetString("Menu_Paste", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Proofread.
+        /// </summary>
+        public static string Menu_Proofread {
+            get {
+                return ResourceManager.GetString("Menu_Proofread", resourceCulture);
             }
         }
         

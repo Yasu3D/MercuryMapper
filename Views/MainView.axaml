@@ -115,6 +115,9 @@
                               Click="MenuItemGenerateJaggedHolds_OnClick"/>
                     <MenuItem Header="{x:Static lang:Resources.Menu_ReconstructHolds}" Name="MenuItemReconstructHolds"
                               Click="MenuItemReconstructHolds_OnClick"/>
+                    <Separator/>
+                    <MenuItem Header="{x:Static lang:Resources.Menu_Proofread}" Name="MenuItemProofread"
+                              Click="MenuItemProofread_OnClick"/>
                 </MenuItem>
             </Menu>
             <Panel Grid.Column="1" Background="{DynamicResource TitleBar}" IsHitTestVisible="False"/>
