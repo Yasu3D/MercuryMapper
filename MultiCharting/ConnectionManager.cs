@@ -38,13 +38,19 @@ namespace MercuryMapper.MultiCharting
             SyncDone = 010,
 
             // 1XX - Metadata
-            ChartAuthorChange = 100,
-            LevelChange = 101,
-            ClearThresholdChange = 102,
-            PreviewStartChange = 103,
-            PreviewLengthChange = 104,
-            AudioOffsetChange = 105,
-            MovieOffsetChange = 106,
+            VersionChange = 100,
+            TitleChange = 101,
+            RubiChange = 102,
+            ArtistChange = 103,
+            AuthorChange = 104,
+            DiffChange = 105,
+            LevelChange = 106,
+            ClearThresholdChange = 107,
+            BpmTextChange = 108,
+            PreviewStartChange = 109,
+            PreviewTimeChange = 110,
+            BgmOffsetChange = 111,
+            BgaOffsetChange = 112,
 
             // 2XX - Realtime Events
             InsertNote = 200,
@@ -524,10 +530,70 @@ namespace MercuryMapper.MultiCharting
                 }
                 
                 // Metadata
-                case MessageTypes.ChartAuthorChange:
+                
+                //VersionChange = 100,
+                //TitleChange = 101,
+                //RubiChange = 102,
+                //ArtistChange = 103,
+                //AuthorChange = 104,
+                //DiffChange = 105,
+                //LevelChange = 106,
+                //ClearThresholdChange = 107,
+                //BpmTextChange = 108,
+                //PreviewStartChange = 109,
+                //PreviewTimeChange = 110,
+                //BgmOffsetChange = 111,
+                //BgaOffsetChange = 112,
+                
+                case MessageTypes.VersionChange:
+                {
+                    Dispatcher.UIThread.Post(() => {
+                        mainView.ChartEditor.Chart.Version = trimmedMessage;
+                        mainView.SetChartInfo();
+                    });
+                    break;
+                }
+                
+                case MessageTypes.TitleChange:
+                {
+                    Dispatcher.UIThread.Post(() => {
+                        mainView.ChartEditor.Chart.Title = trimmedMessage;
+                        mainView.SetChartInfo();
+                    });
+                    break;
+                }
+                
+                case MessageTypes.RubiChange:
+                {
+                    Dispatcher.UIThread.Post(() => {
+                        mainView.ChartEditor.Chart.Rubi = trimmedMessage;
+                        mainView.SetChartInfo();
+                    });
+                    break;
+                }
+                
+                case MessageTypes.ArtistChange:
+                {
+                    Dispatcher.UIThread.Post(() => {
+                        mainView.ChartEditor.Chart.Artist = trimmedMessage;
+                        mainView.SetChartInfo();
+                    });
+                    break;
+                }
+                
+                case MessageTypes.AuthorChange:
                 {
                     Dispatcher.UIThread.Post(() => {
                         mainView.ChartEditor.Chart.Author = trimmedMessage;
+                        mainView.SetChartInfo();
+                    });
+                    break;
+                }
+                
+                case MessageTypes.DiffChange:
+                {
+                    Dispatcher.UIThread.Post(() => {
+                        mainView.ChartEditor.Chart.Diff = Convert.ToInt32(trimmedMessage);
                         mainView.SetChartInfo();
                     });
                     break;
@@ -551,6 +617,15 @@ namespace MercuryMapper.MultiCharting
                     break;
                 }
                 
+                case MessageTypes.BpmTextChange:
+                {
+                    Dispatcher.UIThread.Post(() => {
+                        mainView.ChartEditor.Chart.BpmText = trimmedMessage;
+                        mainView.SetChartInfo();
+                    });
+                    break;
+                }
+                
                 case MessageTypes.PreviewStartChange:
                 {
                     Dispatcher.UIThread.Post(() => {
@@ -560,7 +635,7 @@ namespace MercuryMapper.MultiCharting
                     break;
                 }
                 
-                case MessageTypes.PreviewLengthChange:
+                case MessageTypes.PreviewTimeChange:
                 {
                     Dispatcher.UIThread.Post(() => {
                         mainView.ChartEditor.Chart.PreviewTime = Convert.ToDecimal(trimmedMessage, CultureInfo.InvariantCulture);
@@ -569,7 +644,7 @@ namespace MercuryMapper.MultiCharting
                     break;
                 }
                 
-                case MessageTypes.AudioOffsetChange:
+                case MessageTypes.BgmOffsetChange:
                 {
                     Dispatcher.UIThread.Post(() => {
                         mainView.ChartEditor.Chart.BgmOffset = Convert.ToDecimal(trimmedMessage, CultureInfo.InvariantCulture);
@@ -578,7 +653,7 @@ namespace MercuryMapper.MultiCharting
                     break;
                 }
                 
-                case MessageTypes.MovieOffsetChange:
+                case MessageTypes.BgaOffsetChange:
                 {
                     Dispatcher.UIThread.Post(() => {
                         mainView.ChartEditor.Chart.BgaOffset = Convert.ToDecimal(trimmedMessage, CultureInfo.InvariantCulture);

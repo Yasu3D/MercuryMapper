@@ -337,6 +337,8 @@ internal static class SatHandler
             
             Console.WriteLine(chart.Filepath);
             Console.WriteLine(chart.BgmFilepath);
+            Console.WriteLine(chart.BgaFilepath);
+            Console.WriteLine(chart.JacketFilepath);
         }
 
         return;
@@ -364,9 +366,9 @@ internal static class SatHandler
                 
                 if (FormatHandler.ContainsTag(line, "@BGM ", out result)) chart.BgmFilepath = Path.Combine(Path.GetDirectoryName(chart.Filepath) ?? "", result);
                 if (FormatHandler.ContainsTag(line, "@BGM_OFFSET ", out result)) chart.BgmOffset = Convert.ToDecimal(result);
-                if (FormatHandler.ContainsTag(line, "@BGA ", out result)) chart.BgaFilepath = Path.Combine(Path.GetDirectoryName(chart.Filepath) ?? "", result);
+                if (FormatHandler.ContainsTag(line, "@BGA ", out result)) chart.BgaFilepath = result == "" ? "" : Path.Combine(Path.GetDirectoryName(chart.Filepath) ?? "", result);
                 if (FormatHandler.ContainsTag(line, "@BGA_OFFSET ", out result)) chart.BgaOffset = Convert.ToDecimal(result);
-                if (FormatHandler.ContainsTag(line, "@JACKET ", out result)) chart.JacketFilepath = result;
+                if (FormatHandler.ContainsTag(line, "@JACKET ", out result)) chart.JacketFilepath = result == "" ? "" : Path.Combine(Path.GetDirectoryName(chart.Filepath) ?? "", result);
             }
         }
         

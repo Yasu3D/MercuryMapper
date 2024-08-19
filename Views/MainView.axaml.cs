@@ -13,6 +13,7 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
+using Avalonia.Media.Imaging;
 using Avalonia.Platform.Storage;
 using Avalonia.Threading;
 using FluentAvalonia.UI.Controls;
@@ -502,15 +503,39 @@ public partial class MainView : UserControl
     public void SetChartInfo()
     {
         ChartInfoChartFilepath.Text = Path.GetFileName(ChartEditor.Chart.Filepath);
-        ChartInfoAudioFilepath.Text = Path.GetFileName(ChartEditor.Chart.BgmFilepath);
-        
+
+        ChartInfoVersion.Text = ChartEditor.Chart.Version;
+        ChartInfoTitle.Text = ChartEditor.Chart.Title;
+        ChartInfoRubi.Text = ChartEditor.Chart.Rubi;
+        ChartInfoArtist.Text = ChartEditor.Chart.Artist;
         ChartInfoAuthor.Text = ChartEditor.Chart.Author;
+
+        ChartInfoDiff.SelectedIndex = ChartEditor.Chart.Diff;
         ChartInfoLevel.Value = (double)ChartEditor.Chart.Level;
         ChartInfoClearThreshold.Value = (double)ChartEditor.Chart.ClearThreshold;
-        ChartInfoPreviewTime.Value = (double)ChartEditor.Chart.PreviewStart;
-        ChartInfoPreviewLength.Value = (double)ChartEditor.Chart.PreviewTime;
-        ChartInfoOffset.Value = (double)ChartEditor.Chart.BgmOffset;
-        ChartInfoMovieOffset.Value = (double)ChartEditor.Chart.BgaOffset;
+        ChartInfoBpmText.Text = ChartEditor.Chart.BpmText;
+        
+        ChartInfoPreviewStart.Value = (double)ChartEditor.Chart.PreviewStart;
+        ChartInfoPreviewTime.Value = (double)ChartEditor.Chart.PreviewTime;
+
+        ChartInfoBgmFilepath.Text = Path.GetFileName(ChartEditor.Chart.BgmFilepath);
+        ChartInfoBgmOffset.Value = (double)ChartEditor.Chart.BgmOffset;
+        ChartInfoBgaFilepath.Text = ChartEditor.Chart.BgaFilepath == "" ? "" : Path.GetFileName(ChartEditor.Chart.BgaFilepath);
+        ChartInfoBgaOffset.Value = (double)ChartEditor.Chart.BgaOffset;
+        ChartInfoJacketFilepath.Text = ChartEditor.Chart.JacketFilepath == "" ? "" : Path.GetFileName(ChartEditor.Chart.JacketFilepath);
+
+        if (File.Exists(ChartEditor.Chart.JacketFilepath))
+        {
+            ChartInfoJacket.IsVisible = true;
+            ChartInfoJacketFallback.IsVisible = false;
+            
+            ChartInfoJacket.Source = new Bitmap(ChartEditor.Chart.JacketFilepath);
+        }
+        else
+        {
+            ChartInfoJacket.IsVisible = false;
+            ChartInfoJacketFallback.IsVisible = true;
+        }
     }
 
     public void SetQuickSettings()
@@ -532,9 +557,12 @@ public partial class MainView : UserControl
         SliderNoteSize.Value = double.Max(SliderNoteSize.Value, minimum);
     }
 
-    public void UpdateAudioFilepathUi()
+    public void UpdateFilepathsInUi()
     {
-        ChartInfoAudioFilepath.Text = Path.GetFileName(ChartEditor.Chart.BgmFilepath);
+        ChartInfoChartFilepath.Text = Path.GetFileName(ChartEditor.Chart.Filepath);
+        ChartInfoBgmFilepath.Text = Path.GetFileName(ChartEditor.Chart.BgmFilepath);
+        ChartInfoBgaFilepath.Text = Path.GetFileName(ChartEditor.Chart.BgaFilepath);
+        ChartInfoJacketFilepath.Text = Path.GetFileName(ChartEditor.Chart.JacketFilepath);
     }
     
     private void UpdateLoopMarkerPosition()
@@ -1307,7 +1335,7 @@ public partial class MainView : UserControl
                 ChartEditor.NewChart(filepath, author, bpm, timeSigUpper, timeSigLower);
                 AudioManager.SetSong(filepath, (float)UserConfig.AudioConfig.MusicVolume * 0.01f, (int)SliderPlaybackSpeed.Value);
                 SetSongPositionSliderValues();
-                UpdateAudioFilepathUi();
+                UpdateFilepathsInUi();
                 RenderEngine.UpdateVisibleTime();
                 ClearAutosaves();
                 ResetLoopMarkers(AudioManager.CurrentSong?.Length ?? 0);
@@ -1944,7 +1972,103 @@ public partial class MainView : UserControl
         AudioManager.CurrentSong.PlaybackSpeed = (int)SliderPlaybackSpeed.Value;
     }
 
-    private async void ChartInfoSelectAudio_OnClick(object? sender, RoutedEventArgs e)
+    private void ChartInfoVersion_OnTextChanged(object? sender, TextChangedEventArgs e)
+    {
+        ChartEditor.Chart.Version = ChartInfoVersion.Text ?? "";
+        ChartEditor.Chart.IsSaved = false;
+    }
+    private void ChartInfoVersion_LostFocus(object? sender, RoutedEventArgs e) => ConnectionManager.SendMessage(ConnectionManager.MessageTypes.VersionChange, ChartEditor.Chart.Version);
+
+    private void ChartInfoTitle_OnTextChanged(object? sender, TextChangedEventArgs e)
+    {
+        ChartEditor.Chart.Title = ChartInfoTitle.Text ?? "";
+        ChartEditor.Chart.IsSaved = false;
+    }
+    private void ChartInfoTitle_LostFocus(object? sender, RoutedEventArgs e) => ConnectionManager.SendMessage(ConnectionManager.MessageTypes.TitleChange, ChartEditor.Chart.Title);
+
+    private void ChartInfoRubi_OnTextChanged(object? sender, TextChangedEventArgs e)
+    {
+        ChartEditor.Chart.Rubi = ChartInfoRubi.Text ?? "";
+        ChartEditor.Chart.IsSaved = false;
+    }
+    private void ChartInfoRubi_LostFocus(object? sender, RoutedEventArgs e) => ConnectionManager.SendMessage(ConnectionManager.MessageTypes.RubiChange, ChartEditor.Chart.Rubi);
+
+    private void ChartInfoArtist_OnTextChanged(object? sender, TextChangedEventArgs e)
+    {
+        ChartEditor.Chart.Artist = ChartInfoArtist.Text ?? "";
+        ChartEditor.Chart.IsSaved = false;
+    }
+    private void ChartInfoArtist_LostFocus(object? sender, RoutedEventArgs e) => ConnectionManager.SendMessage(ConnectionManager.MessageTypes.ArtistChange, ChartEditor.Chart.Artist);
+
+    private void ChartInfoAuthor_OnTextChanged(object? sender, TextChangedEventArgs e)
+    {
+        ChartEditor.Chart.Author = ChartInfoAuthor.Text ?? "";
+        ChartEditor.Chart.IsSaved = false;
+    }
+    private void ChartInfoAuthor_LostFocus(object? sender, RoutedEventArgs e) => ConnectionManager.SendMessage(ConnectionManager.MessageTypes.AuthorChange, ChartEditor.Chart.Author);
+
+    private void ChartInfoDiff_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        if (ChartInfoDiff is null) return;
+        ChartEditor.Chart.Diff = ChartInfoDiff.SelectedIndex;
+        ChartEditor.Chart.IsSaved = false;
+    }
+    private void ChartInfoDiff_LostFocus(object? sender, RoutedEventArgs e)
+    {
+        if (ChartInfoDiff is null) return;
+        ConnectionManager.SendMessage(ConnectionManager.MessageTypes.DiffChange, ChartEditor.Chart.Diff.ToString());
+    }
+
+    private void ChartInfoLevel_OnValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
+    {
+        ChartEditor.Chart.Level = (decimal)ChartInfoLevel.Value;
+        ChartEditor.Chart.IsSaved = false;
+    }
+    private void ChartInfoLevel_LostFocus(object? sender, RoutedEventArgs e) => ConnectionManager.SendMessage(ConnectionManager.MessageTypes.LevelChange, ChartEditor.Chart.Level.ToString(CultureInfo.InvariantCulture));
+
+    private void ChartInfoClearThreshold_OnValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
+    {
+        ChartEditor.Chart.ClearThreshold = (decimal)ChartInfoClearThreshold.Value;
+        ChartEditor.Chart.IsSaved = false;
+    }
+    private void ChartInfoClearThreshold_LostFocus(object? sender, RoutedEventArgs e) => ConnectionManager.SendMessage(ConnectionManager.MessageTypes.ClearThresholdChange, ChartEditor.Chart.ClearThreshold.ToString(CultureInfo.InvariantCulture));
+
+    private void ChartInfoBpmText_OnTextChanged(object? sender, TextChangedEventArgs e)
+    {
+        ChartEditor.Chart.BpmText = ChartInfoBpmText.Text ?? "";
+        ChartEditor.Chart.IsSaved = false;
+    }
+    private void ChartInfoBpmText_LostFocus(object? sender, RoutedEventArgs e) => ConnectionManager.SendMessage(ConnectionManager.MessageTypes.BpmTextChange, ChartEditor.Chart.BpmText);
+
+    private void ChartInfoPreviewStart_OnValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
+    {
+        ChartEditor.Chart.PreviewStart = (decimal)ChartInfoPreviewStart.Value;
+        ChartEditor.Chart.IsSaved = false;
+    }
+    private void ChartInfoPreviewStart_LostFocus(object? sender, RoutedEventArgs e) => ConnectionManager.SendMessage(ConnectionManager.MessageTypes.PreviewStartChange, ChartEditor.Chart.PreviewStart.ToString(CultureInfo.InvariantCulture));
+
+    private void ChartInfoPreviewTime_OnValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
+    {
+        ChartEditor.Chart.PreviewTime = (decimal)ChartInfoPreviewTime.Value;
+        ChartEditor.Chart.IsSaved = false;
+    }
+    private void ChartInfoPreviewTime_LostFocus(object? sender, RoutedEventArgs e) => ConnectionManager.SendMessage(ConnectionManager.MessageTypes.PreviewTimeChange, ChartEditor.Chart.PreviewTime.ToString(CultureInfo.InvariantCulture));
+
+    private void ChartInfoBgmOffset_OnValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
+    {
+        ChartEditor.Chart.BgmOffset = (decimal)ChartInfoBgmOffset.Value;
+        ChartEditor.Chart.IsSaved = false;
+    }
+    private void ChartInfoBgmOffset_LostFocus(object? sender, RoutedEventArgs e) => ConnectionManager.SendMessage(ConnectionManager.MessageTypes.BgmOffsetChange, ChartEditor.Chart.BgmOffset.ToString(CultureInfo.InvariantCulture));
+
+    private void ChartInfoBgaOffset_OnValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
+    {
+        ChartEditor.Chart.BgaOffset = (decimal)ChartInfoBgaOffset.Value;
+        ChartEditor.Chart.IsSaved = false;
+    }
+    private void ChartInfoBgaOffset_LostFocus(object? sender, RoutedEventArgs e) => ConnectionManager.SendMessage(ConnectionManager.MessageTypes.BgaOffsetChange, ChartEditor.Chart.BgaOffset.ToString(CultureInfo.InvariantCulture));
+
+    private async void ChartInfoSelectBgm_OnClick(object? sender, RoutedEventArgs e)
     {
         // prompt user to create new chart if no start time events exist -> no chart exists
         if (ChartEditor.Chart.StartBpm == null || ChartEditor.Chart.StartTimeSig == null)
@@ -1952,7 +2076,7 @@ public partial class MainView : UserControl
             MenuItemNew_OnClick(sender, e);
             return;
         }
-        
+
         IStorageFile? audioFile = await OpenAudioFilePicker();
         if (audioFile == null) return;
         if (!File.Exists(audioFile.Path.LocalPath))
@@ -1962,92 +2086,72 @@ public partial class MainView : UserControl
         }
 
         ChartEditor.Chart.BgmFilepath = audioFile.Path.LocalPath;
-        
+        ChartEditor.Chart.IsSaved = false;
+
         AudioManager.SetSong(ChartEditor.Chart.BgmFilepath, (float)(UserConfig.AudioConfig.MusicVolume * 0.01), (int)SliderPlaybackSpeed.Value);
         SetSongPositionSliderValues();
-        UpdateAudioFilepathUi();
+        UpdateFilepathsInUi();
         RenderEngine.UpdateVisibleTime();
     }
-    
-    private void ChartInfoAuthor_OnTextChanged(object? sender, TextChangedEventArgs e)
+
+    private async void ChartInfoSelectBga_OnClick(object? sender, RoutedEventArgs e)
     {
-        ChartEditor.Chart.Author = ChartInfoAuthor.Text ?? "";
+        // prompt user to create new chart if no start time events exist -> no chart exists
+        if (ChartEditor.Chart.StartBpm == null || ChartEditor.Chart.StartTimeSig == null)
+        {
+            MenuItemNew_OnClick(sender, e);
+            return;
+        }
+
+        IStorageFile? videoFile = await OpenVideoFilePicker();
+        if (videoFile == null) return;
+        if (!File.Exists(videoFile.Path.LocalPath))
+        {
+            ShowWarningMessage(Assets.Lang.Resources.Editor_NewChartInvalidAudio);
+            return;
+        }
+
+        ChartEditor.Chart.BgaFilepath = videoFile.Path.LocalPath;
+        ChartEditor.Chart.IsSaved = false;
+
+        UpdateFilepathsInUi();
     }
 
-    private void ChartInfoAuthor_LostFocus(object? sender, RoutedEventArgs e)
+    private async void ChartInfoSelectJacket_OnClick(object? sender, RoutedEventArgs e)
     {
-        ConnectionManager.SendMessage(ConnectionManager.MessageTypes.ChartAuthorChange, ChartEditor.Chart.Author);
-    }
-    
-    private void ChartInfoLevel_OnValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
-    {
-        ChartEditor.Chart.Level = (decimal)ChartInfoLevel.Value;
-    }
+        // prompt user to create new chart if no start time events exist -> no chart exists
+        if (ChartEditor.Chart.StartBpm == null || ChartEditor.Chart.StartTimeSig == null)
+        {
+            MenuItemNew_OnClick(sender, e);
+            return;
+        }
 
-    private void ChartInfoLevel_LostFocus(object? sender, RoutedEventArgs e)
-    {
-        ConnectionManager.SendMessage(ConnectionManager.MessageTypes.LevelChange, ChartEditor.Chart.Level.ToString(CultureInfo.InvariantCulture));
-    }
+        IStorageFile? jacketFile = await OpenJacketFilePicker();
 
-    private void ChartInfoClearThreshold_OnValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
-    {
-        ChartEditor.Chart.ClearThreshold = (decimal)ChartInfoClearThreshold.Value;
-    }
+        if (jacketFile == null) return;
 
-    private void ChartInfoClearThreshold_LostFocus(object? sender, RoutedEventArgs e)
-    {
-        ConnectionManager.SendMessage(ConnectionManager.MessageTypes.ClearThresholdChange, ChartEditor.Chart.ClearThreshold.ToString(CultureInfo.InvariantCulture));
-    }
+        if (!File.Exists(jacketFile.Path.LocalPath))
+        {
+            ShowWarningMessage(Assets.Lang.Resources.Editor_NewChartInvalidAudio);
+            return;
+        }
 
-    private void ChartInfoPreviewStart_OnValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
-    {
-        ChartEditor.Chart.PreviewStart = (decimal)ChartInfoPreviewTime.Value;
-    }
+        ChartEditor.Chart.JacketFilepath = jacketFile.Path.LocalPath;
+        ChartEditor.Chart.IsSaved = false;
 
-    private void ChartInfoPreviewStart_LostFocus(object? sender, RoutedEventArgs e)
-    {
-        ConnectionManager.SendMessage(ConnectionManager.MessageTypes.PreviewStartChange, ChartEditor.Chart.PreviewStart.ToString(CultureInfo.InvariantCulture));
-    }
-
-    private void ChartInfoPreviewTime_OnValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
-    {
-        ChartEditor.Chart.PreviewTime = (decimal)ChartInfoPreviewLength.Value;
-    }
-
-    private void ChartInfoPreviewTime_LostFocus(object? sender, RoutedEventArgs e)
-    {
-        ConnectionManager.SendMessage(ConnectionManager.MessageTypes.PreviewLengthChange, ChartEditor.Chart.PreviewTime.ToString(CultureInfo.InvariantCulture));
+        UpdateFilepathsInUi();
+        SetChartInfo();
     }
 
     private void ChartInfoPlayPreview_OnClick(object? sender, RoutedEventArgs e)
     {
         if (ChartEditor.Chart.PreviewTime == 0 || AudioManager.CurrentSong == null) return;
-        
+
         AudioManager.CurrentSong.Position = (uint)(ChartEditor.Chart.PreviewStart * 1000);
         UpdateTime(TimeUpdateSource.Timer);
         SetPlayState(PlayerState.Preview);
     }
     
-    private void ChartInfoOffset_OnValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
-    {
-        ChartEditor.Chart.BgmOffset = (decimal)ChartInfoOffset.Value;
-    }
-
-    private void ChartInfoOffset_LostFocus(object? sender, RoutedEventArgs e)
-    {
-        ConnectionManager.SendMessage(ConnectionManager.MessageTypes.AudioOffsetChange, ChartEditor.Chart.BgmOffset.ToString(CultureInfo.InvariantCulture));
-    }
-
-    private void ChartInfoMovieOffset_OnValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
-    {
-        ChartEditor.Chart.BgaOffset = (decimal)ChartInfoMovieOffset.Value;
-    }
-
-    private void ChartInfoMovieOffset_LostFocus(object? sender, RoutedEventArgs e)
-    {
-        ConnectionManager.SendMessage(ConnectionManager.MessageTypes.MovieOffsetChange, ChartEditor.Chart.BgaOffset.ToString(CultureInfo.InvariantCulture));
-    }
-
     private void SelectionInfoHighlightNext_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.HighlightNextElement();
     
     private void SelectionInfoHighlightPrev_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.HighlightPrevElement();
@@ -2403,6 +2507,24 @@ public partial class MainView : UserControl
         return result.Count != 1 ? null : result[0];
     }
     
+    public async Task<IStorageFile?> OpenVideoFilePicker()
+    {
+        IReadOnlyList<IStorageFile> result = await GetStorageProvider().OpenFilePickerAsync(new()
+        {
+            AllowMultiple = false,
+            FileTypeFilter = new List<FilePickerFileType>
+            {
+                new("Video files")
+                {
+                    Patterns = new[] {"*.mp4","*.webm"},
+                    AppleUniformTypeIdentifiers = new[] {"public.item"}
+                }
+            }
+        });
+
+        return result.Count != 1 ? null : result[0];
+    }
+    
     public async Task<IStorageFolder?> OpenFolderPicker()
     {
         IReadOnlyList<IStorageFolder> result = await GetStorageProvider().OpenFolderPickerAsync(new()
@@ -2460,7 +2582,7 @@ public partial class MainView : UserControl
             {
                 // User said no, clear chart again and return.
                 ChartEditor.Chart.Clear();
-                UpdateAudioFilepathUi();
+                UpdateFilepathsInUi();
                 SetChartInfo();
                 SetSelectionInfo();
                 ResetLoopMarkers(AudioManager.CurrentSong?.Length ?? 0);
@@ -2483,7 +2605,7 @@ public partial class MainView : UserControl
         
         AudioManager.SetSong(ChartEditor.Chart.BgmFilepath, (float)(UserConfig.AudioConfig.MusicVolume * 0.01), (int)SliderPlaybackSpeed.Value);
         SetSongPositionSliderValues();
-        UpdateAudioFilepathUi();
+        UpdateFilepathsInUi();
         RenderEngine.UpdateVisibleTime();
         ResetLoopMarkers(AudioManager.CurrentSong?.Length ?? 0);
         SetUiLockState(UiLockState.Loaded);
@@ -2495,7 +2617,7 @@ public partial class MainView : UserControl
         ChartEditor.Chart.BgmFilepath = bgmFilepath;
         AudioManager.SetSong(ChartEditor.Chart.BgmFilepath, (float)(UserConfig.AudioConfig.MusicVolume * 0.01), (int)SliderPlaybackSpeed.Value);
         SetSongPositionSliderValues();
-        UpdateAudioFilepathUi();
+        UpdateFilepathsInUi();
         RenderEngine.UpdateVisibleTime();
         ResetLoopMarkers(AudioManager.CurrentSong?.Length ?? 0);
         SetUiLockState(UiLockState.Loaded);

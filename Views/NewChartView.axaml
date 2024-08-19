@@ -31,21 +31,21 @@
     <!-- These row definitions remind me of a gladde paling song -->
     <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto"
           ColumnDefinitions="Auto,*,*" Margin="10">
-        <TextBlock Grid.Row="0" Grid.Column="0" Text="{x:Static lang:Resources.ChartProperties_Bpm}"/>
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="{x:Static lang:Resources.ChartInfo_BpmText}"/>
         <fluent:NumberBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" Name="BpmNumberBox" Value="120"/>
         
-        <TextBlock Grid.Row="1" Grid.Column="0" Text="{x:Static lang:Resources.ChartProperties_TimeSignature}"/>
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="{x:Static lang:Resources.Gimmick_TimeSigChange}"/>
         <fluent:NumberBox Grid.Row="1" Grid.Column="1" Name="TimeSigUpperNumberBox" Value="4"/>
         <fluent:NumberBox Grid.Row="1" Grid.Column="2" Name="TimeSigLowerNumberBox" Value="4"/>
         
         <Separator Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3"/>
         
-        <TextBlock Grid.Row="3" Grid.Column="0" Text="{x:Static lang:Resources.ChartProperties_Author}"/>
+        <TextBlock Grid.Row="3" Grid.Column="0" Text="{x:Static lang:Resources.ChartInfo_Author}"/>
         <TextBox Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Name="AuthorTextBox"/>
         
         <Separator Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3"/>
         
-        <TextBlock Grid.Row="5" Grid.Column="0" Text="{x:Static lang:Resources.ChartProperties_MusicFilePath}"/>
+        <TextBlock Grid.Row="5" Grid.Column="0" Text="{x:Static lang:Resources.ChartInfo_Bgm}"/>
         <Button Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" Content="{x:Static lang:Resources.Generic_SelectFile}" Click="SelectFile_OnClick"/>
         <TextBox Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3" Name="MusicFilePathTextBox"/>
     </Grid>

@@ -83,6 +83,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <AvaloniaResource Include="Assets\EmptyJacket.png" />
       <AvaloniaResource Include="Assets\AppIcon.png" />
       <AvaloniaResource Include="Assets\AppIcon.ico" />
       <AvaloniaResource Include="Assets\Inter.ttf" />

@@ -309,42 +309,6 @@
   <data name="Editor_NewChart" xml:space="preserve">
     <value>Neue Chart</value>
   </data>
-  <data name="ChartProperties_Bpm" xml:space="preserve">
-    <value>BPM</value>
-  </data>
-  <data name="ChartProperties_TimeSignature" xml:space="preserve">
-    <value>Taktart</value>
-  </data>
-  <data name="ChartProperties_Author" xml:space="preserve">
-    <value>Chart Author</value>
-  </data>
-  <data name="ChartProperties_Level" xml:space="preserve">
-    <value>Level</value>
-  </data>
-  <data name="ChartProperties_MusicFilePath" xml:space="preserve">
-    <value>Musik Dateipfad</value>
-  </data>
-  <data name="ChartProperties_PreviewLength" xml:space="preserve">
-    <value>Vorschau Länge</value>
-  </data>
-  <data name="ChartProperties_PreviewTime" xml:space="preserve">
-    <value>Vorschau Start</value>
-  </data>
-  <data name="ChartProperties_Offset" xml:space="preserve">
-    <value>Offset</value>
-  </data>
-  <data name="ChartProperties_MovieOffset" xml:space="preserve">
-    <value>Video Offset</value>
-  </data>
-  <data name="ChartProperties_Artist" xml:space="preserve">
-    <value>Interpret</value>
-  </data>
-  <data name="ChartProperties_Title" xml:space="preserve">
-    <value>Titel</value>
-  </data>
-  <data name="ChartProperties_ClearThreshold" xml:space="preserve">
-    <value>Clear Schwelle</value>
-  </data>
   <data name="Generic_Ok" xml:space="preserve">
     <value>Ok</value>
   </data>
@@ -637,7 +601,7 @@ Möchten Sie eine Datei manuell auswählen?</value>
   <data name="Tools_ShiftBy" xml:space="preserve">
     <value>Verschieben um</value>
   </data>
-  <data name="ChartProperties_PlayPreview" xml:space="preserve">
+  <data name="ChartInfo_PlayPreview" xml:space="preserve">
     <value>Vorschau Abspielen</value>
   </data>
   <data name="Editor_HoldEase_Linear" xml:space="preserve">
@@ -1082,5 +1046,59 @@ Fortfahren?</value>
   </data>
   <data name="Settings_MuteHitsoundsOnPreview" xml:space="preserve">
     <value>Hitsounds während Vorschau stummschalten</value>
+  </data>
+  <data name="ChartInfo_Artist" xml:space="preserve">
+    <value>Künstler</value>
+  </data>
+  <data name="ChartInfo_Author" xml:space="preserve">
+    <value>Chart Author</value>
+  </data>
+  <data name="ChartInfo_Bga" xml:space="preserve">
+    <value>Video</value>
+  </data>
+  <data name="ChartInfo_BgaOffset" xml:space="preserve">
+    <value>Video Offset</value>
+  </data>
+  <data name="ChartInfo_Bgm" xml:space="preserve">
+    <value>Musik</value>
+  </data>
+  <data name="ChartInfo_BgmOffset" xml:space="preserve">
+    <value>Musik Offset</value>
+  </data>
+  <data name="ChartInfo_BpmText" xml:space="preserve">
+    <value>BPM Text</value>
+  </data>
+  <data name="ChartInfo_Clear" xml:space="preserve">
+    <value>Clear Schwelle</value>
+  </data>
+  <data name="ChartInfo_Diff" xml:space="preserve">
+    <value>Diff</value>
+  </data>
+  <data name="ChartInfo_Jacket" xml:space="preserve">
+    <value>Titelbild</value>
+  </data>
+  <data name="ChartInfo_Level" xml:space="preserve">
+    <value>Level</value>
+  </data>
+  <data name="ChartInfo_PreviewStart" xml:space="preserve">
+    <value>Vorschau Start</value>
+  </data>
+  <data name="ChartInfo_PreviewTime" xml:space="preserve">
+    <value>Vorschau Länge</value>
+  </data>
+  <data name="ChartInfo_Rubi" xml:space="preserve">
+    <value>Rubi</value>
+  </data>
+  <data name="ChartInfo_Title" xml:space="preserve">
+    <value>Titel</value>
+  </data>
+  <data name="ChartInfo_Version" xml:space="preserve">
+    <value>Version</value>
+  </data>
+  <data name="Editor_InvalidBga" xml:space="preserve">
+    <value>Die ausgewählte Videodatei konnte nicht gefunden werden.</value>
+  </data>
+  <data name="Editor_InvalidJacket" xml:space="preserve">
+    <value>Die ausgewählte Bilddatei konnte nicht gefunden werden.</value>
   </data>
 </root>

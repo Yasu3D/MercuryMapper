@@ -89,117 +89,153 @@ namespace MercuryMapper.Assets.Lang {
         /// <summary>
         ///   Looks up a localized string similar to Artist.
         /// </summary>
-        public static string ChartProperties_Artist {
+        public static string ChartInfo_Artist {
             get {
-                return ResourceManager.GetString("ChartProperties_Artist", resourceCulture);
+                return ResourceManager.GetString("ChartInfo_Artist", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Chart Author.
         /// </summary>
-        public static string ChartProperties_Author {
+        public static string ChartInfo_Author {
             get {
-                return ResourceManager.GetString("ChartProperties_Author", resourceCulture);
+                return ResourceManager.GetString("ChartInfo_Author", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to BPM.
+        ///   Looks up a localized string similar to BGA.
         /// </summary>
-        public static string ChartProperties_Bpm {
+        public static string ChartInfo_Bga {
             get {
-                return ResourceManager.GetString("ChartProperties_Bpm", resourceCulture);
+                return ResourceManager.GetString("ChartInfo_Bga", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to BGA Offset.
+        /// </summary>
+        public static string ChartInfo_BgaOffset {
+            get {
+                return ResourceManager.GetString("ChartInfo_BgaOffset", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to BGM.
+        /// </summary>
+        public static string ChartInfo_Bgm {
+            get {
+                return ResourceManager.GetString("ChartInfo_Bgm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to BGM Offset.
+        /// </summary>
+        public static string ChartInfo_BgmOffset {
+            get {
+                return ResourceManager.GetString("ChartInfo_BgmOffset", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to BPM Text.
+        /// </summary>
+        public static string ChartInfo_BpmText {
+            get {
+                return ResourceManager.GetString("ChartInfo_BpmText", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Clear Threshold.
         /// </summary>
-        public static string ChartProperties_ClearThreshold {
+        public static string ChartInfo_Clear {
             get {
-                return ResourceManager.GetString("ChartProperties_ClearThreshold", resourceCulture);
+                return ResourceManager.GetString("ChartInfo_Clear", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Diff.
+        /// </summary>
+        public static string ChartInfo_Diff {
+            get {
+                return ResourceManager.GetString("ChartInfo_Diff", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Jacket.
+        /// </summary>
+        public static string ChartInfo_Jacket {
+            get {
+                return ResourceManager.GetString("ChartInfo_Jacket", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Level.
         /// </summary>
-        public static string ChartProperties_Level {
+        public static string ChartInfo_Level {
             get {
-                return ResourceManager.GetString("ChartProperties_Level", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Movie Offset.
-        /// </summary>
-        public static string ChartProperties_MovieOffset {
-            get {
-                return ResourceManager.GetString("ChartProperties_MovieOffset", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Music Filepath.
-        /// </summary>
-        public static string ChartProperties_MusicFilePath {
-            get {
-                return ResourceManager.GetString("ChartProperties_MusicFilePath", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Offset.
-        /// </summary>
-        public static string ChartProperties_Offset {
-            get {
-                return ResourceManager.GetString("ChartProperties_Offset", resourceCulture);
+                return ResourceManager.GetString("ChartInfo_Level", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Play Preview.
         /// </summary>
-        public static string ChartProperties_PlayPreview {
+        public static string ChartInfo_PlayPreview {
             get {
-                return ResourceManager.GetString("ChartProperties_PlayPreview", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Preview Length.
-        /// </summary>
-        public static string ChartProperties_PreviewLength {
-            get {
-                return ResourceManager.GetString("ChartProperties_PreviewLength", resourceCulture);
+                return ResourceManager.GetString("ChartInfo_PlayPreview", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Preview Start.
         /// </summary>
-        public static string ChartProperties_PreviewTime {
+        public static string ChartInfo_PreviewStart {
             get {
-                return ResourceManager.GetString("ChartProperties_PreviewTime", resourceCulture);
+                return ResourceManager.GetString("ChartInfo_PreviewStart", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Time Signature.
+        ///   Looks up a localized string similar to Preview Length.
         /// </summary>
-        public static string ChartProperties_TimeSignature {
+        public static string ChartInfo_PreviewTime {
             get {
-                return ResourceManager.GetString("ChartProperties_TimeSignature", resourceCulture);
+                return ResourceManager.GetString("ChartInfo_PreviewTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rubi.
+        /// </summary>
+        public static string ChartInfo_Rubi {
+            get {
+                return ResourceManager.GetString("ChartInfo_Rubi", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Title.
         /// </summary>
-        public static string ChartProperties_Title {
+        public static string ChartInfo_Title {
             get {
-                return ResourceManager.GetString("ChartProperties_Title", resourceCulture);
+                return ResourceManager.GetString("ChartInfo_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Version.
+        /// </summary>
+        public static string ChartInfo_Version {
+            get {
+                return ResourceManager.GetString("ChartInfo_Version", resourceCulture);
             }
         }
         
@@ -623,6 +659,24 @@ namespace MercuryMapper.Assets.Lang {
         public static string Editor_InsertHoldSegment {
             get {
                 return ResourceManager.GetString("Editor_InsertHoldSegment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Selected video file couldn&apos;t be found..
+        /// </summary>
+        public static string Editor_InvalidBga {
+            get {
+                return ResourceManager.GetString("Editor_InvalidBga", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Selected image file couldn&apos;t be found..
+        /// </summary>
+        public static string Editor_InvalidJacket {
+            get {
+                return ResourceManager.GetString("Editor_InvalidJacket", resourceCulture);
             }
         }
         
