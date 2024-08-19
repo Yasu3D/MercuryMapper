@@ -502,8 +502,6 @@
 
                         <Separator/>
                         
-                        
-                        
                         <UniformGrid Columns="2">
                             <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.ChartInfo_BgmOffset}" Margin="0,2,0,2"/>
                             <fluent:NumberBox Value="0" Name="ChartInfoBgmOffset" ValueChanged="ChartInfoBgmOffset_OnValueChanged" LostFocus="ChartInfoBgmOffset_LostFocus" HorizontalAlignment="Right" Margin="0,2,0,2" Width="130"/>

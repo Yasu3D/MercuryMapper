@@ -334,11 +334,6 @@ internal static class SatHandler
 
             chart.IsSaved = true;
             chart.IsNew = false;
-            
-            Console.WriteLine(chart.Filepath);
-            Console.WriteLine(chart.BgmFilepath);
-            Console.WriteLine(chart.BgaFilepath);
-            Console.WriteLine(chart.JacketFilepath);
         }
 
         return;
