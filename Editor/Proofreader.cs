@@ -68,6 +68,18 @@ public static class Proofreader
                 AddMessage(textBlock, MessageType.Error, "End of Chart Note missing.\n");
                 AddMessage(textBlock, MessageType.None, "Place an End of Chart note at least a Measure after the last playable note. Without it, the game would crash.\n\n");
             }
+
+            Note[] endOfChartNotes = chart.Notes.Where(x => x.NoteType is NoteType.EndOfChart).ToArray();
+            
+            if (endOfChartNotes.Length > 1)
+            {
+                for (int i = 0; i < endOfChartNotes.Length - 1; i++)
+                {
+                    AddMessage(textBlock, MessageType.Error, $"End of Chart Note @ {endOfChartNotes[i].BeatData.Measure} {endOfChartNotes[i].BeatData.Tick} is redundant.\n");
+                }
+                
+                AddMessage(textBlock, MessageType.None, "A Chart with more than one End of Chart Note could cause undefined behavior and crash the game.\n\n");
+            }
         }
 
         void checkNotesAfterEndOfChart()
