@@ -354,7 +354,7 @@ namespace MercuryMapper.MultiCharting
                 
                 case DeleteHoldNote deleteHoldNote:
                 {
-                    string opData = $"{deleteHoldNote.DeletedNote.ToNetworkString()}\n{(deleteHoldNote.RNote ? "1" : "0")}";
+                    string opData = $"{deleteHoldNote.DeletedNote.ToNetworkString()}\n{(int)deleteHoldNote.BonusType}";
                     SendMessage(MessageTypes.DeleteHoldNote, opDir + opData);
                     break;
                 }
@@ -740,12 +740,12 @@ namespace MercuryMapper.MultiCharting
                     Dispatcher.UIThread.Post(() =>
                     {
                         string[] noteData = operationData[1].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-                        bool rNote = operationData[2] == "1";
+                        BonusType bonusType = (BonusType)Convert.ToInt32(operationData[2]);
 
                         if (operationData[0] == "0")
                         {
                             // Undo
-                            DeleteHoldNote operation = new(Chart, ChartEditor.SelectedNotes, Note.ParseNetworkString(Chart, noteData), rNote);
+                            DeleteHoldNote operation = new(Chart, ChartEditor.SelectedNotes, Note.ParseNetworkString(Chart, noteData), bonusType);
                             operation.Undo();
                             ChartEditor.UndoRedoManager.Invoke();
                         }
@@ -755,7 +755,7 @@ namespace MercuryMapper.MultiCharting
                             Note? note = Chart.FindNoteByGuid(noteData[0]);
                             if (note == null) return;
                         
-                            DeleteHoldNote operation = new(Chart, ChartEditor.SelectedNotes, note, rNote);
+                            DeleteHoldNote operation = new(Chart, ChartEditor.SelectedNotes, note, bonusType);
                             operation.Redo();
                             ChartEditor.UndoRedoManager.Invoke();
                         }

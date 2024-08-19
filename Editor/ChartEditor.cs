@@ -160,140 +160,11 @@ public class ChartEditor
 
     public void UpdateCursorNoteType()
     {
-        switch (CurrentNoteType)
-        {
-            case NoteType.Touch:
-            case NoteType.TouchBonus:
-            case NoteType.TouchRNote:
-            {
-                CurrentNoteType = CurrentBonusType switch
-                {
-                    BonusType.None => NoteType.Touch,
-                    BonusType.Bonus => NoteType.TouchBonus,
-                    BonusType.RNote => NoteType.TouchRNote,
-                    _ => CurrentNoteType
-                };
-                break;
-            }
-            
-            case NoteType.SnapForward:
-            case NoteType.SnapForwardRNote:
-            {
-                CurrentNoteType = CurrentBonusType switch
-                {
-                    BonusType.None => NoteType.SnapForward,
-                    BonusType.Bonus => NoteType.SnapForward,
-                    BonusType.RNote => NoteType.SnapForwardRNote,
-                    _ => CurrentNoteType
-                };
-                break;
-            }
-            
-            case NoteType.SnapBackward:
-            case NoteType.SnapBackwardRNote:
-            {
-                CurrentNoteType = CurrentBonusType switch
-                {
-                    BonusType.None => NoteType.SnapBackward,
-                    BonusType.Bonus => NoteType.SnapBackward,
-                    BonusType.RNote => NoteType.SnapBackwardRNote,
-                    _ => CurrentNoteType
-                };
-                break;
-            }
-            
-            case NoteType.SlideClockwise:
-            case NoteType.SlideClockwiseBonus:
-            case NoteType.SlideClockwiseRNote:
-            {
-                CurrentNoteType = CurrentBonusType switch
-                {
-                    BonusType.None => NoteType.SlideClockwise,
-                    BonusType.Bonus => NoteType.SlideClockwiseBonus,
-                    BonusType.RNote => NoteType.SlideClockwiseRNote,
-                    _ => CurrentNoteType
-                };
-                break;
-            }
-            
-            case NoteType.SlideCounterclockwise:
-            case NoteType.SlideCounterclockwiseBonus:
-            case NoteType.SlideCounterclockwiseRNote:
-            {
-                CurrentNoteType = CurrentBonusType switch
-                {
-                    BonusType.None => NoteType.SlideCounterclockwise,
-                    BonusType.Bonus => NoteType.SlideCounterclockwiseBonus,
-                    BonusType.RNote => NoteType.SlideCounterclockwiseRNote,
-                    _ => CurrentNoteType
-                };
-                break;
-            }
-            
-            case NoteType.HoldStart:
-            case NoteType.HoldStartRNote:
-            {
-                CurrentNoteType = CurrentBonusType switch
-                {
-                    BonusType.None => NoteType.HoldStart,
-                    BonusType.Bonus => NoteType.HoldStart,
-                    BonusType.RNote => NoteType.HoldStartRNote,
-                    _ => CurrentNoteType
-                };
-                break;
-            }
-            
-            case NoteType.HoldSegment:
-            {
-                CurrentNoteType = NoteType.HoldSegment;
-                break;
-            }
-            
-            case NoteType.HoldEnd:
-            {
-                CurrentNoteType = NoteType.HoldEnd;
-                break;
-            }
-            
-            case NoteType.Chain:
-            case NoteType.ChainRNote:
-            {
-                CurrentNoteType = CurrentBonusType switch
-                {
-                    BonusType.None => NoteType.Chain,
-                    BonusType.Bonus => NoteType.Chain,
-                    BonusType.RNote => NoteType.ChainRNote,
-                    _ => CurrentNoteType
-                };
-                break;
-            }
-            
-            case NoteType.MaskAdd:
-            {
-                CurrentNoteType = NoteType.MaskAdd;
-                break;
-            }
-            
-            case NoteType.MaskRemove:
-            {
-                CurrentNoteType = NoteType.MaskRemove;
-                break;
-            }
-            
-            case NoteType.EndOfChart:
-            {
-                CurrentNoteType = NoteType.EndOfChart;
-                break;
-            }
-            
-            default: return;
-        }
-        
         // Reset Editor State
-        if (CurrentNoteType is not (NoteType.HoldStart or NoteType.HoldStartRNote or NoteType.HoldSegment or NoteType.HoldEnd)) EndHold(false);
+        if (CurrentNoteType is not (NoteType.HoldStart or NoteType.HoldSegment or NoteType.HoldEnd)) EndHold(false);
         mainView.SetHoldContextButton(EditorState);
         mainView.ToggleInsertButton();
-        mainView.SetMinNoteSize(CurrentNoteType);
+        mainView.SetMinNoteSize(CurrentNoteType, CurrentBonusType);
     }
 
     // ________________ Edit Menu
@@ -311,7 +182,7 @@ public class ChartEditor
         if (operation is InsertNote insertNoteOperation)
         {
             // Update CurrentHoldStart + End Hold
-            if (insertNoteOperation.Note.NoteType is NoteType.HoldStart or NoteType.HoldStartRNote && EditorState is ChartEditorState.InsertHold)
+            if (insertNoteOperation.Note.NoteType is NoteType.HoldStart && EditorState is ChartEditorState.InsertHold)
             {
                 CurrentHoldStart = null;
                 EndHold(true);
@@ -345,7 +216,7 @@ public class ChartEditor
         // Update CurrentHoldStart + Start Hold
         if (operation is InsertNote insertNoteOperation)
         {
-            if (insertNoteOperation.Note.NoteType is NoteType.HoldStart or NoteType.HoldStartRNote)
+            if (insertNoteOperation.Note.NoteType is NoteType.HoldStart)
             {
                 StartHold(insertNoteOperation.Note);
             }
@@ -566,7 +437,7 @@ public class ChartEditor
             {
                 BoxSelect = new();
 
-                mainView.SetMinNoteSize(NoteType.None);
+                mainView.SetMinNoteSize(NoteType.None, BonusType.None);
                 EditorState = ChartEditorState.BoxSelectStart;
                 break;
             }
@@ -596,7 +467,7 @@ public class ChartEditor
                 
                 select();
                 mainView.SetSelectionInfo();
-                mainView.SetMinNoteSize(CurrentNoteType);
+                mainView.SetMinNoteSize(CurrentNoteType, CurrentBonusType);
                 EditorState = ChartEditorState.InsertNote;
                 break;
             }
@@ -640,7 +511,7 @@ public class ChartEditor
 
     public void StopBoxSelect()
     {
-        mainView.SetMinNoteSize(CurrentNoteType);
+        mainView.SetMinNoteSize(CurrentNoteType, CurrentBonusType);
         EditorState = ChartEditorState.InsertNote;
     }
     
@@ -741,6 +612,7 @@ public class ChartEditor
                     GimmickType = GimmickType.None,
                     MaskDirection = CurrentMaskDirection,
                     NoteType = CurrentNoteType,
+                    BonusType = CurrentBonusType,
                     Position = endOfChart ? 0 : Cursor.Position,
                     Size = endOfChart ? 60 : Cursor.Size
                 };
@@ -748,7 +620,7 @@ public class ChartEditor
                 Chart.IsSaved = false;
                 UndoRedoManager.InvokeAndPush(new InsertNote(Chart, SelectedNotes, note));
                 
-                if (note.NoteType is NoteType.HoldStart or NoteType.HoldStartRNote)
+                if (note.NoteType is NoteType.HoldStart)
                 {
                     StartHold(note);
                 }
@@ -758,10 +630,10 @@ public class ChartEditor
             
             case ChartEditorState.InsertHold:
             {
-                // Place Hold End
-                // Hold end's prevReferencedNote is LastPlacedNote
-                // LastPlacedNote's nextReferencedNote is Hold End
-                // If previous note is hold end, convert it to hold segment
+                // Place Hold End.
+                // Hold End's prevReferencedNote is LastPlacedNote.
+                // LastPlacedNote's nextReferencedNote is Hold End.
+                // If previous note is hold end, convert it to Hold Segment.
 
                 if (LastPlacedHold is null || CurrentHoldStart is null) return;
                 if (CurrentBeatData.FullTick <= CurrentHoldStart.BeatData.FullTick) return;
@@ -773,6 +645,7 @@ public class ChartEditor
                     GimmickType = GimmickType.None,
                     MaskDirection = CurrentMaskDirection,
                     NoteType = NoteType.HoldEnd,
+                    BonusType = BonusType.None,
                     Position = Cursor.Position,
                     Size = Cursor.Size,
                     PrevReferencedNote = LastPlacedHold
@@ -1141,7 +1014,7 @@ public class ChartEditor
                     }
                 }
 
-                DeleteHoldNote holdOp = new(Chart, SelectedNotes, note, note.FirstReference()?.NoteType is NoteType.HoldStartRNote);
+                DeleteHoldNote holdOp = new(Chart, SelectedNotes, note, note.References().FirstOrDefault()?.BonusType ?? BonusType.None);
                 holdOperationList.Add(holdOp);
                 
                 UndoRedoManager.InvokeAndPush(holdOp);
@@ -1177,14 +1050,16 @@ public class ChartEditor
         {
             int newPosition = shape ? Cursor.Position : note.Position;
             int newSize = shape ? Cursor.Size : note.Size;
-            NoteType newType = properties ? editNoteType(note, CurrentNoteType) : note.NoteType;
+            NoteType newNoteType = properties ? editNoteType(note, CurrentNoteType) : note.NoteType;
+            BonusType newBonusType = properties ? editBonusType(note, CurrentBonusType) : note.BonusType;
             MaskDirection newDirection = properties ? CurrentMaskDirection : note.MaskDirection;
 
             Note newNote = new(note, note.Guid)
             {
                 Position = newPosition,
-                Size = int.Max(newSize, Note.MinSize(newType)),
-                NoteType = newType,
+                Size = int.Max(newSize, Note.MinSize(newNoteType, newBonusType)),
+                NoteType = newNoteType,
+                BonusType = newBonusType,
                 MaskDirection = newDirection
             };
 
@@ -1200,12 +1075,18 @@ public class ChartEditor
             if (currentNoteType is NoteType.EndOfChart or NoteType.HoldSegment or NoteType.HoldEnd) return note.NoteType;
 
             // HoldStart and HoldStartRNote cannot be edited into other note types.
-            if (note.NoteType is NoteType.HoldStart or NoteType.HoldStartRNote && currentNoteType is not (NoteType.HoldStart or NoteType.HoldStartRNote)) return note.NoteType;
+            if (note.NoteType is NoteType.HoldStart && currentNoteType is not NoteType.HoldStart) return note.NoteType;
 
             // Other note types cannot be edited into HoldStart and HoldStartRNote.
-            if (note.NoteType is not (NoteType.HoldStart or NoteType.HoldStartRNote) && currentNoteType is NoteType.HoldStart or NoteType.HoldStartRNote) return note.NoteType;
+            if (note.NoteType is not NoteType.HoldStart && currentNoteType is NoteType.HoldStart) return note.NoteType;
             
             return currentNoteType;
+        }
+
+        BonusType editBonusType(Note note, BonusType currentBonusType)
+        {
+            // EndOfChart, HoldSegment and HoldEnd are not editable.
+            return note.NoteType is NoteType.EndOfChart or NoteType.HoldSegment or NoteType.HoldEnd ? note.BonusType : currentBonusType;
         }
     }
 
@@ -1262,7 +1143,7 @@ public class ChartEditor
             Note newNote = new(note, note.Guid)
             {
                 Position = note.Position,
-                Size = int.Clamp(note.Size + delta, Note.MinSize(note.NoteType), 60)
+                Size = int.Clamp(note.Size + delta, Note.MinSize(note.NoteType, note.BonusType), 60)
             };
 
             operationList.Add(new EditNote(note, newNote));
@@ -1453,11 +1334,7 @@ public class ChartEditor
                 NoteType = note.NoteType switch
                 {
                     NoteType.SlideClockwise => NoteType.SlideCounterclockwise,
-                    NoteType.SlideClockwiseBonus => NoteType.SlideCounterclockwiseBonus,
-                    NoteType.SlideClockwiseRNote => NoteType.SlideCounterclockwiseRNote,
                     NoteType.SlideCounterclockwise => NoteType.SlideClockwise,
-                    NoteType.SlideCounterclockwiseBonus => NoteType.SlideClockwiseBonus,
-                    NoteType.SlideCounterclockwiseRNote => NoteType.SlideClockwiseRNote,
                     _ => note.NoteType
                 },
                 MaskDirection = note.MaskDirection switch
@@ -1508,7 +1385,7 @@ public class ChartEditor
 
         void addOperation(Note note)
         {
-            if (note.NoteType is not (NoteType.HoldStart or NoteType.HoldStartRNote or NoteType.HoldSegment) || note.NextReferencedNote is null) return;
+            if (note.NoteType is not (NoteType.HoldStart or NoteType.HoldSegment) || note.NextReferencedNote is null) return;
             if (note.Position == note.NextReferencedNote.Position && note.Size == note.NextReferencedNote.Size) return;
             
             BakeHold bakeHold = interpolate(note, note.NextReferencedNote);
@@ -1717,7 +1594,7 @@ public class ChartEditor
         
         if (first.BeatData.FullTick == second.BeatData.FullTick) return;
         if (first.NoteType is not NoteType.HoldEnd) return;
-        if (second.NoteType is not (NoteType.HoldStart or NoteType.HoldStartRNote)) return;
+        if (second.NoteType is not (NoteType.HoldStart)) return;
 
         UndoRedoManager.InvokeAndPush(new StitchHold(Chart, first, second, second.NoteType));
         Chart.IsSaved = false;
@@ -1784,9 +1661,9 @@ public class ChartEditor
         EditorState = ChartEditorState.InsertNote;
         mainView.SetHoldContextButton(EditorState);
         mainView.ToggleInsertButton();
-        if (setNoteType) CurrentNoteType = CurrentBonusType is BonusType.None ? NoteType.HoldStart : NoteType.HoldStartRNote;
+        if (setNoteType) CurrentNoteType = NoteType.HoldStart;
 
-        if (LastPlacedHold?.NoteType is NoteType.HoldStart or NoteType.HoldStartRNote)
+        if (LastPlacedHold?.NoteType is NoteType.HoldStart)
         {
             lock (Chart) Chart.Notes.Remove(LastPlacedHold);
         }
@@ -1858,11 +1735,7 @@ public class ChartEditor
                 NoteType = note.NoteType switch
                 {
                     NoteType.SlideClockwise => NoteType.SlideCounterclockwise,
-                    NoteType.SlideClockwiseBonus => NoteType.SlideCounterclockwiseBonus,
-                    NoteType.SlideClockwiseRNote => NoteType.SlideCounterclockwiseRNote,
                     NoteType.SlideCounterclockwise => NoteType.SlideClockwise,
-                    NoteType.SlideCounterclockwiseBonus => NoteType.SlideClockwiseBonus,
-                    NoteType.SlideCounterclockwiseRNote => NoteType.SlideClockwiseRNote,
                     _ => note.NoteType
                 },
                 MaskDirection = note.MaskDirection switch
@@ -1944,7 +1817,7 @@ public class ChartEditor
                 Note note = hold.Segments[i];
 
                 int position = (note.Position - left) % 60;
-                int size = int.Clamp(note.Size + left + right, Note.MinSize(note.NoteType), 60);
+                int size = int.Clamp(note.Size + left + right, Note.MinSize(note.NoteType, note.BonusType), 60);
                 
                 Note newNote = new(note, note.Guid)
                 {
@@ -2003,7 +1876,7 @@ public class ChartEditor
                 int right = random.Next(rMin, rMax);
 
                 int position = (note.Position - left) % 60;
-                int size = int.Clamp(note.Size + left + right, Note.MinSize(note.NoteType), 60);
+                int size = int.Clamp(note.Size + left + right, Note.MinSize(note.NoteType, note.BonusType), 60);
                 
                 Note newNote = new(note, note.Guid)
                 {
@@ -2052,7 +1925,7 @@ public class ChartEditor
 
             switch (generatorMethod)
             {
-                case 0: holdToHold(hold, hold.Segments[0].IsRNote, firstTick, lastTick); break;
+                case 0: holdToHold(hold, hold.Segments[0].BonusType, firstTick, lastTick); break;
                 case 1: holdToChain(hold, firstTick, lastTick); break;
             }
             
@@ -2064,7 +1937,7 @@ public class ChartEditor
         Chart.IsSaved = false;
         return;
 
-        void holdToHold(Hold hold, bool isRNote, int firstTick, int lastTick)
+        void holdToHold(Hold hold, BonusType bonusType, int firstTick, int lastTick)
         {
             Note? last = null;
             for (int i = firstTick; i <= lastTick; i += interval)
@@ -2077,9 +1950,10 @@ public class ChartEditor
                     BeatData = new(i),
                     GimmickType = GimmickType.None,
                     MaskDirection = MaskDirection.Center,
-                    NoteType = last != null ? NoteType.HoldEnd : isRNote ? NoteType.HoldStartRNote : NoteType.HoldStart,
+                    NoteType = last != null ? NoteType.HoldEnd : NoteType.HoldStart,
+                    BonusType = last != null ? BonusType.None : bonusType,
                     Position = pos % 60,
-                    Size = int.Max(size, Note.MinSize(last == null ? NoteType.HoldStart : NoteType.HoldEnd)),
+                    Size = int.Max(size, Note.MinSize(last != null ? NoteType.HoldEnd : NoteType.HoldStart, last != null ? BonusType.None : bonusType)),
                     PrevReferencedNote = last,
                 };
 
@@ -2124,7 +1998,7 @@ public class ChartEditor
                     MaskDirection = MaskDirection.Center,
                     NoteType = NoteType.Chain,
                     Position = pos % 60,
-                    Size = int.Max(size, Note.MinSize(NoteType.Chain))
+                    Size = int.Max(size, Note.MinSize(NoteType.Chain, BonusType.None))
                 };
 
                 operationList.Add(new InsertNote(Chart, SelectedNotes, note));
@@ -2137,7 +2011,7 @@ public class ChartEditor
             
             foreach (Note note in hold.Segments.OrderByDescending(x => x.BeatData.FullTick))
             {
-                DeleteHoldNote holdOp = new(Chart, SelectedNotes, note, hold.Segments[0].NoteType is NoteType.HoldStartRNote);
+                DeleteHoldNote holdOp = new(Chart, SelectedNotes, note, hold.Segments[0].BonusType);
                 holdOperationList.Add(holdOp);
                 
                 UndoRedoManager.InvokeAndPush(holdOp);

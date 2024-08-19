@@ -795,7 +795,7 @@ public class RenderEngine(MainView mainView)
                 if (i == 0)
                 {
                     // If the hold start is visible there's no need to interpolate.
-                    if (note.NoteType is NoteType.HoldStart or NoteType.HoldStartRNote)
+                    if (note.NoteType is NoteType.HoldStart)
                     {
                         path.ArcTo(currentData.Rect, currentData.StartAngle, currentData.SweepAngle, true);
                     }
@@ -855,7 +855,7 @@ public class RenderEngine(MainView mainView)
                 Note note = hold.Segments[i];
                 
                 // *technically unnecessary to skip, but doing it just for consistency.
-                if (i == 0 && note.NoteType is NoteType.HoldStart or NoteType.HoldStartRNote) continue;
+                if (i == 0 && note.NoteType is NoteType.HoldStart) continue;
                 
                 ArcData currentData = getArcData(note, TruncateMode.Hold);
                 path.LineTo(RenderMath.GetPointOnArc(canvasCenter, currentData.Rect.Width * 0.5f, currentData.StartAngle));
@@ -895,7 +895,7 @@ public class RenderEngine(MainView mainView)
 
             if (note.IsRNote) DrawRNote(canvas, note, data);
             
-            if (note.NoteType is NoteType.HoldStart or NoteType.HoldStartRNote)
+            if (note.NoteType is NoteType.HoldStart)
             {
                 if (note.Size != 60)
                 {
@@ -1057,7 +1057,7 @@ public class RenderEngine(MainView mainView)
 
             if (note.IsRNote) DrawRNote(canvas, note, currentData);
             
-            if (note.NoteType is NoteType.HoldStart or NoteType.HoldStartRNote)
+            if (note.NoteType is NoteType.HoldStart)
             {
                 if (note.Size != 60) DrawNoteCaps(canvas, currentData.Rect, currentData.StartAngle, currentData.SweepAngle, currentData.Scale);
                 canvas.DrawArc(currentData.Rect, currentData.StartAngle, currentData.SweepAngle, false, brushes.GetNotePen(note, canvasScale * currentData.Scale));
@@ -1114,7 +1114,7 @@ public class RenderEngine(MainView mainView)
 
             if (note.IsBonus) DrawBonusFill(canvas, note, data);
             
-            if (RenderConfig.ShowChainStripes && note.NoteType is NoteType.Chain or NoteType.ChainRNote)
+            if (RenderConfig.ShowChainStripes && note.NoteType is NoteType.Chain)
             {
                 int stripes = note.Size * 2;
                 float radiusInner = 0.5f * (data.Rect.Width - brushes.NoteWidthMultiplier * canvasScale * data.Scale);
@@ -1235,15 +1235,9 @@ public class RenderEngine(MainView mainView)
             int arrowDirection = note.NoteType switch
             {
                 NoteType.SlideClockwise => 1,
-                NoteType.SlideClockwiseBonus => 1,
-                NoteType.SlideClockwiseRNote => 1,
                 NoteType.SnapForward => 1,
-                NoteType.SnapForwardRNote => 1,
                 NoteType.SlideCounterclockwise => -1,
-                NoteType.SlideCounterclockwiseBonus => -1,
-                NoteType.SlideCounterclockwiseRNote => -1,
                 NoteType.SnapBackward => -1,
-                NoteType.SnapBackwardRNote => -1,
                 _ => 0
             };
 

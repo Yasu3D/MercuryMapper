@@ -13,6 +13,7 @@ public class EditNote(Note note, Note newNote) : IOperation
         BaseNote.Position = OldNote.Position;
         BaseNote.Size = OldNote.Size;
         BaseNote.NoteType = OldNote.NoteType;
+        BaseNote.BonusType = OldNote.BonusType;
         BaseNote.MaskDirection = OldNote.MaskDirection;
         BaseNote.BeatData = OldNote.BeatData;
         BaseNote.RenderSegment = OldNote.RenderSegment;
@@ -23,6 +24,7 @@ public class EditNote(Note note, Note newNote) : IOperation
         BaseNote.Position = NewNote.Position;
         BaseNote.Size = NewNote.Size;
         BaseNote.NoteType = NewNote.NoteType;
+        BaseNote.BonusType = NewNote.BonusType;
         BaseNote.MaskDirection = NewNote.MaskDirection;
         BaseNote.BeatData = NewNote.BeatData;
         BaseNote.RenderSegment = NewNote.RenderSegment;

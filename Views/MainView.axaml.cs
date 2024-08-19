@@ -473,7 +473,7 @@ public partial class MainView : UserControl
             {
                 SelectionInfoPositionValue.Text = note.Position.ToString();
                 SelectionInfoSizeValue.Text = note.Size.ToString();
-                SelectionInfoNoteTypeValue.Text = Enums2String.NoteType2String(note.NoteType);
+                SelectionInfoNoteTypeValue.Text = Enums2String.NoteType2String(note.NoteType, note.BonusType);
                 SelectionInfoMaskDirectionValue.Text = Enums2String.MaskDirection2String(note.MaskDirection);
                 
                 SelectionInfoNoteType.IsVisible = true;
@@ -522,9 +522,9 @@ public partial class MainView : UserControl
         QuickSettingsCheckBoxShowHiSpeed.IsChecked = UserConfig.RenderConfig.ShowHiSpeed;
     }
     
-    public void SetMinNoteSize(NoteType type)
+    public void SetMinNoteSize(NoteType noteType, BonusType bonusType)
     {
-        int minimum = Note.MinSize(type);
+        int minimum = Note.MinSize(noteType, bonusType);
         SliderNoteSize.Minimum = minimum;
         NumericNoteSize.Minimum = minimum;
         ChartEditor.Cursor.MinSize = minimum;

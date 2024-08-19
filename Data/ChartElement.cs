@@ -166,6 +166,7 @@ public class Gimmick : ChartElement
 public class Note : ChartElement
 {
     public NoteType NoteType { get; set; } = NoteType.Touch;
+    public BonusType BonusType { get; set; }
     public int Position { get; set; }
     public int Size { get; set; }
 
@@ -190,6 +191,7 @@ public class Note : ChartElement
         Position = note.Position;
         Size = note.Size;
         NoteType = note.NoteType;
+        BonusType = note.BonusType;
         RenderSegment = note.RenderSegment;
         MaskDirection = note.MaskDirection;
 
@@ -197,12 +199,13 @@ public class Note : ChartElement
         PrevReferencedNote = note.PrevReferencedNote;
     }
 
-    public Note(int measure, int tick, NoteType noteType, int noteIndex, int position, int size, bool renderSegment, Guid? guid = null)
+    public Note(int measure, int tick, NoteType noteType, BonusType bonusType, int noteIndex, int position, int size, bool renderSegment, Guid? guid = null)
     {
         Guid = guid ?? Guid;
         BeatData = new(measure, tick);
         GimmickType = GimmickType.None;
         NoteType = noteType;
+        BonusType = bonusType;
         Position = position;
         Size = size;
         RenderSegment = renderSegment;
@@ -212,7 +215,6 @@ public class Note : ChartElement
     
     public bool IsHold => NoteType
         is NoteType.HoldStart 
-        or NoteType.HoldStartRNote 
         or NoteType.HoldSegment 
         or NoteType.HoldEnd;
 
@@ -221,68 +223,66 @@ public class Note : ChartElement
         or NoteType.HoldEnd;
 
     public bool IsChain => NoteType
-        is NoteType.Chain
-        or NoteType.ChainRNote;
+        is NoteType.Chain;
     
     public bool IsSlide => NoteType 
         is NoteType.SlideClockwise 
-        or NoteType.SlideCounterclockwise
-        or NoteType.SlideClockwiseBonus 
-        or NoteType.SlideCounterclockwiseBonus
-        or NoteType.SlideClockwiseRNote 
-        or NoteType.SlideCounterclockwiseRNote;
+        or NoteType.SlideCounterclockwise;
 
     public bool IsSnap => NoteType 
         is NoteType.SnapForward 
-        or NoteType.SnapBackward 
-        or NoteType.SnapForwardRNote
-        or NoteType.SnapBackwardRNote;
+        or NoteType.SnapBackward;
 
-    public bool IsBonus => NoteType
-        is NoteType.TouchBonus
-        or NoteType.SlideClockwiseBonus
-        or NoteType.SlideCounterclockwiseBonus;
+    public bool IsBonus => BonusType is BonusType.Bonus;
 
-    public bool IsRNote => NoteType
-        is NoteType.TouchRNote
-        or NoteType.SnapForwardRNote
-        or NoteType.SnapBackwardRNote
-        or NoteType.SlideClockwiseRNote
-        or NoteType.SlideCounterclockwiseRNote
-        or NoteType.HoldStartRNote
-        or NoteType.ChainRNote;
+    public bool IsRNote => BonusType is BonusType.RNote;
 
     public bool IsMask => NoteType
         is NoteType.MaskAdd
         or NoteType.MaskRemove;
 
-    public static int MinSize(NoteType type)
+    public static int MinSize(NoteType noteType, BonusType bonusType)
     {
-        return type switch
+        return (noteType, bonusType) switch
         {
-            NoteType.None => 1,
-            NoteType.Touch => 4,
-            NoteType.TouchBonus => 5,
-            NoteType.SnapForward => 6,
-            NoteType.SnapBackward => 6,
-            NoteType.SlideClockwise => 5,
-            NoteType.SlideClockwiseBonus => 7,
-            NoteType.SlideCounterclockwise => 5,
-            NoteType.SlideCounterclockwiseBonus => 7,
-            NoteType.HoldStart => 2,
-            NoteType.HoldSegment => 1,
-            NoteType.HoldEnd => 1,
-            NoteType.MaskAdd => 1,
-            NoteType.MaskRemove => 1,
-            NoteType.EndOfChart => 60,
-            NoteType.Chain => 4,
-            NoteType.TouchRNote => 6,
-            NoteType.SnapForwardRNote => 8,
-            NoteType.SnapBackwardRNote => 8,
-            NoteType.SlideClockwiseRNote => 10,
-            NoteType.SlideCounterclockwiseRNote => 10,
-            NoteType.HoldStartRNote => 8,
-            NoteType.ChainRNote => 10,
+            (NoteType.Touch, BonusType.None) => 4,
+            (NoteType.Touch, BonusType.Bonus) => 5,
+            (NoteType.Touch, BonusType.RNote) => 6,
+            
+            (NoteType.SnapForward, BonusType.None) => 6,
+            (NoteType.SnapBackward, BonusType.None) => 6,
+            
+            (NoteType.SnapForward, BonusType.Bonus) => 6,
+            (NoteType.SnapBackward, BonusType.Bonus) => 6,
+            
+            (NoteType.SnapForward, BonusType.RNote) => 8,
+            (NoteType.SnapBackward, BonusType.RNote) => 8,
+            
+            (NoteType.SlideClockwise, BonusType.None) => 5,
+            (NoteType.SlideCounterclockwise, BonusType.None) => 5,
+            
+            (NoteType.SlideClockwise, BonusType.Bonus) => 7,
+            (NoteType.SlideCounterclockwise, BonusType.Bonus) => 7,
+            
+            (NoteType.SlideClockwise, BonusType.RNote) => 10,
+            (NoteType.SlideCounterclockwise, BonusType.RNote) => 10,
+            
+            (NoteType.Chain, BonusType.None) => 4,
+            (NoteType.Chain, BonusType.Bonus) => 4,
+            (NoteType.Chain, BonusType.RNote) => 10,
+            
+            (NoteType.HoldStart, BonusType.None) => 2,
+            (NoteType.HoldStart, BonusType.Bonus) => 2,
+            (NoteType.HoldStart, BonusType.RNote) => 8,
+            
+            (NoteType.HoldSegment, _) => 4,
+            (NoteType.HoldEnd, _) => 4,
+            
+            (NoteType.MaskAdd, _) => 4,
+            (NoteType.MaskRemove, _) => 4,
+            
+            (NoteType.EndOfChart, _) => 60,
+            
             _ => 5
         };
     }
@@ -328,7 +328,7 @@ public class Note : ChartElement
 
     public string ToNetworkString()
     {
-        string result = $"{Guid} {BeatData.Measure:F0} {BeatData.Tick:F0} {(int)NoteType:F0} {Position:F0} {Size:F0} {(RenderSegment ? 1 : 0)}";
+        string result = $"{Guid} {BeatData.Measure:F0} {BeatData.Tick:F0} {(int)NoteType:F0} {(int)BonusType:F0} {Position:F0} {Size:F0} {(RenderSegment ? 1 : 0)}";
         if (IsMask)
         {
             result += $" {(int)MaskDirection:F0}";
@@ -349,20 +349,95 @@ public class Note : ChartElement
             Guid = Guid.Parse(data[0]),
             BeatData = new(Convert.ToInt32(data[1]), Convert.ToInt32(data[2])),
             NoteType = (NoteType)Convert.ToInt32(data[3]),
-            Position = Convert.ToInt32(data[4]),
-            Size = Convert.ToInt32(data[5]),
-            RenderSegment = data[6] != "0",
+            BonusType = (BonusType)Convert.ToInt32(data[4]),
+            Position = Convert.ToInt32(data[5]),
+            Size = Convert.ToInt32(data[6]),
+            RenderSegment = data[7] != "0",
         };
 
-        if (note.IsMask && data.Length == 8) note.MaskDirection = (MaskDirection)Convert.ToInt32(data[7]);
+        if (note.IsMask && data.Length == 9) note.MaskDirection = (MaskDirection)Convert.ToInt32(data[8]);
 
-        if (data.Length == 9)
+        if (data.Length == 10)
         {
             if (data[7] != "null") note.NextReferencedNote = chart.FindNoteByGuid(data[7]);
             if (data[8] != "null") note.PrevReferencedNote = chart.FindNoteByGuid(data[8]);
         }
 
         return note;
+    }
+
+    public int NoteToId()
+    {
+        return (NoteType, BonusType) switch
+        {
+            (NoteType.Touch, BonusType.None) => 1,
+            (NoteType.Touch, BonusType.Bonus) => 2,
+            (NoteType.Touch, BonusType.RNote) => 20,
+
+            (NoteType.SnapForward, BonusType.None) => 3,
+            (NoteType.SnapForward, BonusType.Bonus) => 3,
+            (NoteType.SnapForward, BonusType.RNote) => 21,
+
+            (NoteType.SnapBackward, BonusType.None) => 4,
+            (NoteType.SnapBackward, BonusType.Bonus) => 4,
+            (NoteType.SnapBackward, BonusType.RNote) => 22,
+
+            (NoteType.SlideClockwise, BonusType.None) => 5,
+            (NoteType.SlideClockwise, BonusType.Bonus) => 6,
+            (NoteType.SlideClockwise, BonusType.RNote) => 23,
+
+            (NoteType.SlideCounterclockwise, BonusType.None) => 7,
+            (NoteType.SlideCounterclockwise, BonusType.Bonus) => 8,
+            (NoteType.SlideCounterclockwise, BonusType.RNote) => 24,
+
+            (NoteType.HoldStart, BonusType.None) => 9,
+            (NoteType.HoldStart, BonusType.Bonus) => 9,
+            (NoteType.HoldStart, BonusType.RNote) => 25,
+
+            (NoteType.HoldSegment, _) => 10,
+            (NoteType.HoldEnd, _) => 11,
+
+            (NoteType.MaskAdd, _) => 12,
+            (NoteType.MaskRemove, _) => 13,
+
+            (NoteType.EndOfChart, _) => 14,
+
+            (NoteType.Chain, BonusType.None) => 16,
+            (NoteType.Chain, BonusType.Bonus) => 16,
+            (NoteType.Chain, BonusType.RNote) => 26,
+            _ => 1
+        };
+    }
+    
+    public static NoteType NoteTypeFromId(int id)
+    {
+        return id switch
+        {
+            1 or 2 or 20 => NoteType.Touch,
+            3 or 21 => NoteType.SnapForward,
+            4 or 22 => NoteType.SnapBackward,
+            5 or 6 or 23 => NoteType.SlideClockwise,
+            7 or 8 or 24 => NoteType.SlideCounterclockwise,
+            9 or 25 => NoteType.HoldStart,
+            10 => NoteType.HoldSegment,
+            11 => NoteType.HoldEnd,
+            12 => NoteType.MaskAdd,
+            13 => NoteType.MaskRemove,
+            14 => NoteType.EndOfChart,
+            16 or 26 => NoteType.Chain,
+            _ => NoteType.None
+        };
+    }
+
+    public static BonusType BonusTypeFromId(int id)
+    {
+        return id switch
+        {
+            1 or 3 or 4 or 5 or 7 or 9 or 10 or 11 or 12 or 13 or 14 or 16 => BonusType.None,
+            2 or 6 or 8 => BonusType.Bonus,
+            20 or 21 or 22 or 23 or 24 or 25 or 26 => BonusType.RNote,
+            _ => BonusType.None
+        };
     }
 }
 

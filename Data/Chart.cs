@@ -92,7 +92,10 @@ public class Chart
                     
                     if (noteTypeId is 15 or 17 or 18 or 19 or > 26) continue; // Invalid note type
                 
-                    Note tempNote = new(measure, tick, (NoteType)noteTypeId, noteIndex, position, size, renderSegment);
+                    NoteType noteType = Note.NoteTypeFromId(noteTypeId);
+                    BonusType bonusType = Note.BonusTypeFromId(noteTypeId);
+                    
+                    Note tempNote = new(measure, tick, noteType, bonusType, noteIndex, position, size, renderSegment);
                 
                     // hold start & segments
                     if (noteTypeId is 9 or 10 or 25 && split.Length >= 9)
@@ -142,7 +145,7 @@ public class Chart
             // Clamp size and position
             foreach (Note note in notes)
             {
-                note.Size = int.Clamp(note.Size, Note.MinSize(note.NoteType), 60);
+                note.Size = int.Clamp(note.Size, Note.MinSize(note.NoteType, note.BonusType), 60);
                 note.Position = MathExtensions.Modulo(note.Position, 60);
             }
             
@@ -188,7 +191,7 @@ public class Chart
                 }
                 
                 // Hold start without a next note
-                if (note.NoteType is NoteType.HoldStart or NoteType.HoldStartRNote && note.NextReferencedNote == null)
+                if (note.NoteType is NoteType.HoldStart && note.NextReferencedNote == null)
                 {
                     garbage.Add(note);
                 }
@@ -333,7 +336,10 @@ public class Chart
                     int size = Convert.ToInt32(parsed[7]);
                     bool renderSegment = noteTypeId != 10 || Convert.ToBoolean(Convert.ToInt32(parsed[8])); // Set to true by default if note is not a hold segment.
 
-                    Note tempNote = new(measure, tick, (NoteType)noteTypeId, noteIndex, position, size, renderSegment, guid);
+                    NoteType noteType = Note.NoteTypeFromId(noteTypeId);
+                    BonusType bonusType = Note.BonusTypeFromId(noteTypeId);
+                    
+                    Note tempNote = new(measure, tick, noteType, bonusType, noteIndex, position, size, renderSegment, guid);
                     
                     // hold start & segments
                     if (noteTypeId is 9 or 10 or 25 && parsed.Length >= 10)

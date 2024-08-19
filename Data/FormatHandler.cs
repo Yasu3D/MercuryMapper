@@ -120,7 +120,7 @@ internal static class MerHandler
             chart.GenerateTimeScales();
 
             chart.IsSaved = false;
-            chart.IsNew = true;
+            chart.IsNew = Path.GetExtension(filepath) != ".map";
         }
 
         return;
@@ -174,9 +174,13 @@ internal static class MerHandler
                     int noteIndex = Convert.ToInt32(split[4]);
                     int position = Convert.ToInt32(split[5]);
                     int size = Convert.ToInt32(split[6]);
+                    
                     bool renderSegment = noteTypeId != 10 || Convert.ToBoolean(Convert.ToInt32(split[7])); // Set to true by default if note is not a hold segment.
 
-                    Note newNote = new(measure, tick, (NoteType)noteTypeId, noteIndex, position, size, renderSegment);
+                    NoteType noteType = Note.NoteTypeFromId(noteTypeId);
+                    BonusType bonusType = Note.BonusTypeFromId(noteTypeId);
+                    
+                    Note newNote = new(measure, tick, noteType, bonusType, noteIndex, position, size, renderSegment);
 
                     // hold start & segments
                     if (noteTypeId is 9 or 10 or 25 && split.Length >= 9)
@@ -272,7 +276,7 @@ internal static class MerHandler
             result += $"{note.BeatData.Measure,4:F0} " +
                       $"{note.BeatData.Tick,4:F0} " +
                       $"{(int)note.GimmickType,4:F0} " +
-                      $"{(int)note.NoteType} " +
+                      $"{note.NoteToId(),4:F0} " +
                       $"{chart.Notes.IndexOf(note),4:F0} " +
                       $"{note.Position,4:F0} " +
                       $"{note.Size,4:F0} " +
@@ -320,6 +324,7 @@ internal static class SatHandler
             parseObjects();
             
             chart.RepairNotes();
+            chart.Notes = chart.Notes.OrderBy(x => x.BeatData.FullTick).ToList();
 
             chart.StartBpm = chart.Gimmicks.LastOrDefault(x => x.BeatData.FullTick == 0 && x.GimmickType is GimmickType.BpmChange);
             chart.StartTimeSig = chart.Gimmicks.LastOrDefault(x => x.BeatData.FullTick == 0 && x.GimmickType is GimmickType.TimeSigChange);
@@ -382,7 +387,7 @@ internal static class SatHandler
                 // internally but grouped with gimmicks for SAT
                 if (split[3] == "CHART_END")
                 {
-                    Note note = new(measure, tick, NoteType.EndOfChart, 0, 0, 60, true);
+                    Note note = new(measure, tick, NoteType.EndOfChart, BonusType.None, 0, 0, 60, true);
                     chart.Notes.Add(note);
                     continue;
                 }
@@ -430,10 +435,8 @@ internal static class SatHandler
                 BonusType bonusType = getBonusType(attributes);
                 MaskDirection maskDirection = getMaskDirection(attributes);
                 bool renderSegment = attributes is [_, not "NR"];
-
-                NoteType combinedType = combineTypes(noteType, bonusType);
                 
-                Note note = new(measure, tick, combinedType, index, position, size, renderSegment);
+                Note note = new(measure, tick, noteType, bonusType, index, position, size, renderSegment);
 
                 if (noteType is NoteType.HoldSegment or NoteType.HoldEnd)
                 {
@@ -511,85 +514,6 @@ internal static class SatHandler
                 _ => GimmickType.None
             };
         }
-
-        // This sucks. TODO: REWORK NOTETYPE AND BONUSTYPE SYSTEM
-        NoteType combineTypes(NoteType noteType, BonusType bonusType)
-        {
-            return noteType switch
-            {
-                NoteType.Touch => bonusType switch
-                {
-                    BonusType.None => NoteType.Touch,
-                    BonusType.Bonus => NoteType.TouchBonus,
-                    BonusType.RNote => NoteType.TouchRNote,
-                    _ => NoteType.Touch
-                },
-                NoteType.SnapForward => bonusType switch
-                {
-                    BonusType.None => NoteType.SnapForward,
-                    BonusType.Bonus => NoteType.SnapForward,
-                    BonusType.RNote => NoteType.SnapForwardRNote,
-                    _ => NoteType.SnapForward
-                },
-                NoteType.SnapBackward => bonusType switch
-                {
-                    BonusType.None => NoteType.SnapBackward,
-                    BonusType.Bonus => NoteType.SnapBackward,
-                    BonusType.RNote => NoteType.SnapBackwardRNote,
-                    _ => NoteType.SnapBackward
-                },
-                NoteType.SlideClockwise => bonusType switch
-                {
-                    BonusType.None => NoteType.SlideClockwise,
-                    BonusType.Bonus => NoteType.SlideClockwiseBonus,
-                    BonusType.RNote => NoteType.SlideClockwiseRNote,
-                    _ => NoteType.SlideClockwise
-                },
-                NoteType.SlideCounterclockwise => bonusType switch
-                {
-                    BonusType.None => NoteType.SlideCounterclockwise,
-                    BonusType.Bonus => NoteType.SlideCounterclockwiseBonus,
-                    BonusType.RNote => NoteType.SlideCounterclockwiseRNote,
-                    _ => NoteType.SlideCounterclockwise
-                },
-                NoteType.Chain => bonusType switch
-                {
-                    BonusType.None => NoteType.Chain,
-                    BonusType.Bonus => NoteType.Chain,
-                    BonusType.RNote => NoteType.ChainRNote,
-                    _ => NoteType.Chain
-                },
-                NoteType.HoldStart => bonusType switch
-                {
-                    BonusType.None => NoteType.HoldStart,
-                    BonusType.Bonus => NoteType.HoldStart,
-                    BonusType.RNote => NoteType.HoldStartRNote,
-                    _ => NoteType.HoldStart
-                },
-                NoteType.HoldSegment => bonusType switch
-                {
-                    BonusType.None => NoteType.HoldSegment,
-                    BonusType.Bonus => NoteType.HoldSegment,
-                    BonusType.RNote => NoteType.HoldSegment,
-                    _ => NoteType.HoldSegment
-                },
-                NoteType.HoldEnd => bonusType switch
-                {
-                    BonusType.None => NoteType.HoldEnd,
-                    BonusType.Bonus => NoteType.HoldEnd,
-                    BonusType.RNote => NoteType.HoldEnd,
-                    _ => NoteType.HoldEnd
-                },
-                NoteType.EndOfChart => bonusType switch
-                {
-                    BonusType.None => NoteType.EndOfChart,
-                    BonusType.Bonus => NoteType.EndOfChart,
-                    BonusType.RNote => NoteType.EndOfChart,
-                    _ => NoteType.EndOfChart
-                },
-                _ => noteType
-            };
-        }
     }
 
     /// <summary>
@@ -642,7 +566,7 @@ internal static class SatHandler
             index++;
         }
         
-        if (chart.EndOfChart != null) result += $"{chart.EndOfChart.BeatData.Measure,4:F0} {chart.EndOfChart.BeatData.Tick,4:F0} {index,4:F0} {getNoteName(chart.EndOfChart)}\n";
+        if (chart.EndOfChart != null) result += $"{chart.EndOfChart.BeatData.Measure,4:F0} {chart.EndOfChart.BeatData.Tick,4:F0} {index,4:F0} {getNoteName(NoteType.EndOfChart)}\n";
 
         result += "\n";
         index = 0;
@@ -653,18 +577,18 @@ internal static class SatHandler
         {
             if (note.NoteType is NoteType.HoldSegment or NoteType.HoldEnd or NoteType.EndOfChart) continue;
             
-            if (note.NoteType is NoteType.HoldStart or NoteType.HoldStartRNote)
+            if (note.NoteType is NoteType.HoldStart)
             {
                 IEnumerable<Note> references = note.References();
                 foreach (Note reference in references)
                 {
-                    result += $"{reference.BeatData.Measure,4:F0} {reference.BeatData.Tick,4:F0} {index,4:F0} {reference.Position,4:F0} {reference.Size,4:F0} {getNoteName(reference)}\n";
+                    result += $"{reference.BeatData.Measure,4:F0} {reference.BeatData.Tick,4:F0} {index,4:F0} {reference.Position,4:F0} {reference.Size,4:F0} {getNoteName(reference.NoteType)}{getModifiers(reference)}\n";
                     index++;
                 }
             }
             else
             {
-                result += $"{note.BeatData.Measure,4:F0} {note.BeatData.Tick,4:F0} {index,4:F0} {note.Position,4:F0} {note.Size,4:F0} {getNoteName(note)}\n";
+                result += $"{note.BeatData.Measure,4:F0} {note.BeatData.Tick,4:F0} {index,4:F0} {note.Position,4:F0} {note.Size,4:F0} {getNoteName(note.NoteType)}{getModifiers(note)}\n";
                 index++;
             }
         }
@@ -672,47 +596,53 @@ internal static class SatHandler
         File.WriteAllTextAsync(filepath, result);
         return;
 
-        string getNoteName(Note note)
+        string getNoteName(NoteType noteType)
         {
-            return note.NoteType switch
+            return noteType switch
             {
                 NoteType.None => "",
                 NoteType.Touch => "TOUCH",
-                NoteType.TouchBonus => "TOUCH.BONUS",
                 NoteType.SnapForward => "SNAP_FW",
                 NoteType.SnapBackward => "SNAP_BW",
                 NoteType.SlideClockwise => "SLIDE_CW",
-                NoteType.SlideClockwiseBonus => "SLIDE_CW.BONUS",
                 NoteType.SlideCounterclockwise => "SLIDE_CCW",
-                NoteType.SlideCounterclockwiseBonus => "SLIDE_CCW.BONUS",
                 NoteType.HoldStart => "HOLD_START",
-                NoteType.HoldSegment => note.RenderSegment ? "HOLD_POINT" : "HOLD_POINT.NR",
+                NoteType.HoldSegment => "HOLD_POINT",
                 NoteType.HoldEnd => "HOLD_END",
-                NoteType.MaskAdd => note.MaskDirection switch
-                {
-                    MaskDirection.Clockwise => "MASK_ADD.CW",
-                    MaskDirection.Counterclockwise => "MASK_ADD.CCW",
-                    MaskDirection.Center => "MASK_ADD.CENTER",
-                    _ => ""
-                },
-                NoteType.MaskRemove => note.MaskDirection switch
-                {
-                    MaskDirection.Clockwise => "MASK_SUB.CW",
-                    MaskDirection.Counterclockwise => "MASK_SUB.CCW",
-                    MaskDirection.Center => "MASK_SUB.CENTER",
-                    _ => ""
-                },
+                NoteType.MaskAdd => "MASK_ADD",
+                NoteType.MaskRemove => "MASK_SUB",
                 NoteType.EndOfChart => "CHART_END",
                 NoteType.Chain => "CHAIN",
-                NoteType.TouchRNote => "TOUCH.RNOTE",
-                NoteType.SnapForwardRNote => "SNAP_FW.RNOTE",
-                NoteType.SnapBackwardRNote => "SNAP_BW.RNOTE",
-                NoteType.SlideClockwiseRNote => "SLIDE_CW.RNOTE",
-                NoteType.SlideCounterclockwiseRNote => "SLIDE_CCW.RNOTE",
-                NoteType.HoldStartRNote => "HOLD_START.RNOTE",
-                NoteType.ChainRNote => "CHAIN.RNOTE",
                 _ => ""
             };
+        }
+
+        string getModifiers(Note note)
+        {
+            string result = "";
+            
+            result += note.BonusType switch
+            {
+                BonusType.None => "",
+                BonusType.Bonus => ".Bonus",
+                BonusType.RNote => ".RNote",
+                _ => ""
+            };
+
+            if (!note.RenderSegment) result += ".NR";
+            
+            Console.WriteLine(Convert.ToInt32(note.RenderSegment));
+
+            if (note.IsMask) result += note.MaskDirection switch
+            {
+                MaskDirection.Center => ".CENTER",
+                MaskDirection.Clockwise => ".CW",
+                MaskDirection.Counterclockwise => ".CCW",
+                MaskDirection.None => "",
+                _ => ""
+            };
+
+            return result;
         }
         
         string getGimmickName(GimmickType gimmickType)

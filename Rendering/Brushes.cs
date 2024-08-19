@@ -348,23 +348,13 @@ public class Brushes(UserConfig userConfig)
     {
         return type switch
         {
-            NoteType.Touch
-                or NoteType.TouchBonus
-                or NoteType.TouchRNote => colorNoteTouch,
-            NoteType.SnapForward
-                or NoteType.SnapForwardRNote => colorNoteSnapForward,
-            NoteType.SnapBackward
-                or NoteType.SnapBackwardRNote => colorNoteSnapBackward,
-            NoteType.SlideClockwise
-                or NoteType.SlideClockwiseBonus
-                or NoteType.SlideClockwiseRNote => colorNoteSlideClockwise,
-            NoteType.SlideCounterclockwise
-                or NoteType.SlideCounterclockwiseBonus
-                or NoteType.SlideCounterclockwiseRNote => colorNoteSlideCounterclockwise,
-            NoteType.Chain
-                or NoteType.ChainRNote => colorNoteChain,
-            NoteType.HoldStart 
-                or NoteType.HoldStartRNote => colorNoteHoldStart,
+            NoteType.Touch => colorNoteTouch,
+            NoteType.SnapForward => colorNoteSnapForward,
+            NoteType.SnapBackward => colorNoteSnapBackward,
+            NoteType.SlideClockwise => colorNoteSlideClockwise,
+            NoteType.SlideCounterclockwise => colorNoteSlideCounterclockwise,
+            NoteType.Chain => colorNoteChain,
+            NoteType.HoldStart => colorNoteHoldStart,
             NoteType.HoldSegment => render ? colorNoteHoldSegment : colorNoteHoldSegmentNoRender,
             NoteType.HoldEnd => colorNoteHoldSegment,
             NoteType.MaskAdd => colorNoteMaskAdd,
