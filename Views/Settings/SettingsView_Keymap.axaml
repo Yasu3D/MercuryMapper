@@ -33,6 +33,7 @@
                     <TreeViewItem Name="EditorSetLoopEnd" Header="{x:Static lang:Resources.Editor_SetLoopEnd}" />
                     <TreeViewItem Name="EditorIncreasePlaybackSpeed" Header="{x:Static lang:Resources.Editor_IncreasePlaybackSpeed}" />
                     <TreeViewItem Name="EditorDecreasePlaybackSpeed" Header="{x:Static lang:Resources.Editor_DecreasePlaybackSpeed}" />
+                    <TreeViewItem Name="EditorAddComment" Header="{x:Static lang:Resources.Editor_AddComment}" />
                 </TreeViewItem>
 
                 <TreeViewItem Header="{x:Static lang:Resources.Settings_Header_Selection}" Classes="HideKeybind">

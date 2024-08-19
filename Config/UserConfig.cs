@@ -83,6 +83,7 @@ public class KeymapConfig
         ["EditorConvertToInstantMask"] = new(Key.N, true, false, false),
         ["EditorIncreasePlaybackSpeed"] = new(Key.Add),
         ["EditorDecreasePlaybackSpeed"] = new(Key.Subtract),
+        ["EditorAddComment"] = new(Key.K, true, false, false),
         ["EditorNoteTypeTouch"] = new(Key.D1),
         ["EditorNoteTypeSlideClockwise"] = new(Key.D2),
         ["EditorNoteTypeSlideCounterclockwise"] = new(Key.D3),

@@ -2099,8 +2099,6 @@ public class ChartEditor
     
     public void AddComment(BeatData beatData, string text)
     {
-        if (mainView.AudioManager.CurrentSong == null) return;
-        
         Random random = new();
         
         Guid guid = Guid.NewGuid();

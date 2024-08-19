@@ -686,13 +686,6 @@ public partial class MainView : UserControl
         }
         
         Keybind keybind = new(e);
-
-        if (Keybind.Compare(keybind, new(Key.G, false, false, false)))
-        {
-            AddComment();
-            e.Handled = true;
-            return;
-        }
         
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["FileNew"]))
         {
@@ -883,6 +876,12 @@ public partial class MainView : UserControl
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorDecreasePlaybackSpeed"])) 
         {
             SliderPlaybackSpeed.Value -= 10;
+            e.Handled = true;
+            return;
+        }
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorAddComment"]))
+        {
+            AddComment();
             e.Handled = true;
             return;
         }
@@ -2664,6 +2663,8 @@ public partial class MainView : UserControl
 
     public async void AddComment()
     {
+        if (AudioManager.CurrentSong == null) return;
+        
         AddCommentView addCommentView = new();
             
         ContentDialog dialog = new()

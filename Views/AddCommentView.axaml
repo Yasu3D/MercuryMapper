@@ -18,9 +18,10 @@
         </Style>
     </UserControl.Styles>
     
-    <Grid RowDefinitions="Auto"
+    <Grid RowDefinitions="Auto, Auto"
           ColumnDefinitions="Auto,*,*">
-        <TextBlock Grid.Row="0" Grid.Column="0" Text="{x:Static lang:Resources.Editor_Comment}"/>
-        <TextBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" Name="CommentTextBox" AcceptsReturn="False" AcceptsTab="False"/>
+        <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="{x:Static lang:Resources.Editor_CommentTip}"/>
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="{x:Static lang:Resources.Editor_Comment}"/>
+        <TextBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" Name="CommentTextBox" AcceptsReturn="False" AcceptsTab="False"/>
     </Grid>
 </UserControl>

@@ -1113,4 +1113,7 @@ Continue?</value>
   <data name="Editor_Comment" xml:space="preserve">
     <value>Comment</value>
   </data>
+  <data name="Editor_CommentTip" xml:space="preserve">
+    <value>Tip: You can delete a comment by holding Alt and clicking it!</value>
+  </data>
 </root>

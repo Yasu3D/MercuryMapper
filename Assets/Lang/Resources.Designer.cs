@@ -321,6 +321,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Tip: You can delete a comment by holding Alt and clicking it!.
+        /// </summary>
+        public static string Editor_CommentTip {
+            get {
+                return ResourceManager.GetString("Editor_CommentTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Convert to Instant Mask.
         /// </summary>
         public static string Editor_ConvertToInstantMask {

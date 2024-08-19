@@ -1113,4 +1113,7 @@ Fortfahren?</value>
   <data name="Editor_Comment" xml:space="preserve">
     <value>Kommentar</value>
   </data>
+  <data name="Editor_CommentTip" xml:space="preserve">
+    <value>Tipp: Sie können einen Kommentar löschen, indem Sie die Alt-Taste gedrückt halten und auf ihn klicken!</value>
+  </data>
 </root>
