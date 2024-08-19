@@ -70,6 +70,28 @@ public static class FormatHandler
             Console.WriteLine(e);
         }
     }
+
+    /// <summary>
+    /// Converts a clipboard string to a List of Notes.
+    /// </summary>
+    public static IEnumerable<Note> ParseClipboard(string clipboard)
+    {
+        string[] objects = clipboard.Split(["\r\n", "\r", "\n"], StringSplitOptions.RemoveEmptyEntries);
+        List<Note> notes = [];
+        SatHandler.ParseObjects(objects, notes);
+        return notes;
+    }
+
+    /// <summary>
+    /// Converts a List of Notes to a clipboard-friendly string.
+    /// </summary>
+    public static string WriteClipboard(IEnumerable<Note> notes)
+    {
+        string result = "```\n";
+        SatHandler.WriteObjects(notes, ref result);
+        result += "```";
+        return result;
+    }
     
     internal static bool ContainsTag(string input, string tag, out string result)
     {
@@ -318,10 +340,10 @@ internal static class SatHandler
             chart.Clear();
             chart.Filepath = filepath;
 
-            parseMetadata();
-            parseComments();
-            parseGimmicks();
-            parseObjects();
+            ParseMetadata(metadata, chart);
+            ParseComments(comments, chart);
+            ParseGimmicks(gimmicks, chart);
+            ParseObjects(objects, chart.Notes);
             
             chart.RepairNotes();
             chart.Notes = chart.Notes.OrderBy(x => x.BeatData.FullTick).ToList();
@@ -335,147 +357,245 @@ internal static class SatHandler
             chart.IsSaved = true;
             chart.IsNew = false;
         }
+    }
 
-        return;
-        
-        void parseMetadata()
+    /// <summary>
+    /// Writes a SAT format file.
+    /// </summary>
+    /// <param name="chart">Chart Instance to load new file into.</param>
+    /// <param name="filepath">Absolute filepath to chart file.</param>
+    public static void WriteFile(Chart chart, string filepath)
+    {
+        if (filepath == "") return;
+
+        string result = "";
+
+        WriteMetadata(chart, ref result);
+        WriteComments(chart, ref result);
+        WriteGimmicks(chart, ref result);
+        WriteObjects(chart.Notes, ref result);
+
+        File.WriteAllTextAsync(filepath, result);
+    }
+
+    // Parsing
+    private static void ParseMetadata(IEnumerable<string> metadata, Chart chart)
+    {
+        foreach (string line in metadata)
         {
-            foreach (string line in metadata)
-            {
-                if (string.IsNullOrWhiteSpace(line)) continue;
-                string result;
-                
-                if (FormatHandler.ContainsTag(line, "@VERSION ", out result)) chart.Version = result;
-                if (FormatHandler.ContainsTag(line, "@TITLE ", out result)) chart.Title = result;
-                if (FormatHandler.ContainsTag(line, "@RUBI ", out result)) chart.Rubi = result;
-                if (FormatHandler.ContainsTag(line, "@ARTIST ", out result)) chart.Artist = result;
-                if (FormatHandler.ContainsTag(line, "@AUTHOR ", out result)) chart.Author = result;
-                
-                if (FormatHandler.ContainsTag(line, "@DIFF ", out result)) chart.Diff = Convert.ToInt32(result);
-                if (FormatHandler.ContainsTag(line, "@LEVEL ", out result)) chart.Level = Convert.ToDecimal(result);
-                if (FormatHandler.ContainsTag(line, "@CLEAR ", out result)) chart.ClearThreshold = Convert.ToDecimal(result);
-                if (FormatHandler.ContainsTag(line, "@BPM_TEXT ", out result)) chart.BpmText = result;
-                
-                if (FormatHandler.ContainsTag(line, "@PREVIEW_START ", out result)) chart.PreviewStart = Convert.ToDecimal(result);
-                if (FormatHandler.ContainsTag(line, "@PREVIEW_TIME ", out result)) chart.PreviewTime = Convert.ToDecimal(result);
-                
-                if (FormatHandler.ContainsTag(line, "@BGM ", out result)) chart.BgmFilepath = Path.Combine(Path.GetDirectoryName(chart.Filepath) ?? "", result);
-                if (FormatHandler.ContainsTag(line, "@BGM_OFFSET ", out result)) chart.BgmOffset = Convert.ToDecimal(result);
-                if (FormatHandler.ContainsTag(line, "@BGA ", out result)) chart.BgaFilepath = result == "" ? "" : Path.Combine(Path.GetDirectoryName(chart.Filepath) ?? "", result);
-                if (FormatHandler.ContainsTag(line, "@BGA_OFFSET ", out result)) chart.BgaOffset = Convert.ToDecimal(result);
-                if (FormatHandler.ContainsTag(line, "@JACKET ", out result)) chart.JacketFilepath = result == "" ? "" : Path.Combine(Path.GetDirectoryName(chart.Filepath) ?? "", result);
-            }
+            if (string.IsNullOrWhiteSpace(line)) continue;
+
+            if (FormatHandler.ContainsTag(line, "@VERSION ", out string result)) chart.Version = result;
+            if (FormatHandler.ContainsTag(line, "@TITLE ", out result)) chart.Title = result;
+            if (FormatHandler.ContainsTag(line, "@RUBI ", out result)) chart.Rubi = result;
+            if (FormatHandler.ContainsTag(line, "@ARTIST ", out result)) chart.Artist = result;
+            if (FormatHandler.ContainsTag(line, "@AUTHOR ", out result)) chart.Author = result;
+
+            if (FormatHandler.ContainsTag(line, "@DIFF ", out result)) chart.Diff = Convert.ToInt32(result);
+            if (FormatHandler.ContainsTag(line, "@LEVEL ", out result)) chart.Level = Convert.ToDecimal(result);
+            if (FormatHandler.ContainsTag(line, "@CLEAR ", out result)) chart.ClearThreshold = Convert.ToDecimal(result);
+            if (FormatHandler.ContainsTag(line, "@BPM_TEXT ", out result)) chart.BpmText = result;
+
+            if (FormatHandler.ContainsTag(line, "@PREVIEW_START ", out result)) chart.PreviewStart = Convert.ToDecimal(result);
+            if (FormatHandler.ContainsTag(line, "@PREVIEW_TIME ", out result)) chart.PreviewTime = Convert.ToDecimal(result);
+
+            if (FormatHandler.ContainsTag(line, "@BGM ", out result)) chart.BgmFilepath = Path.Combine(Path.GetDirectoryName(chart.Filepath) ?? "", result);
+            if (FormatHandler.ContainsTag(line, "@BGM_OFFSET ", out result)) chart.BgmOffset = Convert.ToDecimal(result);
+            if (FormatHandler.ContainsTag(line, "@BGA ", out result)) chart.BgaFilepath = result == "" ? "" : Path.Combine(Path.GetDirectoryName(chart.Filepath) ?? "", result);
+            if (FormatHandler.ContainsTag(line, "@BGA_OFFSET ", out result)) chart.BgaOffset = Convert.ToDecimal(result);
+            if (FormatHandler.ContainsTag(line, "@JACKET ", out result)) chart.JacketFilepath = result == "" ? "" : Path.Combine(Path.GetDirectoryName(chart.Filepath) ?? "", result);
         }
-        
-        void parseComments()
+    }
+    
+    private static void ParseComments(IEnumerable<string> comments, Chart chart)
+    {
+        // TODO: COMMENTS
+    }
+    
+    private static void ParseGimmicks(IEnumerable<string> gimmicks, Chart chart)
+    {
+        foreach (string line in gimmicks)
         {
-            // TODO: COMMENTS
-        }
-        
-        void parseGimmicks()
-        {
-            foreach (string line in gimmicks)
+            if (string.IsNullOrWhiteSpace(line)) continue;
+            string[] split = line.Split(" ", StringSplitOptions.RemoveEmptyEntries);
+            if (split.Length < 4) continue;
+
+            int measure = Convert.ToInt32(split[0]);
+            int tick = Convert.ToInt32(split[1]);
+
+            // slightly jank case since Chart End is a Note
+            // internally but grouped with gimmicks for SAT
+            if (split[3] == "CHART_END")
             {
-                if (string.IsNullOrWhiteSpace(line)) continue;
-                string[] split = line.Split(" ", StringSplitOptions.RemoveEmptyEntries);
-                if (split.Length < 4) continue;
-
-                int measure = Convert.ToInt32(split[0]);
-                int tick = Convert.ToInt32(split[1]);
-                
-                // slightly jank case since Chart End is a Note
-                // internally but grouped with gimmicks for SAT
-                if (split[3] == "CHART_END")
-                {
-                    Note note = new(measure, tick, NoteType.EndOfChart, BonusType.None, 0, 0, 60, true);
-                    chart.Notes.Add(note);
-                    continue;
-                }
-                
-                GimmickType gimmickType = getGimmickType(split[3]);
-                
-                string value1 = "";
-                string value2 = "";
-
-                if (gimmickType is GimmickType.BpmChange or GimmickType.HiSpeedChange && split.Length == 5)
-                {
-                    value1 = split[4];
-                }
-                
-                if (gimmickType is GimmickType.TimeSigChange && split.Length == 6)
-                {
-                    value1 = split[4];
-                    value2 = split[5];
-                }
-
-                Gimmick gimmick = new(measure, tick, gimmickType, value1, value2);
-                chart.Gimmicks.Add(gimmick);
-            }
-        }
-        
-        void parseObjects()
-        {
-            Note? previousNote = null;
-            
-            foreach (string line in objects)
-            {
-                if (string.IsNullOrWhiteSpace(line)) continue;
-                string[] split = line.Split(" ", StringSplitOptions.RemoveEmptyEntries);
-                if (split.Length < 6) continue;
-                
-                int measure = Convert.ToInt32(split[0]);
-                int tick = Convert.ToInt32(split[1]);
-                int index = Convert.ToInt32(split[2]);
-                int position = Convert.ToInt32(split[3]);
-                int size = Convert.ToInt32(split[4]);
-                
-                string[] modifiers = split[5].Split('.',StringSplitOptions.RemoveEmptyEntries);
-                
-                NoteType noteType = getNoteType(modifiers);
-                BonusType bonusType = getBonusType(modifiers);
-                MaskDirection maskDirection = getMaskDirection(modifiers);
-                bool renderSegment = modifiers is not [_, "NR"];
-                
-                Note note = new(measure, tick, noteType, bonusType, index, position, size, renderSegment);
-
-                if (note.IsMask) note.MaskDirection = maskDirection;
-                
-                if (noteType is NoteType.HoldSegment or NoteType.HoldEnd)
-                {
-                    note.PrevReferencedNote = previousNote;
-                    if (previousNote != null) previousNote.NextReferencedNote = note;
-                }
-
+                Note note = new(measure, tick, NoteType.EndOfChart, BonusType.None, 0, 0, 60, true);
                 chart.Notes.Add(note);
-                previousNote = note;
+                continue;
+            }
+
+            GimmickType gimmickType = String2GimmickType(split[3]);
+
+            string value1 = "";
+            string value2 = "";
+
+            if (gimmickType is GimmickType.BpmChange or GimmickType.HiSpeedChange && split.Length == 5)
+            {
+                value1 = split[4];
+            }
+
+            if (gimmickType is GimmickType.TimeSigChange && split.Length == 6)
+            {
+                value1 = split[4];
+                value2 = split[5];
+            }
+
+            Gimmick gimmick = new(measure, tick, gimmickType, value1, value2);
+            chart.Gimmicks.Add(gimmick);
+        }
+    }
+
+    internal static void ParseObjects(IEnumerable<string> objects, List<Note> notes)
+    {
+        Note? previousNote = null;
+
+        foreach (string line in objects)
+        {
+            if (string.IsNullOrWhiteSpace(line)) continue;
+            string[] split = line.Split(" ", StringSplitOptions.RemoveEmptyEntries);
+            if (split.Length < 6) continue;
+
+            int measure = Convert.ToInt32(split[0]);
+            int tick = Convert.ToInt32(split[1]);
+            int index = Convert.ToInt32(split[2]);
+            int position = Convert.ToInt32(split[3]);
+            int size = Convert.ToInt32(split[4]);
+
+            string[] modifiers = split[5].Split('.', StringSplitOptions.RemoveEmptyEntries);
+
+            NoteType noteType = String2NoteType(modifiers);
+            BonusType bonusType = String2BonusType(modifiers);
+            MaskDirection maskDirection = String2MaskDirection(modifiers);
+            bool renderSegment = modifiers is not [_, "NR"];
+
+            Note note = new(measure, tick, noteType, bonusType, index, position, size, renderSegment);
+
+            if (note.IsMask) note.MaskDirection = maskDirection;
+
+            if (noteType is NoteType.HoldSegment or NoteType.HoldEnd)
+            {
+                note.PrevReferencedNote = previousNote;
+                if (previousNote != null) previousNote.NextReferencedNote = note;
+            }
+
+            notes.Add(note);
+            previousNote = note;
+        }
+    }
+    
+    // Writing
+    private static void WriteMetadata(Chart chart, ref string input)
+    {
+        input += $"{"@SAT_VERSION",-16}{SatFormatVersion}\n" + 
+                 $"\n" + $"{"@VERSION",-16}{chart.Version}\n" + 
+                 $"{"@TITLE",-16}{chart.Title}\n" + 
+                 $"{"@RUBI",-16}{chart.Rubi}\n" + 
+                 $"{"@ARTIST",-16}{chart.Artist}\n" + 
+                 $"{"@AUTHOR",-16}{chart.Author}\n" + 
+                 $"\n" + 
+                 $"{"@DIFF",-16}{chart.Diff}\n" + 
+                 $"{"@LEVEL",-16}{chart.Level.ToString("F6", CultureInfo.InvariantCulture)}\n" + 
+                 $"{"@CLEAR",-16}{chart.ClearThreshold.ToString("F6", CultureInfo.InvariantCulture)}\n" + 
+                 $"{"@BPM_TEXT",-16}{chart.BpmText}\n" + 
+                 $"\n" + 
+                 $"{"@PREVIEW_START",-16}{chart.PreviewStart}\n" + 
+                 $"{"@PREVIEW_TIME",-16}{chart.PreviewTime}\n" + 
+                 $"\n" + 
+                 $"{"@BGM",-16}{Path.GetFileName(chart.BgmFilepath)}\n" +
+                 $"{"@BGM_OFFSET",-16}{chart.BgmOffset.ToString("F6", CultureInfo.InvariantCulture)}\n" + 
+                 $"{"@BGA",-16}{Path.GetFileName(chart.BgaFilepath)}\n" + 
+                 $"{"@BGA_OFFSET",-16}{chart.BgaOffset.ToString("F6", CultureInfo.InvariantCulture)}\n" + 
+                 $"{"@JACKET",-16}{chart.JacketFilepath}\n" + 
+                 $"\n";
+    }
+
+    private static void WriteComments(Chart chart, ref string input)
+    {
+        // TODO: COMMENTS
+        input += "@COMMENTS\n\n";
+    }
+
+    private static void WriteGimmicks(Chart chart, ref string input)
+    {
+        int index = 0;
+        input += "@GIMMICKS\n";
+        foreach (Gimmick gimmick in chart.Gimmicks)
+        {
+            input += $"{gimmick.BeatData.Measure,4:F0} {gimmick.BeatData.Tick,4:F0} {index,4:F0} {GimmickType2String(gimmick.GimmickType),-13}";
+
+            if (gimmick.GimmickType is GimmickType.BpmChange) input += $" {gimmick.Bpm.ToString("F6", CultureInfo.InvariantCulture)}";
+            if (gimmick.GimmickType is GimmickType.HiSpeedChange) input += $" {gimmick.HiSpeed.ToString("F6", CultureInfo.InvariantCulture)}";
+            if (gimmick.GimmickType is GimmickType.TimeSigChange) input += $" {gimmick.TimeSig.Upper,4:F0} {gimmick.TimeSig.Lower,4:F0}";
+
+            input += "\n";
+            index++;
+        }
+
+        if (chart.EndOfChart != null) input += $"{chart.EndOfChart.BeatData.Measure,4:F0} {chart.EndOfChart.BeatData.Tick,4:F0} {index,4:F0} {NoteType2String(NoteType.EndOfChart)}\n";
+        input += "\n";
+    }
+
+    internal static void WriteObjects(IEnumerable<Note> notes, ref string input)
+    {
+        int index = 0;
+
+        // Objects
+        input += "@OBJECTS\n";
+        foreach (Note note in notes)
+        {
+            if (note.NoteType is NoteType.HoldSegment or NoteType.HoldEnd or NoteType.EndOfChart) continue;
+
+            if (note.NoteType is NoteType.HoldStart)
+            {
+                IEnumerable<Note> references = note.References();
+                foreach (Note reference in references)
+                {
+                    input += $"{reference.BeatData.Measure,4:F0} {reference.BeatData.Tick,4:F0} {index,4:F0} {reference.Position,4:F0} {reference.Size,4:F0} {NoteType2String(reference.NoteType)}{Modifiers2String(reference)}\n";
+                    index++;
+                }
+            }
+            else
+            {
+                input += $"{note.BeatData.Measure,4:F0} {note.BeatData.Tick,4:F0} {index,4:F0} {note.Position,4:F0} {note.Size,4:F0} {NoteType2String(note.NoteType)}{Modifiers2String(note)}\n";
+                index++;
             }
         }
-        
-        NoteType getNoteType(string[] attributes)
+    }
+
+    // Helpers
+    private static NoteType String2NoteType(string[] attributes)
         {
             if (attributes.Length == 0) return NoteType.None;
-            
+
             return attributes[0] switch
             {
-                "TOUCH" =>  NoteType.Touch,
-                "SNAP_FW" =>  NoteType.SnapForward,
-                "SNAP_BW" =>  NoteType.SnapBackward,
-                "SLIDE_CW" =>  NoteType.SlideClockwise,
-                "SLIDE_CCW" =>  NoteType.SlideCounterclockwise,
-                "CHAIN" =>  NoteType.Chain,
-                "HOLD_START" =>  NoteType.HoldStart,
+                "TOUCH" => NoteType.Touch,
+                "SNAP_FW" => NoteType.SnapForward,
+                "SNAP_BW" => NoteType.SnapBackward,
+                "SLIDE_CW" => NoteType.SlideClockwise,
+                "SLIDE_CCW" => NoteType.SlideCounterclockwise,
+                "CHAIN" => NoteType.Chain,
+                "HOLD_START" => NoteType.HoldStart,
                 "HOLD_POINT" => NoteType.HoldSegment,
                 "HOLD_POINT.NR" => NoteType.HoldSegment,
                 "HOLD_END" => NoteType.HoldEnd,
                 "MASK_ADD" => NoteType.MaskAdd,
                 "MASK_SUB" => NoteType.MaskRemove,
-                "CHART_END" =>  NoteType.EndOfChart,
-                
+                "CHART_END" => NoteType.EndOfChart,
+
                 _ => NoteType.None
             };
         }
 
-        BonusType getBonusType(string[] attributes)
+    private static BonusType String2BonusType(string[] attributes)
         {
             if (attributes.Length < 2) return BonusType.None;
 
@@ -488,7 +608,7 @@ internal static class SatHandler
             };
         }
 
-        MaskDirection getMaskDirection(string[] attributes)
+    private static MaskDirection String2MaskDirection(string[] attributes)
         {
             if (attributes.Length < 2) return MaskDirection.None;
 
@@ -500,8 +620,8 @@ internal static class SatHandler
                 _ => MaskDirection.None
             };
         }
-        
-        GimmickType getGimmickType(string name)
+
+    private static GimmickType String2GimmickType(string name)
         {
             return name switch
             {
@@ -516,122 +636,59 @@ internal static class SatHandler
                 _ => GimmickType.None
             };
         }
+    
+    private static string GimmickType2String(GimmickType gimmickType)
+    {
+        return gimmickType switch
+        {
+            GimmickType.None => "",
+            GimmickType.BpmChange => "BPM",
+            GimmickType.TimeSigChange => "TIMESIG",
+            GimmickType.HiSpeedChange => "HISPEED",
+            GimmickType.ReverseEffectStart => "REV_START",
+            GimmickType.ReverseEffectEnd => "REV_END",
+            GimmickType.ReverseNoteEnd => "REV_ZONE_END",
+            GimmickType.StopStart => "STOP_START",
+            GimmickType.StopEnd => "STOP_END",
+            _ => ""
+        };
+    }
+    
+    private static string NoteType2String(NoteType noteType)
+    {
+        return noteType switch
+        {
+            NoteType.None => "",
+            NoteType.Touch => "TOUCH",
+            NoteType.SnapForward => "SNAP_FW",
+            NoteType.SnapBackward => "SNAP_BW",
+            NoteType.SlideClockwise => "SLIDE_CW",
+            NoteType.SlideCounterclockwise => "SLIDE_CCW",
+            NoteType.HoldStart => "HOLD_START",
+            NoteType.HoldSegment => "HOLD_POINT",
+            NoteType.HoldEnd => "HOLD_END",
+            NoteType.MaskAdd => "MASK_ADD",
+            NoteType.MaskRemove => "MASK_SUB",
+            NoteType.EndOfChart => "CHART_END",
+            NoteType.Chain => "CHAIN",
+            _ => ""
+        };
     }
 
-    /// <summary>
-    /// Writes a SAT format file.
-    /// </summary>
-    /// <param name="chart">Chart Instance to load new file into.</param>
-    /// <param name="filepath">Absolute filepath to chart file.</param>
-    public static void WriteFile(Chart chart, string filepath)
+    private static string Modifiers2String(Note note)
     {
-        if (filepath == "") return;
-        
-        int index = 0;
-        string result = $"{"@SAT_VERSION",-16}{SatFormatVersion}\n" +
-                        $"\n" +
-                        $"{"@VERSION",-16}{chart.Version}\n" +
-                        $"{"@TITLE",-16}{chart.Title}\n" +
-                        $"{"@RUBI",-16}{chart.Rubi}\n" +
-                        $"{"@ARTIST",-16}{chart.Artist}\n" +
-                        $"{"@AUTHOR",-16}{chart.Author}\n" +
-                        $"\n" +
-                        $"{"@DIFF",-16}{chart.Diff}\n" +
-                        $"{"@LEVEL",-16}{chart.Level.ToString("F6", CultureInfo.InvariantCulture)}\n" +
-                        $"{"@CLEAR",-16}{chart.ClearThreshold.ToString("F6", CultureInfo.InvariantCulture)}\n" +
-                        $"{"@BPM_TEXT",-16}{chart.BpmText}\n" +
-                        $"\n" +
-                        $"{"@PREVIEW_START",-16}{chart.PreviewStart}\n" +
-                        $"{"@PREVIEW_TIME",-16}{chart.PreviewTime}\n" +
-                        $"\n" +
-                        $"{"@BGM", -16}{Path.GetFileName(chart.BgmFilepath)}\n" +
-                        $"{"@BGM_OFFSET", -16}{chart.BgmOffset.ToString("F6", CultureInfo.InvariantCulture)}\n" +
-                        $"{"@BGA", -16}{Path.GetFileName(chart.BgaFilepath)}\n" +
-                        $"{"@BGA_OFFSET", -16}{chart.BgaOffset.ToString("F6", CultureInfo.InvariantCulture)}\n" +
-                        $"{"@JACKET", -16}{chart.JacketFilepath}\n" +
-                        $"\n";
+        string modifiers = "";
 
-        // TODO: COMMENTS
-        result += "@COMMENTS\n\n";
-        
-        // Gimmicks
-        result += "@GIMMICKS\n";
-        foreach (Gimmick gimmick in chart.Gimmicks)
+        modifiers += note.BonusType switch
         {
-            result += $"{gimmick.BeatData.Measure,4:F0} {gimmick.BeatData.Tick,4:F0} {index,4:F0} {getGimmickName(gimmick.GimmickType),-13}";
+            BonusType.None => "",
+            BonusType.Bonus => ".BONUS",
+            BonusType.RNote => ".RNOTE",
+            _ => ""
+        };
 
-            if (gimmick.GimmickType is GimmickType.BpmChange) result += $" {gimmick.Bpm.ToString("F6", CultureInfo.InvariantCulture)}";
-            if (gimmick.GimmickType is GimmickType.HiSpeedChange) result += $" {gimmick.HiSpeed.ToString("F6", CultureInfo.InvariantCulture)}";
-            if (gimmick.GimmickType is GimmickType.TimeSigChange) result += $" {gimmick.TimeSig.Upper,4:F0} {gimmick.TimeSig.Lower,4:F0}";
-
-            result += "\n";
-            index++;
-        }
-        
-        if (chart.EndOfChart != null) result += $"{chart.EndOfChart.BeatData.Measure,4:F0} {chart.EndOfChart.BeatData.Tick,4:F0} {index,4:F0} {getNoteName(NoteType.EndOfChart)}\n";
-
-        result += "\n";
-        index = 0;
-        
-        // Objects
-        result += "@OBJECTS\n";
-        foreach (Note note in chart.Notes)
-        {
-            if (note.NoteType is NoteType.HoldSegment or NoteType.HoldEnd or NoteType.EndOfChart) continue;
-            
-            if (note.NoteType is NoteType.HoldStart)
-            {
-                IEnumerable<Note> references = note.References();
-                foreach (Note reference in references)
-                {
-                    result += $"{reference.BeatData.Measure,4:F0} {reference.BeatData.Tick,4:F0} {index,4:F0} {reference.Position,4:F0} {reference.Size,4:F0} {getNoteName(reference.NoteType)}{getModifiers(reference)}\n";
-                    index++;
-                }
-            }
-            else
-            {
-                result += $"{note.BeatData.Measure,4:F0} {note.BeatData.Tick,4:F0} {index,4:F0} {note.Position,4:F0} {note.Size,4:F0} {getNoteName(note.NoteType)}{getModifiers(note)}\n";
-                index++;
-            }
-        }
-        
-        File.WriteAllTextAsync(filepath, result);
-        return;
-
-        string getNoteName(NoteType noteType)
-        {
-            return noteType switch
-            {
-                NoteType.None => "",
-                NoteType.Touch => "TOUCH",
-                NoteType.SnapForward => "SNAP_FW",
-                NoteType.SnapBackward => "SNAP_BW",
-                NoteType.SlideClockwise => "SLIDE_CW",
-                NoteType.SlideCounterclockwise => "SLIDE_CCW",
-                NoteType.HoldStart => "HOLD_START",
-                NoteType.HoldSegment => "HOLD_POINT",
-                NoteType.HoldEnd => "HOLD_END",
-                NoteType.MaskAdd => "MASK_ADD",
-                NoteType.MaskRemove => "MASK_SUB",
-                NoteType.EndOfChart => "CHART_END",
-                NoteType.Chain => "CHAIN",
-                _ => ""
-            };
-        }
-
-        string getModifiers(Note note)
-        {
-            string modifiers = "";
-            
-            modifiers += note.BonusType switch
-            {
-                BonusType.None => "",
-                BonusType.Bonus => ".BONUS",
-                BonusType.RNote => ".RNOTE",
-                _ => ""
-            };
-
-            if (note.IsMask) modifiers += note.MaskDirection switch
+        if (note.IsMask)
+            modifiers += note.MaskDirection switch
             {
                 MaskDirection.Center => ".CENTER",
                 MaskDirection.Clockwise => ".CW",
@@ -639,27 +696,9 @@ internal static class SatHandler
                 MaskDirection.None => "",
                 _ => ""
             };
-            
-            if (!note.RenderSegment) modifiers += ".NR";
-            
-            return modifiers;
-        }
-        
-        string getGimmickName(GimmickType gimmickType)
-        {
-            return gimmickType switch
-            {
-                GimmickType.None => "",
-                GimmickType.BpmChange => "BPM",
-                GimmickType.TimeSigChange => "TIMESIG",
-                GimmickType.HiSpeedChange => "HISPEED",
-                GimmickType.ReverseEffectStart => "REV_START",
-                GimmickType.ReverseEffectEnd => "REV_END",
-                GimmickType.ReverseNoteEnd => "REV_ZONE_END",
-                GimmickType.StopStart => "STOP_START",
-                GimmickType.StopEnd => "STOP_END",
-                _ => ""
-            };
-        }
+
+        if (!note.RenderSegment) modifiers += ".NR";
+
+        return modifiers;
     }
 }

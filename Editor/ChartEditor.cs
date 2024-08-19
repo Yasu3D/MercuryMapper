@@ -253,7 +253,7 @@ public class ChartEditor
         DeselectAllNotes();
         mainView.SetSelectionInfo();
         
-        await systemClipboard.SetTextAsync(Chart.WriteClipboard(NoteClipboard));
+        await systemClipboard.SetTextAsync(FormatHandler.WriteClipboard(NoteClipboard));
     }
     
     public async void Copy()
@@ -268,7 +268,7 @@ public class ChartEditor
         DeselectAllNotes();
         mainView.SetSelectionInfo();
         
-        await systemClipboard.SetTextAsync(Chart.WriteClipboard(NoteClipboard));
+        await systemClipboard.SetTextAsync(FormatHandler.WriteClipboard(NoteClipboard));
     }
     
     public async void Paste()
@@ -282,11 +282,11 @@ public class ChartEditor
         mainView.SetSelectionInfo();
         
         List<IOperation> operationList = [];
+        
         string? clipboardText = await systemClipboard.GetTextAsync();
-
         if (clipboardText == null) return;
         
-        foreach (Note note in Chart.ReadClipboard(clipboardText))
+        foreach (Note note in FormatHandler.ParseClipboard(clipboardText))
         {
             SelectedNotes.Add(note);
             note.BeatData = new(CurrentBeatData.FullTick + note.BeatData.FullTick);
