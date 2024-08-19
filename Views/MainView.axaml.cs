@@ -238,7 +238,7 @@ public partial class MainView : UserControl
                 AudioManager.CurrentSong.Position = 0;
             }
 
-            if (playerState is PlayerState.Preview && AudioManager.CurrentSong.Position >= (int)((ChartEditor.Chart.PreviewTime + ChartEditor.Chart.PreviewTime) * 1000))
+            if (playerState is PlayerState.Preview && AudioManager.CurrentSong.Position >= (int)((ChartEditor.Chart.PreviewStart + ChartEditor.Chart.PreviewTime) * 1000))
             {
                 SetPlayState(PlayerState.Paused);
                 AudioManager.CurrentSong.Position = (uint)(ChartEditor.Chart.PreviewTime * 1000);
