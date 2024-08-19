@@ -9,7 +9,7 @@ namespace MercuryMapper.Data;
 
 public class Chart(ChartEditor editor)
 {
-    private ChartEditor chartEditor = editor;
+    public readonly ChartEditor ChartEditor = editor;
     
     public bool IsSaved { get; set; } = true;
     public bool IsNew { get; set; } = true;
@@ -51,7 +51,7 @@ public class Chart(ChartEditor editor)
     
     public void Clear()
     {
-        chartEditor.ClearCommentMarkers();
+        ChartEditor.ClearCommentMarkers();
         
         Notes.Clear();
         Gimmicks.Clear();

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using FluentAvalonia.Core;
 using MercuryMapper.Enums;
 
@@ -36,6 +37,7 @@ public static class FormatHandler
         catch (Exception e)
         {
             Console.WriteLine(e);
+            throw;
         }
     }
 
@@ -338,6 +340,8 @@ internal static class SatHandler
         int gimmickIndex = data.IndexOf("@GIMMICKS");
         int objectIndex = data.IndexOf("@OBJECTS");
 
+        if (commentIndex < 0 || gimmickIndex < 0 || objectIndex < 0) return;
+
         string[] metadata = data[1..commentIndex];
         string[] comments = data[(commentIndex + 1)..gimmickIndex];
         string[] gimmicks = data[(gimmickIndex + 1)..objectIndex];
@@ -350,8 +354,7 @@ internal static class SatHandler
 
             ParseMetadata(metadata, chart);
             
-            if (includeGuid) ParseCommentsWithGuid(comments, chart); 
-            else ParseComments(comments, chart);
+            if (!includeGuid) ParseComments(comments, chart);
             
             if (includeGuid) ParseGimmicksWithGuid(gimmicks, chart); 
             else ParseGimmicks(gimmicks, chart);
@@ -431,7 +434,28 @@ internal static class SatHandler
     
     private static void ParseComments(IEnumerable<string> comments, Chart chart)
     {
-        // TODO: COMMENTS
+        // regex is scary D:
+        const string pattern = @"^\s*(\d+)\s+(\d+)\s+(\d+)\s+(.*)";
+        
+        foreach (string line in comments)
+        {
+            if (string.IsNullOrWhiteSpace(line)) continue;
+            
+            Match match = Regex.Match(line, pattern);
+            Console.WriteLine(match.Success);
+            
+            if (!match.Success) continue;
+
+            string match1 = match.Groups[1].Value;
+            string match2 = match.Groups[2].Value;
+            // match3 is the index, can be skipped
+            string match4 = match.Groups[4].Value;
+
+            int measure = Convert.ToInt32(match1);
+            int tick = Convert.ToInt32(match2);
+
+            chart.ChartEditor.AddComment(new(measure, tick), match4);
+        }
     }
     
     private static void ParseGimmicks(IEnumerable<string> gimmicks, Chart chart)
@@ -511,11 +535,6 @@ internal static class SatHandler
             notes.Add(note);
             previousNote = note;
         }
-    }
-
-    private static void ParseCommentsWithGuid(IEnumerable<string> comments, Chart chart)
-    {
-        // TODO: COMMENTS
     }
     
     private static void ParseGimmicksWithGuid(IEnumerable<string> gimmicks, Chart chart)
@@ -623,14 +642,24 @@ internal static class SatHandler
                  $"{"@BGM_OFFSET",-16}{chart.BgmOffset.ToString("F6", CultureInfo.InvariantCulture)}\n" + 
                  $"{"@BGA",-16}{Path.GetFileName(chart.BgaFilepath)}\n" + 
                  $"{"@BGA_OFFSET",-16}{chart.BgaOffset.ToString("F6", CultureInfo.InvariantCulture)}\n" + 
-                 $"{"@JACKET",-16}{chart.JacketFilepath}\n" + 
+                 $"{"@JACKET",-16}{Path.GetFileName(chart.JacketFilepath)}\n" + 
                  $"\n";
     }
 
     private static void WriteComments(Chart chart, ref string input)
     {
-        // TODO: COMMENTS
-        input += "@COMMENTS\n\n";
+        int index = 0;
+        input += "@COMMENTS\n";
+        
+        foreach (KeyValuePair<string, Comment> comment in chart.Comments)
+        {
+            input += $"{comment.Value.BeatData.Measure,4:F0} {comment.Value.BeatData.Tick,4:F0} {index,4:F0} {comment.Value.Text}";
+            
+            input += "\n";
+            index++;
+        }
+        
+        input += "\n";
     }
 
     private static void WriteGimmicks(Chart chart, ref string input)
@@ -682,7 +711,7 @@ internal static class SatHandler
 
     private static void WriteCommentsWithGuid(Chart chart, ref string input)
     {
-        // TODO: COMMENTS
+        // Skipped - Comments are not shared over network.
         input += "@COMMENTS\n\n";
     }
     

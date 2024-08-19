@@ -2613,6 +2613,7 @@ public partial class MainView : UserControl
         SetSongPositionSliderValues();
         UpdateFilepathsInUi();
         RenderEngine.UpdateVisibleTime();
+        ChartEditor.UpdateCommentMarkers();
         ResetLoopMarkers(AudioManager.CurrentSong?.Length ?? 0);
         SetUiLockState(UiLockState.Loaded);
     }

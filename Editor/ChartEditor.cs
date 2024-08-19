@@ -2114,7 +2114,11 @@ public class ChartEditor
         };
 
         marker.PointerPressed += Comment_PointerPressed;
-        marker.Margin = new(Chart.BeatData2Timestamp(beatData) * (mainView.SliderSongPosition.Bounds.Width - 25) / mainView.AudioManager.CurrentSong.Length + 12.5, 0, 0, 0);
+
+        if (mainView.AudioManager.CurrentSong != null)
+        {
+            marker.Margin = new(Chart.BeatData2Timestamp(beatData) * (mainView.SliderSongPosition.Bounds.Width - 25) / mainView.AudioManager.CurrentSong.Length + 12.5, 0, 0, 0);
+        }
         
         Comment newComment = new(guid, beatData, text, marker);
         
