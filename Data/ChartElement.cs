@@ -367,7 +367,7 @@ public class Note : ChartElement
         return note;
     }
 
-    public int NoteToId()
+    public int NoteToMerId()
     {
         return (NoteType, BonusType) switch
         {
@@ -410,7 +410,7 @@ public class Note : ChartElement
         };
     }
     
-    public static NoteType NoteTypeFromId(int id)
+    public static NoteType NoteTypeFromMerId(int id)
     {
         return id switch
         {
@@ -430,7 +430,7 @@ public class Note : ChartElement
         };
     }
 
-    public static BonusType BonusTypeFromId(int id)
+    public static BonusType BonusTypeFromMerId(int id)
     {
         return id switch
         {

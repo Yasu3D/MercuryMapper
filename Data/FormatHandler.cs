@@ -208,8 +208,8 @@ internal static class MerHandler
                     
                     bool renderSegment = noteTypeId != 10 || Convert.ToBoolean(Convert.ToInt32(split[7])); // Set to true by default if note is not a hold segment.
 
-                    NoteType noteType = Note.NoteTypeFromId(noteTypeId);
-                    BonusType bonusType = Note.BonusTypeFromId(noteTypeId);
+                    NoteType noteType = Note.NoteTypeFromMerId(noteTypeId);
+                    BonusType bonusType = Note.BonusTypeFromMerId(noteTypeId);
                     
                     Note newNote = new(measure, tick, noteType, bonusType, noteIndex, position, size, renderSegment);
 
@@ -307,7 +307,7 @@ internal static class MerHandler
             result += $"{note.BeatData.Measure,4:F0} " +
                       $"{note.BeatData.Tick,4:F0} " +
                       $"{(int)note.GimmickType,4:F0} " +
-                      $"{note.NoteToId(),4:F0} " +
+                      $"{note.NoteToMerId(),4:F0} " +
                       $"{chart.Notes.IndexOf(note),4:F0} " +
                       $"{note.Position,4:F0} " +
                       $"{note.Size,4:F0} " +
