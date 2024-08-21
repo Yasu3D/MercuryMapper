@@ -54,6 +54,7 @@ public static class Proofreader
         checkNotesAfterEndOfChart();
         checkNotesBeforeEndOfChart();
         checkSmallNotes();
+        checkSmallerThanLegalNotes();
         checkBrokenNotes();
         checkUnbakedHolds();
         checkFullyOverlappingNotes();
@@ -122,7 +123,7 @@ public static class Proofreader
             
             foreach (Note note in chart.Notes)
             {
-                if (note.NoteType is NoteType.HoldSegment or NoteType.HoldEnd) continue;
+                if (note.NoteType is NoteType.HoldSegment or NoteType.HoldEnd or NoteType.MaskAdd or NoteType.MaskRemove) continue;
 
                 if (note.Size < 10)
                 {
@@ -134,6 +135,27 @@ public static class Proofreader
             if (error)
             {
                 AddMessage(textBlock, MessageType.None, "Notes smaller than size 10 are difficult to read and feel like swatting flies. Only use them when you're 100% sure you know what you're doing.\n\n");
+            }
+        }
+        
+        void checkSmallerThanLegalNotes()
+        {
+            bool error = false;
+            
+            foreach (Note note in chart.Notes)
+            {
+                if (note.NoteType is NoteType.HoldSegment or NoteType.HoldEnd or NoteType.MaskAdd or NoteType.MaskRemove) continue;
+
+                if (note.Size < Note.MinSize(note.NoteType, note.BonusType))
+                {
+                    AddMessage(textBlock, MessageType.Warning, $"{note.NoteType} @ {note.BeatData.Measure} {note.BeatData.Tick} is smaller than it's legal minimum size [< {Note.MinSize(note.NoteType, note.BonusType)}.\n");
+                    error = true;
+                }
+            }
+
+            if (error)
+            {
+                AddMessage(textBlock, MessageType.None, "Notes smaller than their intended minimum size may look broken or feel unplayable.\n\n");
             }
         }
 
@@ -198,7 +220,7 @@ public static class Proofreader
                 Note current = chart.Notes[i];
                 Note next = chart.Notes[i + 1];
                 
-                if (current.IsHold) continue;
+                if (current.IsHold || current.IsMask) continue;
                 if (current.BeatData.FullTick != next.BeatData.FullTick) continue;
                 
                 if (MathExtensions.IsOverlapping(current.Position, current.Position + current.Size, next.Position, next.Position + next.Size))
