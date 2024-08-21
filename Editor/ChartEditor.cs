@@ -141,8 +141,15 @@ public class ChartEditor
         SelectedNotes.Clear();
         
         FormatHandler.LoadFile(Chart, path);
+
+        // Preserve IsSaved state, because SetChartInfo() triggers
+        // ValueChanged/TextChanged for all metadata, which sets it to false.
+        bool isSaved = Chart.IsSaved;
+        
         mainView.SetChartInfo();
         mainView.SetSelectionInfo();
+        
+        Chart.IsSaved = isSaved;
     }
 
     public void LoadChartNetwork(string chartData)
