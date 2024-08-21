@@ -72,7 +72,10 @@ public class RenderEngine(MainView mainView)
         
         if (mainView.ChartEditor.LayerNoteActive)
         {
-            DrawJudgementWindows(canvas, Chart);
+            if (RenderConfig is { ShowJudgementWindowMarvelous: true, ShowJudgementWindowGreat: true, ShowJudgementWindowGood: true })
+            {
+                DrawJudgementWindows(canvas, Chart);
+            }
             
             DrawSyncs(canvas, Chart); // Hold Surfaces normally render under syncs but the syncs poke into the note a bit, and it looks shit.
             
