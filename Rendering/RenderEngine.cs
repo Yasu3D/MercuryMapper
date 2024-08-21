@@ -72,7 +72,7 @@ public class RenderEngine(MainView mainView)
         
         if (mainView.ChartEditor.LayerNoteActive)
         {
-            if (RenderConfig is { ShowJudgementWindowMarvelous: true, ShowJudgementWindowGreat: true, ShowJudgementWindowGood: true })
+            if (RenderConfig.ShowJudgementWindowMarvelous || RenderConfig.ShowJudgementWindowGreat || RenderConfig.ShowJudgementWindowGood)
             {
                 DrawJudgementWindows(canvas, Chart);
             }
