@@ -144,8 +144,6 @@ public static class Proofreader
             
             foreach (Note note in chart.Notes)
             {
-                if (note.NoteType is NoteType.HoldSegment or NoteType.HoldEnd or NoteType.MaskAdd or NoteType.MaskRemove) continue;
-
                 if (note.Size < Note.MinSize(note.NoteType, note.BonusType))
                 {
                     AddMessage(textBlock, MessageType.Warning, $"{note.NoteType} @ {note.BeatData.Measure} {note.BeatData.Tick} is smaller than it's legal minimum size [< {Note.MinSize(note.NoteType, note.BonusType)}.\n");
@@ -220,12 +218,12 @@ public static class Proofreader
                 Note current = chart.Notes[i];
                 Note next = chart.Notes[i + 1];
                 
-                if (current.IsHold || current.IsMask) continue;
+                if (current.IsHold || current.IsMask || next.IsHold || next.IsMask) continue;
                 if (current.BeatData.FullTick != next.BeatData.FullTick) continue;
                 
                 if (MathExtensions.IsOverlapping(current.Position, current.Position + current.Size, next.Position, next.Position + next.Size))
                 {
-                    AddMessage(textBlock, MessageType.Error, $"{current.NoteType} @ {current.BeatData.Measure} {current.BeatData.Tick} is overlapping with another Note.\n");
+                    AddMessage(textBlock, MessageType.Error, $"{current.NoteType} @ {current.BeatData.Measure} {current.BeatData.Tick} is overlapping with {next.NoteType}.\n");
                     error = true;
                 }
             }
