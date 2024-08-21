@@ -2000,35 +2000,30 @@ public partial class MainView : UserControl
     private void ChartInfoVersion_OnTextChanged(object? sender, TextChangedEventArgs e)
     {
         ChartEditor.Chart.Version = ChartInfoVersion.Text ?? "";
-        ChartEditor.Chart.IsSaved = false;
     }
     private void ChartInfoVersion_LostFocus(object? sender, RoutedEventArgs e) => ConnectionManager.SendMessage(ConnectionManager.MessageTypes.VersionChange, ChartEditor.Chart.Version);
 
     private void ChartInfoTitle_OnTextChanged(object? sender, TextChangedEventArgs e)
     {
         ChartEditor.Chart.Title = ChartInfoTitle.Text ?? "";
-        ChartEditor.Chart.IsSaved = false;
     }
     private void ChartInfoTitle_LostFocus(object? sender, RoutedEventArgs e) => ConnectionManager.SendMessage(ConnectionManager.MessageTypes.TitleChange, ChartEditor.Chart.Title);
 
     private void ChartInfoRubi_OnTextChanged(object? sender, TextChangedEventArgs e)
     {
         ChartEditor.Chart.Rubi = ChartInfoRubi.Text ?? "";
-        ChartEditor.Chart.IsSaved = false;
     }
     private void ChartInfoRubi_LostFocus(object? sender, RoutedEventArgs e) => ConnectionManager.SendMessage(ConnectionManager.MessageTypes.RubiChange, ChartEditor.Chart.Rubi);
 
     private void ChartInfoArtist_OnTextChanged(object? sender, TextChangedEventArgs e)
     {
         ChartEditor.Chart.Artist = ChartInfoArtist.Text ?? "";
-        ChartEditor.Chart.IsSaved = false;
     }
     private void ChartInfoArtist_LostFocus(object? sender, RoutedEventArgs e) => ConnectionManager.SendMessage(ConnectionManager.MessageTypes.ArtistChange, ChartEditor.Chart.Artist);
 
     private void ChartInfoAuthor_OnTextChanged(object? sender, TextChangedEventArgs e)
     {
         ChartEditor.Chart.Author = ChartInfoAuthor.Text ?? "";
-        ChartEditor.Chart.IsSaved = false;
     }
     private void ChartInfoAuthor_LostFocus(object? sender, RoutedEventArgs e) => ConnectionManager.SendMessage(ConnectionManager.MessageTypes.AuthorChange, ChartEditor.Chart.Author);
 
@@ -2036,7 +2031,6 @@ public partial class MainView : UserControl
     {
         if (ChartInfoDiff is null) return;
         ChartEditor.Chart.Diff = ChartInfoDiff.SelectedIndex;
-        ChartEditor.Chart.IsSaved = false;
     }
     private void ChartInfoDiff_LostFocus(object? sender, RoutedEventArgs e)
     {
@@ -2047,49 +2041,42 @@ public partial class MainView : UserControl
     private void ChartInfoLevel_OnValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
     {
         ChartEditor.Chart.Level = (decimal)ChartInfoLevel.Value;
-        ChartEditor.Chart.IsSaved = false;
     }
     private void ChartInfoLevel_LostFocus(object? sender, RoutedEventArgs e) => ConnectionManager.SendMessage(ConnectionManager.MessageTypes.LevelChange, ChartEditor.Chart.Level.ToString(CultureInfo.InvariantCulture));
 
     private void ChartInfoClearThreshold_OnValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
     {
         ChartEditor.Chart.ClearThreshold = (decimal)ChartInfoClearThreshold.Value;
-        ChartEditor.Chart.IsSaved = false;
     }
     private void ChartInfoClearThreshold_LostFocus(object? sender, RoutedEventArgs e) => ConnectionManager.SendMessage(ConnectionManager.MessageTypes.ClearThresholdChange, ChartEditor.Chart.ClearThreshold.ToString(CultureInfo.InvariantCulture));
 
     private void ChartInfoBpmText_OnTextChanged(object? sender, TextChangedEventArgs e)
     {
         ChartEditor.Chart.BpmText = ChartInfoBpmText.Text ?? "";
-        ChartEditor.Chart.IsSaved = false;
     }
     private void ChartInfoBpmText_LostFocus(object? sender, RoutedEventArgs e) => ConnectionManager.SendMessage(ConnectionManager.MessageTypes.BpmTextChange, ChartEditor.Chart.BpmText);
 
     private void ChartInfoPreviewStart_OnValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
     {
         ChartEditor.Chart.PreviewStart = (decimal)ChartInfoPreviewStart.Value;
-        ChartEditor.Chart.IsSaved = false;
     }
     private void ChartInfoPreviewStart_LostFocus(object? sender, RoutedEventArgs e) => ConnectionManager.SendMessage(ConnectionManager.MessageTypes.PreviewStartChange, ChartEditor.Chart.PreviewStart.ToString(CultureInfo.InvariantCulture));
 
     private void ChartInfoPreviewTime_OnValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
     {
         ChartEditor.Chart.PreviewTime = (decimal)ChartInfoPreviewTime.Value;
-        ChartEditor.Chart.IsSaved = false;
     }
     private void ChartInfoPreviewTime_LostFocus(object? sender, RoutedEventArgs e) => ConnectionManager.SendMessage(ConnectionManager.MessageTypes.PreviewTimeChange, ChartEditor.Chart.PreviewTime.ToString(CultureInfo.InvariantCulture));
 
     private void ChartInfoBgmOffset_OnValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
     {
         ChartEditor.Chart.BgmOffset = (decimal)ChartInfoBgmOffset.Value;
-        ChartEditor.Chart.IsSaved = false;
     }
     private void ChartInfoBgmOffset_LostFocus(object? sender, RoutedEventArgs e) => ConnectionManager.SendMessage(ConnectionManager.MessageTypes.BgmOffsetChange, ChartEditor.Chart.BgmOffset.ToString(CultureInfo.InvariantCulture));
 
     private void ChartInfoBgaOffset_OnValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
     {
         ChartEditor.Chart.BgaOffset = (decimal)ChartInfoBgaOffset.Value;
-        ChartEditor.Chart.IsSaved = false;
     }
     private void ChartInfoBgaOffset_LostFocus(object? sender, RoutedEventArgs e) => ConnectionManager.SendMessage(ConnectionManager.MessageTypes.BgaOffsetChange, ChartEditor.Chart.BgaOffset.ToString(CultureInfo.InvariantCulture));
 
