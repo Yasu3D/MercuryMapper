@@ -118,6 +118,17 @@
                 <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Gimmick_Reverse}"/>
                 <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorGimmickReverse"/>
             </UniformGrid>
+            
+            <Separator/>
+            
+            <UniformGrid Columns="2">
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Judgement_Marvelous}"/>
+                <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorJudgementMarvelous"/>
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Judgement_Great}"/>
+                <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorJudgementGreat"/>
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Judgement_Good}"/>
+                <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorJudgementGood"/>
+            </UniformGrid>
         </StackPanel>
     </ScrollViewer>
 </UserControl>

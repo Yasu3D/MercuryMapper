@@ -615,6 +615,19 @@
                             <CheckBox Name="QuickSettingsCheckBoxShowHiSpeed" HorizontalAlignment="Right" IsCheckedChanged="QuickSettingsShowHiSpeed_OnIsCheckedChanged"/>
                         </UniformGrid>
                         
+                        <Separator/>
+                        
+                        <UniformGrid Columns="2">
+                            <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.QuickSettings_ShowMarvelousWindow}"/>
+                            <CheckBox Name="QuickSettingsCheckBoxShowJudgementWindowMarvelous" HorizontalAlignment="Right" IsCheckedChanged="QuickSettingsShowJudgementWindowMarvelous_OnIsCheckedChanged"/>
+                            
+                            <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.QuickSettings_ShowGreatWindow}"/>
+                            <CheckBox Name="QuickSettingsCheckBoxShowJudgementWindowGreat" HorizontalAlignment="Right" IsCheckedChanged="QuickSettingsShowJudgementWindowGreat_OnIsCheckedChanged"/>
+                            
+                            <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.QuickSettings_ShowGoodWindow}"/>
+                            <CheckBox Name="QuickSettingsCheckBoxShowJudgementWindowGood" HorizontalAlignment="Right" IsCheckedChanged="QuickSettingsShowJudgementWindowGood_OnIsCheckedChanged"/>
+                        </UniformGrid>
+                        
                         <Separator Margin="0,5,0,12"/>
                         
                         <TextBlock VerticalAlignment="Center" Margin="0,0,0,-7" Text="{x:Static lang:Resources.Settings_Audio_MusicVolume}"/>

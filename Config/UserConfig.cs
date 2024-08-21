@@ -26,6 +26,9 @@ public class RenderConfig
     public bool ShowGimmickNotesDuringPlayback { get; set; } = false;
     public bool ShowOtherUsersDuringPlayback { get; set; } = true;
     public bool ShowChainStripes { get; set; } = true;
+    public bool ShowJudgementWindowMarvelous { get; set; } = false;
+    public bool ShowJudgementWindowGreat { get; set; } = false;
+    public bool ShowJudgementWindowGood { get; set; } = false;
 }
 
 public class KeymapConfig
@@ -158,6 +161,9 @@ public class ColorConfig
         ["ColorMeasureLine"] = "FFFFFFFF",
         ["ColorBeatLine"] = "80FFFFFF",
         ["ColorAngleTicks"] = "AAFFFFFF",
+        ["ColorJudgementMarvelous"] = "FFFF3679",
+        ["ColorJudgementGreat"] = "FF8FFF1F",
+        ["ColorJudgementGood"] = "FF50B0FF"
     };
 }
 

@@ -1339,6 +1339,33 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Good Bewertung.
+        /// </summary>
+        public static string Judgement_Good {
+            get {
+                return ResourceManager.GetString("Judgement_Good", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Great Bewertung.
+        /// </summary>
+        public static string Judgement_Great {
+            get {
+                return ResourceManager.GetString("Judgement_Great", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Marvelous Betwertung.
+        /// </summary>
+        public static string Judgement_Marvelous {
+            get {
+                return ResourceManager.GetString("Judgement_Marvelous", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Von Mitte.
         /// </summary>
         public static string MaskDirection_Center {
@@ -1875,6 +1902,33 @@ namespace MercuryMapper.Assets.Lang {
         public static string Online_Username {
             get {
                 return ResourceManager.GetString("Online_Username", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Good Bereich.
+        /// </summary>
+        public static string QuickSettings_ShowGoodWindow {
+            get {
+                return ResourceManager.GetString("QuickSettings_ShowGoodWindow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Great Bereich.
+        /// </summary>
+        public static string QuickSettings_ShowGreatWindow {
+            get {
+                return ResourceManager.GetString("QuickSettings_ShowGreatWindow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Marvelous Bereich.
+        /// </summary>
+        public static string QuickSettings_ShowMarvelousWindow {
+            get {
+                return ResourceManager.GetString("QuickSettings_ShowMarvelousWindow", resourceCulture);
             }
         }
         
@@ -2469,6 +2523,33 @@ namespace MercuryMapper.Assets.Lang {
         public static string Settings_ShowGimmickNotesDuringPlayback {
             get {
                 return ResourceManager.GetString("Settings_ShowGimmickNotesDuringPlayback", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zeige Good Bewertungsbereich.
+        /// </summary>
+        public static string Settings_ShowJudgementWindowGood {
+            get {
+                return ResourceManager.GetString("Settings_ShowJudgementWindowGood", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zeige Great Bewertungsbereich.
+        /// </summary>
+        public static string Settings_ShowJudgementWindowGreat {
+            get {
+                return ResourceManager.GetString("Settings_ShowJudgementWindowGreat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zeige Marvelous Bewertungsbereich.
+        /// </summary>
+        public static string Settings_ShowJudgementWindowMarvelous {
+            get {
+                return ResourceManager.GetString("Settings_ShowJudgementWindowMarvelous", resourceCulture);
             }
         }
         

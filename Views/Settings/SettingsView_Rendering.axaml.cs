@@ -31,6 +31,9 @@ public partial class SettingsView_Rendering : UserControl
         CheckBoxShowGimmickNotesDuringPlayback.IsChecked = RenderConfig.ShowGimmickNotesDuringPlayback;
         CheckBoxShowOtherUsersDuringPlayback.IsChecked = RenderConfig.ShowOtherUsersDuringPlayback;
         CheckBoxShowChainStripes.IsChecked = RenderConfig.ShowChainStripes;
+        CheckBoxShowJudgementWindowMarvelous.IsChecked = RenderConfig.ShowJudgementWindowMarvelous;
+        CheckBoxShowJudgementWindowGreat.IsChecked = RenderConfig.ShowJudgementWindowGreat;
+        CheckBoxShowJudgementWindowGood.IsChecked = RenderConfig.ShowJudgementWindowGood;
     }
     
     private void RefreshRate_OnValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
@@ -86,8 +89,23 @@ public partial class SettingsView_Rendering : UserControl
         RenderConfig.HoldRenderMethod = ComboHoldRenderMethod.SelectedIndex;
     }
 
-    private void ShowChainStripes_OnIsCheckedChanged(object? sender, RoutedEventArgs e)
+    private void CheckBoxShowChainStripes_OnIsCheckedChanged(object? sender, RoutedEventArgs e)
     {
         RenderConfig.ShowChainStripes = CheckBoxShowChainStripes.IsChecked ?? true;
+    }
+    
+    private void CheckBoxShowJudgementWindowMarvelous_OnIsCheckedChanged(object? sender, RoutedEventArgs e)
+    {
+        RenderConfig.ShowJudgementWindowMarvelous = CheckBoxShowJudgementWindowMarvelous.IsChecked ?? true;
+    }
+    
+    private void CheckBoxShowJudgementWindowGreat_OnIsCheckedChanged(object? sender, RoutedEventArgs e)
+    {
+        RenderConfig.ShowJudgementWindowGreat = CheckBoxShowJudgementWindowGreat.IsChecked ?? true;
+    }
+    
+    private void CheckBoxShowJudgementWindowGood_OnIsCheckedChanged(object? sender, RoutedEventArgs e)
+    {
+        RenderConfig.ShowJudgementWindowGood = CheckBoxShowJudgementWindowGood.IsChecked ?? true;
     }
 }

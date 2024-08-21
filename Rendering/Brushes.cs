@@ -230,6 +230,42 @@ public class Brushes(UserConfig userConfig)
         IsAntialias = false
     };
     
+    public readonly SKPaint JudgementMarvelousPen = new()
+    {
+        StrokeWidth = 2,
+        Style = SKPaintStyle.Stroke
+    };
+    
+    public readonly SKPaint JudgementGreatPen = new()
+    {
+        StrokeWidth = 2,
+        Style = SKPaintStyle.Stroke
+    };
+    
+    public readonly SKPaint JudgementGoodPen = new()
+    {
+        StrokeWidth = 2,
+        Style = SKPaintStyle.Stroke
+    };
+    
+    public readonly SKPaint JudgementMarvelousFill = new()
+    {
+        Style = SKPaintStyle.Fill,
+        IsAntialias = false
+    };
+    
+    public readonly SKPaint JudgementGreatFill = new()
+    {
+        Style = SKPaintStyle.Fill,
+        IsAntialias = false
+    };
+    
+    public readonly SKPaint JudgementGoodFill = new()
+    {
+        Style = SKPaintStyle.Fill,
+        IsAntialias = false
+    };
+    
     // ________ Dynamic Brushes
     public SKPaint GetTunnelStripes(float strokeWidth)
     {
@@ -409,6 +445,13 @@ public class Brushes(UserConfig userConfig)
             colorGimmickHiSpeedChange = SKColor.Parse(colors["ColorGimmickHiSpeedChange"]);
             colorGimmickReverse = SKColor.Parse(colors["ColorGimmickStop"]);
             colorGimmickStop = SKColor.Parse(colors["ColorGimmickReverse"]);
+
+            JudgementMarvelousFill.Color = SKColor.Parse(colors["ColorJudgementMarvelous"]).WithAlpha(0xAA);
+            JudgementGreatFill.Color = SKColor.Parse(colors["ColorJudgementGreat"]).WithAlpha(0xAA);
+            JudgementGoodFill.Color = SKColor.Parse(colors["ColorJudgementGood"]).WithAlpha(0xAA);
+            JudgementMarvelousPen.Color = SKColor.Parse(colors["ColorJudgementMarvelous"]).WithAlpha(0xFF);
+            JudgementGreatPen.Color = SKColor.Parse(colors["ColorJudgementGreat"]).WithAlpha(0xFF);
+            JudgementGoodPen.Color = SKColor.Parse(colors["ColorJudgementGood"]).WithAlpha(0xFF);
             
             BonusFill.Color = SKColor.Parse(colors["ColorBonusFill"]);
             syncPen.Color = SKColor.Parse(colors["ColorSync"]);

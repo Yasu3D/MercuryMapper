@@ -546,6 +546,9 @@ public partial class MainView : UserControl
         QuickSettingsNumericBeatDivision.Value = UserConfig.RenderConfig.BeatDivision;
         QuickSettingsNumericNoteSpeed.Value = (decimal?)UserConfig.RenderConfig.NoteSpeed;
         QuickSettingsCheckBoxShowHiSpeed.IsChecked = UserConfig.RenderConfig.ShowHiSpeed;
+        QuickSettingsCheckBoxShowJudgementWindowMarvelous.IsChecked = UserConfig.RenderConfig.ShowJudgementWindowMarvelous;
+        QuickSettingsCheckBoxShowJudgementWindowGreat.IsChecked = UserConfig.RenderConfig.ShowJudgementWindowGreat;
+        QuickSettingsCheckBoxShowJudgementWindowGood.IsChecked = UserConfig.RenderConfig.ShowJudgementWindowGood;
     }
     
     public void SetMinNoteSize(NoteType noteType, BonusType bonusType)
@@ -2211,6 +2214,21 @@ public partial class MainView : UserControl
     private void QuickSettingsShowHiSpeed_OnIsCheckedChanged(object? sender, RoutedEventArgs e)
     {
         UserConfig.RenderConfig.ShowHiSpeed = QuickSettingsCheckBoxShowHiSpeed.IsChecked ?? true;
+    }
+    
+    private void QuickSettingsShowJudgementWindowMarvelous_OnIsCheckedChanged(object? sender, RoutedEventArgs e)
+    {
+        UserConfig.RenderConfig.ShowJudgementWindowMarvelous = QuickSettingsCheckBoxShowJudgementWindowMarvelous.IsChecked ?? true;
+    }
+    
+    private void QuickSettingsShowJudgementWindowGreat_OnIsCheckedChanged(object? sender, RoutedEventArgs e)
+    {
+        UserConfig.RenderConfig.ShowJudgementWindowGreat = QuickSettingsCheckBoxShowJudgementWindowGreat.IsChecked ?? true;
+    }
+    
+    private void QuickSettingsShowJudgementWindowGood_OnIsCheckedChanged(object? sender, RoutedEventArgs e)
+    {
+        UserConfig.RenderConfig.ShowJudgementWindowGood = QuickSettingsCheckBoxShowJudgementWindowGood.IsChecked ?? true;
     }
     
     private void ButtonEditSelectionShape_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.EditSelection(true, false);

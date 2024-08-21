@@ -1119,4 +1119,31 @@ Fortfahren?</value>
   <data name="Menu_Proofread" xml:space="preserve">
     <value>Leseprobe</value>
   </data>
+  <data name="Judgement_Marvelous" xml:space="preserve">
+    <value>Marvelous Betwertung</value>
+  </data>
+  <data name="Judgement_Great" xml:space="preserve">
+    <value>Great Bewertung</value>
+  </data>
+  <data name="Judgement_Good" xml:space="preserve">
+    <value>Good Bewertung</value>
+  </data>
+  <data name="Settings_ShowJudgementWindowMarvelous" xml:space="preserve">
+    <value>Zeige Marvelous Bewertungsbereich</value>
+  </data>
+  <data name="Settings_ShowJudgementWindowGreat" xml:space="preserve">
+    <value>Zeige Great Bewertungsbereich</value>
+  </data>
+  <data name="Settings_ShowJudgementWindowGood" xml:space="preserve">
+    <value>Zeige Good Bewertungsbereich</value>
+  </data>
+  <data name="QuickSettings_ShowGoodWindow" xml:space="preserve">
+    <value>Good Bereich</value>
+  </data>
+  <data name="QuickSettings_ShowGreatWindow" xml:space="preserve">
+    <value>Great Bereich</value>
+  </data>
+  <data name="QuickSettings_ShowMarvelousWindow" xml:space="preserve">
+    <value>Marvelous Bereich</value>
+  </data>
 </root>

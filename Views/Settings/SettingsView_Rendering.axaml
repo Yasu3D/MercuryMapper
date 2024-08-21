@@ -25,7 +25,7 @@
                 </ComboBox>
                 
                 <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_ShowChainStripes}"/>
-                <CheckBox Name="CheckBoxShowChainStripes" HorizontalAlignment="Right" IsCheckedChanged="ShowChainStripes_OnIsCheckedChanged"/>
+                <CheckBox Name="CheckBoxShowChainStripes" HorizontalAlignment="Right" IsCheckedChanged="CheckBoxShowChainStripes_OnIsCheckedChanged"/>
             </UniformGrid>
             
             <Separator/>
@@ -72,6 +72,17 @@
                 
                 <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_ShowOtherUsersDuringPlayback}"/>
                 <CheckBox Name="CheckBoxShowOtherUsersDuringPlayback" HorizontalAlignment="Right" IsCheckedChanged="CheckBoxShowOtherUsersDuringPlayback_OnIsCheckedChanged"/>
+            </UniformGrid>
+            
+            <UniformGrid Columns="2">
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_ShowJudgementWindowMarvelous}"/>
+                <CheckBox Name="CheckBoxShowJudgementWindowMarvelous" HorizontalAlignment="Right" IsCheckedChanged="CheckBoxShowJudgementWindowMarvelous_OnIsCheckedChanged"/>
+                
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_ShowJudgementWindowGreat}"/>
+                <CheckBox Name="CheckBoxShowJudgementWindowGreat" HorizontalAlignment="Right" IsCheckedChanged="CheckBoxShowJudgementWindowGreat_OnIsCheckedChanged"/>
+                
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_ShowJudgementWindowGood}"/>
+                <CheckBox Name="CheckBoxShowJudgementWindowGood" HorizontalAlignment="Right" IsCheckedChanged="CheckBoxShowJudgementWindowGood_OnIsCheckedChanged"/>
             </UniformGrid>
         </StackPanel>
     </ScrollViewer>

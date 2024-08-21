@@ -1119,4 +1119,31 @@ Continue?</value>
   <data name="Menu_Proofread" xml:space="preserve">
     <value>Proofread</value>
   </data>
+  <data name="Judgement_Marvelous" xml:space="preserve">
+    <value>Marvelous Judgement</value>
+  </data>
+  <data name="Judgement_Great" xml:space="preserve">
+    <value>Great Judgement</value>
+  </data>
+  <data name="Judgement_Good" xml:space="preserve">
+    <value>Good Judgement</value>
+  </data>
+  <data name="Settings_ShowJudgementWindowMarvelous" xml:space="preserve">
+    <value>Show Marvelous Judgement Window</value>
+  </data>
+  <data name="Settings_ShowJudgementWindowGreat" xml:space="preserve">
+    <value>Show Great Judgement Window</value>
+  </data>
+  <data name="Settings_ShowJudgementWindowGood" xml:space="preserve">
+    <value>Show Good Judgement Window</value>
+  </data>
+  <data name="QuickSettings_ShowMarvelousWindow" xml:space="preserve">
+    <value>Marvelous Window</value>
+  </data>
+  <data name="QuickSettings_ShowGreatWindow" xml:space="preserve">
+    <value>Great Window</value>
+  </data>
+  <data name="QuickSettings_ShowGoodWindow" xml:space="preserve">
+    <value>Good Window</value>
+  </data>
 </root>
