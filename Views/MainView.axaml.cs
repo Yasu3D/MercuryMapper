@@ -2201,21 +2201,25 @@ public partial class MainView : UserControl
     private void QuickSettingsShowHiSpeed_OnIsCheckedChanged(object? sender, RoutedEventArgs e)
     {
         UserConfig.RenderConfig.ShowHiSpeed = QuickSettingsCheckBoxShowHiSpeed.IsChecked ?? true;
+        ApplySettings();
     }
     
     private void QuickSettingsShowJudgementWindowMarvelous_OnIsCheckedChanged(object? sender, RoutedEventArgs e)
     {
         UserConfig.RenderConfig.ShowJudgementWindowMarvelous = QuickSettingsCheckBoxShowJudgementWindowMarvelous.IsChecked ?? true;
+        ApplySettings();
     }
     
     private void QuickSettingsShowJudgementWindowGreat_OnIsCheckedChanged(object? sender, RoutedEventArgs e)
     {
         UserConfig.RenderConfig.ShowJudgementWindowGreat = QuickSettingsCheckBoxShowJudgementWindowGreat.IsChecked ?? true;
+        ApplySettings();
     }
     
     private void QuickSettingsShowJudgementWindowGood_OnIsCheckedChanged(object? sender, RoutedEventArgs e)
     {
         UserConfig.RenderConfig.ShowJudgementWindowGood = QuickSettingsCheckBoxShowJudgementWindowGood.IsChecked ?? true;
+        ApplySettings();
     }
     
     private void ButtonEditSelectionShape_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.EditSelection(true, false);
