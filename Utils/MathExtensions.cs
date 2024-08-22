@@ -133,7 +133,7 @@ public static class MathExtensions
         };
     }
 
-    public static bool IsOverlapping(int startLeftEdge, int startRightEdge, int endLeftEdge, int endRightEdge)
+    public static bool IsFullyOverlapping(int startLeftEdge, int startRightEdge, int endLeftEdge, int endRightEdge)
     {
         // Start and End are identical
         if (startLeftEdge == endLeftEdge && startRightEdge == endRightEdge) return true;
@@ -166,5 +166,22 @@ public static class MathExtensions
         bool caseB = startLeftEdge <= endLeftEdge && startRightEdge >= endRightEdge; // start bigger than end
         
         return caseA || caseB;
+    }
+
+    public static bool IsPartiallyOverlapping(int startLeftEdge, int startRightEdge, int endLeftEdge, int endRightEdge)
+    {
+        startLeftEdge %= 60;
+        startRightEdge %= 60;
+        endLeftEdge %= 60;
+        endRightEdge %= 60;
+        
+        
+        if (startLeftEdge > startRightEdge)
+        {
+            return endLeftEdge > endRightEdge || IsPartiallyOverlapping(endLeftEdge, endRightEdge, startLeftEdge, startRightEdge);
+        }
+
+        if (endLeftEdge> endRightEdge) return endLeftEdge < startRightEdge || endRightEdge > startLeftEdge;
+        return endLeftEdge < startRightEdge && endRightEdge > startLeftEdge;
     }
 }

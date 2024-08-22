@@ -1138,12 +1138,24 @@ Continue?</value>
     <value>Show Good Judgement Window</value>
   </data>
   <data name="QuickSettings_ShowMarvelousWindow" xml:space="preserve">
-    <value>Marvelous Window</value>
+    <value>Show Marvelous Window</value>
   </data>
   <data name="QuickSettings_ShowGreatWindow" xml:space="preserve">
-    <value>Great Window</value>
+    <value>Show Great Window</value>
   </data>
   <data name="QuickSettings_ShowGoodWindow" xml:space="preserve">
-    <value>Good Window</value>
+    <value>Show Good Window</value>
+  </data>
+  <data name="Settings_CutOverlappingJudgementWindows" xml:space="preserve">
+    <value>Cut overlapping Judgement Windows</value>
+  </data>
+  <data name="Settings_CutEarlyJudgementWindowOnHolds" xml:space="preserve">
+    <value>Cut Early Window on Holds</value>
+  </data>
+  <data name="QuickSettings_CutEarlyJudgementWindowOnHolds" xml:space="preserve">
+    <value>Cut Early on Holds</value>
+  </data>
+  <data name="QuickSettings_CutOverlappingJudgementWindows" xml:space="preserve">
+    <value>Cut Overlapping</value>
   </data>
 </root>

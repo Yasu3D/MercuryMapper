@@ -1458,7 +1458,7 @@ public class ChartEditor
             
             // If one hold completely encases the other (overlaps),
             // a special third HoldDirection needs to be used.
-            bool isOverlapping = MathExtensions.IsOverlapping(startLeftEdge, startRightEdge, endLeftEdge, endRightEdge);
+            bool isOverlapping = MathExtensions.IsFullyOverlapping(startLeftEdge, startRightEdge, endLeftEdge, endRightEdge);
             HoldDirection finalDirection = isOverlapping ? HoldDirection.Symmetrical : shortestDirection;
             
             // Get final signed offsets

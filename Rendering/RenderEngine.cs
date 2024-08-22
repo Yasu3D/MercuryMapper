@@ -1415,6 +1415,49 @@ public class RenderEngine(MainView mainView)
 
             TimingWindow window = GetTimingWindow(note.NoteType);
 
+            // Cut early window on Hold End
+            if (RenderConfig.CutEarlyJudgementWindowOnHolds)
+            {
+                bool holdEndFound = false;
+                Note? next = null;
+                
+                // Iterate forward until next note either doesn't exist, or it's FullTick is > current note's FullTick.
+                for (int j = i; j < chart.Notes.Count; j++)
+                {
+                    next = chart.Notes[j];
+                    
+                    if (next.BeatData.FullTick > note.BeatData.FullTick) break;
+                    if (next.NoteType == NoteType.HoldEnd && MathExtensions.IsPartiallyOverlapping(note.Position, note.Position + note.Size, next!.Position, next.Position + next.Size))
+                    {
+                        holdEndFound = true;
+                        break;
+                    }
+                }
+
+                // If that didnt work, iterate backward until next note either doesn't exist, or it's FullTick is < current note's FullTick.
+                if (holdEndFound == false)
+                {
+                    for (int j = i; j >= 0; j--)
+                    {
+                        next = chart.Notes[j];
+                        
+                        if (next.BeatData.FullTick < note.BeatData.FullTick) break;
+                        if (next.NoteType == NoteType.HoldEnd && MathExtensions.IsPartiallyOverlapping(note.Position, note.Position + note.Size, next!.Position, next.Position + next.Size))
+                        {
+                            holdEndFound = true;
+                            break;
+                        }
+                    }
+                }
+                
+                // Overlapping Hold end Found, cut window.
+                if (holdEndFound)
+                {
+                    window.GoodEarly = window.MarvelousEarly;
+                    window.GreatEarly = window.MarvelousEarly;
+                }
+            }
+            
             bool drawMarvelous = window.MarvelousEarly != 0 && window.MarvelousLate != 0;
             bool drawGreat = window.GreatEarly != 0 && window.GreatLate != 0;
             bool drawGood = window.GoodEarly != 0 && window.GoodLate != 0;
@@ -1435,9 +1478,80 @@ public class RenderEngine(MainView mainView)
             window.GoodEarly = chart.Timestamp2MeasureDecimal(window.GoodEarly);
             window.GoodLate = chart.Timestamp2MeasureDecimal(window.GoodLate);
 
-            if (window.GoodLate < CurrentMeasureDecimal) continue;
-            if (chart.GetScaledMeasureDecimal(window.GoodEarly, RenderConfig.ShowHiSpeed) > ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal) continue;
+            float minEarly = float.Min(float.Min(window.MarvelousEarly, window.GreatEarly), window.GoodEarly);
+            float maxLate = float.Max(float.Max(window.MarvelousLate, window.GreatLate), window.GoodLate);
+            
+            if (maxLate < CurrentMeasureDecimal) continue;
+            if (chart.GetScaledMeasureDecimal(minEarly, RenderConfig.ShowHiSpeed) > ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal) continue;
 
+            // Cut overlapping windows
+            if (RenderConfig.CutOverlappingJudgementWindows)
+            {
+                // Iterate forward until overlapping note is found, or next note is out of range.
+                for (int j = i; j < chart.Notes.Count; j++)
+                {
+                    Note next = chart.Notes[j];
+                    
+                    if (next.NoteType is NoteType.None or NoteType.HoldSegment or NoteType.HoldEnd or NoteType.MaskAdd or NoteType.MaskRemove or NoteType.EndOfChart) continue;
+                    if (next.BeatData.FullTick == note.BeatData.FullTick) continue;
+                    if (!MathExtensions.IsPartiallyOverlapping(note.Position, note.Position + note.Size, next.Position, next.Position + next.Size)) continue;
+                    
+                    TimingWindow nextWindow = GetTimingWindow(next.NoteType);
+                    float nextTimestamp = chart.MeasureDecimal2Timestamp(next.BeatData.MeasureDecimal);
+
+                    nextWindow.MarvelousEarly += nextTimestamp;
+                    nextWindow.GreatEarly += nextTimestamp;
+                    nextWindow.GoodEarly += nextTimestamp;
+
+                    nextWindow.MarvelousEarly = chart.Timestamp2MeasureDecimal(nextWindow.MarvelousEarly);
+                    nextWindow.GreatEarly = chart.Timestamp2MeasureDecimal(nextWindow.GreatEarly);
+                    nextWindow.GoodEarly = chart.Timestamp2MeasureDecimal(nextWindow.GoodEarly);
+                    
+                    float minNextEarly = float.Min(float.Min(nextWindow.MarvelousEarly, nextWindow.GreatEarly), nextWindow.GoodEarly);
+
+                    if (minNextEarly >= maxLate) break;
+
+                    float centerMeasureDecimal = (next.BeatData.MeasureDecimal + note.BeatData.MeasureDecimal) * 0.5f;
+                    
+                    // Cut Timing window
+                    window.MarvelousLate = float.Min(window.MarvelousLate, centerMeasureDecimal);
+                    window.GreatLate = float.Min(window.GreatLate, centerMeasureDecimal);
+                    window.GoodLate = float.Min(window.GoodLate, centerMeasureDecimal);
+                }
+
+                // Iterate backward until overlapping note is found, or prev note is out of range.
+                for (int j = i; j >= 0; j--)
+                {
+                    Note prev = chart.Notes[j];
+                    
+                    if (prev.NoteType is NoteType.None or NoteType.HoldSegment or NoteType.HoldEnd or NoteType.MaskAdd or NoteType.MaskRemove or NoteType.EndOfChart) continue;
+                    if (prev.BeatData.FullTick == note.BeatData.FullTick) continue;
+                    if (!MathExtensions.IsPartiallyOverlapping(note.Position, note.Position + note.Size, prev.Position, prev.Position + prev.Size)) continue;
+                    
+                    TimingWindow prevWindow = GetTimingWindow(prev.NoteType);
+                    float prevTimestamp = chart.MeasureDecimal2Timestamp(prev.BeatData.MeasureDecimal);
+
+                    prevWindow.MarvelousLate += prevTimestamp;
+                    prevWindow.GreatLate += prevTimestamp;
+                    prevWindow.GoodLate += prevTimestamp;
+
+                    prevWindow.MarvelousLate = chart.Timestamp2MeasureDecimal(prevWindow.MarvelousLate);
+                    prevWindow.GreatLate = chart.Timestamp2MeasureDecimal(prevWindow.GreatLate);
+                    prevWindow.GoodLate = chart.Timestamp2MeasureDecimal(prevWindow.GoodLate);
+                    
+                    float maxPrevLate = float.Max(float.Max(prevWindow.MarvelousLate, prevWindow.GreatLate), prevWindow.GoodLate);
+
+                    if (maxPrevLate <= minEarly) break;
+
+                    float centerMeasureDecimal = (prev.BeatData.MeasureDecimal + note.BeatData.MeasureDecimal) * 0.5f;
+                    
+                    // Cut Timing window
+                    window.MarvelousEarly = float.Max(window.MarvelousEarly, centerMeasureDecimal);
+                    window.GreatEarly = float.Max(window.GreatEarly, centerMeasureDecimal);
+                    window.GoodEarly = float.Max(window.GoodEarly, centerMeasureDecimal);
+                }
+            }
+            
             float startAngle = note.Position * -6;
             float sweepAngle = note.Size * -6 + 0.1f;
             
@@ -1460,6 +1574,34 @@ public class RenderEngine(MainView mainView)
             SKRect goodEarlyRect = GetRect(goodEarlyScale);
             SKRect goodLateRect = GetRect(goodLateScale);
 
+            if (drawGood && RenderConfig.ShowJudgementWindowGood)
+            {
+                SKPath goodPath = new();
+                goodPath.ArcTo(goodEarlyRect, startAngle, sweepAngle, true);
+                goodPath.ArcTo(greatEarlyRect, startAngle + sweepAngle, -sweepAngle, false);
+                goodPath.Close();
+                goodPath.ArcTo(greatLateRect, startAngle, sweepAngle, true);
+                goodPath.ArcTo(goodLateRect, startAngle + sweepAngle, -sweepAngle, false);
+                goodPath.Close();
+            
+                canvas.DrawPath(goodPath, brushes.JudgementGoodFill);
+                canvas.DrawPath(goodPath, brushes.JudgementGoodPen);
+            }
+            
+            if (drawGreat && RenderConfig.ShowJudgementWindowGreat)
+            {
+                SKPath greatPath = new();
+                greatPath.ArcTo(greatEarlyRect, startAngle, sweepAngle, true);
+                greatPath.ArcTo(marvelousEarlyRect, startAngle + sweepAngle, -sweepAngle, false);
+                greatPath.Close();
+                greatPath.ArcTo(marvelousLateRect, startAngle, sweepAngle, true);
+                greatPath.ArcTo(greatLateRect, startAngle + sweepAngle, -sweepAngle, false);
+                greatPath.Close();
+            
+                canvas.DrawPath(greatPath, brushes.JudgementGreatFill);
+                canvas.DrawPath(greatPath, brushes.JudgementGreatPen);
+            }
+            
             if (drawMarvelous && RenderConfig.ShowJudgementWindowMarvelous)
             {
                 SKPath marvelousPath = new();
@@ -1469,32 +1611,6 @@ public class RenderEngine(MainView mainView)
             
                 canvas.DrawPath(marvelousPath, brushes.JudgementMarvelousFill);
                 canvas.DrawPath(marvelousPath, brushes.JudgementMarvelousPen);
-            }
-
-            if (drawGreat && RenderConfig.ShowJudgementWindowGreat)
-            {
-                SKPath greatPath = new();
-                greatPath.ArcTo(greatEarlyRect, startAngle, sweepAngle, true);
-                greatPath.ArcTo(marvelousEarlyRect, startAngle + sweepAngle, -sweepAngle, false);
-                greatPath.ArcTo(marvelousLateRect, startAngle, sweepAngle, true);
-                greatPath.ArcTo(greatLateRect, startAngle + sweepAngle, -sweepAngle, false);
-                greatPath.Close();
-            
-                canvas.DrawPath(greatPath, brushes.JudgementGreatFill);
-                canvas.DrawPath(greatPath, brushes.JudgementGreatPen);
-            }
-
-            if (drawGood && RenderConfig.ShowJudgementWindowGood)
-            {
-                SKPath goodPath = new();
-                goodPath.ArcTo(goodEarlyRect, startAngle, sweepAngle, true);
-                goodPath.ArcTo(greatEarlyRect, startAngle + sweepAngle, -sweepAngle, false);
-                goodPath.ArcTo(greatLateRect, startAngle, sweepAngle, true);
-                goodPath.ArcTo(goodLateRect, startAngle + sweepAngle, -sweepAngle, false);
-                goodPath.Close();
-            
-                canvas.DrawPath(goodPath, brushes.JudgementGoodFill);
-                canvas.DrawPath(goodPath, brushes.JudgementGoodPen);
             }
         }
     }

@@ -549,6 +549,8 @@ public partial class MainView : UserControl
         QuickSettingsCheckBoxShowJudgementWindowMarvelous.IsChecked = UserConfig.RenderConfig.ShowJudgementWindowMarvelous;
         QuickSettingsCheckBoxShowJudgementWindowGreat.IsChecked = UserConfig.RenderConfig.ShowJudgementWindowGreat;
         QuickSettingsCheckBoxShowJudgementWindowGood.IsChecked = UserConfig.RenderConfig.ShowJudgementWindowGood;
+        QuickSettingsCheckBoxCutEarlyJudgementWindowOnHolds.IsChecked = UserConfig.RenderConfig.CutEarlyJudgementWindowOnHolds;
+        QuickSettingsCheckBoxCutOverlappingJudgementWindows.IsChecked = UserConfig.RenderConfig.CutOverlappingJudgementWindows;
     }
     
     public void SetMinNoteSize(NoteType noteType, BonusType bonusType)
@@ -2221,6 +2223,19 @@ public partial class MainView : UserControl
         UserConfig.RenderConfig.ShowJudgementWindowGood = QuickSettingsCheckBoxShowJudgementWindowGood.IsChecked ?? true;
         ApplySettings();
     }
+    
+    private void QuickSettingsCutEarlyJudgementWindowOnHolds_OnIsCheckedChanged(object? sender, RoutedEventArgs e)
+    {
+        UserConfig.RenderConfig.CutEarlyJudgementWindowOnHolds = QuickSettingsCheckBoxCutEarlyJudgementWindowOnHolds.IsChecked ?? true;
+        ApplySettings();
+    }
+    
+    private void QuickSettingsCutOverlappingJudgementWindows_OnIsCheckedChanged(object? sender, RoutedEventArgs e)
+    {
+        UserConfig.RenderConfig.CutOverlappingJudgementWindows = QuickSettingsCheckBoxCutOverlappingJudgementWindows.IsChecked ?? true;
+        ApplySettings();
+    }
+
     
     private void ButtonEditSelectionShape_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.EditSelection(true, false);
     

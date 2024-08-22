@@ -221,7 +221,7 @@ public static class Proofreader
                 if (current.IsHold || current.IsMask || next.IsHold || next.IsMask) continue;
                 if (current.BeatData.FullTick != next.BeatData.FullTick) continue;
                 
-                if (MathExtensions.IsOverlapping(current.Position, current.Position + current.Size, next.Position, next.Position + next.Size))
+                if (MathExtensions.IsFullyOverlapping(current.Position, current.Position + current.Size, next.Position, next.Position + next.Size))
                 {
                     AddMessage(textBlock, MessageType.Error, $"{current.NoteType} @ {current.BeatData.Measure} {current.BeatData.Tick} is overlapping with {next.NoteType}.\n");
                     error = true;

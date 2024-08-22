@@ -1906,7 +1906,25 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Good Bereich.
+        ///   Looks up a localized string similar to Entferne Early auf Halte-Noten.
+        /// </summary>
+        public static string QuickSettings_CutEarlyJudgementWindowOnHolds {
+            get {
+                return ResourceManager.GetString("QuickSettings_CutEarlyJudgementWindowOnHolds", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Entferne überlappende Bereiche.
+        /// </summary>
+        public static string QuickSettings_CutOverlappingJudgementWindows {
+            get {
+                return ResourceManager.GetString("QuickSettings_CutOverlappingJudgementWindows", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zeige Good Bereich.
         /// </summary>
         public static string QuickSettings_ShowGoodWindow {
             get {
@@ -1915,7 +1933,7 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Great Bereich.
+        ///   Looks up a localized string similar to Zeige Great Bereich.
         /// </summary>
         public static string QuickSettings_ShowGreatWindow {
             get {
@@ -1924,7 +1942,7 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Marvelous Bereich.
+        ///   Looks up a localized string similar to Zeige Marvelous Bereich.
         /// </summary>
         public static string QuickSettings_ShowMarvelousWindow {
             get {
@@ -2199,6 +2217,24 @@ namespace MercuryMapper.Assets.Lang {
         public static string Settings_Color_Sync {
             get {
                 return ResourceManager.GetString("Settings_Color_Sync", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Entferne Early Bereiche auf Halte-Noten.
+        /// </summary>
+        public static string Settings_CutEarlyJudgementWindowOnHolds {
+            get {
+                return ResourceManager.GetString("Settings_CutEarlyJudgementWindowOnHolds", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Entferne überlappende Wertungsbereiche.
+        /// </summary>
+        public static string Settings_CutOverlappingJudgementWindows {
+            get {
+                return ResourceManager.GetString("Settings_CutOverlappingJudgementWindows", resourceCulture);
             }
         }
         

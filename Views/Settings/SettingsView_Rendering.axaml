@@ -74,6 +74,8 @@
                 <CheckBox Name="CheckBoxShowOtherUsersDuringPlayback" HorizontalAlignment="Right" IsCheckedChanged="CheckBoxShowOtherUsersDuringPlayback_OnIsCheckedChanged"/>
             </UniformGrid>
             
+            <Separator/>
+            
             <UniformGrid Columns="2">
                 <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_ShowJudgementWindowMarvelous}"/>
                 <CheckBox Name="CheckBoxShowJudgementWindowMarvelous" HorizontalAlignment="Right" IsCheckedChanged="CheckBoxShowJudgementWindowMarvelous_OnIsCheckedChanged"/>
@@ -83,6 +85,16 @@
                 
                 <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_ShowJudgementWindowGood}"/>
                 <CheckBox Name="CheckBoxShowJudgementWindowGood" HorizontalAlignment="Right" IsCheckedChanged="CheckBoxShowJudgementWindowGood_OnIsCheckedChanged"/>
+            </UniformGrid>
+            
+            <Separator/>
+            
+            <UniformGrid Columns="2">
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_CutEarlyJudgementWindowOnHolds}"/>
+                <CheckBox Name="CheckBoxCutEarlyJudgementWindowOnHolds" HorizontalAlignment="Right" IsCheckedChanged="CheckBoxCutEarlyJudgementWindowOnHolds_OnIsCheckedChanged"/>
+                
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_CutOverlappingJudgementWindows}"/>
+                <CheckBox Name="CheckBoxCutOverlappingJudgementWindows" HorizontalAlignment="Right" IsCheckedChanged="CheckBoxCutOverlappingJudgementWindows_OnIsCheckedChanged"/>
             </UniformGrid>
         </StackPanel>
     </ScrollViewer>

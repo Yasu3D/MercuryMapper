@@ -1138,12 +1138,24 @@ Fortfahren?</value>
     <value>Zeige Good Bewertungsbereich</value>
   </data>
   <data name="QuickSettings_ShowGoodWindow" xml:space="preserve">
-    <value>Good Bereich</value>
+    <value>Zeige Good Bereich</value>
   </data>
   <data name="QuickSettings_ShowGreatWindow" xml:space="preserve">
-    <value>Great Bereich</value>
+    <value>Zeige Great Bereich</value>
   </data>
   <data name="QuickSettings_ShowMarvelousWindow" xml:space="preserve">
-    <value>Marvelous Bereich</value>
+    <value>Zeige Marvelous Bereich</value>
+  </data>
+  <data name="Settings_CutEarlyJudgementWindowOnHolds" xml:space="preserve">
+    <value>Entferne Early Bereiche auf Halte-Noten</value>
+  </data>
+  <data name="Settings_CutOverlappingJudgementWindows" xml:space="preserve">
+    <value>Entferne überlappende Wertungsbereiche</value>
+  </data>
+  <data name="QuickSettings_CutEarlyJudgementWindowOnHolds" xml:space="preserve">
+    <value>Entferne Early auf Halte-Noten</value>
+  </data>
+  <data name="QuickSettings_CutOverlappingJudgementWindows" xml:space="preserve">
+    <value>Entferne überlappende Bereiche</value>
   </data>
 </root>

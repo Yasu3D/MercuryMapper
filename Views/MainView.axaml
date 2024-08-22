@@ -628,6 +628,16 @@
                             <CheckBox Name="QuickSettingsCheckBoxShowJudgementWindowGood" HorizontalAlignment="Right" IsCheckedChanged="QuickSettingsShowJudgementWindowGood_OnIsCheckedChanged"/>
                         </UniformGrid>
                         
+                        <Separator/>
+                        
+                        <UniformGrid Columns="2">
+                            <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.QuickSettings_CutEarlyJudgementWindowOnHolds}"/>
+                            <CheckBox Name="QuickSettingsCheckBoxCutEarlyJudgementWindowOnHolds" HorizontalAlignment="Right" IsCheckedChanged="QuickSettingsCutEarlyJudgementWindowOnHolds_OnIsCheckedChanged"/>
+                            
+                            <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.QuickSettings_CutOverlappingJudgementWindows}"/>
+                            <CheckBox Name="QuickSettingsCheckBoxCutOverlappingJudgementWindows" HorizontalAlignment="Right" IsCheckedChanged="QuickSettingsCutOverlappingJudgementWindows_OnIsCheckedChanged"/>
+                        </UniformGrid>
+                        
                         <Separator Margin="0,5,0,12"/>
                         
                         <TextBlock VerticalAlignment="Center" Margin="0,0,0,-7" Text="{x:Static lang:Resources.Settings_Audio_MusicVolume}"/>
