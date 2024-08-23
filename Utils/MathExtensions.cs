@@ -174,7 +174,9 @@ public static class MathExtensions
         startRightEdge %= 60;
         endLeftEdge %= 60;
         endRightEdge %= 60;
-        
+
+        // one or either notes are size 60, they must be overlapping.
+        if (startLeftEdge == startRightEdge || endLeftEdge == endRightEdge) return true;
         
         if (startLeftEdge > startRightEdge)
         {
