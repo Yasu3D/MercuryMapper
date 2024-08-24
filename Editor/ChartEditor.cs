@@ -487,22 +487,7 @@ public class ChartEditor
                 bool inTimeRange = x.BeatData.FullTick >= BoxSelect.SelectionStart.FullTick &&
                                    x.BeatData.FullTick <= BoxSelect.SelectionEnd.FullTick;
 
-                int noteEnd = (x.Position + x.Size) % 60;
-                int boxSelectEnd = (BoxSelect.Position + BoxSelect.Size) % 60;
-                
-                bool case1 = (x.Position <= noteEnd && BoxSelect.Position >= x.Position && BoxSelect.Position <= noteEnd) ||
-                             (x.Position > noteEnd && (BoxSelect.Position >= x.Position || BoxSelect.Position <= noteEnd));
-
-                bool case2 = (x.Position <= noteEnd && boxSelectEnd >= x.Position && boxSelectEnd <= noteEnd) ||
-                             (x.Position > noteEnd && (boxSelectEnd >= x.Position || boxSelectEnd <= noteEnd));
-
-                bool case3 = (BoxSelect.Position <= boxSelectEnd && x.Position >= BoxSelect.Position && x.Position <= boxSelectEnd) ||
-                             (BoxSelect.Position > boxSelectEnd && (x.Position >= BoxSelect.Position || x.Position <= boxSelectEnd));
-
-                bool case4 = (BoxSelect.Position <= boxSelectEnd && noteEnd >= BoxSelect.Position && noteEnd <= boxSelectEnd) ||
-                             (BoxSelect.Position > boxSelectEnd && (noteEnd >= BoxSelect.Position || noteEnd <= boxSelectEnd));
-                
-                return inTimeRange && (BoxSelect.Size == 60 || case1 || case2 || case3 || case4);
+                return inTimeRange && MathExtensions.IsPartiallyOverlapping(x.Position, x.Position + x.Size, BoxSelect.Position, BoxSelect.Position + BoxSelect.Size);
             });
             
             foreach (Note note in selectable)
