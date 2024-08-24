@@ -326,6 +326,12 @@ public partial class MainView : UserControl
         foreach (string file in autosaves) File.Delete(file);
     }
 
+    private static void ClearMultiChartingAudio()
+    {
+        string[] audioFiles = Directory.GetFiles(Path.GetTempPath(), "*.mmm.audio");
+        foreach (string file in audioFiles) File.Delete(file);
+    }
+
     /// <summary>
     /// (Don't confuse this with UpdateTimer_Tick please)
     /// Updates the current time/measureDecimal the user is looking at.
@@ -1540,6 +1546,8 @@ public partial class MainView : UserControl
         bool save = await PromptSave();
         if (!save) return;
 
+        ClearMultiChartingAudio();
+        
         CanShutdown = true;
         (Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.Shutdown();
     }
