@@ -39,10 +39,10 @@ public partial class MainView : UserControl
     public MainView()
     {
         ChartEditor = new(this);
-        
+
         InitializeComponent();
         LoadUserConfig();
-        
+
         KeybindEditor = new(UserConfig);
         AudioManager = new(this);
         RenderEngine = new(this);
@@ -50,12 +50,12 @@ public partial class MainView : UserControl
         PeerManager = new(this);
         PeerBroadcaster = new(this);
         ConnectionManager = new(this);
-        
+
         updateInterval = TimeSpan.FromSeconds(1.0 / UserConfig.RenderConfig.RefreshRate);
         UpdateTimer = new(UpdateTimer_Tick, null, Timeout.Infinite, Timeout.Infinite);
         HitsoundTimer = new(TimeSpan.FromMilliseconds(1), DispatcherPriority.Background, HitsoundTimer_Tick) { IsEnabled = false };
         AutosaveTimer = new(TimeSpan.FromMinutes(1), DispatcherPriority.Background, AutosaveTimer_Tick) { IsEnabled = true };
-        
+
         KeyDownEvent.AddClassHandler<TopLevel>(OnKeyDown, RoutingStrategies.Tunnel, handledEventsToo: true);
         KeyUpEvent.AddClassHandler<TopLevel>(OnKeyUp, RoutingStrategies.Tunnel, handledEventsToo: true);
 
@@ -65,14 +65,14 @@ public partial class MainView : UserControl
         ToggleInsertButton();
         SetSelectionInfo();
         SetQuickSettings();
-        
+
         Dispatcher.UIThread.Post(async () => await CheckAutosaves(), DispatcherPriority.Background);
     }
 
     public bool CanShutdown;
     public const string AppVersion = "v3.0.0 DEV";
     private const string ConfigPath = "UserConfig.toml";
-    
+
     public UserConfig UserConfig = new();
     public readonly KeybindEditor KeybindEditor;
     public readonly ChartEditor ChartEditor;
@@ -119,7 +119,7 @@ public partial class MainView : UserControl
         Empty,
         Loaded
     }
-    
+
     // ________________ Setup & UI Updates
 
     private void LoadUserConfig()
@@ -129,7 +129,7 @@ public partial class MainView : UserControl
             File.WriteAllText(ConfigPath, Toml.FromModel(UserConfig));
             return;
         }
-        
+
         try
         {
             UserConfig = Toml.ToModel<UserConfig>(File.ReadAllText(ConfigPath));
@@ -158,7 +158,7 @@ public partial class MainView : UserControl
     private void ToggleTypeRadio(bool isMask)
     {
         if (BonusTypePanel == null || MaskDirectionPanel == null) return;
-        
+
         BonusTypePanel.IsVisible = !isMask;
         MaskDirectionPanel.IsVisible = isMask;
     }
@@ -222,7 +222,7 @@ public partial class MainView : UserControl
             {
                 AudioManager.CurrentSong.Position = AudioManager.LoopStart;
                 AudioManager.HitsoundNoteIndex = ChartEditor.Chart.Notes.FindIndex(x => x.BeatData.MeasureDecimal >= ChartEditor.Chart.Timestamp2MeasureDecimal(AudioManager.CurrentSong.Position));
-                
+
                 if (ChartEditor.Chart.StartTimeSig != null)
                 {
                     int clicks = ChartEditor.Chart.StartTimeSig.TimeSig.Upper;
@@ -231,7 +231,7 @@ public partial class MainView : UserControl
                     AudioManager.MetronomeIndex = (int)float.Ceiling(ChartEditor.CurrentMeasureDecimal / interval);
                 }
             }
-            
+
             if (AudioManager.CurrentSong.Position >= AudioManager.CurrentSong.Length && AudioManager.CurrentSong.IsPlaying)
             {
                 SetPlayState(PlayerState.Paused);
@@ -243,19 +243,19 @@ public partial class MainView : UserControl
                 SetPlayState(PlayerState.Paused);
                 AudioManager.CurrentSong.Position = (uint)(ChartEditor.Chart.PreviewTime * 1000);
             }
-        
-            if (UpdateSource == TimeUpdateSource.None) 
+
+            if (UpdateSource == TimeUpdateSource.None)
                 UpdateTime(TimeUpdateSource.Timer);
         });
     }
-    
+
     public void HitsoundTimer_Tick(object? sender, EventArgs e)
     {
         if (AudioManager.CurrentSong == null) return;
         if (playerState is PlayerState.Preview && UserConfig.AudioConfig.MuteHitsoundsOnPreview) return;
-        
+
         float measure = ChartEditor.Chart.Timestamp2MeasureDecimal(AudioManager.CurrentSong.Position + BassSoundEngine.GetLatency() + UserConfig.AudioConfig.HitsoundOffset);
-        
+
         if (AudioManager.HitsoundNoteIndex != -1)
         {
             while (AudioManager.HitsoundNoteIndex < ChartEditor.Chart.Notes.Count && ChartEditor.Chart.Notes[AudioManager.HitsoundNoteIndex].BeatData.MeasureDecimal <= measure)
@@ -281,10 +281,10 @@ public partial class MainView : UserControl
     public void AutosaveTimer_Tick(object? sender, EventArgs e)
     {
         if (ChartEditor.Chart.IsSaved) return;
-        
-        string filepath = Path.GetTempFileName().Replace(".tmp",".autosave.mer");
+
+        string filepath = Path.GetTempFileName().Replace(".tmp", ".autosave.mer");
         FormatHandler.WriteFile(ChartEditor.Chart, filepath, ChartFormatType.Saturn);
-        
+
         Console.WriteLine(filepath);
     }
 
@@ -292,7 +292,7 @@ public partial class MainView : UserControl
     {
         string[] autosaves = Directory.GetFiles(Path.GetTempPath(), "*.autosave.mer").OrderByDescending(File.GetCreationTime).ToArray();
         if (autosaves.Length == 0) return;
-        
+
         ContentDialogResult result = await showSelectAudioPrompt(File.GetCreationTime(autosaves[0]).ToString("yyyy-MM-dd HH:mm:ss"));
         if (result != ContentDialogResult.Primary) return;
 
@@ -300,7 +300,7 @@ public partial class MainView : UserControl
         ChartEditor.Chart.IsSaved = false; // Force saved prompt
         ChartEditor.Chart.IsNew = true; // Set new to force a new save.
         ChartEditor.Chart.Filepath = ""; // Clear path to not overwrite temp file.
-        
+
         ClearAutosaves();
         return;
 
@@ -313,7 +313,7 @@ public partial class MainView : UserControl
                 PrimaryButtonText = Assets.Lang.Resources.Generic_Yes,
                 CloseButtonText = Assets.Lang.Resources.Generic_No
             };
-            
+
             return dialog.ShowAsync();
         }
     }
@@ -321,11 +321,11 @@ public partial class MainView : UserControl
     private static void ClearAutosaves()
     {
         Console.WriteLine("Clearing Autosaves");
-        
+
         string[] autosaves = Directory.GetFiles(Path.GetTempPath(), "*.autosave.mer");
         foreach (string file in autosaves) File.Delete(file);
     }
-    
+
     /// <summary>
     /// (Don't confuse this with UpdateTimer_Tick please)
     /// Updates the current time/measureDecimal the user is looking at.
@@ -337,7 +337,7 @@ public partial class MainView : UserControl
     {
         if (AudioManager.CurrentSong == null) return;
         UpdateSource = source;
-        
+
         // Update Audio Position
         if (source is not TimeUpdateSource.Timer && !AudioManager.CurrentSong.IsPlaying)
         {
@@ -349,7 +349,7 @@ public partial class MainView : UserControl
             if (source is TimeUpdateSource.Numeric)
             {
                 if (NumericMeasure.Value == null || NumericBeatValue.Value == null || NumericBeatDivisor.Value == null) return;
-                
+
                 float measureDecimal = (float)(NumericMeasure.Value + NumericBeatValue.Value / NumericBeatDivisor.Value);
                 AudioManager.CurrentSong.Position = (uint)ChartEditor.Chart.BeatData2Timestamp(new(measureDecimal));
             }
@@ -359,13 +359,13 @@ public partial class MainView : UserControl
                 AudioManager.CurrentSong.Position = (uint)ChartEditor.Chart.MeasureDecimal2Timestamp(ChartEditor.CurrentMeasureDecimal);
             }
         }
-        
+
         // Avoid imprecision from Timestamp2BeatData when paused.
         // This was causing a lot of off-by-one errors on BeatData.Tick values. >:[
         BeatData data = UpdateSource is TimeUpdateSource.Timer or TimeUpdateSource.Slider or TimeUpdateSource.MeasureDecimal || NumericMeasure.Value is null || NumericBeatValue.Value is null || NumericBeatDivisor.Value is null
             ? ChartEditor.Chart.Timestamp2BeatData(AudioManager.CurrentSong.Position)
             : new((int)NumericMeasure.Value, (int)(NumericBeatValue.Value / NumericBeatDivisor.Value * 1920));
-        
+
         // Update Numeric
         if (source is not TimeUpdateSource.Numeric && NumericBeatDivisor.Value != null)
         {
@@ -381,125 +381,125 @@ public partial class MainView : UserControl
         {
             SliderSongPosition.Value = (int)AudioManager.CurrentSong.Position;
         }
-        
+
         ChartEditor.CurrentMeasureDecimal = data.MeasureDecimal;
         TimestampDetailed.Text = TimeSpan.FromMilliseconds(AudioManager.CurrentSong.Position).ToString(@"hh\:mm\:ss\.fff");
         TimestampSeconds.Text = $"{AudioManager.CurrentSong.Position * 0.001f:F3}";
         ToggleInsertButton();
-        
+
         UpdateSource = TimeUpdateSource.None;
     }
 
     public void ToggleInsertButton()
     {
         int endOfChartCount = ChartEditor.Chart.Notes.Count(x => x.NoteType is NoteType.EndOfChart);
-            
+
         bool blockEndOfChart = endOfChartCount == 1 && ChartEditor.CurrentNoteType is NoteType.EndOfChart;
         bool behindEndOfChart = endOfChartCount != 0 && ChartEditor.CurrentMeasureDecimal >= ChartEditor.Chart.Notes.FirstOrDefault(x => x.NoteType is NoteType.EndOfChart)?.BeatData.MeasureDecimal;
         bool beforeHoldStart = ChartEditor is { CurrentHoldStart: not null, EditorState: ChartEditorState.InsertHold } && ChartEditor.CurrentMeasureDecimal <= ChartEditor.CurrentHoldStart.BeatData.MeasureDecimal;
         bool beforeLastHold = ChartEditor is { LastPlacedHold: not null, EditorState: ChartEditorState.InsertHold } && ChartEditor.CurrentMeasureDecimal <= ChartEditor.LastPlacedHold.BeatData.MeasureDecimal;
-            
+
         ButtonInsert.IsEnabled = !(blockEndOfChart || behindEndOfChart || beforeHoldStart || beforeLastHold);
     }
-    
+
     public void SetSelectionInfo()
+    {
+        SelectionInfoSelectedNotesValue.Text = ChartEditor.SelectedNotes.Count.ToString();
+        SelectionCountText.Text = $"{Assets.Lang.Resources.Editor_SelectionInfo_SelectedNotes}: {ChartEditor.SelectedNotes.Count}";
+        SelectionCountText.IsVisible = ChartEditor.SelectedNotes.Count != 0;
+
+        if (ChartEditor.HighlightedElement is null)
         {
-            SelectionInfoSelectedNotesValue.Text = ChartEditor.SelectedNotes.Count.ToString();
-            SelectionCountText.Text = $"{Assets.Lang.Resources.Editor_SelectionInfo_SelectedNotes}: {ChartEditor.SelectedNotes.Count}";
-            SelectionCountText.IsVisible = ChartEditor.SelectedNotes.Count != 0;
-            
-            if (ChartEditor.HighlightedElement is null)
-            {
-                SelectionInfoMeasureValue.Text = "/";
-                SelectionInfoBeatValue.Text = "/";
-                
-                SelectionInfoNoteType.IsVisible = false;
-                SelectionInfoNoteTypeValue.IsVisible = false;
-                SelectionInfoGimmickType.IsVisible = false;
-                SelectionInfoGimmickTypeValue.IsVisible = false;
-                SelectionInfoPosition.IsVisible = false;
-                SelectionInfoPositionValue.IsVisible = false;
-                SelectionInfoSize.IsVisible = false;
-                SelectionInfoSizeValue.IsVisible = false;
-                SelectionInfoMaskDirection.IsVisible = false;
-                SelectionInfoMaskDirectionValue.IsVisible = false;
-                SelectionInfoBpm.IsVisible = false;
-                SelectionInfoBpmValue.IsVisible = false;
-                SelectionInfoHiSpeed.IsVisible = false;
-                SelectionInfoHiSpeedValue.IsVisible = false;
-                SelectionInfoTimeSig.IsVisible = false;
-                SelectionInfoTimeSigValue.IsVisible = false;
-                
-                SelectionInfoSeparator1.IsVisible = false;
-                SelectionInfoSeparator2.IsVisible = false;
+            SelectionInfoMeasureValue.Text = "/";
+            SelectionInfoBeatValue.Text = "/";
 
-                return;
-            }
+            SelectionInfoNoteType.IsVisible = false;
+            SelectionInfoNoteTypeValue.IsVisible = false;
+            SelectionInfoGimmickType.IsVisible = false;
+            SelectionInfoGimmickTypeValue.IsVisible = false;
+            SelectionInfoPosition.IsVisible = false;
+            SelectionInfoPositionValue.IsVisible = false;
+            SelectionInfoSize.IsVisible = false;
+            SelectionInfoSizeValue.IsVisible = false;
+            SelectionInfoMaskDirection.IsVisible = false;
+            SelectionInfoMaskDirectionValue.IsVisible = false;
+            SelectionInfoBpm.IsVisible = false;
+            SelectionInfoBpmValue.IsVisible = false;
+            SelectionInfoHiSpeed.IsVisible = false;
+            SelectionInfoHiSpeedValue.IsVisible = false;
+            SelectionInfoTimeSig.IsVisible = false;
+            SelectionInfoTimeSigValue.IsVisible = false;
 
-            SelectionInfoMeasureValue.Text = ChartEditor.HighlightedElement.BeatData.Measure.ToString();
+            SelectionInfoSeparator1.IsVisible = false;
+            SelectionInfoSeparator2.IsVisible = false;
 
-            int tick = ChartEditor.HighlightedElement.BeatData.Tick;
-            int gcd = MathExtensions.GreatestCommonDivisor(tick, 1920);
-            SelectionInfoBeatValue.Text = $"{tick / gcd} / {1920 / gcd}";
-            
-            if (ChartEditor.HighlightedElement is Gimmick gimmick)
-            {
-                SelectionInfoGimmickTypeValue.Text = Enums2String.GimmickType2String(gimmick.GimmickType);
-                SelectionInfoBpmValue.Text = gimmick.Bpm.ToString(CultureInfo.CurrentCulture);
-                SelectionInfoHiSpeedValue.Text = gimmick.HiSpeed.ToString(CultureInfo.CurrentCulture);
-                SelectionInfoTimeSigValue.Text = $"{gimmick.TimeSig.Upper} / {gimmick.TimeSig.Lower}";
-                
-                SelectionInfoNoteType.IsVisible = false;
-                SelectionInfoNoteTypeValue.IsVisible = false;
-                SelectionInfoPosition.IsVisible = false;
-                SelectionInfoPositionValue.IsVisible = false;
-                SelectionInfoSize.IsVisible = false;
-                SelectionInfoSizeValue.IsVisible = false;
-                SelectionInfoMaskDirection.IsVisible = false;
-                SelectionInfoMaskDirectionValue.IsVisible = false;
-                
-                SelectionInfoGimmickType.IsVisible = true;
-                SelectionInfoGimmickTypeValue.IsVisible = true;
-                SelectionInfoBpm.IsVisible = gimmick.GimmickType is GimmickType.BpmChange;
-                SelectionInfoBpmValue.IsVisible = gimmick.GimmickType is GimmickType.BpmChange;
-                SelectionInfoHiSpeed.IsVisible = gimmick.GimmickType is GimmickType.HiSpeedChange;
-                SelectionInfoHiSpeedValue.IsVisible = gimmick.GimmickType is GimmickType.HiSpeedChange;
-                SelectionInfoTimeSig.IsVisible = gimmick.GimmickType is GimmickType.TimeSigChange;
-                SelectionInfoTimeSigValue.IsVisible = gimmick.GimmickType is GimmickType.TimeSigChange;
-                
-                SelectionInfoSeparator1.IsVisible = true;
-                SelectionInfoSeparator2.IsVisible = gimmick is { IsStop: false, IsReverse: false };
-            }
-
-            if (ChartEditor.HighlightedElement is Note note)
-            {
-                SelectionInfoPositionValue.Text = note.Position.ToString();
-                SelectionInfoSizeValue.Text = note.Size.ToString();
-                SelectionInfoNoteTypeValue.Text = Enums2String.NoteType2String(note.NoteType, note.BonusType);
-                SelectionInfoMaskDirectionValue.Text = Enums2String.MaskDirection2String(note.MaskDirection);
-                
-                SelectionInfoNoteType.IsVisible = true;
-                SelectionInfoNoteTypeValue.IsVisible = true;
-                SelectionInfoGimmickType.IsVisible = false;
-                SelectionInfoGimmickTypeValue.IsVisible = false;
-                SelectionInfoPosition.IsVisible = true;
-                SelectionInfoPositionValue.IsVisible = true;
-                SelectionInfoSize.IsVisible = true;
-                SelectionInfoSizeValue.IsVisible = true;
-                SelectionInfoMaskDirection.IsVisible = note.IsMask;
-                SelectionInfoMaskDirectionValue.IsVisible = note.IsMask;
-                
-                SelectionInfoBpm.IsVisible = false;
-                SelectionInfoBpmValue.IsVisible = false;
-                SelectionInfoHiSpeed.IsVisible = false;
-                SelectionInfoHiSpeedValue.IsVisible = false;
-                SelectionInfoTimeSig.IsVisible = false;
-                SelectionInfoTimeSigValue.IsVisible = false;
-                
-                SelectionInfoSeparator1.IsVisible = true;
-                SelectionInfoSeparator2.IsVisible = true;
-            }
+            return;
         }
+
+        SelectionInfoMeasureValue.Text = ChartEditor.HighlightedElement.BeatData.Measure.ToString();
+
+        int tick = ChartEditor.HighlightedElement.BeatData.Tick;
+        int gcd = MathExtensions.GreatestCommonDivisor(tick, 1920);
+        SelectionInfoBeatValue.Text = $"{tick / gcd} / {1920 / gcd}";
+
+        if (ChartEditor.HighlightedElement is Gimmick gimmick)
+        {
+            SelectionInfoGimmickTypeValue.Text = Enums2String.GimmickType2String(gimmick.GimmickType);
+            SelectionInfoBpmValue.Text = gimmick.Bpm.ToString(CultureInfo.CurrentCulture);
+            SelectionInfoHiSpeedValue.Text = gimmick.HiSpeed.ToString(CultureInfo.CurrentCulture);
+            SelectionInfoTimeSigValue.Text = $"{gimmick.TimeSig.Upper} / {gimmick.TimeSig.Lower}";
+
+            SelectionInfoNoteType.IsVisible = false;
+            SelectionInfoNoteTypeValue.IsVisible = false;
+            SelectionInfoPosition.IsVisible = false;
+            SelectionInfoPositionValue.IsVisible = false;
+            SelectionInfoSize.IsVisible = false;
+            SelectionInfoSizeValue.IsVisible = false;
+            SelectionInfoMaskDirection.IsVisible = false;
+            SelectionInfoMaskDirectionValue.IsVisible = false;
+
+            SelectionInfoGimmickType.IsVisible = true;
+            SelectionInfoGimmickTypeValue.IsVisible = true;
+            SelectionInfoBpm.IsVisible = gimmick.GimmickType is GimmickType.BpmChange;
+            SelectionInfoBpmValue.IsVisible = gimmick.GimmickType is GimmickType.BpmChange;
+            SelectionInfoHiSpeed.IsVisible = gimmick.GimmickType is GimmickType.HiSpeedChange;
+            SelectionInfoHiSpeedValue.IsVisible = gimmick.GimmickType is GimmickType.HiSpeedChange;
+            SelectionInfoTimeSig.IsVisible = gimmick.GimmickType is GimmickType.TimeSigChange;
+            SelectionInfoTimeSigValue.IsVisible = gimmick.GimmickType is GimmickType.TimeSigChange;
+
+            SelectionInfoSeparator1.IsVisible = true;
+            SelectionInfoSeparator2.IsVisible = gimmick is { IsStop: false, IsReverse: false };
+        }
+
+        if (ChartEditor.HighlightedElement is Note note)
+        {
+            SelectionInfoPositionValue.Text = note.Position.ToString();
+            SelectionInfoSizeValue.Text = note.Size.ToString();
+            SelectionInfoNoteTypeValue.Text = Enums2String.NoteType2String(note.NoteType, note.BonusType);
+            SelectionInfoMaskDirectionValue.Text = Enums2String.MaskDirection2String(note.MaskDirection);
+
+            SelectionInfoNoteType.IsVisible = true;
+            SelectionInfoNoteTypeValue.IsVisible = true;
+            SelectionInfoGimmickType.IsVisible = false;
+            SelectionInfoGimmickTypeValue.IsVisible = false;
+            SelectionInfoPosition.IsVisible = true;
+            SelectionInfoPositionValue.IsVisible = true;
+            SelectionInfoSize.IsVisible = true;
+            SelectionInfoSizeValue.IsVisible = true;
+            SelectionInfoMaskDirection.IsVisible = note.IsMask;
+            SelectionInfoMaskDirectionValue.IsVisible = note.IsMask;
+
+            SelectionInfoBpm.IsVisible = false;
+            SelectionInfoBpmValue.IsVisible = false;
+            SelectionInfoHiSpeed.IsVisible = false;
+            SelectionInfoHiSpeedValue.IsVisible = false;
+            SelectionInfoTimeSig.IsVisible = false;
+            SelectionInfoTimeSigValue.IsVisible = false;
+
+            SelectionInfoSeparator1.IsVisible = true;
+            SelectionInfoSeparator2.IsVisible = true;
+        }
+    }
 
     public void SetChartInfo()
     {
@@ -515,7 +515,7 @@ public partial class MainView : UserControl
         ChartInfoLevel.Value = (double)ChartEditor.Chart.Level;
         ChartInfoClearThreshold.Value = (double)ChartEditor.Chart.ClearThreshold;
         ChartInfoBpmText.Text = ChartEditor.Chart.BpmText;
-        
+
         ChartInfoPreviewStart.Value = (double)ChartEditor.Chart.PreviewStart;
         ChartInfoPreviewTime.Value = (double)ChartEditor.Chart.PreviewTime;
 
@@ -529,7 +529,7 @@ public partial class MainView : UserControl
         {
             ChartInfoJacket.IsVisible = true;
             ChartInfoJacketFallback.IsVisible = false;
-            
+
             ChartInfoJacket.Source = new Bitmap(ChartEditor.Chart.JacketFilepath);
         }
         else
@@ -552,7 +552,7 @@ public partial class MainView : UserControl
         QuickSettingsCheckBoxCutEarlyJudgementWindowOnHolds.IsChecked = UserConfig.RenderConfig.CutEarlyJudgementWindowOnHolds;
         QuickSettingsCheckBoxCutOverlappingJudgementWindows.IsChecked = UserConfig.RenderConfig.CutOverlappingJudgementWindows;
     }
-    
+
     public void SetMinNoteSize(NoteType noteType, BonusType bonusType)
     {
         int minimum = Note.MinSize(noteType, bonusType);
@@ -570,14 +570,14 @@ public partial class MainView : UserControl
         ChartInfoBgaFilepath.Text = Path.GetFileName(ChartEditor.Chart.BgaFilepath);
         ChartInfoJacketFilepath.Text = Path.GetFileName(ChartEditor.Chart.JacketFilepath);
     }
-    
+
     private void UpdateLoopMarkerPosition()
     {
         if (AudioManager.CurrentSong is null) return;
 
         double start = AudioManager.LoopStart * (SliderSongPosition.Bounds.Width - 25) / AudioManager.CurrentSong.Length + 12.5;
         double end = AudioManager.LoopEnd * (SliderSongPosition.Bounds.Width - 25) / AudioManager.CurrentSong.Length + 12.5;
-        
+
         LoopMarkerStart.Margin = new(start, 0, 0, 0);
         LoopMarkerEnd.Margin = new(end, 0, 0, 0);
     }
@@ -586,11 +586,11 @@ public partial class MainView : UserControl
     {
         AudioManager.LoopStart = 0;
         AudioManager.LoopEnd = length;
-        
+
         LoopMarkerStart.Margin = new(12.5, 0, 0, 0);
         LoopMarkerEnd.Margin = new(SliderSongPosition.Bounds.Width - 12.5, 0, 0, 0);
     }
-    
+
     private void SetLoopMarkerStart()
     {
         if (AudioManager.CurrentSong is null) return;
@@ -612,37 +612,37 @@ public partial class MainView : UserControl
         switch (lockState)
         {
             case UiLockState.Loaded:
-            {
-                UiLock.IsVisible = false;
-
-                if (ConnectionManager.NetworkState == ConnectionManager.NetworkConnectionState.Local)
                 {
-                    MenuItemCreateSession.IsEnabled = true;
-                }
-                
-                MenuItemEdit.IsEnabled = true;
-                MenuItemSelect.IsEnabled = true;
-                MenuItemTools.IsEnabled = true;
-                break;
-            }
-            
-            case UiLockState.Empty:
-            {
-                UiLock.IsVisible = true;
-                SetPlayState(PlayerState.Paused);
+                    UiLock.IsVisible = false;
 
-                MenuItemEdit.IsEnabled = false;
-                MenuItemSelect.IsEnabled = false;
-                MenuItemTools.IsEnabled = false;
-                break;
-            }
+                    if (ConnectionManager.NetworkState == ConnectionManager.NetworkConnectionState.Local)
+                    {
+                        MenuItemCreateSession.IsEnabled = true;
+                    }
+
+                    MenuItemEdit.IsEnabled = true;
+                    MenuItemSelect.IsEnabled = true;
+                    MenuItemTools.IsEnabled = true;
+                    break;
+                }
+
+            case UiLockState.Empty:
+                {
+                    UiLock.IsVisible = true;
+                    SetPlayState(PlayerState.Paused);
+
+                    MenuItemEdit.IsEnabled = false;
+                    MenuItemSelect.IsEnabled = false;
+                    MenuItemTools.IsEnabled = false;
+                    break;
+                }
         }
 
         LockState = lockState;
     }
-    
+
     // ________________ Input
-    
+
     private void OnKeyDown(object sender, KeyEventArgs e)
     {
         if (TopLevel.GetTopLevel(this)?.FocusManager?.GetFocusedElement() is TextBox) return;
@@ -669,49 +669,49 @@ public partial class MainView : UserControl
             switch (ChartEditor.EditorState)
             {
                 case ChartEditorState.InsertNote:
-                {
-                    break;
-                }
-                
+                    {
+                        break;
+                    }
+
                 case ChartEditorState.InsertHold:
-                {
-                    ChartEditor.EndHold(true);
-                    break;
-                }
-                
+                    {
+                        ChartEditor.EndHold(true);
+                        break;
+                    }
+
                 case ChartEditorState.BoxSelectStart:
                 case ChartEditorState.BoxSelectEnd:
-                {
-                    ChartEditor.StopBoxSelect();
-                    break;
-                }
+                    {
+                        ChartEditor.StopBoxSelect();
+                        break;
+                    }
             }
 
             e.Handled = true;
             return;
         }
-        
+
         Keybind keybind = new(e);
-        
+
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["FileNew"]))
         {
             MenuItemNew_OnClick(null, new());
             e.Handled = true;
             return;
         }
-        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["FileOpen"])) 
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["FileOpen"]))
         {
             MenuItemOpen_OnClick(null, new());
             e.Handled = true;
             return;
         }
-        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["FileSave"])) 
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["FileSave"]))
         {
             MenuItemSave_OnClick(null, new());
             e.Handled = true;
             return;
         }
-        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["FileSaveAs"])) 
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["FileSaveAs"]))
         {
             MenuItemSaveAs_OnClick(null, new());
             e.Handled = true;
@@ -725,14 +725,14 @@ public partial class MainView : UserControl
         }
 
         if (LockState == UiLockState.Empty) return;
-        
-        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditUndo"])) 
+
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditUndo"]))
         {
             ChartEditor.Undo();
             e.Handled = true;
             return;
         }
-        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditRedo"])) 
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditRedo"]))
         {
             ChartEditor.Redo();
             e.Handled = true;
@@ -744,46 +744,46 @@ public partial class MainView : UserControl
             e.Handled = true;
             return;
         }
-        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditCopy"])) 
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditCopy"]))
         {
             ChartEditor.Copy();
             e.Handled = true;
             return;
         }
-        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditPaste"])) 
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditPaste"]))
         {
             ChartEditor.Paste();
             e.Handled = true;
             return;
         }
-            
+
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorInsert"]))
         {
             if (!ButtonInsert.IsEnabled) return;
-            
+
             ChartEditor.InsertNote();
             e.Handled = true;
             return;
         }
-        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorPlay"])) 
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorPlay"]))
         {
             ButtonPlay_OnClick(null, new());
             e.Handled = true;
             return;
         }
-        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorSelectAll"])) 
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorSelectAll"]))
         {
             ChartEditor.SelectAllNotes();
             e.Handled = true;
             return;
         }
-        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorDeselectAll"])) 
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorDeselectAll"]))
         {
             ChartEditor.DeselectAllNotes();
             e.Handled = true;
             return;
         }
-        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorCheckerDeselect"])) 
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorCheckerDeselect"]))
         {
             ChartEditor.CheckerDeselect();
             e.Handled = true;
@@ -879,7 +879,7 @@ public partial class MainView : UserControl
             e.Handled = true;
             return;
         }
-        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorDecreasePlaybackSpeed"])) 
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorDecreasePlaybackSpeed"]))
         {
             SliderPlaybackSpeed.Value -= 10;
             e.Handled = true;
@@ -897,55 +897,55 @@ public partial class MainView : UserControl
             e.Handled = true;
             return;
         }
-        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorNoteTypeSlideClockwise"])) 
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorNoteTypeSlideClockwise"]))
         {
             RadioNoteSlideClockwise.IsChecked = true;
             e.Handled = true;
             return;
         }
-        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorNoteTypeSlideCounterclockwise"])) 
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorNoteTypeSlideCounterclockwise"]))
         {
             RadioNoteSlideCounterclockwise.IsChecked = true;
             e.Handled = true;
             return;
         }
-        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorNoteTypeSnapForward"])) 
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorNoteTypeSnapForward"]))
         {
             RadioNoteSnapForward.IsChecked = true;
             e.Handled = true;
             return;
         }
-        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorNoteTypeSnapBackward"])) 
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorNoteTypeSnapBackward"]))
         {
             RadioNoteSnapBackward.IsChecked = true;
             e.Handled = true;
             return;
         }
-        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorNoteTypeChain"])) 
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorNoteTypeChain"]))
         {
             RadioNoteChain.IsChecked = true;
             e.Handled = true;
             return;
         }
-        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorNoteTypeHold"])) 
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorNoteTypeHold"]))
         {
             RadioNoteHold.IsChecked = true;
             e.Handled = true;
             return;
         }
-        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorNoteTypeMaskAdd"])) 
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorNoteTypeMaskAdd"]))
         {
             RadioNoteMaskAdd.IsChecked = true;
             e.Handled = true;
             return;
         }
-        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorNoteTypeMaskRemove"])) 
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorNoteTypeMaskRemove"]))
         {
             RadioNoteMaskRemove.IsChecked = true;
             e.Handled = true;
             return;
         }
-        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorNoteTypeEndOfChart"])) 
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorNoteTypeEndOfChart"]))
         {
             RadioNoteEndOfChart.IsChecked = true;
             e.Handled = true;
@@ -955,7 +955,7 @@ public partial class MainView : UserControl
         {
             if (BonusTypePanel.IsVisible) RadioNoBonus.IsChecked = true;
             else RadioMaskClockwise.IsChecked = true;
-            
+
             e.Handled = true;
             return;
         }
@@ -963,7 +963,7 @@ public partial class MainView : UserControl
         {
             if (BonusTypePanel.IsVisible && RadioBonus.IsEnabled) RadioBonus.IsChecked = true;
             else RadioMaskCounterclockwise.IsChecked = true;
-            
+
             e.Handled = true;
             return;
         }
@@ -971,35 +971,35 @@ public partial class MainView : UserControl
         {
             if (BonusTypePanel.IsVisible) RadioRNote.IsChecked = true;
             else RadioMaskCenter.IsChecked = true;
-            
+
             e.Handled = true;
             return;
         }
-        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorEditNoteShape"])) 
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorEditNoteShape"]))
         {
             ChartEditor.EditSelection(true, false);
             e.Handled = true;
             return;
         }
-        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorEditNoteProperties"])) 
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorEditNoteProperties"]))
         {
             ChartEditor.EditSelection(false, true);
             e.Handled = true;
             return;
         }
-        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorEditNoteShapeProperties"])) 
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorEditNoteShapeProperties"]))
         {
             ChartEditor.EditSelection(true, true);
             e.Handled = true;
             return;
         }
-        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorMirrorNote"])) 
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorMirrorNote"]))
         {
             ChartEditor.MirrorSelection((int?)NumericMirrorAxis.Value ?? 30);
             e.Handled = true;
             return;
         }
-        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorDelete"])) 
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorDelete"]))
         {
             ChartEditor.DeleteGimmick();
             ChartEditor.DeleteSelection();
@@ -1072,14 +1072,14 @@ public partial class MainView : UserControl
             e.Handled = true;
             return;
         }
-        
+
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["RenderIncreaseNoteSpeed"]))
         {
             UserConfig.RenderConfig.NoteSpeed = double.Min(UserConfig.RenderConfig.NoteSpeed + 0.1, 6);
             File.WriteAllText(ConfigPath, Toml.FromModel(UserConfig));
             RenderEngine.UpdateVisibleTime();
             SetQuickSettings();
-            
+
             e.Handled = true;
             return;
         }
@@ -1089,21 +1089,21 @@ public partial class MainView : UserControl
             File.WriteAllText(ConfigPath, Toml.FromModel(UserConfig));
             RenderEngine.UpdateVisibleTime();
             SetQuickSettings();
-            
+
             e.Handled = true;
             return;
         }
     }
 
     private static void OnKeyUp(object sender, KeyEventArgs e) => e.Handled = true;
-    
+
     // ________________ Canvas
 
     private void Canvas_OnRenderSkia(SKCanvas canvas)
     {
         lock (ChartEditor.Chart) RenderEngine.Render(canvas);
     }
-    
+
     private void Canvas_OnPointerWheelChanged(object? sender, PointerWheelEventArgs e)
     {
         int delta = double.Sign(e.Delta.Y);
@@ -1123,12 +1123,12 @@ public partial class MainView : UserControl
             decimal value = NumericBeatDivisor.Value ?? 16;
             NumericBeatDivisor.Value = Math.Clamp(value + delta, NumericBeatDivisor.Minimum, NumericBeatDivisor.Maximum);
         }
-        
+
         // Double/Halve Beat Divisor
         else if (e.KeyModifiers.HasFlag(KeyModifiers.Alt))
         {
             decimal value = NumericBeatDivisor.Value ?? 16;
-            
+
             if (delta > 0)
             {
                 NumericBeatDivisor.Value = Math.Min(value * 2, 1920);
@@ -1150,11 +1150,11 @@ public partial class MainView : UserControl
             if (AudioManager.CurrentSong == null || AudioManager.CurrentSong.IsPlaying) return;
             // I know some gremlin would try this.
             if (NumericMeasure.Value >= NumericMeasure.Maximum && NumericBeatValue.Value >= NumericBeatDivisor.Value - 1 && delta > 0) return;
-            
+
             NumericBeatValue.Value += delta;
         }
     }
-    
+
     private void Canvas_OnPointerMoved(object? sender, PointerEventArgs e)
     {
         if (ChartEditor.EditorState is ChartEditorState.BoxSelectEnd)
@@ -1171,11 +1171,11 @@ public partial class MainView : UserControl
             RenderEngine.PointerPosition = point;
             return;
         }
-        
+
         PointerPoint p = e.GetCurrentPoint(Canvas);
-        
+
         if (pointerState is not PointerState.Pressed) return;
-        
+
         if (p.Properties is { IsLeftButtonPressed: true, IsRightButtonPressed: false })
         {
             if (e.KeyModifiers.HasFlag(KeyModifiers.Control) || e.KeyModifiers.HasFlag(KeyModifiers.Shift))
@@ -1183,11 +1183,11 @@ public partial class MainView : UserControl
                 OnLeftClick(p, e.KeyModifiers, true);
                 return;
             }
-        
+
             float x = (float)(p.Position.X - Canvas.Width * 0.5);
             float y = (float)(p.Position.Y - Canvas.Height * 0.5);
             int theta = MathExtensions.GetThetaNotePosition(x, y);
-        
+
             ChartEditor.Cursor.Drag(theta);
             NumericNotePosition.Value = ChartEditor.Cursor.Position;
             NumericNoteSize.Value = ChartEditor.Cursor.Size;
@@ -1203,18 +1203,18 @@ public partial class MainView : UserControl
             OnLeftClick(p, e.KeyModifiers, false);
         }
     }
-    
+
     private void Canvas_OnPointerReleased(object? sender, PointerReleasedEventArgs e)
     {
         pointerState = PointerState.Released;
         ChartEditor.LastSelectedNote = null;
-        
+
         if (ChartEditor.EditorState is ChartEditorState.BoxSelectStart or ChartEditorState.BoxSelectEnd)
         {
             PointerPoint p = e.GetCurrentPoint(Canvas);
 
             if (p.Properties.PointerUpdateKind is not PointerUpdateKind.LeftButtonReleased) return;
-            
+
             SKPoint point = new((float)p.Position.X, (float)p.Position.Y);
             point.X -= (float)Canvas.Width * 0.5f;
             point.Y -= (float)Canvas.Height * 0.5f;
@@ -1222,11 +1222,11 @@ public partial class MainView : UserControl
             point.Y /= (float)(Canvas.Height - 30) * 0.5f;
             point.X /= 0.9f;
             point.Y /= 0.9f;
-            
+
             ChartEditor.RunBoxSelect(RenderEngine.GetMeasureDecimalAtPointer(ChartEditor.Chart, point));
         }
     }
-    
+
     private void OnLeftClick(PointerPoint p, KeyModifiers modifiers, bool pointerMoved)
     {
         SKPoint point = new((float)p.Position.X, (float)p.Position.Y);
@@ -1236,18 +1236,18 @@ public partial class MainView : UserControl
         point.Y /= (float)(Canvas.Height - 30) * 0.5f;
         point.X /= 0.9f;
         point.Y /= 0.9f;
-        
+
         pointerState = PointerState.Pressed;
 
         if (ChartEditor.EditorState is ChartEditorState.BoxSelectEnd) return;
-        
+
         if (modifiers.HasFlag(KeyModifiers.Shift))
         {
             // Selecting
             if ((Note?)RenderEngine.GetChartElementAtPointer(ChartEditor.Chart, point, false, ChartEditor.LayerNoteActive, ChartEditor.LayerMaskActive, ChartEditor.LayerGimmickActive) is not { } note) return;
-            
+
             if (pointerMoved && note == ChartEditor.LastSelectedNote) return;
-            
+
             ChartEditor.SelectNote(note);
             ChartEditor.LastSelectedNote = note;
         }
@@ -1255,9 +1255,9 @@ public partial class MainView : UserControl
         {
             // Highlighting
             if (RenderEngine.GetChartElementAtPointer(ChartEditor.Chart, point, true, ChartEditor.LayerNoteActive, ChartEditor.LayerMaskActive, ChartEditor.LayerGimmickActive) is not { } note) return;
-            
+
             if (pointerMoved && note == ChartEditor.HighlightedElement) return;
-            
+
             ChartEditor.HighlightElement(note);
         }
 
@@ -1270,9 +1270,9 @@ public partial class MainView : UserControl
             NumericNoteSize.Value = ChartEditor.Cursor.Size;
         }
     }
-    
+
     // ________________ UI Events
-    
+
     private void MainView_OnPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
     {
         if (e.Property == BoundsProperty) Dispatcher.UIThread.Post(MainView_OnResize);
@@ -1288,18 +1288,18 @@ public partial class MainView : UserControl
         Canvas.Height = min;
         RenderEngine.UpdateSize(min);
         RenderEngine.UpdateBrushes();
-        
+
         UpdateLoopMarkerPosition();
         PeerManager.UpdatePeerMarkers();
         ChartEditor.UpdateCommentMarkers();
     }
-    
+
     public async void DragDrop(string path)
     {
         if (!await PromptSave()) return;
         OpenChart(path);
     }
-    
+
     private async void MenuItemNew_OnClick(object? sender, RoutedEventArgs e)
     {
         if (!await PromptSave()) return;
@@ -1312,7 +1312,7 @@ public partial class MainView : UserControl
             PrimaryButtonText = Assets.Lang.Resources.Generic_Create,
             CloseButtonText = Assets.Lang.Resources.Generic_Cancel
         };
-        
+
         Dispatcher.UIThread.Post(async () =>
         {
             ContentDialogResult result = await dialog.ShowAsync();
@@ -1341,9 +1341,9 @@ public partial class MainView : UserControl
                     ShowWarningMessage(Assets.Lang.Resources.Editor_NewChartInvalidAudio);
                     return;
                 }
-                
+
                 AudioManager.ResetSong();
-                
+
                 ChartEditor.NewChart(filepath, bpm, timeSigUpper, timeSigLower);
                 AudioManager.SetSong(filepath, (float)UserConfig.AudioConfig.MusicVolume * 0.01f, (int)SliderPlaybackSpeed.Value);
                 SetSongPositionSliderValues();
@@ -1359,9 +1359,9 @@ public partial class MainView : UserControl
     private async void MenuItemOpen_OnClick(object? sender, RoutedEventArgs e)
     {
         if (!await PromptSave()) return;
-        
+
         SetUiLockState(UiLockState.Empty);
-        
+
         // Get .mer file
         IStorageFile? file = await OpenChartFilePicker();
         if (file == null) return;
@@ -1369,7 +1369,7 @@ public partial class MainView : UserControl
         AudioManager.ResetSong();
         OpenChart(file.Path.LocalPath);
     }
-    
+
     private async void MenuItemSave_OnClick(object? sender, RoutedEventArgs e)
     {
         if (LockState == UiLockState.Empty) return;
@@ -1385,7 +1385,7 @@ public partial class MainView : UserControl
     private async void MenuItemExportMercury_OnClick(object? sender, RoutedEventArgs e)
     {
         if (LockState == UiLockState.Empty) return;
-        
+
         await ExportFile(ChartFormatType.Mercury);
     }
 
@@ -1397,14 +1397,14 @@ public partial class MainView : UserControl
             ShowWarningMessage(Assets.Lang.Resources.Generic_EndOfChartWarning, Assets.Lang.Resources.Generic_EndOfChartWarningExplanation);
             return;
         }
-        
+
         await ExportFile(ChartFormatType.Saturn);
     }
 
     private void MenuItemExportSaturnFolder_OnClick(object? sender, RoutedEventArgs e)
     {
         SaturnFolderExportView exportView = new(this);
-        
+
         ContentDialog dialog = new()
         {
             Title = Assets.Lang.Resources.SaturnExport_WindowTitle,
@@ -1425,14 +1425,14 @@ public partial class MainView : UserControl
             {
                 if (exportView.FolderPathTextBox.Text is null) return;
                 string folderPath = exportView.FolderPathTextBox.Text;
-                
+
                 // Write metadata
                 Stream stream = File.OpenWrite(Path.Combine(folderPath, "meta.mer"));
                 stream.SetLength(0);
-                
+
                 await using StreamWriter streamWriter = new(stream, new UTF8Encoding(false));
                 streamWriter.NewLine = "\n";
-                
+
                 await streamWriter.WriteLineAsync($"#TITLE {exportView.TitleTextBox.Text}");
                 await streamWriter.WriteLineAsync($"#RUBI_TITLE {exportView.RubiTextBox.Text}");
                 await streamWriter.WriteLineAsync($"#ARTIST {exportView.ArtistTextBox.Text}");
@@ -1446,7 +1446,7 @@ public partial class MainView : UserControl
                     if (File.Exists(exportView.ExpertPathTextBox.Text)) File.Copy(exportView.ExpertPathTextBox.Text, Path.Combine(folderPath, "2.mer"), true);
                     if (File.Exists(exportView.InfernoPathTextBox.Text)) File.Copy(exportView.InfernoPathTextBox.Text, Path.Combine(folderPath, "3.mer"), true);
                     if (File.Exists(exportView.BeyondPathTextBox.Text)) File.Copy(exportView.BeyondPathTextBox.Text, Path.Combine(folderPath, "4.mer"), true);
-                
+
                     if (File.Exists(exportView.MusicTextBox.Text)) File.Copy(exportView.MusicTextBox.Text, Path.Combine(folderPath, Path.GetFileName(exportView.MusicTextBox.Text)), true);
                     if (File.Exists(exportView.JacketTextBox.Text)) File.Copy(exportView.JacketTextBox.Text, Path.Combine(folderPath, $"jacket{Path.GetExtension(exportView.JacketTextBox.Text)}"), true);
                 }
@@ -1457,15 +1457,15 @@ public partial class MainView : UserControl
             }
         });
     }
-    
+
     private void MenuItemCreateSession_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (ConnectionManager.LobbyCode != "")
+        if (ConnectionManager.SessionCode != "")
         {
-            ShowWarningMessage($"{Assets.Lang.Resources.Online_SessionOpened} {ConnectionManager.LobbyCode}");
+            ShowWarningMessage($"{Assets.Lang.Resources.Online_SessionOpened} {ConnectionManager.SessionCode}");
             return;
         }
-        
+
         OnlineView_CreateSession createSessionView = new();
         ContentDialog dialog = new()
         {
@@ -1474,7 +1474,7 @@ public partial class MainView : UserControl
             PrimaryButtonText = Assets.Lang.Resources.Generic_Create,
             CloseButtonText = Assets.Lang.Resources.Generic_Cancel
         };
-        
+
         Dispatcher.UIThread.Post(async () =>
         {
             ContentDialogResult result = await dialog.ShowAsync();
@@ -1483,7 +1483,7 @@ public partial class MainView : UserControl
             {
                 // TODO: Validate user input.
                 Color color = createSessionView.UserColor.Color;
-                ConnectionManager.CreateLobby(createSessionView.ServerAddressTextBox.Text ?? "", createSessionView.UsernameTextbox.Text ?? "", $"#{color.A:X2}{color.R:X2}{color.G:X2}{color.B:X2}");
+                ConnectionManager.CreateSession(createSessionView.ServerAddressTextBox.Text ?? "", createSessionView.UsernameTextbox.Text ?? "", $"#{color.A:X2}{color.R:X2}{color.G:X2}{color.B:X2}");
             }
         });
     }
@@ -1491,7 +1491,7 @@ public partial class MainView : UserControl
     private async void MenuItemJoinSession_OnClick(object? sender, RoutedEventArgs e)
     {
         if (!await PromptSave()) return;
-        
+
         OnlineView_JoinSession joinSessionView = new();
         ContentDialog dialog = new()
         {
@@ -1500,7 +1500,7 @@ public partial class MainView : UserControl
             PrimaryButtonText = Assets.Lang.Resources.Generic_Join,
             CloseButtonText = Assets.Lang.Resources.Generic_Cancel
         };
-        
+
         Dispatcher.UIThread.Post(async () =>
         {
             ContentDialogResult result = await dialog.ShowAsync();
@@ -1509,16 +1509,16 @@ public partial class MainView : UserControl
             {
                 // TODO: Validate user input.
                 Color color = joinSessionView.UserColor.Color;
-                ConnectionManager.JoinLobby(joinSessionView.ServerAddressTextBox.Text ?? "", joinSessionView.UsernameTextbox.Text ?? "", $"#{color.A:X2}{color.R:X2}{color.G:X2}{color.B:X2}", joinSessionView.SessionCodeTextBox.Text ?? "");
+                ConnectionManager.JoinSession(joinSessionView.ServerAddressTextBox.Text ?? "", joinSessionView.UsernameTextbox.Text ?? "", $"#{color.A:X2}{color.R:X2}{color.G:X2}{color.B:X2}", joinSessionView.SessionCodeTextBox.Text ?? "");
             }
         });
     }
-    
+
     private void MenuItemDisconnect_OnClick(object? sender, RoutedEventArgs e)
     {
-        ConnectionManager.LeaveLobby();
+        ConnectionManager.LeaveSession();
     }
-    
+
     private void MenuItemSettings_OnClick(object? sender, RoutedEventArgs e)
     {
         ContentDialog dialog = new()
@@ -1531,7 +1531,7 @@ public partial class MainView : UserControl
 
         dialog.PrimaryButtonClick += OnSettingsPrimary;
         dialog.CloseButtonClick += OnSettingsClose;
-        
+
         Dispatcher.UIThread.Post(async () => await dialog.ShowAsync());
     }
 
@@ -1559,9 +1559,9 @@ public partial class MainView : UserControl
     private void MenuItemDeselectAll_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.DeselectAllNotes();
 
     private void MenuItemCheckerDeselect_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.CheckerDeselect();
-    
+
     private void MenuItemSelectHoldReferences_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.SelectHoldReferences();
-    
+
     private void MenuItemSelectHighlightedNote_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.SelectHighlightedNote();
 
     private void MenuItemBoxSelect_OnClick(object? sender, RoutedEventArgs e)
@@ -1569,7 +1569,7 @@ public partial class MainView : UserControl
         if (ChartEditor.EditorState is not ChartEditorState.InsertNote) return;
         ChartEditor.RunBoxSelect();
     }
-    
+
     private void MenuItemMirrorChart_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.MirrorChart((int?)NumericMirrorAxis.Value ?? 30);
 
     private void MenuItemShiftChart_OnClick(object? sender, RoutedEventArgs e)
@@ -1582,16 +1582,16 @@ public partial class MainView : UserControl
             CloseButtonText = Assets.Lang.Resources.Generic_Cancel,
             PrimaryButtonText = Assets.Lang.Resources.Generic_Ok
         };
-        
+
         Dispatcher.UIThread.Post(async () =>
         {
             ContentDialogResult result = await dialog.ShowAsync();
             if (result is not ContentDialogResult.Primary) return;
-            
+
             ChartEditor.ShiftChart(shiftView.Ticks);
         });
     }
-    
+
     private async void MenuItemFixOffByOne_OnClick(object? sender, RoutedEventArgs e)
     {
         ContentDialogResult result = await showPrompt();
@@ -1608,7 +1608,7 @@ public partial class MainView : UserControl
                 PrimaryButtonText = Assets.Lang.Resources.Generic_Yes,
                 CloseButtonText = Assets.Lang.Resources.Generic_No
             };
-            
+
             return dialog.ShowAsync();
         }
     }
@@ -1620,7 +1620,7 @@ public partial class MainView : UserControl
             ShowWarningMessage(Assets.Lang.Resources.Editor_NoHoldsSelected, Assets.Lang.Resources.Editor_NoHoldsSelectedTip);
             return;
         }
-        
+
         ToolsView_GenerateJaggedHolds generatorView = new();
         ContentDialog dialog = new()
         {
@@ -1629,7 +1629,7 @@ public partial class MainView : UserControl
             CloseButtonText = Assets.Lang.Resources.Generic_Cancel,
             PrimaryButtonText = Assets.Lang.Resources.Generic_Generate
         };
-        
+
         Dispatcher.UIThread.Post(async () =>
         {
             ContentDialogResult result = await dialog.ShowAsync();
@@ -1638,19 +1638,19 @@ public partial class MainView : UserControl
             switch (generatorView.GeneratorMethod.SelectedIndex)
             {
                 case 0:
-                {
-                    ChartEditor.GenerateSpikeHolds(generatorView.OffsetEven.IsChecked ?? true, (int?)generatorView.LeftEdge.Value ?? 0, (int?)generatorView.RightEdge.Value ?? 0);
-                    break;
-                }
+                    {
+                        ChartEditor.GenerateSpikeHolds(generatorView.OffsetEven.IsChecked ?? true, (int?)generatorView.LeftEdge.Value ?? 0, (int?)generatorView.RightEdge.Value ?? 0);
+                        break;
+                    }
                 case 1:
-                {
-                    ChartEditor.GenerateNoiseHolds(generatorView.OffsetEven.IsChecked ?? true, (int?)generatorView.LeftEdgeMin.Value ?? 0, (int?)generatorView.LeftEdgeMax.Value ?? 0, (int?)generatorView.RightEdgeMin.Value ?? 0, (int?)generatorView.RightEdgeMax.Value ?? 0);
-                    break;
-                }
+                    {
+                        ChartEditor.GenerateNoiseHolds(generatorView.OffsetEven.IsChecked ?? true, (int?)generatorView.LeftEdgeMin.Value ?? 0, (int?)generatorView.LeftEdgeMax.Value ?? 0, (int?)generatorView.RightEdgeMin.Value ?? 0, (int?)generatorView.RightEdgeMax.Value ?? 0);
+                        break;
+                    }
             }
         });
     }
-    
+
     private void MenuItemReconstructHolds_OnClick(object? sender, RoutedEventArgs e)
     {
         if (!ChartEditor.SelectedNotes.Exists(x => x.IsHold))
@@ -1658,7 +1658,7 @@ public partial class MainView : UserControl
             ShowWarningMessage(Assets.Lang.Resources.Editor_NoHoldsSelected, Assets.Lang.Resources.Editor_NoHoldsSelectedTip);
             return;
         }
-        
+
         ToolsView_ReconstructHolds reconstructView = new();
         ContentDialog dialog = new()
         {
@@ -1667,16 +1667,16 @@ public partial class MainView : UserControl
             CloseButtonText = Assets.Lang.Resources.Generic_Cancel,
             PrimaryButtonText = Assets.Lang.Resources.Generic_Generate
         };
-        
+
         Dispatcher.UIThread.Post(async () =>
         {
             ContentDialogResult result = await dialog.ShowAsync();
             if (result is not ContentDialogResult.Primary) return;
-            
+
             ChartEditor.ReconstructHold(reconstructView.GeneratorMethod.SelectedIndex, (int?)reconstructView.Interval.Value ?? 0);
         });
     }
-    
+
     private void MenuItemProofread_OnClick(object? sender, RoutedEventArgs e)
     {
         MiscView_Proofread proofreadView = new();
@@ -1686,17 +1686,17 @@ public partial class MainView : UserControl
         {
             Dispatcher.UIThread.Invoke(() => proofreadView.TextBlockProofreadResults.Inlines.Add(new Avalonia.Controls.Documents.Run("No issues found! :]") { FontWeight = FontWeight.Bold, Foreground = Avalonia.Media.Brushes.Turquoise }));
         }
-        
+
         ContentDialog dialog = new()
         {
             Content = proofreadView,
             Title = Assets.Lang.Resources.Menu_Proofread,
             CloseButtonText = Assets.Lang.Resources.Generic_Ok
         };
-        
+
         dialog.ShowAsync();
     }
-    
+
     private void RadioNoteType_IsCheckedChanged(object? sender, RoutedEventArgs e)
     {
         if (RadioNoteMaskAdd?.IsChecked == null || RadioNoteMaskRemove?.IsChecked == null) return;
@@ -1724,7 +1724,7 @@ public partial class MainView : UserControl
         bool noBonusAvailable = noteType is not NoteType.EndOfChart;
         bool bonusAvailable = noteType is NoteType.Touch or NoteType.SlideClockwise or NoteType.SlideCounterclockwise;
         bool rNoteAvailable = noteType is not NoteType.EndOfChart;
-        
+
         ToggleTypeRadio(isMask);
         ToggleBonusTypeRadios(noBonusAvailable, bonusAvailable, rNoteAvailable);
     }
@@ -1769,18 +1769,18 @@ public partial class MainView : UserControl
             CloseButtonText = Assets.Lang.Resources.Generic_Cancel,
             PrimaryButtonText = Assets.Lang.Resources.Generic_Create
         };
-        
+
         Dispatcher.UIThread.Post(async () =>
         {
             ContentDialogResult result = await dialog.ShowAsync();
             if (result is not ContentDialogResult.Primary) return;
-            
+
             if (gimmickView.BpmNumberBox.Value <= 0)
             {
                 ShowWarningMessage(Assets.Lang.Resources.Editor_NewChartInvalidBpm);
                 return;
             }
-            
+
             ChartEditor.InsertBpmChange((float)gimmickView.BpmNumberBox.Value);
         });
     }
@@ -1795,18 +1795,18 @@ public partial class MainView : UserControl
             CloseButtonText = Assets.Lang.Resources.Generic_Cancel,
             PrimaryButtonText = Assets.Lang.Resources.Generic_Create
         };
-        
+
         Dispatcher.UIThread.Post(async () =>
         {
             ContentDialogResult result = await dialog.ShowAsync();
             if (result is not ContentDialogResult.Primary) return;
-            
+
             if ((int)gimmickView.TimeSigUpperNumberBox.Value <= 0 || (int)gimmickView.TimeSigLowerNumberBox.Value <= 0)
             {
                 ShowWarningMessage(Assets.Lang.Resources.Editor_NewChartInvalidTimeSig);
                 return;
             }
-            
+
             ChartEditor.InsertTimeSigChange((int)gimmickView.TimeSigUpperNumberBox.Value, (int)gimmickView.TimeSigLowerNumberBox.Value);
         });
     }
@@ -1821,7 +1821,7 @@ public partial class MainView : UserControl
             CloseButtonText = Assets.Lang.Resources.Generic_Cancel,
             PrimaryButtonText = Assets.Lang.Resources.Generic_Create
         };
-        
+
         Dispatcher.UIThread.Post(async () =>
         {
             ContentDialogResult result = await dialog.ShowAsync();
@@ -1840,13 +1840,13 @@ public partial class MainView : UserControl
             CloseButtonText = Assets.Lang.Resources.Generic_Cancel,
             PrimaryButtonText = Assets.Lang.Resources.Generic_Create
         };
-        
+
         Dispatcher.UIThread.Post(async () =>
         {
             ContentDialogResult result = await dialog.ShowAsync();
             if (result is not ContentDialogResult.Primary) return;
             if (gimmickView.IsValueNull) return;
-            
+
             ChartEditor.InsertStop(gimmickView.StartMeasureDecimal, gimmickView.EndMeasureDecimal);
         });
     }
@@ -1861,17 +1861,17 @@ public partial class MainView : UserControl
             CloseButtonText = Assets.Lang.Resources.Generic_Cancel,
             PrimaryButtonText = Assets.Lang.Resources.Generic_Create
         };
-        
+
         Dispatcher.UIThread.Post(async () =>
         {
             ContentDialogResult result = await dialog.ShowAsync();
             if (result is not ContentDialogResult.Primary) return;
             if (gimmickView.IsValueNull) return;
-            
+
             ChartEditor.InsertReverse(gimmickView.EffectStartMeasureDecimal, gimmickView.EffectEndMeasureDecimal, gimmickView.NoteEndMeasureDecimal);
         });
     }
-    
+
     private void ButtonInsert_OnClick(object? sender, RoutedEventArgs e)
     {
         ChartEditor.InsertNote();
@@ -1883,7 +1883,7 @@ public partial class MainView : UserControl
     }
 
     private void ButtonEndHold_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.EndHold(true);
-    
+
     private void SliderPosition_OnValueChanged(object? sender, RangeBaseValueChangedEventArgs e) => Position_OnValueChanged(true);
     private void SliderNotePosition_OnPointerWheelChanged(object? sender, PointerWheelEventArgs e)
     {
@@ -1912,7 +1912,7 @@ public partial class MainView : UserControl
 
         ChartEditor.Cursor.Position = (int)NumericNotePosition.Value;
     }
-    
+
     private void SliderSize_OnValueChanged(object? sender, RangeBaseValueChangedEventArgs e) => Size_OnValueChanged(true);
     private void SliderNoteSize_OnPointerWheelChanged(object? sender, PointerWheelEventArgs e)
     {
@@ -1928,21 +1928,21 @@ public partial class MainView : UserControl
 
         ChartEditor.Cursor.Size = (int)(NumericNoteSize.Value ?? 15);
     }
-    
+
     private void NumericMeasure_OnValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
     {
         if (e.NewValue == null || NumericMeasure?.Value == null) return;
         NumericMeasure.Value = Math.Clamp((decimal)e.NewValue, NumericMeasure.Minimum, NumericMeasure.Maximum);
-        
+
         if (UpdateSource is TimeUpdateSource.None)
             UpdateTime(TimeUpdateSource.Numeric);
     }
-    
+
     private void NumericBeatValue_OnValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
     {
         if (e.NewValue == null || NumericMeasure?.Value == null || NumericBeatDivisor?.Value == null) return;
         if (AudioManager.CurrentSong is { IsPlaying: true }) return;
-        
+
         decimal? value = e.NewValue;
 
         if (value >= NumericBeatDivisor.Value)
@@ -1964,7 +1964,7 @@ public partial class MainView : UserControl
                 NumericBeatValue.Value = 0;
             }
         }
-        
+
         if (UpdateSource is TimeUpdateSource.None)
             UpdateTime(TimeUpdateSource.Numeric);
     }
@@ -1978,24 +1978,24 @@ public partial class MainView : UserControl
         decimal ratio = (decimal)e.NewValue / oldValue;
         NumericBeatValue.Value = decimal.Round((decimal)NumericBeatValue.Value * ratio);
     }
-    
+
     private void ButtonPlay_OnClick(object? sender, RoutedEventArgs e)
     {
         if (AudioManager.CurrentSong == null) return;
         SetPlayState(AudioManager.CurrentSong.IsPlaying ? PlayerState.Paused : PlayerState.Playing);
     }
-    
+
     private void SliderSongPosition_OnValueChanged(object? sender, RangeBaseValueChangedEventArgs e)
     {
         if (UpdateSource is TimeUpdateSource.None)
             UpdateTime(TimeUpdateSource.Slider);
     }
-    
+
     private void SliderPlaybackSpeed_OnValueChanged(object? sender, RangeBaseValueChangedEventArgs e)
     {
         TextBlockPlaybackSpeed.Text = $"{SliderPlaybackSpeed.Value,3:F0}%";
         if (AudioManager.CurrentSong == null) return;
-        
+
         AudioManager.CurrentSong.PlaybackSpeed = (int)SliderPlaybackSpeed.Value;
     }
 
@@ -2003,31 +2003,31 @@ public partial class MainView : UserControl
     {
         ChartEditor.Chart.Version = ChartInfoVersion.Text ?? "";
     }
-    private void ChartInfoVersion_LostFocus(object? sender, RoutedEventArgs e) => ConnectionManager.SendMessage(ConnectionManager.MessageTypes.VersionChange, ChartEditor.Chart.Version);
+    private void ChartInfoVersion_LostFocus(object? sender, RoutedEventArgs e) => ConnectionManager.SendMessage(new ConnectionManager.MessageSerializer(ConnectionManager.MessageTypes.VersionChange, [ChartEditor.Chart.Version]));
 
     private void ChartInfoTitle_OnTextChanged(object? sender, TextChangedEventArgs e)
     {
         ChartEditor.Chart.Title = ChartInfoTitle.Text ?? "";
     }
-    private void ChartInfoTitle_LostFocus(object? sender, RoutedEventArgs e) => ConnectionManager.SendMessage(ConnectionManager.MessageTypes.TitleChange, ChartEditor.Chart.Title);
+    private void ChartInfoTitle_LostFocus(object? sender, RoutedEventArgs e) => ConnectionManager.SendMessage(new ConnectionManager.MessageSerializer(ConnectionManager.MessageTypes.TitleChange, [ChartEditor.Chart.Title]));
 
     private void ChartInfoRubi_OnTextChanged(object? sender, TextChangedEventArgs e)
     {
         ChartEditor.Chart.Rubi = ChartInfoRubi.Text ?? "";
     }
-    private void ChartInfoRubi_LostFocus(object? sender, RoutedEventArgs e) => ConnectionManager.SendMessage(ConnectionManager.MessageTypes.RubiChange, ChartEditor.Chart.Rubi);
+    private void ChartInfoRubi_LostFocus(object? sender, RoutedEventArgs e) => ConnectionManager.SendMessage(new ConnectionManager.MessageSerializer(ConnectionManager.MessageTypes.RubiChange, [ChartEditor.Chart.Rubi]));
 
     private void ChartInfoArtist_OnTextChanged(object? sender, TextChangedEventArgs e)
     {
         ChartEditor.Chart.Artist = ChartInfoArtist.Text ?? "";
     }
-    private void ChartInfoArtist_LostFocus(object? sender, RoutedEventArgs e) => ConnectionManager.SendMessage(ConnectionManager.MessageTypes.ArtistChange, ChartEditor.Chart.Artist);
+    private void ChartInfoArtist_LostFocus(object? sender, RoutedEventArgs e) => ConnectionManager.SendMessage(new ConnectionManager.MessageSerializer(ConnectionManager.MessageTypes.ArtistChange, [ChartEditor.Chart.Artist]));
 
     private void ChartInfoAuthor_OnTextChanged(object? sender, TextChangedEventArgs e)
     {
         ChartEditor.Chart.Author = ChartInfoAuthor.Text ?? "";
     }
-    private void ChartInfoAuthor_LostFocus(object? sender, RoutedEventArgs e) => ConnectionManager.SendMessage(ConnectionManager.MessageTypes.AuthorChange, ChartEditor.Chart.Author);
+    private void ChartInfoAuthor_LostFocus(object? sender, RoutedEventArgs e) => ConnectionManager.SendMessage(new ConnectionManager.MessageSerializer(ConnectionManager.MessageTypes.AuthorChange, [ChartEditor.Chart.Author]));
 
     private void ChartInfoDiff_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
@@ -2037,50 +2037,50 @@ public partial class MainView : UserControl
     private void ChartInfoDiff_LostFocus(object? sender, RoutedEventArgs e)
     {
         if (ChartInfoDiff is null) return;
-        ConnectionManager.SendMessage(ConnectionManager.MessageTypes.DiffChange, ChartEditor.Chart.Diff.ToString());
+        ConnectionManager.SendMessage(new ConnectionManager.MessageSerializer(ConnectionManager.MessageTypes.DiffChange, null, [ ChartEditor.Chart.Diff ]));
     }
 
     private void ChartInfoLevel_OnValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
     {
         ChartEditor.Chart.Level = (decimal)ChartInfoLevel.Value;
     }
-    private void ChartInfoLevel_LostFocus(object? sender, RoutedEventArgs e) => ConnectionManager.SendMessage(ConnectionManager.MessageTypes.LevelChange, ChartEditor.Chart.Level.ToString(CultureInfo.InvariantCulture));
+    private void ChartInfoLevel_LostFocus(object? sender, RoutedEventArgs e) => ConnectionManager.SendMessage(new ConnectionManager.MessageSerializer(ConnectionManager.MessageTypes.LevelChange, null, null, [ ChartEditor.Chart.Level ]));
 
     private void ChartInfoClearThreshold_OnValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
     {
         ChartEditor.Chart.ClearThreshold = (decimal)ChartInfoClearThreshold.Value;
     }
-    private void ChartInfoClearThreshold_LostFocus(object? sender, RoutedEventArgs e) => ConnectionManager.SendMessage(ConnectionManager.MessageTypes.ClearThresholdChange, ChartEditor.Chart.ClearThreshold.ToString(CultureInfo.InvariantCulture));
+    private void ChartInfoClearThreshold_LostFocus(object? sender, RoutedEventArgs e) => ConnectionManager.SendMessage(new ConnectionManager.MessageSerializer(ConnectionManager.MessageTypes.ClearThresholdChange, null, null, [ ChartEditor.Chart.ClearThreshold ]));
 
     private void ChartInfoBpmText_OnTextChanged(object? sender, TextChangedEventArgs e)
     {
         ChartEditor.Chart.BpmText = ChartInfoBpmText.Text ?? "";
     }
-    private void ChartInfoBpmText_LostFocus(object? sender, RoutedEventArgs e) => ConnectionManager.SendMessage(ConnectionManager.MessageTypes.BpmTextChange, ChartEditor.Chart.BpmText);
+    private void ChartInfoBpmText_LostFocus(object? sender, RoutedEventArgs e) => ConnectionManager.SendMessage(new ConnectionManager.MessageSerializer(ConnectionManager.MessageTypes.BpmTextChange, [ ChartEditor.Chart.BpmText ]));
 
     private void ChartInfoPreviewStart_OnValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
     {
         ChartEditor.Chart.PreviewStart = (decimal)ChartInfoPreviewStart.Value;
     }
-    private void ChartInfoPreviewStart_LostFocus(object? sender, RoutedEventArgs e) => ConnectionManager.SendMessage(ConnectionManager.MessageTypes.PreviewStartChange, ChartEditor.Chart.PreviewStart.ToString(CultureInfo.InvariantCulture));
+    private void ChartInfoPreviewStart_LostFocus(object? sender, RoutedEventArgs e) => ConnectionManager.SendMessage(new ConnectionManager.MessageSerializer(ConnectionManager.MessageTypes.PreviewStartChange, null, null, [ ChartEditor.Chart.PreviewStart ]));
 
     private void ChartInfoPreviewTime_OnValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
     {
         ChartEditor.Chart.PreviewTime = (decimal)ChartInfoPreviewTime.Value;
     }
-    private void ChartInfoPreviewTime_LostFocus(object? sender, RoutedEventArgs e) => ConnectionManager.SendMessage(ConnectionManager.MessageTypes.PreviewTimeChange, ChartEditor.Chart.PreviewTime.ToString(CultureInfo.InvariantCulture));
+    private void ChartInfoPreviewTime_LostFocus(object? sender, RoutedEventArgs e) => ConnectionManager.SendMessage(new ConnectionManager.MessageSerializer(ConnectionManager.MessageTypes.PreviewTimeChange, null, null, [ ChartEditor.Chart.PreviewTime ]));
 
     private void ChartInfoBgmOffset_OnValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
     {
         ChartEditor.Chart.BgmOffset = (decimal)ChartInfoBgmOffset.Value;
     }
-    private void ChartInfoBgmOffset_LostFocus(object? sender, RoutedEventArgs e) => ConnectionManager.SendMessage(ConnectionManager.MessageTypes.BgmOffsetChange, ChartEditor.Chart.BgmOffset.ToString(CultureInfo.InvariantCulture));
+    private void ChartInfoBgmOffset_LostFocus(object? sender, RoutedEventArgs e) => ConnectionManager.SendMessage(new ConnectionManager.MessageSerializer(ConnectionManager.MessageTypes.BgmOffsetChange, null, null, [ ChartEditor.Chart.BgmOffset ]));
 
     private void ChartInfoBgaOffset_OnValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
     {
         ChartEditor.Chart.BgaOffset = (decimal)ChartInfoBgaOffset.Value;
     }
-    private void ChartInfoBgaOffset_LostFocus(object? sender, RoutedEventArgs e) => ConnectionManager.SendMessage(ConnectionManager.MessageTypes.BgaOffsetChange, ChartEditor.Chart.BgaOffset.ToString(CultureInfo.InvariantCulture));
+    private void ChartInfoBgaOffset_LostFocus(object? sender, RoutedEventArgs e) => ConnectionManager.SendMessage(new ConnectionManager.MessageSerializer(ConnectionManager.MessageTypes.BgaOffsetChange, null, null, [ ChartEditor.Chart.BgaOffset ]));
 
     private async void ChartInfoSelectBgm_OnClick(object? sender, RoutedEventArgs e)
     {
@@ -2386,7 +2386,7 @@ public partial class MainView : UserControl
         Dispatcher.UIThread.Post(async () =>
         {
             ContentDialogResult result = await showReceivingDataDialog();
-            if (result is ContentDialogResult.Primary) ConnectionManager.LeaveLobby();
+            if (result is ContentDialogResult.Primary) ConnectionManager.LeaveSession();
         });
         return;
         

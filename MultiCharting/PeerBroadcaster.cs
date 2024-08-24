@@ -23,7 +23,7 @@ public class PeerBroadcaster
         if (mainView.AudioManager.CurrentSong == null) return;
         if (mainView.AudioManager.CurrentSong.Position == lastTimestamp) return;
 
-        mainView.ConnectionManager.SendMessage(ConnectionManager.MessageTypes.ClientTimestamp, mainView.AudioManager.CurrentSong.Position.ToString(CultureInfo.InvariantCulture));
+        mainView.ConnectionManager.SendMessage(new ConnectionManager.MessageSerializer(ConnectionManager.MessageTypes.ClientTimestamp, null, [ (int)mainView.AudioManager.CurrentSong.Position ]));
 
         lastTimestamp = mainView.AudioManager.CurrentSong.Position;
     }

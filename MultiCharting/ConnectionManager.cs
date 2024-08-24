@@ -12,6 +12,8 @@ using MercuryMapper.Enums;
 using MercuryMapper.UndoRedo;
 using MercuryMapper.UndoRedo.NoteOperations;
 using Websocket.Client;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace MercuryMapper.MultiCharting
 {
@@ -22,22 +24,24 @@ namespace MercuryMapper.MultiCharting
         private ChartEditor ChartEditor => mainView.ChartEditor;
         private Chart Chart => mainView.ChartEditor.Chart;
         
-        public enum MessageTypes : uint
+        public enum MessageTypes : int
         {
-            // 0XX - Host, Join, and Sync
-            CreateLobby = 000,
-            LobbyCreated = 001,
-            LobbyClosed = 002,
-            JoinLobby = 003,
-            LeaveLobby = 004,
-            BadLobbyCode = 005,
-            GoodLobbyCode = 006,
-            SyncRequest = 007,
-            SongFile = 008,
-            ChartData = 009,
-            SyncDone = 010,
+            // 000 - Connect, Host, Join, and Sync
+            InitConnection = 0,
+            OutdatedClient = 1,
+            CreateSession = 2,
+            SessionCreated = 3,
+            SessionClosed = 4,
+            JoinSession = 5,
+            LeaveSession = 6,
+            BadSessionCode = 7,
+            GoodSessionCode = 8,
+            SyncRequest = 9,
+            File = 10,
+            ChartData = 11,
+            SyncDone = 12,
 
-            // 1XX - Metadata
+            // 100 - Metadata
             VersionChange = 100,
             TitleChange = 101,
             RubiChange = 102,
@@ -52,7 +56,7 @@ namespace MercuryMapper.MultiCharting
             BgmOffsetChange = 111,
             BgaOffsetChange = 112,
 
-            // 2XX - Realtime Events
+            // 200 - Realtime Events
             InsertNote = 200,
             InsertHoldNote = 201,
             InsertHoldSegment = 202,
@@ -62,27 +66,41 @@ namespace MercuryMapper.MultiCharting
             BakeHold = 206,
             SplitHold = 207,
             StitchHold = 208,
-            ConvertToInstantMask = 209, // Obsolete and Unused. TODO: remove from backend.
-            InsertGimmick = 210,
-            EditGimmick = 211,
-            DeleteGimmick = 212,
-            ClientTimestamp = 213
+            InsertGimmick = 209,
+            EditGimmick = 210,
+            DeleteGimmick = 211,
+            ClientTimestamp = 212
         }
-
-        public enum OperationDirection
+        public enum OperationDirection : int
         {
             Undo = 0,
             Redo = 1
         }
-        
-        private const string RequestTypeFormat = "000";
-        private const int RequestTypeLength = 3;
-        private const int HexColorLength = 9;
+
+        public class MessageSerializer(MessageTypes messageType, string[]? stringData = null, int[]? intData = null, decimal[]? decimalData = null)
+        {
+            [JsonInclude]
+            public readonly int MessageType = (int)messageType;
+            [JsonInclude]
+            public readonly string[] StringData = stringData ?? [];
+            [JsonInclude]
+            public readonly int[] IntData = intData ?? [];
+            [JsonInclude]
+            public readonly decimal[] DecimalData = decimalData ?? [];
+        }
+
+        private class MessageDeserializer
+        {
+            public MessageTypes MessageType { get; set; }
+            public string[]? StringData { get; set; }
+            public int[]? IntData { get; set; }
+            public decimal[]? DecimalData { get; set; }
+        }
 
         private WebsocketClient? webSocketClient;
         private bool connectionGood;
         
-        public string LobbyCode = "";
+        public string SessionCode = "";
         private string audioFilePath = "";
         private string receivedChartData = "";
 
@@ -154,8 +172,8 @@ namespace MercuryMapper.MultiCharting
             });
         }
 
-        // Lobby Setup
-        public void CreateLobby(string address, string username, string color)
+        // Session Setup
+        public void CreateSession(string address, string username, string color)
         {
             string connection = CheckConnectionOrConnect(address);
 
@@ -165,27 +183,25 @@ namespace MercuryMapper.MultiCharting
                 return;
             }
 
-            SendMessage(MessageTypes.CreateLobby, color + username);
+            SendMessage(new MessageSerializer(MessageTypes.CreateSession, [ username, color ]));
         }
 
-        public void JoinLobby(string address, string username, string color, string lobbyCode)
+        public void JoinSession(string address, string username, string color, string sessionCode)
         {
             string connection = CheckConnectionOrConnect(address);
 
             if (connection == "failed") return;
 
-            LobbyCode = lobbyCode.ToUpperInvariant();
+            SessionCode = sessionCode.ToUpperInvariant();
 
-            SendMessage(MessageTypes.JoinLobby, LobbyCode + color + username);
+            SendMessage(new MessageSerializer(MessageTypes.JoinSession, [ sessionCode, username, color ]));
         }
 
-        public void LeaveLobby()
+        public void LeaveSession()
         {
             if (webSocketClient == null || !connectionGood) return;
 
-            SendMessage(MessageTypes.LeaveLobby, "");
-
-            LobbyCode = "";
+            SessionCode = "";
 
             webSocketClient.Dispose();
         }
@@ -198,10 +214,10 @@ namespace MercuryMapper.MultiCharting
             webSocketClient = null;
 
             Dispatcher.UIThread.Post(() => {
-                if (LobbyCode != "")
+                if (SessionCode != "")
                 {
                     mainView.ShowWarningMessage($"{Assets.Lang.Resources.Online_SessionClosed}");
-                    LobbyCode = "";
+                    SessionCode = "";
                 }
 
                 PeerManager.RemoveAllPeers();
@@ -217,7 +233,6 @@ namespace MercuryMapper.MultiCharting
                 return "connected";
             }
 
-            // Set up WebSocket client factory for custom protocol
             ClientWebSocket factory()
             {
                 ClientWebSocket client = new();
@@ -227,7 +242,6 @@ namespace MercuryMapper.MultiCharting
                 return client;
             }
 
-            // Prep server Uri and return false if it's invalid.
             Uri serverUri;
             
             try
@@ -239,31 +253,24 @@ namespace MercuryMapper.MultiCharting
                 return "failed";
             }
 
-            // Create client using Uri and client factory
             webSocketClient = new(serverUri, factory)
             {
-                // Disable message timeout
                 ReconnectTimeout = null,
-
-                // Disable reconnect on disconnect
                 IsReconnectionEnabled = false
             };
 
-            // Log disconnects and destroy/clean up after disconnection
             webSocketClient.DisconnectionHappened.Subscribe(_ =>
             {
                 HandleDisconnect();
             });
 
-            // Set up to handle incoming messages
             webSocketClient.MessageReceived.Subscribe(HandleMessage);
 
             try
             {
                 webSocketClient.Start().Wait();
 
-                // Announce connection to server
-                SendMessage(null, "Hello MercuryMultiMapperServer!");
+                SendMessage(new MessageSerializer(MessageTypes.InitConnection, [ "Hello MercuryMultiMapperServer!", MainView.AppVersion ]));
 
                 return "connected";
             }
@@ -273,49 +280,38 @@ namespace MercuryMapper.MultiCharting
             }
         }
 
-        // File Transfer
-        private void SendSongFile(string receivingClientId)
+        private void SendFile(int receivingClientId)
         {
             byte[] bytes = File.ReadAllBytes(ChartEditor.Chart.BgmFilepath);
             string fileData = Convert.ToBase64String(bytes);
 
-            // I swear - if someone uses pipes in file names - they're insane.
-            SendMessage(MessageTypes.SongFile, receivingClientId + "|" + Path.GetFileName(ChartEditor.Chart.BgmFilepath) + "|" + fileData);
+            SendMessage(new MessageSerializer(MessageTypes.File, [ Path.GetFileName(ChartEditor.Chart.BgmFilepath), fileData ], [ receivingClientId ]));
         }
 
-        private void SendChartData(string receivingClientId)
+        private void SendChartData(int receivingClientId)
         {
             string chartData = FormatHandler.WriteFileToNetwork(mainView.ChartEditor.Chart);
 
-            SendMessage(MessageTypes.ChartData, receivingClientId + "|" + chartData);
+            SendMessage(new MessageSerializer(MessageTypes.ChartData, [ chartData ], [ receivingClientId ]));
         }
 
         private void LoadChartAndAudio()
         {
             Dispatcher.UIThread.Post(() => mainView.OpenChartFromNetwork(receivedChartData, audioFilePath));
-            
+
             mainView.HideReceivingDataMessage();
-            SendMessage(MessageTypes.SyncDone, "");
+            SendMessage(new MessageSerializer(MessageTypes.SyncDone));
         }
         
-        // Messages
-        public void SendMessage(MessageTypes? messageType, string messageData)
+        public void SendMessage(MessageSerializer messageObject)
         {
             if (webSocketClient == null) return;
-            
-            if (messageType == null)
-            {
-                webSocketClient.Send(messageData);
-                return;
-            }
 
-            webSocketClient.Send(((uint)messageType.Value).ToString(RequestTypeFormat) + messageData);
+            webSocketClient.Send(JsonSerializer.Serialize(messageObject));
         }
 
         public void SendOperationMessage(IOperation operation, OperationDirection operationDirection)
         {
-            string opDir = operationDirection == OperationDirection.Redo ? "1\n" : "0\n";
-            
             switch (operation)
             {
                 case CompositeOperation compositeOperation:
@@ -326,19 +322,19 @@ namespace MercuryMapper.MultiCharting
                     }
                     break;
                 }
-                
+
                 case InsertNote insertNote:
                 {
                     string opData = insertNote.Note.ToNetworkString();
-                    SendMessage(MessageTypes.InsertNote, opDir + opData);
+                    SendMessage(new MessageSerializer(MessageTypes.InsertNote, [ opData ], [ (int)operationDirection ]));
                     break;
                 }
-                
+
                 case InsertHoldNote insertHoldNote:
                 {
                     string opData = $"{insertHoldNote.Note.ToNetworkString()}\n" +
                                     $"{insertHoldNote.LastPlacedNote.ToNetworkString()}";
-                    SendMessage(MessageTypes.InsertHoldNote, opDir + opData);
+                    SendMessage(new MessageSerializer(MessageTypes.InsertHoldNote, [ opData ], [ (int)operationDirection ]));
                     break;
                 }
                 
@@ -347,21 +343,21 @@ namespace MercuryMapper.MultiCharting
                     string opData = $"{insertHoldSegment.NewNote.ToNetworkString()}\n" +
                                     $"{insertHoldSegment.Previous.ToNetworkString()}\n" +
                                     $"{insertHoldSegment.Next.ToNetworkString()}";
-                    SendMessage(MessageTypes.InsertHoldSegment, opDir + opData);
+                    SendMessage(new MessageSerializer(MessageTypes.InsertHoldSegment, [ opData ], [ (int)operationDirection ]));
                     break;
                 }
                 
                 case DeleteNote deleteNote:
                 {
                     string opData = deleteNote.Note.ToNetworkString();
-                    SendMessage(MessageTypes.DeleteNote, opDir + opData);
+                    SendMessage(new MessageSerializer(MessageTypes.DeleteNote, [ opData ], [ (int)operationDirection ]));
                     break;
                 }
                 
                 case DeleteHoldNote deleteHoldNote:
                 {
                     string opData = $"{deleteHoldNote.DeletedNote.ToNetworkString()}\n{(int)deleteHoldNote.BonusType}";
-                    SendMessage(MessageTypes.DeleteHoldNote, opDir + opData);
+                    SendMessage(new MessageSerializer(MessageTypes.DeleteHoldNote, [ opData ], [ (int)operationDirection ]));
                     break;
                 }
                 
@@ -370,7 +366,7 @@ namespace MercuryMapper.MultiCharting
                     string opData = $"{editNote.BaseNote.ToNetworkString()}\n" +
                                     $"{editNote.OldNote.ToNetworkString()}\n" + 
                                     $"{editNote.NewNote.ToNetworkString()}";
-                    SendMessage(MessageTypes.EditNote, opDir + opData);
+                    SendMessage(new MessageSerializer(MessageTypes.EditNote, [ opData ], [ (int)operationDirection ]));
                     break;
                 }
                 
@@ -383,7 +379,7 @@ namespace MercuryMapper.MultiCharting
                         opData += $"{note.ToNetworkString()}\n";
                     }
                     
-                    SendMessage(MessageTypes.BakeHold, opDir + opData);
+                    SendMessage(new MessageSerializer(MessageTypes.BakeHold, [ opData ], [ (int)operationDirection ]));
                     break;
                 }
                 
@@ -392,7 +388,7 @@ namespace MercuryMapper.MultiCharting
                     string opData = $"{splitHold.Segment.ToNetworkString()}\n" +
                                     $"{splitHold.NewStart.ToNetworkString()}\n" + 
                                     $"{splitHold.NewEnd.ToNetworkString()}";
-                    SendMessage(MessageTypes.SplitHold, opDir + opData);
+                    SendMessage(new MessageSerializer(MessageTypes.SplitHold, [ opData ], [ (int)operationDirection ]));
                     break;
                 }
 
@@ -401,21 +397,21 @@ namespace MercuryMapper.MultiCharting
                     string opData = $"{stitchHold.First.ToNetworkString()}\n" +
                                     $"{stitchHold.Second.ToNetworkString()}\n" + 
                                     $"{(int)stitchHold.SecondType}";
-                    SendMessage(MessageTypes.StitchHold, opDir + opData);
+                    SendMessage(new MessageSerializer(MessageTypes.StitchHold, [ opData ], [ (int)operationDirection ]));
                     break;
                 }
 
                 case InsertGimmick insertGimmick:
                 {
                     string opData = $"{insertGimmick.Gimmick.ToNetworkString()}";
-                    SendMessage(MessageTypes.InsertGimmick, opDir + opData);
+                    SendMessage(new MessageSerializer(MessageTypes.InsertGimmick, [ opData ], [ (int)operationDirection ]));
                     break;
                 }
                 
                 case DeleteGimmick deleteGimmick:
                 {
                     string opData = $"{deleteGimmick.Gimmick.ToNetworkString()}";
-                    SendMessage(MessageTypes.DeleteGimmick, opDir + opData);
+                    SendMessage(new MessageSerializer(MessageTypes.DeleteGimmick, [ opData ], [ (int)operationDirection ]));
                     break;
                 }
 
@@ -424,7 +420,7 @@ namespace MercuryMapper.MultiCharting
                     string opData = $"{editGimmick.BaseGimmick.ToNetworkString()}\n" +
                                     $"{editGimmick.OldGimmick.ToNetworkString()}\n" + 
                                     $"{editGimmick.NewGimmick.ToNetworkString()}";
-                    SendMessage(MessageTypes.EditGimmick, opDir + opData);
+                    SendMessage(new MessageSerializer(MessageTypes.EditGimmick, [ opData ], [ (int)operationDirection ]));
                     break;
                 }
             }
@@ -432,76 +428,70 @@ namespace MercuryMapper.MultiCharting
         
         private void HandleMessage(ResponseMessage message)
         {
-            // Verify message type is the kind expected
             if (message.MessageType != WebSocketMessageType.Text || message.Text == null) return;
 
-            // Check for initial valid response and ignore data until it's received
-            if (connectionGood == false)
+            MessageDeserializer? messageData = JsonSerializer.Deserialize<MessageDeserializer>(message.Text);
+
+            if (messageData == null || messageData.StringData == null || messageData.IntData == null || messageData.DecimalData == null) return;
+
+            if (connectionGood  == false)
             {
-                if (message.Text == "Hello MercuryMapper Client!") connectionGood = true;
+                if (messageData.MessageType == MessageTypes.InitConnection && messageData.StringData[0] == "Hello MercuryMapper Client!") connectionGood = true;
 
                 return;
             }
 
-            MessageTypes requestType = (MessageTypes)uint.Parse(message.Text[..RequestTypeLength]);
-
-            string trimmedMessage = message.Text[RequestTypeLength..];
-            string[] operationData = trimmedMessage.Split(["\r\n", "\r", "\n"], StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-
-            Console.WriteLine(requestType);
-
-            switch (requestType)
+            switch (messageData.MessageType)
             {
                 // Host, Join, Sync
-                case MessageTypes.LobbyCreated:
+                case MessageTypes.SessionCreated:
                 {
-                    LobbyCode = trimmedMessage;
+                    SessionCode = messageData.StringData[0];
                     Dispatcher.UIThread.Post(() => {
-                        mainView.ShowWarningMessage($"{Assets.Lang.Resources.Online_SessionOpened} {LobbyCode}");
+                        mainView.ShowWarningMessage($"{Assets.Lang.Resources.Online_SessionOpened} {SessionCode}");
                     });
                     SetNetworkConnectionState(NetworkConnectionState.Host);
                     break;
                 }
 
-                case MessageTypes.JoinLobby:
+                case MessageTypes.JoinSession:
                 {
-                    string[] joinSplitMessage = trimmedMessage.Split('|');
-                    Dispatcher.UIThread.Post(() => PeerManager.AddPeer(int.Parse(joinSplitMessage[0]), joinSplitMessage[1][HexColorLength..], joinSplitMessage[1][..HexColorLength]));
+                    Dispatcher.UIThread.Post(() => PeerManager.AddPeer(messageData.IntData[0], messageData.StringData[0], messageData.StringData[1]));
                     break;
                 }
                 
-                case MessageTypes.LeaveLobby:
+                case MessageTypes.LeaveSession:
                 {
-                    Dispatcher.UIThread.Post(() => PeerManager.RemovePeer(int.Parse(trimmedMessage)));
+                    Dispatcher.UIThread.Post(() => PeerManager.RemovePeer(messageData.IntData[0]));
                     break;
                 }
                 
-                case MessageTypes.BadLobbyCode:
+                case MessageTypes.BadSessionCode:
                 {
                     Dispatcher.UIThread.Post(() => mainView.ShowWarningMessage($"{Assets.Lang.Resources.Online_InvalidSessionCode}"));
-                    LobbyCode = "";
+                    SessionCode = "";
                     webSocketClient?.Dispose();
                     break;
                 }
                 
-                case MessageTypes.GoodLobbyCode:
+                case MessageTypes.GoodSessionCode:
                 {
                     SetNetworkConnectionState(NetworkConnectionState.Client);
-                    SendMessage(MessageTypes.SyncRequest, "");
+                    SendMessage(new MessageSerializer(MessageTypes.SyncRequest));
                     mainView.ShowReceivingDataMessage();
                     break;
                 }
                 
                 case MessageTypes.SyncRequest:
                 {
-                    SendChartData(trimmedMessage);
-                    SendSongFile(trimmedMessage);
+                    SendChartData(messageData.IntData[0]);
+                    SendFile(messageData.IntData[0]);
                     break;
                 }
                 
                 case MessageTypes.ChartData:
                 {
-                    receivedChartData = trimmedMessage;
+                    receivedChartData = messageData.StringData[0];
 
                     // Report back that this data has been received.
                     // Then check if the other was received, and begin loading if it was.
@@ -510,12 +500,12 @@ namespace MercuryMapper.MultiCharting
                     break;
                 }
                 
-                case MessageTypes.SongFile:
+                case MessageTypes.File:
                 {
-                    string fileName = trimmedMessage[..trimmedMessage.IndexOf('|')];
+                    string fileName = messageData.StringData[0];
                     audioFilePath = Path.GetFullPath("tmp/" + fileName);
             
-                    string audioFileData = trimmedMessage[(trimmedMessage.IndexOf('|') + 1)..];
+                    string audioFileData = messageData.StringData[1];
                     byte[] fileData = Convert.FromBase64String(audioFileData);
             
                     if (!Directory.Exists("tmp")) Directory.CreateDirectory("tmp");
@@ -548,7 +538,7 @@ namespace MercuryMapper.MultiCharting
                 case MessageTypes.VersionChange:
                 {
                     Dispatcher.UIThread.Post(() => {
-                        mainView.ChartEditor.Chart.Version = trimmedMessage;
+                        mainView.ChartEditor.Chart.Version = messageData.StringData[0];
                         mainView.SetChartInfo();
                     });
                     break;
@@ -557,7 +547,7 @@ namespace MercuryMapper.MultiCharting
                 case MessageTypes.TitleChange:
                 {
                     Dispatcher.UIThread.Post(() => {
-                        mainView.ChartEditor.Chart.Title = trimmedMessage;
+                        mainView.ChartEditor.Chart.Title = messageData.StringData[0];
                         mainView.SetChartInfo();
                     });
                     break;
@@ -566,7 +556,7 @@ namespace MercuryMapper.MultiCharting
                 case MessageTypes.RubiChange:
                 {
                     Dispatcher.UIThread.Post(() => {
-                        mainView.ChartEditor.Chart.Rubi = trimmedMessage;
+                        mainView.ChartEditor.Chart.Rubi = messageData.StringData[0];
                         mainView.SetChartInfo();
                     });
                     break;
@@ -575,7 +565,7 @@ namespace MercuryMapper.MultiCharting
                 case MessageTypes.ArtistChange:
                 {
                     Dispatcher.UIThread.Post(() => {
-                        mainView.ChartEditor.Chart.Artist = trimmedMessage;
+                        mainView.ChartEditor.Chart.Artist = messageData.StringData[0];
                         mainView.SetChartInfo();
                     });
                     break;
@@ -584,7 +574,7 @@ namespace MercuryMapper.MultiCharting
                 case MessageTypes.AuthorChange:
                 {
                     Dispatcher.UIThread.Post(() => {
-                        mainView.ChartEditor.Chart.Author = trimmedMessage;
+                        mainView.ChartEditor.Chart.Author = messageData.StringData[0];
                         mainView.SetChartInfo();
                     });
                     break;
@@ -593,7 +583,7 @@ namespace MercuryMapper.MultiCharting
                 case MessageTypes.DiffChange:
                 {
                     Dispatcher.UIThread.Post(() => {
-                        mainView.ChartEditor.Chart.Diff = Convert.ToInt32(trimmedMessage);
+                        mainView.ChartEditor.Chart.Diff = messageData.IntData[0];
                         mainView.SetChartInfo();
                     });
                     break;
@@ -602,7 +592,7 @@ namespace MercuryMapper.MultiCharting
                 case MessageTypes.LevelChange:
                 {
                     Dispatcher.UIThread.Post(() => {
-                        mainView.ChartEditor.Chart.Level = Convert.ToDecimal(trimmedMessage, CultureInfo.InvariantCulture);
+                        mainView.ChartEditor.Chart.Level = messageData.DecimalData[0];
                         mainView.SetChartInfo();
                     });
                     break;
@@ -611,7 +601,7 @@ namespace MercuryMapper.MultiCharting
                 case MessageTypes.ClearThresholdChange:
                 {
                     Dispatcher.UIThread.Post(() => {
-                        mainView.ChartEditor.Chart.ClearThreshold = Convert.ToDecimal(trimmedMessage, CultureInfo.InvariantCulture);
+                        mainView.ChartEditor.Chart.ClearThreshold = messageData.DecimalData[0];
                         mainView.SetChartInfo();
                     });
                     break;
@@ -620,7 +610,7 @@ namespace MercuryMapper.MultiCharting
                 case MessageTypes.BpmTextChange:
                 {
                     Dispatcher.UIThread.Post(() => {
-                        mainView.ChartEditor.Chart.BpmText = trimmedMessage;
+                        mainView.ChartEditor.Chart.BpmText = messageData.StringData[0];
                         mainView.SetChartInfo();
                     });
                     break;
@@ -629,7 +619,7 @@ namespace MercuryMapper.MultiCharting
                 case MessageTypes.PreviewStartChange:
                 {
                     Dispatcher.UIThread.Post(() => {
-                        mainView.ChartEditor.Chart.PreviewStart = Convert.ToDecimal(trimmedMessage, CultureInfo.InvariantCulture);
+                        mainView.ChartEditor.Chart.PreviewStart = messageData.DecimalData[0];
                         mainView.SetChartInfo();
                     });
                     break;
@@ -638,7 +628,7 @@ namespace MercuryMapper.MultiCharting
                 case MessageTypes.PreviewTimeChange:
                 {
                     Dispatcher.UIThread.Post(() => {
-                        mainView.ChartEditor.Chart.PreviewTime = Convert.ToDecimal(trimmedMessage, CultureInfo.InvariantCulture);
+                        mainView.ChartEditor.Chart.PreviewTime = messageData.DecimalData[0];
                         mainView.SetChartInfo();
                     });
                     break;
@@ -647,7 +637,7 @@ namespace MercuryMapper.MultiCharting
                 case MessageTypes.BgmOffsetChange:
                 {
                     Dispatcher.UIThread.Post(() => {
-                        mainView.ChartEditor.Chart.BgmOffset = Convert.ToDecimal(trimmedMessage, CultureInfo.InvariantCulture);
+                        mainView.ChartEditor.Chart.BgmOffset = messageData.DecimalData[0];
                         mainView.SetChartInfo();
                     });
                     break;
@@ -656,7 +646,7 @@ namespace MercuryMapper.MultiCharting
                 case MessageTypes.BgaOffsetChange:
                 {
                     Dispatcher.UIThread.Post(() => {
-                        mainView.ChartEditor.Chart.BgaOffset = Convert.ToDecimal(trimmedMessage, CultureInfo.InvariantCulture);
+                        mainView.ChartEditor.Chart.BgaOffset = messageData.DecimalData[0];
                         mainView.SetChartInfo();
                     });
                     break;
@@ -664,12 +654,11 @@ namespace MercuryMapper.MultiCharting
                 
                 case MessageTypes.ClientTimestamp:
                 {
-                    string[] timestampSplitMessage = trimmedMessage.Split('|');
-                    Dispatcher.UIThread.Post(() => PeerManager.SetPeerMarkerTimestamp(int.Parse(timestampSplitMessage[0]), uint.Parse(timestampSplitMessage[1])));
+                    Dispatcher.UIThread.Post(() => PeerManager.SetPeerMarkerTimestamp(messageData.IntData[0], (uint)messageData.IntData[1]));
                     break;
                 }
                 
-                case MessageTypes.LobbyClosed:
+                case MessageTypes.SessionClosed:
                 {
                     webSocketClient?.Dispose();
                     break;
@@ -680,9 +669,10 @@ namespace MercuryMapper.MultiCharting
                 {
                     Dispatcher.UIThread.Post(() =>
                     {
-                        string[] noteData = operationData[1].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                        string[] operationData = messageData.StringData[0].Split(["\r\n", "\r", "\n"], StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                        string[] noteData = operationData[0].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
                     
-                        if (operationData[0] == "0")
+                        if ((OperationDirection)messageData.IntData[0] == OperationDirection.Undo)
                         {
                             // Undo
                             Note? note = Chart.FindNoteByGuid(noteData[0]);
@@ -708,10 +698,11 @@ namespace MercuryMapper.MultiCharting
                 {
                     Dispatcher.UIThread.Post(() =>
                     {
-                        string[] noteData = operationData[1].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-                        string[] lastPlacedNoteData = operationData[2].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                        string[] operationData = messageData.StringData[0].Split(["\r\n", "\r", "\n"], StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                        string[] noteData = operationData[0].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                        string[] lastPlacedNoteData = operationData[1].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
                         
-                        if (operationData[0] == "0")
+                        if ((OperationDirection)messageData.IntData[0] == OperationDirection.Undo)
                         {
                             // Undo
                             Note? note = Chart.FindNoteByGuid(noteData[0]);
@@ -750,11 +741,12 @@ namespace MercuryMapper.MultiCharting
                 {
                     Dispatcher.UIThread.Post(() =>
                     {
-                        string[] noteData = operationData[1].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-                        string[] prevReferencedNoteData = operationData[2].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-                        string[] nextReferencedNoteData = operationData[3].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                        string[] operationData = messageData.StringData[0].Split(["\r\n", "\r", "\n"], StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                        string[] noteData = operationData[0].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                        string[] prevReferencedNoteData = operationData[1].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                        string[] nextReferencedNoteData = operationData[2].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
                         
-                        if (operationData[0] == "0")
+                        if ((OperationDirection)messageData.IntData[0] == OperationDirection.Undo)
                         {
                             // Undo
                             Note? note = Chart.FindNoteByGuid(noteData[0]);
@@ -786,9 +778,10 @@ namespace MercuryMapper.MultiCharting
                 {
                     Dispatcher.UIThread.Post(() =>
                     {
-                        string[] noteData = operationData[1].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                        string[] operationData = messageData.StringData[0].Split(["\r\n", "\r", "\n"], StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                        string[] noteData = operationData[0].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
                     
-                        if (operationData[0] == "0")
+                        if ((OperationDirection)messageData.IntData[0] == OperationDirection.Undo)
                         {
                             // Undo
                             DeleteNote operation = new(Chart, ChartEditor.SelectedNotes, Note.ParseNetworkString(Chart, noteData));
@@ -814,10 +807,11 @@ namespace MercuryMapper.MultiCharting
                 {
                     Dispatcher.UIThread.Post(() =>
                     {
-                        string[] noteData = operationData[1].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-                        BonusType bonusType = (BonusType)Convert.ToInt32(operationData[2]);
+                        string[] operationData = messageData.StringData[0].Split(["\r\n", "\r", "\n"], StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                        string[] noteData = operationData[0].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                        BonusType bonusType = (BonusType)Convert.ToInt32(operationData[1]);
 
-                        if (operationData[0] == "0")
+                        if ((OperationDirection)messageData.IntData[0] == OperationDirection.Undo)
                         {
                             // Undo
                             DeleteHoldNote operation = new(Chart, ChartEditor.SelectedNotes, Note.ParseNetworkString(Chart, noteData), bonusType);
@@ -851,11 +845,12 @@ namespace MercuryMapper.MultiCharting
                 {
                     Dispatcher.UIThread.Post(() =>
                     {
-                        string[] noteData = operationData[1].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-                        string[] oldNoteData = operationData[2].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-                        string[] newNoteData = operationData[3].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                        string[] operationData = messageData.StringData[0].Split(["\r\n", "\r", "\n"], StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                        string[] noteData = operationData[0].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                        string[] oldNoteData = operationData[1].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                        string[] newNoteData = operationData[2].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
                     
-                        if (operationData[0] == "0")
+                        if ((OperationDirection)messageData.IntData[0] == OperationDirection.Undo)
                         {
                             // Undo
                             Note? note = Chart.FindNoteByGuid(noteData[0]);
@@ -888,16 +883,17 @@ namespace MercuryMapper.MultiCharting
                 {
                     Dispatcher.UIThread.Post(() =>
                     {
-                        string[] startData = operationData[1].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-                        string[] endData = operationData[2].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                        string[] operationData = messageData.StringData[0].Split(["\r\n", "\r", "\n"], StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                        string[] startData = operationData[0].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                        string[] endData = operationData[1].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
                         List<string[]> segmentData = [];
                         
-                        for (int i = 3; i < operationData.Length; i++)
+                        for (int i = 2; i < operationData.Length; i++)
                         {
                             segmentData.Add(operationData[i].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries));
                         }
 
-                        if (operationData[0] == "0")
+                        if ((OperationDirection)messageData.IntData[0] == OperationDirection.Undo)
                         {
                             // Undo
                             Note? start = Chart.FindNoteByGuid(startData[0]);
@@ -953,11 +949,12 @@ namespace MercuryMapper.MultiCharting
                 {
                     Dispatcher.UIThread.Post(() =>
                     {
-                        string[] segmentData = operationData[1].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-                        string[] newStartData = operationData[2].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-                        string[] newEndData = operationData[3].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                        string[] operationData = messageData.StringData[0].Split(["\r\n", "\r", "\n"], StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                        string[] segmentData = operationData[0].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                        string[] newStartData = operationData[1].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                        string[] newEndData = operationData[2].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
                     
-                        if (operationData[0] == "0")
+                        if ((OperationDirection)messageData.IntData[0] == OperationDirection.Undo)
                         {
                             // Undo
                             Note? newStart = Chart.FindNoteByGuid(newStartData[0]);
@@ -992,17 +989,18 @@ namespace MercuryMapper.MultiCharting
                 {
                     Dispatcher.UIThread.Post(() =>
                     {
-                        string[] firstData = operationData[1].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-                        string[] secondData = operationData[2].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                        string[] operationData = messageData.StringData[0].Split(["\r\n", "\r", "\n"], StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                        string[] firstData = operationData[0].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                        string[] secondData = operationData[1].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
 
-                        if (operationData[0] == "0")
+                        if ((OperationDirection)messageData.IntData[0] == OperationDirection.Undo)
                         {
                             // Undo
                             Note? first = Chart.FindNoteByGuid(firstData[0]);
                             Note? second = Chart.FindNoteByGuid(secondData[0]);
                             if (first == null || second == null) return;
 
-                            NoteType secondType = (NoteType)Convert.ToInt32(operationData[3], CultureInfo.InvariantCulture);
+                            NoteType secondType = (NoteType)Convert.ToInt32(operationData[2], CultureInfo.InvariantCulture);
 
                             StitchHold operation = new(Chart, first, second, secondType);
                             operation.Undo();
@@ -1015,7 +1013,7 @@ namespace MercuryMapper.MultiCharting
                             Note? second = Chart.FindNoteByGuid(secondData[0]);
                             if (first == null || second == null) return;
 
-                            NoteType secondType = (NoteType)Convert.ToInt32(operationData[3], CultureInfo.InvariantCulture);
+                            NoteType secondType = (NoteType)Convert.ToInt32(operationData[2], CultureInfo.InvariantCulture);
 
                             StitchHold operation = new(Chart, first, second, secondType);
 
@@ -1031,9 +1029,10 @@ namespace MercuryMapper.MultiCharting
                 {
                     Dispatcher.UIThread.Post(() =>
                     {
-                        string[] gimmickData = operationData[1].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                        string[] operationData = messageData.StringData[0].Split(["\r\n", "\r", "\n"], StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                        string[] gimmickData = operationData[0].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
                         
-                        if (operationData[0] == "0")
+                        if ((OperationDirection)messageData.IntData[0] == OperationDirection.Undo)
                         {
                             // Undo
                             Gimmick? gimmick = Chart.FindGimmickByGuid(gimmickData[0]);
@@ -1058,11 +1057,12 @@ namespace MercuryMapper.MultiCharting
                 {
                     Dispatcher.UIThread.Post(() =>
                     {
-                        string[] gimmickData = operationData[1].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-                        string[] oldGimmickData = operationData[2].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-                        string[] newGimmickData = operationData[3].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                        string[] operationData = messageData.StringData[0].Split(["\r\n", "\r", "\n"], StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                        string[] gimmickData = operationData[0].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                        string[] oldGimmickData = operationData[1].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                        string[] newGimmickData = operationData[2].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
                     
-                        if (operationData[0] == "0")
+                        if ((OperationDirection)messageData.IntData[0] == OperationDirection.Undo)
                         {
                             // Undo
                             Gimmick? gimmick = Chart.FindGimmickByGuid(gimmickData[0]);
@@ -1095,9 +1095,10 @@ namespace MercuryMapper.MultiCharting
                 {
                     Dispatcher.UIThread.Post(() =>
                     {
-                        string[] gimmickData = operationData[1].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                        string[] operationData = messageData.StringData[0].Split(["\r\n", "\r", "\n"], StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                        string[] gimmickData = operationData[0].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
                     
-                        if (operationData[0] == "0")
+                        if ((OperationDirection)messageData.IntData[0] == OperationDirection.Undo)
                         {
                             // Undo
                             DeleteGimmick operation = new(Chart, Gimmick.ParseNetworkString(gimmickData));
@@ -1121,7 +1122,7 @@ namespace MercuryMapper.MultiCharting
                 
                 default:
                 {
-                    Console.WriteLine($"^ Got an unknown or unhandled request type: {requestType}");
+                    Console.WriteLine($"Got an unknown or unhandled message type: {messageData.MessageType}");
                     break;
                 }
             }
