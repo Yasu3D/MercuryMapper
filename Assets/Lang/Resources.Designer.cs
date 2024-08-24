@@ -1843,24 +1843,6 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Receiving Data....
-        /// </summary>
-        public static string Online_ReceivingData {
-            get {
-                return ResourceManager.GetString("Online_ReceivingData", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Sending Data....
-        /// </summary>
-        public static string Online_SendingData {
-            get {
-                return ResourceManager.GetString("Online_SendingData", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Server Address.
         /// </summary>
         public static string Online_ServerAddress {
@@ -1893,6 +1875,15 @@ namespace MercuryMapper.Assets.Lang {
         public static string Online_SessionOpened {
             get {
                 return ResourceManager.GetString("Online_SessionOpened", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Transmitting Data....
+        /// </summary>
+        public static string Online_TransmittingData {
+            get {
+                return ResourceManager.GetString("Online_TransmittingData", resourceCulture);
             }
         }
         

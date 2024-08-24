@@ -1032,9 +1032,6 @@ Continue?</value>
   <data name="Generic_NoChartLoaded" xml:space="preserve">
     <value>No Chart Loaded :]</value>
   </data>
-  <data name="Online_ReceivingData" xml:space="preserve">
-    <value>Receiving Data...</value>
-  </data>
   <data name="Online_ConnectionFailed" xml:space="preserve">
     <value>Connection Failed.</value>
   </data>
@@ -1158,7 +1155,7 @@ Continue?</value>
   <data name="QuickSettings_CutOverlappingJudgementWindows" xml:space="preserve">
     <value>Cut Overlapping</value>
   </data>
-  <data name="Online_SendingData" xml:space="preserve">
-    <value>Sending Data...</value>
+  <data name="Online_TransmittingData" xml:space="preserve">
+    <value>Transmitting Data...</value>
   </data>
 </root>

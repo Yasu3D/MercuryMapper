@@ -39,7 +39,8 @@ public class ConnectionManager(MainView main)
         SyncRequest = 9,
         File = 10,
         ChartData = 11,
-        SyncDone = 12,
+        SyncBegin = 12,
+        SyncEnd = 13,
 
         // 100 - Metadata
         VersionChange = 100,
@@ -298,9 +299,8 @@ public class ConnectionManager(MainView main)
     private void LoadChartAndAudio()
     {
         Dispatcher.UIThread.Post(() => mainView.OpenChartFromNetwork(receivedChartData, audioFilePath));
-
-        mainView.HideReceivingDataMessage();
-        SendMessage(new MessageSerializer(MessageTypes.SyncDone));
+        
+        SendMessage(new MessageSerializer(MessageTypes.SyncEnd));
     }
         
     public void SendMessage(MessageSerializer messageObject)
@@ -478,15 +478,12 @@ public class ConnectionManager(MainView main)
             {
                 SetNetworkConnectionState(NetworkConnectionState.Client);
                 SendMessage(new MessageSerializer(MessageTypes.SyncRequest));
-                mainView.ShowReceivingDataMessage();
                 break;
             }
                 
             case MessageTypes.SyncRequest:
             {
-                mainView.ShowSendingDataMessage();
                 SendChartData(messageData.IntData[0]);
-                mainView.HideSendingDataMessage();
                 SendFile(messageData.IntData[0]);
                 break;
             }
@@ -518,7 +515,20 @@ public class ConnectionManager(MainView main)
                 if (chartReceived) LoadChartAndAudio();
                 break;
             }
-                
+
+            case MessageTypes.SyncBegin:
+            {
+                mainView.SetPlayState(MainView.PlayerState.Paused);
+                mainView.ShowTransmittingDataMessage();
+                break;   
+            }
+
+            case MessageTypes.SyncEnd:
+            {
+                mainView.HideTransmittingDataMessage();
+                break;
+            }
+            
             // Metadata
                 
             //VersionChange = 100,

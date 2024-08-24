@@ -2383,13 +2383,13 @@ public partial class MainView : UserControl
         dialog.ShowAsync();
     }
     
-    private readonly ContentDialog receivingDataDialog = new()
+    private readonly ContentDialog transmittingDataDialog = new()
     {
-        Title = Assets.Lang.Resources.Online_ReceivingData,
+        Title = Assets.Lang.Resources.Online_TransmittingData,
         PrimaryButtonText = Assets.Lang.Resources.Menu_Disconnect
     };
 
-    public void ShowReceivingDataMessage()
+    public void ShowTransmittingDataMessage()
     {
         Dispatcher.UIThread.Post(async () =>
         {
@@ -2400,24 +2400,17 @@ public partial class MainView : UserControl
         
         Task<ContentDialogResult> showReceivingDataDialog()
         {
-            return receivingDataDialog.ShowAsync();
+            return transmittingDataDialog.ShowAsync();
         }
     }
 
-    public void HideReceivingDataMessage() => Dispatcher.UIThread.Post(() => receivingDataDialog.Hide());
+    public void HideTransmittingDataMessage() => Dispatcher.UIThread.Post(() => transmittingDataDialog.Hide());
 
     private readonly ContentDialog sendingDataDialog = new()
     {
-        Title = Assets.Lang.Resources.Online_SendingData
+        Title = Assets.Lang.Resources.Online_TransmittingData
     };
-    
-    public void ShowSendingDataMessage()
-    {
-        Dispatcher.UIThread.Post(() => sendingDataDialog.ShowAsync());
-    }
-    
-    public void HideSendingDataMessage() => Dispatcher.UIThread.Post(() => sendingDataDialog.Hide());
-    
+
     public void SetPlayState(PlayerState state)
     {
         if (AudioManager.CurrentSong == null)
