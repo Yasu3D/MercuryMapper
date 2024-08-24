@@ -2406,6 +2406,18 @@ public partial class MainView : UserControl
 
     public void HideReceivingDataMessage() => Dispatcher.UIThread.Post(() => receivingDataDialog.Hide());
 
+    private readonly ContentDialog sendingDataDialog = new()
+    {
+        Title = Assets.Lang.Resources.Online_SendingData
+    };
+    
+    public void ShowSendingDataMessage()
+    {
+        Dispatcher.UIThread.Post(() => sendingDataDialog.ShowAsync());
+    }
+    
+    public void HideSendingDataMessage() => Dispatcher.UIThread.Post(() => sendingDataDialog.Hide());
+    
     public void SetPlayState(PlayerState state)
     {
         if (AudioManager.CurrentSong == null)

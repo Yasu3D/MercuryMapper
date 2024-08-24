@@ -484,7 +484,9 @@ public class ConnectionManager(MainView main)
                 
             case MessageTypes.SyncRequest:
             {
+                mainView.ShowSendingDataMessage();
                 SendChartData(messageData.IntData[0]);
+                mainView.HideSendingDataMessage();
                 SendFile(messageData.IntData[0]);
                 break;
             }

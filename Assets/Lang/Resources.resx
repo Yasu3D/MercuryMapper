@@ -1158,4 +1158,7 @@ Continue?</value>
   <data name="QuickSettings_CutOverlappingJudgementWindows" xml:space="preserve">
     <value>Cut Overlapping</value>
   </data>
+  <data name="Online_SendingData" xml:space="preserve">
+    <value>Sending Data...</value>
+  </data>
 </root>

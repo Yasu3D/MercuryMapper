@@ -1158,4 +1158,7 @@ Fortfahren?</value>
   <data name="QuickSettings_CutOverlappingJudgementWindows" xml:space="preserve">
     <value>Entferne überlappende Bereiche</value>
   </data>
+  <data name="Online_SendingData" xml:space="preserve">
+    <value>Übertrage Daten...</value>
+  </data>
 </root>

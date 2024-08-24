@@ -1852,6 +1852,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Übertrage Daten....
+        /// </summary>
+        public static string Online_SendingData {
+            get {
+                return ResourceManager.GetString("Online_SendingData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Server Addresse.
         /// </summary>
         public static string Online_ServerAddress {
