@@ -1843,6 +1843,24 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Veralteter Client!.
+        /// </summary>
+        public static string Online_OutdatedClient {
+            get {
+                return ResourceManager.GetString("Online_OutdatedClient", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bitte aktualisieren Sie MercuryMapper auf die neueste Version. Wenn Sie selbst hosten, aktualisieren Sie auch Ihren Server..
+        /// </summary>
+        public static string Online_OutdatedClientDetails {
+            get {
+                return ResourceManager.GetString("Online_OutdatedClientDetails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Server Addresse.
         /// </summary>
         public static string Online_ServerAddress {

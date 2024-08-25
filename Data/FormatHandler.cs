@@ -75,7 +75,6 @@ public static class FormatHandler
 
     public static void LoadFileFromNetwork(Chart chart, string data)
     {
-        Console.WriteLine(data);
         SatHandler.LoadFile(chart, "", data.Split(["\r\n", "\r", "\n"], StringSplitOptions.RemoveEmptyEntries), true);
     }
     public static string WriteFileToNetwork(Chart chart) => SatHandler.WriteFile(chart, "", true);
@@ -442,8 +441,7 @@ internal static class SatHandler
             if (string.IsNullOrWhiteSpace(line)) continue;
             
             Match match = Regex.Match(line, pattern);
-            Console.WriteLine(match.Success);
-            
+
             if (!match.Success) continue;
 
             string match1 = match.Groups[1].Value;

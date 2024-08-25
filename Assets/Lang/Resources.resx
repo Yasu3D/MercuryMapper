@@ -1158,4 +1158,10 @@ Continue?</value>
   <data name="Online_TransmittingData" xml:space="preserve">
     <value>Transmitting Data...</value>
   </data>
+  <data name="Online_OutdatedClient" xml:space="preserve">
+    <value>Outdated Client!</value>
+  </data>
+  <data name="Online_OutdatedClientDetails" xml:space="preserve">
+    <value>Please update MercuryMapper to the latest version. If you're self-hosting, update your server too.</value>
+  </data>
 </root>

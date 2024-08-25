@@ -1158,4 +1158,10 @@ Fortfahren?</value>
   <data name="Online_TransmittingData" xml:space="preserve">
     <value>Übertrage Daten...</value>
   </data>
+  <data name="Online_OutdatedClient" xml:space="preserve">
+    <value>Veralteter Client!</value>
+  </data>
+  <data name="Online_OutdatedClientDetails" xml:space="preserve">
+    <value>Bitte aktualisieren Sie MercuryMapper auf die neueste Version. Wenn Sie selbst hosten, aktualisieren Sie auch Ihren Server.</value>
+  </data>
 </root>

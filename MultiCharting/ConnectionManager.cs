@@ -189,6 +189,9 @@ public class ConnectionManager(MainView main)
 
     public void JoinSession(string address, string username, string color, string sessionCode)
     {
+        audioReceived = false;
+        chartReceived = false;
+        
         string connection = CheckConnectionOrConnect(address);
 
         if (connection == "failed") return;
@@ -271,7 +274,7 @@ public class ConnectionManager(MainView main)
         {
             webSocketClient.Start().Wait();
 
-            SendMessage(new MessageSerializer(MessageTypes.InitConnection, [ "Hello MercuryMultiMapperServer!", MainView.AppVersion ]));
+            SendMessage(new MessageSerializer(MessageTypes.InitConnection, [ "Hello MercuryMultiMapperServer!", MainView.ServerVersion ]));
 
             return "connected";
         }
@@ -308,6 +311,8 @@ public class ConnectionManager(MainView main)
         if (webSocketClient == null) return;
 
         webSocketClient.Send(JsonSerializer.Serialize(messageObject));
+        
+        Console.WriteLine($"Sending {messageObject.MessageType}");
     }
 
     public void SendOperationMessage(IOperation operation, OperationDirection operationDirection)
@@ -429,10 +434,10 @@ public class ConnectionManager(MainView main)
     private void HandleMessage(ResponseMessage message)
     {
         if (message.MessageType != WebSocketMessageType.Text || message.Text == null) return;
-
+        
         MessageDeserializer? messageData = JsonSerializer.Deserialize<MessageDeserializer>(message.Text);
 
-        if (messageData == null || messageData.StringData == null || messageData.IntData == null || messageData.DecimalData == null) return;
+        if (messageData?.StringData == null || messageData.IntData == null || messageData.DecimalData == null) return;
 
         if (connectionGood  == false)
         {
@@ -441,6 +446,8 @@ public class ConnectionManager(MainView main)
             return;
         }
 
+        Console.WriteLine($"Receiving {messageData.MessageType}");
+        
         switch (messageData.MessageType)
         {
             // Host, Join, Sync
@@ -451,6 +458,14 @@ public class ConnectionManager(MainView main)
                     mainView.ShowWarningMessage($"{Assets.Lang.Resources.Online_SessionOpened} {SessionCode}");
                 });
                 SetNetworkConnectionState(NetworkConnectionState.Host);
+                break;
+            }
+
+            case MessageTypes.OutdatedClient:
+            {
+                Dispatcher.UIThread.Post(() => {
+                    mainView.ShowWarningMessage(Assets.Lang.Resources.Online_OutdatedClient, Assets.Lang.Resources.Online_OutdatedClientDetails);
+                });
                 break;
             }
 
@@ -518,14 +533,17 @@ public class ConnectionManager(MainView main)
 
             case MessageTypes.SyncBegin:
             {
-                mainView.SetPlayState(MainView.PlayerState.Paused);
-                mainView.ShowTransmittingDataMessage();
+                Dispatcher.UIThread.Post(() =>
+                {
+                    mainView.SetPlayState(MainView.PlayerState.Paused);
+                    mainView.ShowTransmittingDataMessage();
+                });
                 break;   
             }
 
             case MessageTypes.SyncEnd:
             {
-                mainView.HideTransmittingDataMessage();
+                Dispatcher.UIThread.Post(() => mainView.HideTransmittingDataMessage());
                 break;
             }
             
