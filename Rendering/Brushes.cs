@@ -42,7 +42,6 @@ public class Brushes(UserConfig userConfig)
     private SKColor colorNoteHoldSegmentNoRender;
     private SKColor colorNoteMaskAdd;
     private SKColor colorNoteMaskRemove;
-    private SKColor colorNoteEndOfChart;
     private SKColor colorNoteCaps;
 
     private SKColor colorGimmickBpmChange;
@@ -50,6 +49,7 @@ public class Brushes(UserConfig userConfig)
     private SKColor colorGimmickHiSpeedChange;
     private SKColor colorGimmickReverse;
     private SKColor colorGimmickStop;
+    private SKColor colorGimmickEndOfChart;
     
     // ________ Private Brushes
     private readonly SKPaint guideLinePen = new()
@@ -395,7 +395,6 @@ public class Brushes(UserConfig userConfig)
             NoteType.HoldEnd => colorNoteHoldSegment,
             NoteType.MaskAdd => colorNoteMaskAdd,
             NoteType.MaskRemove => colorNoteMaskRemove,
-            NoteType.EndOfChart => colorNoteEndOfChart,
             _ => throw new ArgumentOutOfRangeException()
         };
     }
@@ -413,6 +412,7 @@ public class Brushes(UserConfig userConfig)
             or GimmickType.ReverseNoteEnd => colorGimmickReverse,
             GimmickType.StopStart
             or GimmickType.StopEnd => colorGimmickStop,
+            GimmickType.EndOfChart => colorGimmickEndOfChart,
             _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
         };
     }
@@ -437,7 +437,7 @@ public class Brushes(UserConfig userConfig)
             colorNoteHoldSegmentNoRender = SKColor.Parse(colors["ColorNoteHoldSegmentNoRender"]);
             colorNoteMaskAdd = SKColor.Parse(colors["ColorNoteMaskAdd"]);
             colorNoteMaskRemove = SKColor.Parse(colors["ColorNoteMaskRemove"]);
-            colorNoteEndOfChart = SKColor.Parse(colors["ColorNoteEndOfChart"]);
+            colorGimmickEndOfChart = SKColor.Parse(colors["ColorNoteEndOfChart"]);
             colorNoteCaps = SKColor.Parse(colors["ColorNoteCaps"]);
             
             colorGimmickBpmChange = SKColor.Parse(colors["ColorGimmickBpmChange"]);

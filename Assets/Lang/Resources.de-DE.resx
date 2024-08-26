@@ -180,7 +180,7 @@
   <data name="Note_Touch" xml:space="preserve">
     <value>Tippen</value>
   </data>
-  <data name="Note_EndOfChart" xml:space="preserve">
+  <data name="Gimmick_EndOfChart" xml:space="preserve">
     <value>Chart Ende</value>
   </data>
   <data name="Note_MaskAdd" xml:space="preserve">
@@ -1163,5 +1163,8 @@ Fortfahren?</value>
   </data>
   <data name="Online_OutdatedClientDetails" xml:space="preserve">
     <value>Bitte aktualisieren Sie MercuryMapper auf die neueste Version. Wenn Sie selbst hosten, aktualisieren Sie auch Ihren Server.</value>
+  </data>
+  <data name="ToolTip_EndOfChart" xml:space="preserve">
+    <value>Kennzeichnet das Ende einer Chart. Musik- und Chart-Wiedergabe stoppen, und CLEAR oder FAIL wird angezeigt.</value>
   </data>
 </root>

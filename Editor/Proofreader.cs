@@ -70,13 +70,13 @@ public static class Proofreader
                 AddMessage(textBlock, MessageType.None, "Place an End of Chart note at least a Measure after the last playable note. Without it, the game would crash.\n\n");
             }
 
-            Note[] endOfChartNotes = chart.Notes.Where(x => x.NoteType is NoteType.EndOfChart).ToArray();
+            Gimmick[] endOfChartGimmicks = chart.Gimmicks.Where(x => x.GimmickType is GimmickType.EndOfChart).ToArray();
             
-            if (endOfChartNotes.Length > 1)
+            if (endOfChartGimmicks.Length > 1)
             {
-                for (int i = 0; i < endOfChartNotes.Length - 1; i++)
+                for (int i = 0; i < endOfChartGimmicks.Length - 1; i++)
                 {
-                    AddMessage(textBlock, MessageType.Error, $"End of Chart Note @ {endOfChartNotes[i].BeatData.Measure} {endOfChartNotes[i].BeatData.Tick} is redundant.\n");
+                    AddMessage(textBlock, MessageType.Error, $"End of Chart Note @ {endOfChartGimmicks[i].BeatData.Measure} {endOfChartGimmicks[i].BeatData.Tick} is redundant.\n");
                 }
                 
                 AddMessage(textBlock, MessageType.None, "A Chart with more than one End of Chart Note could cause undefined behavior and crash the game.\n\n");
@@ -92,7 +92,6 @@ public static class Proofreader
             foreach (Note note in chart.Notes)
             {
                 if (note.BeatData.FullTick < chart.EndOfChart.BeatData.FullTick) continue;
-                if (note.NoteType is NoteType.EndOfChart) continue;
                 
                 AddMessage(textBlock, MessageType.Error, $"{note.NoteType} @ {note.BeatData.Measure} {note.BeatData.Tick} is after the End of Chart Note.\n");
                 error = true;

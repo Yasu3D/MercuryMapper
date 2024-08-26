@@ -180,7 +180,7 @@
   <data name="Note_Hold" xml:space="preserve">
     <value>Hold</value>
   </data>
-  <data name="Note_EndOfChart" xml:space="preserve">
+  <data name="Gimmick_EndOfChart" xml:space="preserve">
     <value>End of Chart</value>
   </data>
   <data name="Note_MaskAdd" xml:space="preserve">
@@ -1163,5 +1163,8 @@ Continue?</value>
   </data>
   <data name="Online_OutdatedClientDetails" xml:space="preserve">
     <value>Please update MercuryMapper to the latest version. If you're self-hosting, update your server too.</value>
+  </data>
+  <data name="ToolTip_EndOfChart" xml:space="preserve">
+    <value>Marks the end of a Chart. BGM and Chart playback stops, and the CLEAR or FAIL popup is shown.</value>
   </data>
 </root>

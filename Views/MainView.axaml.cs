@@ -153,7 +153,6 @@ public partial class MainView : UserControl
         RadioNoteHold.BorderBrush = new SolidColorBrush(Convert.ToUInt32(UserConfig.ColorConfig.Colors["ColorNoteHoldStart"], 16));
         RadioNoteMaskAdd.BorderBrush = new SolidColorBrush(Convert.ToUInt32(UserConfig.ColorConfig.Colors["ColorNoteMaskAdd"], 16));
         RadioNoteMaskRemove.BorderBrush = new SolidColorBrush(Convert.ToUInt32(UserConfig.ColorConfig.Colors["ColorNoteMaskRemove"], 16));
-        RadioNoteEndOfChart.BorderBrush = new SolidColorBrush(Convert.ToUInt32(UserConfig.ColorConfig.Colors["ColorNoteEndOfChart"], 16));
     }
 
     private void ToggleTypeRadio(bool isMask)
@@ -164,14 +163,12 @@ public partial class MainView : UserControl
         MaskDirectionPanel.IsVisible = isMask;
     }
 
-    private void ToggleBonusTypeRadios(bool noBonus, bool bonus, bool rNote)
+    private void ToggleBonusTypeRadios(bool bonus)
     {
         if (RadioNoBonus == null || RadioBonus == null || RadioRNote == null) return;
-        RadioNoBonus.IsEnabled = noBonus;
         RadioBonus.IsEnabled = bonus;
-        RadioRNote.IsEnabled = rNote;
 
-        if ((RadioBonus.IsChecked == true && !bonus) || (RadioRNote.IsChecked == true && !rNote))
+        if ((RadioBonus.IsChecked == true && !bonus) || (RadioRNote.IsChecked == true))
             RadioNoBonus.IsChecked = true;
     }
 
@@ -399,14 +396,11 @@ public partial class MainView : UserControl
 
     public void ToggleInsertButton()
     {
-        int endOfChartCount = ChartEditor.Chart.Notes.Count(x => x.NoteType is NoteType.EndOfChart);
-
-        bool blockEndOfChart = endOfChartCount == 1 && ChartEditor.CurrentNoteType is NoteType.EndOfChart;
-        bool behindEndOfChart = endOfChartCount != 0 && ChartEditor.CurrentMeasureDecimal >= ChartEditor.Chart.Notes.FirstOrDefault(x => x.NoteType is NoteType.EndOfChart)?.BeatData.MeasureDecimal;
+        bool behindEndOfChart = ChartEditor.Chart.EndOfChart != null && ChartEditor.CurrentBeatData.FullTick >= ChartEditor.Chart.EndOfChart.BeatData.FullTick;
         bool beforeHoldStart = ChartEditor is { CurrentHoldStart: not null, EditorState: ChartEditorState.InsertHold } && ChartEditor.CurrentMeasureDecimal <= ChartEditor.CurrentHoldStart.BeatData.MeasureDecimal;
         bool beforeLastHold = ChartEditor is { LastPlacedHold: not null, EditorState: ChartEditorState.InsertHold } && ChartEditor.CurrentMeasureDecimal <= ChartEditor.LastPlacedHold.BeatData.MeasureDecimal;
 
-        ButtonInsert.IsEnabled = !(blockEndOfChart || behindEndOfChart || beforeHoldStart || beforeLastHold);
+        ButtonInsert.IsEnabled = !(behindEndOfChart || beforeHoldStart || beforeLastHold);
     }
 
     public void SetSelectionInfo()
@@ -949,12 +943,6 @@ public partial class MainView : UserControl
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorNoteTypeMaskRemove"]))
         {
             RadioNoteMaskRemove.IsChecked = true;
-            e.Handled = true;
-            return;
-        }
-        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorNoteTypeEndOfChart"]))
-        {
-            RadioNoteEndOfChart.IsChecked = true;
             e.Handled = true;
             return;
         }
@@ -1722,7 +1710,6 @@ public partial class MainView : UserControl
             "RadioNoteHold" => NoteType.HoldStart,
             "RadioNoteMaskAdd" => NoteType.MaskAdd,
             "RadioNoteMaskRemove" => NoteType.MaskRemove,
-            "RadioNoteEndOfChart" => NoteType.EndOfChart,
             _ => throw new ArgumentOutOfRangeException()
         };
 
@@ -1730,12 +1717,10 @@ public partial class MainView : UserControl
         ChartEditor.UpdateCursorNoteType();
 
         bool isMask = noteType is NoteType.MaskAdd or NoteType.MaskRemove;
-        bool noBonusAvailable = noteType is not NoteType.EndOfChart;
         bool bonusAvailable = noteType is NoteType.Touch or NoteType.SlideClockwise or NoteType.SlideCounterclockwise;
-        bool rNoteAvailable = noteType is not NoteType.EndOfChart;
 
         ToggleTypeRadio(isMask);
-        ToggleBonusTypeRadios(noBonusAvailable, bonusAvailable, rNoteAvailable);
+        ToggleBonusTypeRadios(bonusAvailable);
     }
 
     private void RadioBonusType_IsCheckedChanged(object? sender, RoutedEventArgs e)
@@ -1880,6 +1865,8 @@ public partial class MainView : UserControl
             ChartEditor.InsertReverse(gimmickView.EffectStartMeasureDecimal, gimmickView.EffectEndMeasureDecimal, gimmickView.NoteEndMeasureDecimal);
         });
     }
+
+    private void ButtonGimmickEndOfChart_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.InsertEndOfChart();
 
     private void ButtonInsert_OnClick(object? sender, RoutedEventArgs e)
     {

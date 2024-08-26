@@ -17,7 +17,8 @@ public static class Enums2String
             GimmickType.ReverseEffectEnd => Resources.Gimmick_ReverseEffectEnd,
             GimmickType.ReverseNoteEnd => Resources.Gimmick_ReverseNoteEnd,
             GimmickType.StopStart => Resources.Gimmick_StopStart,
-            GimmickType.StopEnd => Resources.Gimmick_StopEnd,
+            GimmickType.StopEnd => Resources.Gimmick_StopEnd, 
+            GimmickType.EndOfChart => Resources.Gimmick_EndOfChart,
             _ => type.ToString()
         };
     }
@@ -61,8 +62,6 @@ public static class Enums2String
 
             (NoteType.MaskAdd, _) => Resources.Note_MaskAdd,
             (NoteType.MaskRemove, _) => Resources.Note_MaskRemove,
-
-            (NoteType.EndOfChart, _) => Resources.Note_EndOfChart,
             _ => "Unknown Note"
         };
     }

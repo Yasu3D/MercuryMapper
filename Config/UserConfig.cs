@@ -98,7 +98,7 @@ public class KeymapConfig
         ["EditorNoteTypeHold"] = new(Key.D7),
         ["EditorNoteTypeMaskAdd"] = new(Key.D8),
         ["EditorNoteTypeMaskRemove"] = new(Key.D9),
-        ["EditorNoteTypeEndOfChart"] = new(Key.D0),
+        ["EditorNoteTypeEndOfChart"] = new(Key.D0), // DEPRECATED
         ["EditorTypeRadio1"] = new(Key.D1, false, true, false),
         ["EditorTypeRadio2"] = new(Key.D2, false, true, false),
         ["EditorTypeRadio3"] = new(Key.D3, false, true, false),

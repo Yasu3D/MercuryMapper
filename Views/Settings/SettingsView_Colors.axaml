@@ -53,8 +53,6 @@
                 <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorNoteMaskAdd"/>
                 <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Note_MaskRemove}"/>
                 <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorNoteMaskRemove"/>
-                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Note_EndOfChart}"/>
-                <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorNoteEndOfChart"/>
             </UniformGrid>
             
             <Separator/>
@@ -117,6 +115,8 @@
                 <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorGimmickStop"/>
                 <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Gimmick_Reverse}"/>
                 <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorGimmickReverse"/>
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Gimmick_EndOfChart}"/>
+                <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorNoteEndOfChart"/>
             </UniformGrid>
             
             <Separator/>

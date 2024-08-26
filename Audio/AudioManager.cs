@@ -88,8 +88,7 @@ public class AudioManager(MainView mainView)
         HitsoundNoteIndex++;
         
         bool mute = note.NoteType
-            is NoteType.EndOfChart
-            or NoteType.MaskAdd
+            is NoteType.MaskAdd
             or NoteType.MaskRemove
             or NoteType.HoldSegment;
         

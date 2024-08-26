@@ -207,6 +207,14 @@ internal static class MerHandler
                     
                     bool renderSegment = noteTypeId != 10 || Convert.ToBoolean(Convert.ToInt32(split[7])); // Set to true by default if note is not a hold segment.
 
+                    // End Of Chart
+                    if (noteTypeId == 14)
+                    {
+                        Gimmick newGimmick = new(measure, tick, GimmickType.EndOfChart, "", "");
+                        chart.Gimmicks.Add(newGimmick);
+                        continue;
+                    }
+                    
                     NoteType noteType = Note.NoteTypeFromMerId(noteTypeId);
                     BonusType bonusType = Note.BonusTypeFromMerId(noteTypeId);
                     
@@ -291,6 +299,8 @@ internal static class MerHandler
 
         foreach (Gimmick gimmick in chart.Gimmicks)
         {
+            if (gimmick.GimmickType is GimmickType.EndOfChart) continue;
+            
             result += $"{gimmick.BeatData.Measure,4:F0} {gimmick.BeatData.Tick,4:F0} {(int)gimmick.GimmickType,4:F0}";
             result += gimmick.GimmickType switch
             {
@@ -315,6 +325,20 @@ internal static class MerHandler
             if (note.IsMask) result += $" {(int)note.MaskDirection,4:F0}";
             if (note.NextReferencedNote != null) result += $" {chart.Notes.IndexOf(note.NextReferencedNote),4:F0}";
 
+            result += "\n";
+        }
+
+        if (chart.EndOfChart != null)
+        {
+            result += $"{chart.EndOfChart.BeatData.Measure,4:F0} " +
+                      $"{chart.EndOfChart.BeatData.Tick,4:F0} " +
+                      $"   1 " +
+                      $"  14 " +
+                      $"{chart.Notes.Count} " +
+                      $"   0 " +
+                      $"  60 " +
+                      $"   1";
+            
             result += "\n";
         }
         
@@ -467,15 +491,6 @@ internal static class SatHandler
             int measure = Convert.ToInt32(split[0]);
             int tick = Convert.ToInt32(split[1]);
 
-            // slightly jank case since Chart End is a Note
-            // internally but grouped with gimmicks for SAT
-            if (split[3] == "CHART_END")
-            {
-                Note note = new(measure, tick, NoteType.EndOfChart, BonusType.None, 0, 0, 60, true);
-                chart.Notes.Add(note);
-                continue;
-            }
-
             GimmickType gimmickType = String2GimmickType(split[3]);
 
             string value1 = "";
@@ -547,15 +562,6 @@ internal static class SatHandler
             
             int measure = Convert.ToInt32(split[1]);
             int tick = Convert.ToInt32(split[2]);
-
-            // slightly jank case since Chart End is a Note
-            // internally but grouped with gimmicks for SAT
-            if (split[4] == "CHART_END")
-            {
-                Note note = new(measure, tick, NoteType.EndOfChart, BonusType.None, 0, 0, 60, true);
-                chart.Notes.Add(note);
-                continue;
-            }
 
             GimmickType gimmickType = String2GimmickType(split[4]);
 
@@ -675,8 +681,7 @@ internal static class SatHandler
             input += "\n";
             index++;
         }
-
-        if (chart.EndOfChart != null) input += $"{chart.EndOfChart.BeatData.Measure,4:F0} {chart.EndOfChart.BeatData.Tick,4:F0} {index,4:F0} {NoteType2String(NoteType.EndOfChart)}\n";
+        
         input += "\n";
     }
 
@@ -688,7 +693,7 @@ internal static class SatHandler
         input += "@OBJECTS\n";
         foreach (Note note in notes)
         {
-            if (note.NoteType is NoteType.HoldSegment or NoteType.HoldEnd or NoteType.EndOfChart) continue;
+            if (note.NoteType is NoteType.HoldSegment or NoteType.HoldEnd) continue;
 
             if (note.NoteType is NoteType.HoldStart)
             {
@@ -728,8 +733,7 @@ internal static class SatHandler
             input += "\n";
             index++;
         }
-
-        if (chart.EndOfChart != null) input += $"{chart.EndOfChart.Guid} {chart.EndOfChart.BeatData.Measure,4:F0} {chart.EndOfChart.BeatData.Tick,4:F0} {index,4:F0} {NoteType2String(NoteType.EndOfChart)}\n";
+        
         input += "\n";
     }
     
@@ -741,7 +745,7 @@ internal static class SatHandler
         input += "@OBJECTS\n";
         foreach (Note note in notes)
         {
-            if (note.NoteType is NoteType.HoldSegment or NoteType.HoldEnd or NoteType.EndOfChart) continue;
+            if (note.NoteType is NoteType.HoldSegment or NoteType.HoldEnd) continue;
 
             if (note.NoteType is NoteType.HoldStart)
             {
@@ -779,7 +783,6 @@ internal static class SatHandler
                 "HOLD_END" => NoteType.HoldEnd,
                 "MASK_ADD" => NoteType.MaskAdd,
                 "MASK_SUB" => NoteType.MaskRemove,
-                "CHART_END" => NoteType.EndOfChart,
 
                 _ => NoteType.None
             };
@@ -823,6 +826,7 @@ internal static class SatHandler
                 "REV_ZONE_END" => GimmickType.ReverseNoteEnd,
                 "STOP_START" => GimmickType.StopStart,
                 "STOP_END" => GimmickType.StopEnd,
+                "CHART_END" => GimmickType.EndOfChart,
                 _ => GimmickType.None
             };
         }
@@ -840,6 +844,7 @@ internal static class SatHandler
             GimmickType.ReverseNoteEnd => "REV_ZONE_END",
             GimmickType.StopStart => "STOP_START",
             GimmickType.StopEnd => "STOP_END",
+            GimmickType.EndOfChart => "CHART_END",
             _ => ""
         };
     }
@@ -859,7 +864,6 @@ internal static class SatHandler
             NoteType.HoldEnd => "HOLD_END",
             NoteType.MaskAdd => "MASK_ADD",
             NoteType.MaskRemove => "MASK_SUB",
-            NoteType.EndOfChart => "CHART_END",
             NoteType.Chain => "CHAIN",
             _ => ""
         };

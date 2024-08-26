@@ -209,13 +209,6 @@
                                              Content="{x:Static lang:Resources.Note_MaskRemove}" />
                                     
                                 <Separator Margin="0"/>
-                                    
-                                <RadioButton Name="RadioNoteEndOfChart" Classes="ToggleRadioStripe"
-                                             BorderBrush="White" 
-                                             ToolTip.Tip="{x:Static lang:Resources.ToolTip_NoteTypes}"
-                                             IsCheckedChanged="RadioNoteType_IsCheckedChanged" GroupName="NoteType"
-                                             Content="{x:Static lang:Resources.Note_EndOfChart}" />
-                                    
                             </StackPanel>
                         </Border>
 
@@ -299,6 +292,12 @@
                                 <Button Name="ButtonGimmickReverse" Classes="CompactButton" Click="ButtonGimmickReverse_OnClick"
                                         ToolTip.Tip="{x:Static lang:Resources.ToolTip_Reverse}"
                                         Content="{x:Static lang:Resources.Gimmick_Reverse}" />
+                                
+                                <Separator Margin="0"/>
+                                    
+                                <Button Name="ButtonGimmickEndOfChart" Classes="CompactButton" Click="ButtonGimmickEndOfChart_OnClick"
+                                        ToolTip.Tip="{x:Static lang:Resources.ToolTip_EndOfChart}"
+                                        Content="{x:Static lang:Resources.Gimmick_EndOfChart}" />
                             </StackPanel>
                         </Border>
                         

@@ -22,7 +22,7 @@ public class Chart(ChartEditor editor)
     public Gimmick? StartBpm { get; set; }
     public Gimmick? StartTimeSig { get; set; }
     
-    public Note? EndOfChart => Notes.LastOrDefault(x => x.NoteType is NoteType.EndOfChart);
+    public Gimmick? EndOfChart => Gimmicks.LastOrDefault(x => x.GimmickType is GimmickType.EndOfChart);
     
     private List<Gimmick>? TimeEvents { get; set; }
     public List<TimeScaleData> TimeScales { get; } = [];

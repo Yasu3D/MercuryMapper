@@ -591,8 +591,6 @@ public class ChartEditor
                     CurrentNoteType = NoteType.HoldStart;
                     UpdateCursorNoteType();
                 }
-                
-                bool endOfChart = CurrentNoteType is NoteType.EndOfChart;
             
                 Note note = new()
                 {
@@ -601,8 +599,8 @@ public class ChartEditor
                     MaskDirection = CurrentMaskDirection,
                     NoteType = CurrentNoteType,
                     BonusType = CurrentBonusType,
-                    Position = endOfChart ? 0 : Cursor.Position,
-                    Size = endOfChart ? 60 : Cursor.Size
+                    Position = Cursor.Position,
+                    Size = Cursor.Size
                 };
                 
                 Chart.IsSaved = false;
@@ -755,6 +753,21 @@ public class ChartEditor
         };
         
         UndoRedoManager.InvokeAndPush(new CompositeOperation([new InsertGimmick(Chart, effectStartGimmick), new InsertGimmick(Chart, effectEndGimmick), new InsertGimmick(Chart, noteEndGimmick)]));
+        Chart.IsSaved = false;
+    }
+
+    public void InsertEndOfChart()
+    {
+        if (Chart.StartBpm is null || Chart.StartTimeSig is null) return;
+        if (Chart.EndOfChart != null) return;
+        
+        Gimmick gimmick = new()
+        {
+            BeatData = CurrentBeatData,
+            GimmickType = GimmickType.EndOfChart
+        };
+        
+        UndoRedoManager.InvokeAndPush(new InsertGimmick(Chart, gimmick));
         Chart.IsSaved = false;
     }
     
@@ -1057,10 +1070,10 @@ public class ChartEditor
         NoteType editNoteType(Note note, NoteType currentNoteType)
         {
             // EndOfChart, HoldSegment and HoldEnd are not editable.
-            if (note.NoteType is NoteType.EndOfChart or NoteType.HoldSegment or NoteType.HoldEnd) return note.NoteType;
+            if (note.NoteType is NoteType.HoldSegment or NoteType.HoldEnd) return note.NoteType;
             
             // Cannot edit a note into EndOfChart, HoldSegment or HoldEnd.
-            if (currentNoteType is NoteType.EndOfChart or NoteType.HoldSegment or NoteType.HoldEnd) return note.NoteType;
+            if (currentNoteType is NoteType.HoldSegment or NoteType.HoldEnd) return note.NoteType;
 
             // HoldStart and HoldStartRNote cannot be edited into other note types.
             if (note.NoteType is NoteType.HoldStart && currentNoteType is not NoteType.HoldStart) return note.NoteType;
@@ -1074,7 +1087,7 @@ public class ChartEditor
         BonusType editBonusType(Note note, BonusType currentBonusType)
         {
             // EndOfChart, HoldSegment and HoldEnd are not editable.
-            return note.NoteType is NoteType.EndOfChart or NoteType.HoldSegment or NoteType.HoldEnd ? note.BonusType : currentBonusType;
+            return note.NoteType is NoteType.HoldSegment or NoteType.HoldEnd ? note.BonusType : currentBonusType;
         }
     }
 
@@ -1277,6 +1290,16 @@ public class ChartEditor
                     Gimmick? prev = Chart.Gimmicks.LastOrDefault(x => x.BeatData.FullTick < gimmick.BeatData.FullTick && x.GimmickType is GimmickType.StopStart);
                     if (prev != null) min = prev.BeatData.MeasureDecimal;
                     
+                    break;
+                }
+                
+                case GimmickType.EndOfChart:
+                {
+                    float prevNote = Chart.Notes.LastOrDefault(x => x.BeatData.FullTick < gimmick.BeatData.FullTick)?.BeatData.MeasureDecimal ?? 0;
+                    float prevGimmick = Chart.Gimmicks.LastOrDefault(x => x.BeatData.FullTick < gimmick.BeatData.FullTick)?.BeatData.MeasureDecimal ?? 0;
+
+                    min = float.Max(prevNote, prevGimmick);
+                    max = float.PositiveInfinity;
                     break;
                 }
             }

@@ -1487,12 +1487,12 @@ public class RenderEngine(MainView mainView)
             // Cut overlapping windows
             if (RenderConfig.CutOverlappingJudgementWindows)
             {
-                // Iterate forward until overlapping note is found, or next note is out of range.
+                // Iterate forwards until overlapping note is found, or next note is out of range.
                 for (int j = i; j < chart.Notes.Count; j++)
                 {
                     Note next = chart.Notes[j];
                     
-                    if (next.NoteType is NoteType.None or NoteType.HoldSegment or NoteType.HoldEnd or NoteType.MaskAdd or NoteType.MaskRemove or NoteType.EndOfChart) continue;
+                    if (next.NoteType is NoteType.None or NoteType.HoldSegment or NoteType.HoldEnd or NoteType.MaskAdd or NoteType.MaskRemove) continue;
                     if (next.BeatData.FullTick == note.BeatData.FullTick) continue;
                     if (!MathExtensions.IsPartiallyOverlapping(note.Position, note.Position + note.Size, next.Position, next.Position + next.Size)) continue;
                     
@@ -1519,12 +1519,12 @@ public class RenderEngine(MainView mainView)
                     window.GoodLate = float.Min(window.GoodLate, centerMeasureDecimal);
                 }
 
-                // Iterate backward until overlapping note is found, or prev note is out of range.
+                // Iterate backwards until overlapping note is found, or prev note is out of range.
                 for (int j = i; j >= 0; j--)
                 {
                     Note prev = chart.Notes[j];
                     
-                    if (prev.NoteType is NoteType.None or NoteType.HoldSegment or NoteType.HoldEnd or NoteType.MaskAdd or NoteType.MaskRemove or NoteType.EndOfChart) continue;
+                    if (prev.NoteType is NoteType.None or NoteType.HoldSegment or NoteType.HoldEnd or NoteType.MaskAdd or NoteType.MaskRemove) continue;
                     if (prev.BeatData.FullTick == note.BeatData.FullTick) continue;
                     if (!MathExtensions.IsPartiallyOverlapping(note.Position, note.Position + note.Size, prev.Position, prev.Position + prev.Size)) continue;
                     
@@ -1653,7 +1653,6 @@ internal static class RenderMath
             NoteType.HoldEnd => new(0, 0, 0, 0, 0, 0),
             NoteType.MaskAdd => new(0, 0, 0, 0, 0, 0),
             NoteType.MaskRemove => new(0, 0, 0, 0, 0, 0),
-            NoteType.EndOfChart => new(0, 0, 0, 0, 0, 0),
             NoteType.Chain => new(-4, 4, 0, 0, 0, 0),
             _ => throw new ArgumentOutOfRangeException(nameof(noteType), noteType, null)
         };

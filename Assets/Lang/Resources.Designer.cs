@@ -1258,6 +1258,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to End of Chart.
+        /// </summary>
+        public static string Gimmick_EndOfChart {
+            get {
+                return ResourceManager.GetString("Gimmick_EndOfChart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to HiSpeed.
         /// </summary>
         public static string Gimmick_HiSpeedChange {
@@ -1659,15 +1668,6 @@ namespace MercuryMapper.Assets.Lang {
         public static string Note_Chain {
             get {
                 return ResourceManager.GetString("Note_Chain", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to End of Chart.
-        /// </summary>
-        public static string Note_EndOfChart {
-            get {
-                return ResourceManager.GetString("Note_EndOfChart", resourceCulture);
             }
         }
         
@@ -2876,6 +2876,15 @@ namespace MercuryMapper.Assets.Lang {
         public static string ToolTip_EditType {
             get {
                 return ResourceManager.GetString("ToolTip_EditType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Marks the end of a Chart. BGM and Chart playback stops, and the CLEAR or FAIL popup is shown..
+        /// </summary>
+        public static string ToolTip_EndOfChart {
+            get {
+                return ResourceManager.GetString("ToolTip_EndOfChart", resourceCulture);
             }
         }
         

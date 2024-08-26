@@ -13,6 +13,5 @@ public enum NoteType
     HoldEnd = 8,
     MaskAdd = 9,
     MaskRemove = 10,
-    EndOfChart = 11,
     Chain = 12
 }

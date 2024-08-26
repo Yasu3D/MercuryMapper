@@ -282,8 +282,6 @@ public class Note : ChartElement
             (NoteType.MaskAdd, _) => 1,
             (NoteType.MaskRemove, _) => 1,
             
-            (NoteType.EndOfChart, _) => 60,
-            
             _ => 5
         };
     }
@@ -401,8 +399,6 @@ public class Note : ChartElement
             (NoteType.MaskAdd, _) => 12,
             (NoteType.MaskRemove, _) => 13,
 
-            (NoteType.EndOfChart, _) => 14,
-
             (NoteType.Chain, BonusType.None) => 16,
             (NoteType.Chain, BonusType.Bonus) => 16,
             (NoteType.Chain, BonusType.RNote) => 26,
@@ -424,7 +420,6 @@ public class Note : ChartElement
             11 => NoteType.HoldEnd,
             12 => NoteType.MaskAdd,
             13 => NoteType.MaskRemove,
-            14 => NoteType.EndOfChart,
             16 or 26 => NoteType.Chain,
             _ => NoteType.None
         };
