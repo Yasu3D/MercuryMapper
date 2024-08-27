@@ -358,8 +358,8 @@ public class Note : ChartElement
 
         if (data.Length == 10)
         {
-            if (data[7] != "null") note.NextReferencedNote = chart.FindNoteByGuid(data[7]);
-            if (data[8] != "null") note.PrevReferencedNote = chart.FindNoteByGuid(data[8]);
+            if (data[8] != "null") note.NextReferencedNote = chart.FindNoteByGuid(data[8]);
+            if (data[9] != "null") note.PrevReferencedNote = chart.FindNoteByGuid(data[9]);
         }
 
         return note;

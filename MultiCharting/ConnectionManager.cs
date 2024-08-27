@@ -377,14 +377,18 @@ public class ConnectionManager(MainView main)
                 
             case BakeHold bakeHold:
             {
-                string opData = $"{bakeHold.Start.ToNetworkString()}\n" +
-                                $"{bakeHold.End.ToNetworkString()}\n";
+                List<string> opData =
+                [
+                    $"{bakeHold.Start.ToNetworkString()}",
+                    $"{bakeHold.End.ToNetworkString()}"
+                ];
+
                 foreach (Note note in bakeHold.Segments)
                 {
-                    opData += $"{note.ToNetworkString()}\n";
+                    opData.Add($"{note.ToNetworkString()}");
                 }
                     
-                SendMessage(new MessageSerializer(MessageTypes.BakeHold, [ opData ], [ (int)operationDirection ]));
+                SendMessage(new MessageSerializer(MessageTypes.BakeHold, opData.ToArray(), [ (int)operationDirection ]));
                 break;
             }
                 
@@ -911,14 +915,13 @@ public class ConnectionManager(MainView main)
             {
                 Dispatcher.UIThread.Post(() =>
                 {
-                    string[] operationData = messageData.StringData[0].Split(["\r\n", "\r", "\n"], StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-                    string[] startData = operationData[0].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-                    string[] endData = operationData[1].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                    string[] startData = messageData.StringData[0].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                    string[] endData = messageData.StringData[1].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
                     List<string[]> segmentData = [];
                         
-                    for (int i = 2; i < operationData.Length; i++)
+                    for (int i = 2; i < messageData.StringData.Length; i++)
                     {
-                        segmentData.Add(operationData[i].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries));
+                        segmentData.Add(messageData.StringData[i].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries));
                     }
 
                     if ((OperationDirection)messageData.IntData[0] == OperationDirection.Undo)
@@ -960,8 +963,8 @@ public class ConnectionManager(MainView main)
                             string[] data = segmentData[i];
 
                             // Repair references that weren't picked up by Note.ParseNetworkString
-                            if (data[7] != "null" && segment.NextReferencedNote == null ) segment.NextReferencedNote = segments.LastOrDefault(x => x.Guid.ToString() == data[7]);
-                            if (data[8] != "null" && segment.PrevReferencedNote == null ) segment.PrevReferencedNote = segments.LastOrDefault(x => x.Guid.ToString() == data[8]);
+                            if (data[8] != "null" && segment.NextReferencedNote == null ) segment.NextReferencedNote = segments.FirstOrDefault(x => x.Guid.ToString() == data[8]);
+                            if (data[9] != "null" && segment.PrevReferencedNote == null ) segment.PrevReferencedNote = segments.FirstOrDefault(x => x.Guid.ToString() == data[9]);
                         }
 
                         BakeHold operation = new(Chart, ChartEditor.SelectedNotes, segments, start, end);
