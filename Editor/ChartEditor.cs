@@ -1679,6 +1679,7 @@ public class ChartEditor
         if (LastPlacedHold?.NoteType is NoteType.HoldStart)
         {
             lock (Chart) Chart.Notes.Remove(LastPlacedHold);
+            mainView.ConnectionManager.SendOperationMessage(new DeleteNote(Chart, SelectedNotes, LastPlacedHold), ConnectionManager.OperationDirection.Redo);
         }
     }
     
