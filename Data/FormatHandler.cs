@@ -292,7 +292,7 @@ internal static class MerHandler
         string result = $"#MUSIC_SCORE_ID 0\n" +
                         $"#MUSIC_SCORE_VERSION 0\n" +
                         $"#GAME_VERSION\n" +
-                        $"#MUSIC_FILE_PATH {Path.GetFileName(chart.BgmFilepath)}\n" +
+                        $"#MUSIC_FILE_PATH\n" +
                         $"#OFFSET {chart.BgmOffset.ToString("F6", CultureInfo.InvariantCulture)}\n" +
                         $"MOVIEOFFSET {chart.BgaOffset.ToString("F6", CultureInfo.InvariantCulture)}\n" +
                         $"#BODY\n";
