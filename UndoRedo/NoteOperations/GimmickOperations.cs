@@ -14,6 +14,7 @@ public class InsertGimmick(Chart chart, Gimmick gimmick) : IOperation
             Chart.Gimmicks.Remove(Gimmick);
             Chart.GenerateTimeEvents();
             Chart.GenerateTimeScales();
+            Chart.ChartEditor.UpdateVisibleTimeInRenderEngine();
         }
     }
 
@@ -24,6 +25,7 @@ public class InsertGimmick(Chart chart, Gimmick gimmick) : IOperation
             Chart.Gimmicks.Add(Gimmick);
             Chart.GenerateTimeEvents();
             Chart.GenerateTimeScales();
+            Chart.ChartEditor.UpdateVisibleTimeInRenderEngine();
         }
     }
 }
@@ -46,6 +48,7 @@ public class EditGimmick(Chart chart, Gimmick gimmick, Gimmick newGimmick) : IOp
             
             Chart.GenerateTimeEvents();
             Chart.GenerateTimeScales();
+            Chart.ChartEditor.UpdateVisibleTimeInRenderEngine();
         }
     }
 
@@ -60,6 +63,7 @@ public class EditGimmick(Chart chart, Gimmick gimmick, Gimmick newGimmick) : IOp
             
             Chart.GenerateTimeEvents();
             Chart.GenerateTimeScales();
+            Chart.ChartEditor.UpdateVisibleTimeInRenderEngine();
         }
     }
 }
@@ -76,6 +80,7 @@ public class DeleteGimmick(Chart chart, Gimmick gimmick) : IOperation
             Chart.Gimmicks.Add(Gimmick);
             Chart.GenerateTimeEvents();
             Chart.GenerateTimeScales();
+            Chart.ChartEditor.UpdateVisibleTimeInRenderEngine();
         }
     }
 
@@ -86,6 +91,7 @@ public class DeleteGimmick(Chart chart, Gimmick gimmick) : IOperation
             Chart.Gimmicks.Remove(Gimmick);
             Chart.GenerateTimeEvents();
             Chart.GenerateTimeScales();
+            Chart.ChartEditor.UpdateVisibleTimeInRenderEngine();
         }
     }
 }

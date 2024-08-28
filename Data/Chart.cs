@@ -355,17 +355,4 @@ public class Chart(ChartEditor editor)
     {
         return Gimmicks.LastOrDefault(x => x.Guid.ToString() == guid);
     }
-    
-    public static List<string> ReadLines(Stream stream)
-    {
-        List<string> lines = [];
-        using StreamReader streamReader = new(stream);
-
-        while (!streamReader.EndOfStream)
-        {
-            lines.Add(streamReader.ReadLine() ?? "");
-        }
-
-        return lines;
-    }
 }

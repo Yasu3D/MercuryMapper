@@ -574,6 +574,8 @@ public class ChartEditor
             if (note.NextReferencedNote != null) note.NextReferencedNote.PrevReferencedNote = note;
         }
     }
+
+    public void UpdateVisibleTimeInRenderEngine() => mainView.RenderEngine.UpdateVisibleTime();
     
     // ________________ ChartElement Operations
     public void InsertNote()
