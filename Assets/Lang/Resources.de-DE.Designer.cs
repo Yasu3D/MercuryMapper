@@ -87,119 +87,164 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Interpret.
+        ///   Looks up a localized string similar to Künstler.
         /// </summary>
-        public static string ChartProperties_Artist {
+        public static string ChartInfo_Artist {
             get {
-                return ResourceManager.GetString("ChartProperties_Artist", resourceCulture);
+                return ResourceManager.GetString("ChartInfo_Artist", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Chart Author.
         /// </summary>
-        public static string ChartProperties_Author {
+        public static string ChartInfo_Author {
             get {
-                return ResourceManager.GetString("ChartProperties_Author", resourceCulture);
+                return ResourceManager.GetString("ChartInfo_Author", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to BPM.
+        ///   Looks up a localized string similar to Video.
         /// </summary>
-        public static string ChartProperties_Bpm {
+        public static string ChartInfo_Bga {
             get {
-                return ResourceManager.GetString("ChartProperties_Bpm", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Clear Schwelle.
-        /// </summary>
-        public static string ChartProperties_ClearThreshold {
-            get {
-                return ResourceManager.GetString("ChartProperties_ClearThreshold", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Level.
-        /// </summary>
-        public static string ChartProperties_Level {
-            get {
-                return ResourceManager.GetString("ChartProperties_Level", resourceCulture);
+                return ResourceManager.GetString("ChartInfo_Bga", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Video Offset.
         /// </summary>
-        public static string ChartProperties_MovieOffset {
+        public static string ChartInfo_BgaOffset {
             get {
-                return ResourceManager.GetString("ChartProperties_MovieOffset", resourceCulture);
+                return ResourceManager.GetString("ChartInfo_BgaOffset", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Musik Dateipfad.
+        ///   Looks up a localized string similar to Musik.
         /// </summary>
-        public static string ChartProperties_MusicFilePath {
+        public static string ChartInfo_Bgm {
             get {
-                return ResourceManager.GetString("ChartProperties_MusicFilePath", resourceCulture);
+                return ResourceManager.GetString("ChartInfo_Bgm", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Offset.
+        ///   Looks up a localized string similar to Musik Offset.
         /// </summary>
-        public static string ChartProperties_Offset {
+        public static string ChartInfo_BgmOffset {
             get {
-                return ResourceManager.GetString("ChartProperties_Offset", resourceCulture);
+                return ResourceManager.GetString("ChartInfo_BgmOffset", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to BPM Text.
+        /// </summary>
+        public static string ChartInfo_BpmText {
+            get {
+                return ResourceManager.GetString("ChartInfo_BpmText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Clear Schwelle.
+        /// </summary>
+        public static string ChartInfo_Clear {
+            get {
+                return ResourceManager.GetString("ChartInfo_Clear", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Diff.
+        /// </summary>
+        public static string ChartInfo_Diff {
+            get {
+                return ResourceManager.GetString("ChartInfo_Diff", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Titelbild.
+        /// </summary>
+        public static string ChartInfo_Jacket {
+            get {
+                return ResourceManager.GetString("ChartInfo_Jacket", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Level.
+        /// </summary>
+        public static string ChartInfo_Level {
+            get {
+                return ResourceManager.GetString("ChartInfo_Level", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Vorschau Abspielen.
         /// </summary>
-        public static string ChartProperties_PlayPreview {
+        public static string ChartInfo_PlayPreview {
             get {
-                return ResourceManager.GetString("ChartProperties_PlayPreview", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Vorschau Länge.
-        /// </summary>
-        public static string ChartProperties_PreviewLength {
-            get {
-                return ResourceManager.GetString("ChartProperties_PreviewLength", resourceCulture);
+                return ResourceManager.GetString("ChartInfo_PlayPreview", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Vorschau Start.
         /// </summary>
-        public static string ChartProperties_PreviewTime {
+        public static string ChartInfo_PreviewStart {
             get {
-                return ResourceManager.GetString("ChartProperties_PreviewTime", resourceCulture);
+                return ResourceManager.GetString("ChartInfo_PreviewStart", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Taktart.
+        ///   Looks up a localized string similar to Vorschau Länge.
         /// </summary>
-        public static string ChartProperties_TimeSignature {
+        public static string ChartInfo_PreviewTime {
             get {
-                return ResourceManager.GetString("ChartProperties_TimeSignature", resourceCulture);
+                return ResourceManager.GetString("ChartInfo_PreviewTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ruby.
+        /// </summary>
+        public static string ChartInfo_Rubi {
+            get {
+                return ResourceManager.GetString("ChartInfo_Rubi", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Titel.
         /// </summary>
-        public static string ChartProperties_Title {
+        public static string ChartInfo_Title {
             get {
-                return ResourceManager.GetString("ChartProperties_Title", resourceCulture);
+                return ResourceManager.GetString("ChartInfo_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Version.
+        /// </summary>
+        public static string ChartInfo_Version {
+            get {
+                return ResourceManager.GetString("ChartInfo_Version", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Kommentar Hinzufügen.
+        /// </summary>
+        public static string Editor_AddComment {
+            get {
+                return ResourceManager.GetString("Editor_AddComment", resourceCulture);
             }
         }
         
@@ -263,6 +308,24 @@ namespace MercuryMapper.Assets.Lang {
         public static string Editor_CheckerDeselect {
             get {
                 return ResourceManager.GetString("Editor_CheckerDeselect", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Kommentar.
+        /// </summary>
+        public static string Editor_Comment {
+            get {
+                return ResourceManager.GetString("Editor_Comment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tipp: Sie können einen Kommentar löschen, indem Sie die Alt-Taste gedrückt halten und auf ihn klicken!.
+        /// </summary>
+        public static string Editor_CommentHint {
+            get {
+                return ResourceManager.GetString("Editor_CommentHint", resourceCulture);
             }
         }
         
@@ -627,6 +690,24 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Die ausgewählte Videodatei konnte nicht gefunden werden..
+        /// </summary>
+        public static string Editor_InvalidBga {
+            get {
+                return ResourceManager.GetString("Editor_InvalidBga", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Die ausgewählte Bilddatei konnte nicht gefunden werden..
+        /// </summary>
+        public static string Editor_InvalidJacket {
+            get {
+                return ResourceManager.GetString("Editor_InvalidJacket", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Layer: Gimmick.
         /// </summary>
         public static string Editor_LayerGimmick {
@@ -960,6 +1041,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Hinzufügen.
+        /// </summary>
+        public static string Generic_Add {
+            get {
+                return ResourceManager.GetString("Generic_Add", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Autosave gefunden. Zeitstempel:.
         /// </summary>
         public static string Generic_AutosaveFound {
@@ -969,7 +1059,7 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Möchten sie diesen öffnen?.
+        ///   Looks up a localized string similar to Möchten Sie diesen öffnen?.
         /// </summary>
         public static string Generic_AutosavePrompt {
             get {
@@ -1001,6 +1091,15 @@ namespace MercuryMapper.Assets.Lang {
         public static string Generic_Create {
             get {
                 return ResourceManager.GetString("Generic_Create", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Kommentar Löschen?.
+        /// </summary>
+        public static string Generic_DeleteComment {
+            get {
+                return ResourceManager.GetString("Generic_DeleteComment", resourceCulture);
             }
         }
         
@@ -1059,11 +1158,29 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Beitreten.
+        /// </summary>
+        public static string Generic_Join {
+            get {
+                return ResourceManager.GetString("Generic_Join", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Nein.
         /// </summary>
         public static string Generic_No {
             get {
                 return ResourceManager.GetString("Generic_No", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Keine Chart geöffnet :].
+        /// </summary>
+        public static string Generic_NoChartLoaded {
+            get {
+                return ResourceManager.GetString("Generic_NoChartLoaded", resourceCulture);
             }
         }
         
@@ -1104,7 +1221,7 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Chart hat entweder kein Audio oder die angegebene Audiodatei wurde nicht gefunden.
+        ///   Looks up a localized string similar to Chart hat entweder kein Audio oder die angegebene Audiodatei wurde nicht gefunden. 
         ///Möchten Sie eine Datei manuell auswählen?.
         /// </summary>
         public static string Generic_SelectAudioPrompt {
@@ -1137,6 +1254,15 @@ namespace MercuryMapper.Assets.Lang {
         public static string Gimmick_BpmChange {
             get {
                 return ResourceManager.GetString("Gimmick_BpmChange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Chart Ende.
+        /// </summary>
+        public static string Gimmick_EndOfChart {
+            get {
+                return ResourceManager.GetString("Gimmick_EndOfChart", resourceCulture);
             }
         }
         
@@ -1222,6 +1348,33 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Good Bewertung.
+        /// </summary>
+        public static string Judgement_Good {
+            get {
+                return ResourceManager.GetString("Judgement_Good", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Great Bewertung.
+        /// </summary>
+        public static string Judgement_Great {
+            get {
+                return ResourceManager.GetString("Judgement_Great", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Marvelous Betwertung.
+        /// </summary>
+        public static string Judgement_Marvelous {
+            get {
+                return ResourceManager.GetString("Judgement_Marvelous", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Von Mitte.
         /// </summary>
         public static string MaskDirection_Center {
@@ -1258,11 +1411,29 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Sitzung Erstellen.
+        /// </summary>
+        public static string Menu_CreateSession {
+            get {
+                return ResourceManager.GetString("Menu_CreateSession", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ausschneiden.
         /// </summary>
         public static string Menu_Cut {
             get {
                 return ResourceManager.GetString("Menu_Cut", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Verbindung Trennen.
+        /// </summary>
+        public static string Menu_Disconnect {
+            get {
+                return ResourceManager.GetString("Menu_Disconnect", resourceCulture);
             }
         }
         
@@ -1330,6 +1501,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Sitzung Beitreten.
+        /// </summary>
+        public static string Menu_JoinSession {
+            get {
+                return ResourceManager.GetString("Menu_JoinSession", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Chart Spiegeln.
         /// </summary>
         public static string Menu_MirrorChart {
@@ -1348,6 +1528,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Online.
+        /// </summary>
+        public static string Menu_Online {
+            get {
+                return ResourceManager.GetString("Menu_Online", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Öffnen.
         /// </summary>
         public static string Menu_Open {
@@ -1362,6 +1551,15 @@ namespace MercuryMapper.Assets.Lang {
         public static string Menu_Paste {
             get {
                 return ResourceManager.GetString("Menu_Paste", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Leseprobe.
+        /// </summary>
+        public static string Menu_Proofread {
+            get {
+                return ResourceManager.GetString("Menu_Proofread", resourceCulture);
             }
         }
         
@@ -1470,15 +1668,6 @@ namespace MercuryMapper.Assets.Lang {
         public static string Note_Chain {
             get {
                 return ResourceManager.GetString("Note_Chain", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Chart Ende.
-        /// </summary>
-        public static string Note_EndOfChart {
-            get {
-                return ResourceManager.GetString("Note_EndOfChart", resourceCulture);
             }
         }
         
@@ -1627,6 +1816,159 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Verbindung Fehlgeschlagen..
+        /// </summary>
+        public static string Online_ConnectionFailed {
+            get {
+                return ResourceManager.GetString("Online_ConnectionFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Vergewissern Sie sich, dass die angegebene Adresse korrekt ist und dass der Server läuft..
+        /// </summary>
+        public static string Online_ConnectionFailedDetails {
+            get {
+                return ResourceManager.GetString("Online_ConnectionFailedDetails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ungültiger Session Code!.
+        /// </summary>
+        public static string Online_InvalidSessionCode {
+            get {
+                return ResourceManager.GetString("Online_InvalidSessionCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Veralteter Client!.
+        /// </summary>
+        public static string Online_OutdatedClient {
+            get {
+                return ResourceManager.GetString("Online_OutdatedClient", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bitte aktualisieren Sie MercuryMapper auf die neueste Version. Wenn Sie selbst hosten, aktualisieren Sie auch Ihren Server..
+        /// </summary>
+        public static string Online_OutdatedClientDetails {
+            get {
+                return ResourceManager.GetString("Online_OutdatedClientDetails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Server Addresse.
+        /// </summary>
+        public static string Online_ServerAddress {
+            get {
+                return ResourceManager.GetString("Online_ServerAddress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Session geschlossen..
+        /// </summary>
+        public static string Online_SessionClosed {
+            get {
+                return ResourceManager.GetString("Online_SessionClosed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Session Code.
+        /// </summary>
+        public static string Online_SessionCode {
+            get {
+                return ResourceManager.GetString("Online_SessionCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Session Offen. Code:.
+        /// </summary>
+        public static string Online_SessionOpened {
+            get {
+                return ResourceManager.GetString("Online_SessionOpened", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Übertrage Daten....
+        /// </summary>
+        public static string Online_TransmittingData {
+            get {
+                return ResourceManager.GetString("Online_TransmittingData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Benutzer Farbe.
+        /// </summary>
+        public static string Online_UserColor {
+            get {
+                return ResourceManager.GetString("Online_UserColor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Benutzername.
+        /// </summary>
+        public static string Online_Username {
+            get {
+                return ResourceManager.GetString("Online_Username", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Entferne Early auf Halte-Noten.
+        /// </summary>
+        public static string QuickSettings_CutEarlyJudgementWindowOnHolds {
+            get {
+                return ResourceManager.GetString("QuickSettings_CutEarlyJudgementWindowOnHolds", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Entferne überlappende Bereiche.
+        /// </summary>
+        public static string QuickSettings_CutOverlappingJudgementWindows {
+            get {
+                return ResourceManager.GetString("QuickSettings_CutOverlappingJudgementWindows", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zeige Good Bereich.
+        /// </summary>
+        public static string QuickSettings_ShowGoodWindow {
+            get {
+                return ResourceManager.GetString("QuickSettings_ShowGoodWindow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zeige Great Bereich.
+        /// </summary>
+        public static string QuickSettings_ShowGreatWindow {
+            get {
+                return ResourceManager.GetString("QuickSettings_ShowGreatWindow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zeige Marvelous Bereich.
+        /// </summary>
+        public static string QuickSettings_ShowMarvelousWindow {
+            get {
+                return ResourceManager.GetString("QuickSettings_ShowMarvelousWindow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Künstler.
         /// </summary>
         public static string SaturnExport_Artist {
@@ -1726,7 +2068,7 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Rubi.
+        ///   Looks up a localized string similar to Ruby.
         /// </summary>
         public static string SaturnExport_Rubi {
             get {
@@ -1893,6 +2235,24 @@ namespace MercuryMapper.Assets.Lang {
         public static string Settings_Color_Sync {
             get {
                 return ResourceManager.GetString("Settings_Color_Sync", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Entferne Early Bereiche auf Halte-Noten.
+        /// </summary>
+        public static string Settings_CutEarlyJudgementWindowOnHolds {
+            get {
+                return ResourceManager.GetString("Settings_CutEarlyJudgementWindowOnHolds", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Entferne überlappende Wertungsbereiche.
+        /// </summary>
+        public static string Settings_CutOverlappingJudgementWindows {
+            get {
+                return ResourceManager.GetString("Settings_CutOverlappingJudgementWindows", resourceCulture);
             }
         }
         
@@ -2149,6 +2509,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Hitsounds während Vorschau stummschalten.
+        /// </summary>
+        public static string Settings_MuteHitsoundsOnPreview {
+            get {
+                return ResourceManager.GetString("Settings_MuteHitsoundsOnPreview", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Noten-Größe.
         /// </summary>
         public static string Settings_NoteSize {
@@ -2212,11 +2581,47 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Zeige Good Bewertungsbereich.
+        /// </summary>
+        public static string Settings_ShowJudgementWindowGood {
+            get {
+                return ResourceManager.GetString("Settings_ShowJudgementWindowGood", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zeige Great Bewertungsbereich.
+        /// </summary>
+        public static string Settings_ShowJudgementWindowGreat {
+            get {
+                return ResourceManager.GetString("Settings_ShowJudgementWindowGreat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zeige Marvelous Bewertungsbereich.
+        /// </summary>
+        public static string Settings_ShowJudgementWindowMarvelous {
+            get {
+                return ResourceManager.GetString("Settings_ShowJudgementWindowMarvelous", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Zeige Maske-Noten während Playback.
         /// </summary>
         public static string Settings_ShowMaskDuringPlayback {
             get {
                 return ResourceManager.GetString("Settings_ShowMaskDuringPlayback", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zeige andere Nutzer während Playback in Multi-Charting.
+        /// </summary>
+        public static string Settings_ShowOtherUsersDuringPlayback {
+            get {
+                return ResourceManager.GetString("Settings_ShowOtherUsersDuringPlayback", resourceCulture);
             }
         }
         
@@ -2471,6 +2876,15 @@ namespace MercuryMapper.Assets.Lang {
         public static string ToolTip_EditType {
             get {
                 return ResourceManager.GetString("ToolTip_EditType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Kennzeichnet das Ende einer Chart. Musik- und Chart-Wiedergabe stoppen, und CLEAR oder FAIL wird angezeigt..
+        /// </summary>
+        public static string ToolTip_EndOfChart {
+            get {
+                return ResourceManager.GetString("ToolTip_EndOfChart", resourceCulture);
             }
         }
         

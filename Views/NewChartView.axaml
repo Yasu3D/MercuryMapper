@@ -4,8 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:lang="clr-namespace:MercuryMapper.Assets.Lang"
              xmlns:fluent="using:FluentAvalonia.UI.Controls"
-             Width="300" Height="250"
-             mc:Ignorable="d" d:DesignWidth="300" d:DesignHeight="250"
+             Width="300" Height="200"
+             mc:Ignorable="d" d:DesignWidth="300" d:DesignHeight="200"
              x:Class="MercuryMapper.Views.NewChartView">
     <UserControl.Styles>
         <Style Selector="TextBlock">
@@ -28,25 +28,19 @@
         </Style>
     </UserControl.Styles>
     
-    <!-- These row definitions remind me of a gladde paling song -->
-    <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto"
+    <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto"
           ColumnDefinitions="Auto,*,*" Margin="10">
-        <TextBlock Grid.Row="0" Grid.Column="0" Text="{x:Static lang:Resources.ChartProperties_Bpm}"/>
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="{x:Static lang:Resources.ChartInfo_BpmText}"/>
         <fluent:NumberBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" Name="BpmNumberBox" Value="120"/>
         
-        <TextBlock Grid.Row="1" Grid.Column="0" Text="{x:Static lang:Resources.ChartProperties_TimeSignature}"/>
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="{x:Static lang:Resources.Gimmick_TimeSigChange}"/>
         <fluent:NumberBox Grid.Row="1" Grid.Column="1" Name="TimeSigUpperNumberBox" Value="4"/>
         <fluent:NumberBox Grid.Row="1" Grid.Column="2" Name="TimeSigLowerNumberBox" Value="4"/>
         
         <Separator Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3"/>
         
-        <TextBlock Grid.Row="3" Grid.Column="0" Text="{x:Static lang:Resources.ChartProperties_Author}"/>
-        <TextBox Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Name="AuthorTextBox"/>
-        
-        <Separator Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3"/>
-        
-        <TextBlock Grid.Row="5" Grid.Column="0" Text="{x:Static lang:Resources.ChartProperties_MusicFilePath}"/>
-        <Button Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" Content="{x:Static lang:Resources.Generic_SelectFile}" Click="SelectFile_OnClick"/>
-        <TextBox Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3" Name="MusicFilePathTextBox"/>
+        <TextBlock Grid.Row="3" Grid.Column="0" Text="{x:Static lang:Resources.ChartInfo_Bgm}"/>
+        <Button Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" Content="{x:Static lang:Resources.Generic_SelectFile}" Click="SelectFile_OnClick"/>
+        <TextBox Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" Name="MusicFilePathTextBox"/>
     </Grid>
 </UserControl>

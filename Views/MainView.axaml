@@ -32,7 +32,6 @@
                         </MenuItem.Icon>
                     </MenuItem>
                     
-                    
                     <MenuItem Header="{x:Static lang:Resources.Menu_SaveAs}" Click="MenuItemSaveAs_OnClick" Name="MenuItemSaveAs" >
                         <MenuItem.Icon>
                             <PathIcon Data="{DynamicResource IconSaveAs}"/>
@@ -50,6 +49,15 @@
                     
                     <Separator/>
                     
+                    <MenuItem Header="{x:Static lang:Resources.Menu_Online}">
+                        <MenuItem Header="{x:Static lang:Resources.Menu_CreateSession}" Click="MenuItemCreateSession_OnClick" Name="MenuItemCreateSession" IsEnabled="False"/>
+                        <MenuItem Header="{x:Static lang:Resources.Menu_JoinSession}" Click="MenuItemJoinSession_OnClick" Name="MenuItemJoinSession"/>
+                        <Separator/>
+                        <MenuItem Header="{x:Static lang:Resources.Menu_Disconnect}" Click="MenuItemDisconnect_OnClick" Name="MenuItemDisconnect" IsEnabled="False"/>
+                    </MenuItem>
+                    
+                    <Separator/>
+                        
                     <MenuItem Header="{x:Static lang:Resources.Menu_Settings}" Click="MenuItemSettings_OnClick" Name="MenuItemSettings" > 
                         <MenuItem.Icon>
                             <PathIcon Data="{DynamicResource IconSettings}"/>
@@ -61,7 +69,7 @@
                     <MenuItem Header="{x:Static lang:Resources.Menu_Exit}" Click="MenuItemExit_OnClick"/>
                 </MenuItem>
                 
-                <MenuItem Header="{x:Static lang:Resources.MenuHeader_Edit}">
+                <MenuItem Header="{x:Static lang:Resources.MenuHeader_Edit}" Name="MenuItemEdit" IsEnabled="False">
                     <MenuItem Header="{x:Static lang:Resources.Menu_Undo}" Name="MenuItemUndo"
                               Click="MenuItemUndo_OnClick"/>
                     <MenuItem Header="{x:Static lang:Resources.Menu_Redo}" Name="MenuItemRedo"
@@ -75,7 +83,7 @@
                               Click="MenuItemPaste_OnClick"/>
                 </MenuItem>
                 
-                <MenuItem Header="{x:Static lang:Resources.MenuHeader_Select}">
+                <MenuItem Header="{x:Static lang:Resources.MenuHeader_Select}" Name="MenuItemSelect" IsEnabled="False">
                     <MenuItem Header="{x:Static lang:Resources.Editor_SelectAll}" Name="MenuItemSelectAll"
                               Click="MenuItemSelectAll_OnClick"/>
                     <MenuItem Header="{x:Static lang:Resources.Editor_DeselectAll}" Name="MenuItemDeselectAll"
@@ -94,7 +102,7 @@
                     
                 </MenuItem>
                 
-                <MenuItem Header="{x:Static lang:Resources.MenuHeader_Tools}">
+                <MenuItem Header="{x:Static lang:Resources.MenuHeader_Tools}" Name="MenuItemTools" IsEnabled="False">
                     <MenuItem Header="{x:Static lang:Resources.Menu_MirrorChart}" Name="MenuItemMirrorChart"
                               Click="MenuItemMirrorChart_OnClick"/>
                     <MenuItem Header="{x:Static lang:Resources.Menu_ShiftChart}" Name="MenuItemShiftChart"
@@ -107,9 +115,20 @@
                               Click="MenuItemGenerateJaggedHolds_OnClick"/>
                     <MenuItem Header="{x:Static lang:Resources.Menu_ReconstructHolds}" Name="MenuItemReconstructHolds"
                               Click="MenuItemReconstructHolds_OnClick"/>
+                    <Separator/>
+                    <MenuItem Header="{x:Static lang:Resources.Menu_Proofread}" Name="MenuItemProofread"
+                              Click="MenuItemProofread_OnClick"/>
                 </MenuItem>
             </Menu>
             <Panel Grid.Column="1" Background="{DynamicResource TitleBar}" IsHitTestVisible="False"/>
+        </Grid>
+        
+        <!-- UI Lock -->
+        <Grid ColumnDefinitions="*,300" RowDefinitions="*" Grid.Row="1" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="3" ZIndex="99999" Name="UiLock">
+            <Rectangle Grid.Column="0" Fill="{DynamicResource DarkBrush}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+            <TextBlock Grid.Column="0" Text="{x:Static lang:Resources.Generic_NoChartLoaded}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" Foreground="Gray"/>
+            
+            <Rectangle Grid.Column="1" Fill="{DynamicResource LightBrush}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
         </Grid>
         
         <!-- Left Panel -->
@@ -190,13 +209,6 @@
                                              Content="{x:Static lang:Resources.Note_MaskRemove}" />
                                     
                                 <Separator Margin="0"/>
-                                    
-                                <RadioButton Name="RadioNoteEndOfChart" Classes="ToggleRadioStripe"
-                                             BorderBrush="White" 
-                                             ToolTip.Tip="{x:Static lang:Resources.ToolTip_NoteTypes}"
-                                             IsCheckedChanged="RadioNoteType_IsCheckedChanged" GroupName="NoteType"
-                                             Content="{x:Static lang:Resources.Note_EndOfChart}" />
-                                    
                             </StackPanel>
                         </Border>
 
@@ -280,6 +292,12 @@
                                 <Button Name="ButtonGimmickReverse" Classes="CompactButton" Click="ButtonGimmickReverse_OnClick"
                                         ToolTip.Tip="{x:Static lang:Resources.ToolTip_Reverse}"
                                         Content="{x:Static lang:Resources.Gimmick_Reverse}" />
+                                
+                                <Separator Margin="0"/>
+                                    
+                                <Button Name="ButtonGimmickEndOfChart" Classes="CompactButton" Click="ButtonGimmickEndOfChart_OnClick"
+                                        ToolTip.Tip="{x:Static lang:Resources.ToolTip_EndOfChart}"
+                                        Content="{x:Static lang:Resources.Gimmick_EndOfChart}" />
                             </StackPanel>
                         </Border>
                         
@@ -396,12 +414,16 @@
             <Grid Grid.Column="1" RowDefinitions="Auto, Auto" ColumnDefinitions="Auto, Auto, *">
                 
                 <Slider Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Classes="Compact" Margin="10,0,15,0"
-                        Name="SliderSongPosition" ValueChanged="SliderSongPosition_OnValueChanged"/>
+                        Name="SliderSongPosition" ValueChanged="SliderSongPosition_OnValueChanged" IsEnabled="False"/>
                 
                 <Panel Grid.Row="0" Grid.Column="0" VerticalAlignment="Stretch" Grid.ColumnSpan="3" Margin="10,10,0,0">
                     <Rectangle VerticalAlignment="Stretch" IsVisible="False" HorizontalAlignment="Left" Width="2" Fill="MediumSeaGreen" Name="LoopMarkerStart" IsHitTestVisible="False"/>
                     <Rectangle VerticalAlignment="Stretch" IsVisible="False" HorizontalAlignment="Left" Width="2" Fill="Firebrick" Name="LoopMarkerEnd" IsHitTestVisible="False"/>
                 </Panel>
+                
+                <Panel Grid.Row="0" Grid.Column="0" VerticalAlignment="Stretch" Grid.ColumnSpan="3" Margin="10,10,0,0" Name="PanelCommentMarker"/>
+                
+                <Panel Grid.Row="0" Grid.Column="0" VerticalAlignment="Stretch" Grid.ColumnSpan="3" Margin="10,10,0,0" Name="PanelClientMarker"/>
                 
                 <Slider Grid.Row="1" Grid.Column="0" Classes="Compact" Width="200" HorizontalAlignment="Left" Margin="10,0,15,0" Name="SliderPlaybackSpeed"
                         Minimum="10" Maximum="200" Value="100" ValueChanged="SliderPlaybackSpeed_OnValueChanged"
@@ -430,50 +452,97 @@
                         <Separator/>
                         
                         <UniformGrid Columns="2">
-                            <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Editor_ChartInfo_ChartAudio}" Margin="0,2,0,2"/>
-                            <Button Content="{x:Static lang:Resources.Generic_SelectFile}" Name="ChartInfoSelectAudio" Click="ChartInfoSelectAudio_OnClick" Width="130" Height="35" HorizontalAlignment="Right" Margin="0,2,0,2"/>
-                        </UniformGrid>
-                        
-                        <TextBlock Name="ChartInfoAudioFilepath" Text=""/>
+                            <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.ChartInfo_Version}" Margin="0,2,0,2"/>
+                            <TextBox Text="" Name="ChartInfoVersion" TextChanged="ChartInfoVersion_OnTextChanged" LostFocus="ChartInfoVersion_LostFocus" HorizontalAlignment="Right" Margin="0,2,0,2" Width="130"/>
+
+                            <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.ChartInfo_Title}" Margin="0,2,0,2"/>
+                            <TextBox Text="" Name="ChartInfoTitle" TextChanged="ChartInfoTitle_OnTextChanged" LostFocus="ChartInfoTitle_LostFocus" HorizontalAlignment="Right" Margin="0,2,0,2" Width="130"/>
+
+                            <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.ChartInfo_Rubi}" Margin="0,2,0,2"/>
+                            <TextBox Text="" Name="ChartInfoRubi" TextChanged="ChartInfoRubi_OnTextChanged" LostFocus="ChartInfoRubi_LostFocus" HorizontalAlignment="Right" Margin="0,2,0,2" Width="130"/>
                             
-                        <Separator/>
-                        
-                        <UniformGrid Columns="2">
-                            <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.ChartProperties_Author}" Margin="0,2,0,2"/>
-                            <TextBox Text="" Name="ChartInfoAuthor" TextChanged="ChartInfoAuthor_OnTextChanged" HorizontalAlignment="Right" Margin="0,2,0,2" Width="130"/>
-                        </UniformGrid>
-                        
-                        <Separator/>
-                        
-                        <UniformGrid Columns="2">
-                            <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.ChartProperties_Level}" Margin="0,2,0,2"/>
-                            <fluent:NumberBox Value="0" Name="ChartInfoLevel" ValueChanged="ChartInfoLevel_OnValueChanged" HorizontalAlignment="Right" Margin="0,2,0,2" Width="130"/>
+                            <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.ChartInfo_Artist}" Margin="0,2,0,2"/>
+                            <TextBox Text="" Name="ChartInfoArtist" TextChanged="ChartInfoArtist_OnTextChanged" LostFocus="ChartInfoArtist_LostFocus" HorizontalAlignment="Right" Margin="0,2,0,2" Width="130"/>
                             
-                            <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.ChartProperties_ClearThreshold}" Margin="0,2,0,2"/>
-                            <fluent:NumberBox Value="0" Name="ChartInfoClearThreshold" ValueChanged="ChartInfoClearThreshold_OnValueChanged" HorizontalAlignment="Right" Margin="0,2,0,2" Width="130"/>
+                            <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.ChartInfo_Author}" Margin="0,2,0,2"/>
+                            <TextBox Text="" Name="ChartInfoAuthor" TextChanged="ChartInfoAuthor_OnTextChanged" LostFocus="ChartInfoAuthor_LostFocus" HorizontalAlignment="Right" Margin="0,2,0,2" Width="130"/>
                         </UniformGrid>
                         
                         <Separator/>
                         
                         <UniformGrid Columns="2">
-                            <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.ChartProperties_PreviewTime}" Margin="0,2,0,2"/>
-                            <fluent:NumberBox Value="0" Name="ChartInfoPreviewTime" ValueChanged="ChartInfoPreviewTime_OnValueChanged" HorizontalAlignment="Right" Margin="0,2,0,2" Width="130"/>
+                            <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.ChartInfo_Diff}" Margin="0,2,0,2"/>
+                            <ComboBox Name="ChartInfoDiff" SelectionChanged="ChartInfoDiff_OnSelectionChanged" LostFocus="ChartInfoDiff_LostFocus" HorizontalAlignment="Right" Margin="0,2,0,2" Width="130" >
+                                <ComboBoxItem Content="NORMAL"/>
+                                <ComboBoxItem Content="HARD"/>
+                                <ComboBoxItem Content="EXPERT"/>
+                                <ComboBoxItem Content="INFERNO"/>
+                                <ComboBoxItem Content="ABYSS"/>
+                            </ComboBox>
                             
-                            <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.ChartProperties_PreviewLength}" Margin="0,2,0,2"/>
-                            <fluent:NumberBox Value="10" Name="ChartInfoPreviewLength" ValueChanged="ChartInfoPreviewLength_OnValueChanged" HorizontalAlignment="Right" Margin="0,2,0,2" Width="130"/>
+                            <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.ChartInfo_Level}" Margin="0,2,0,2"/>
+                            <fluent:NumberBox Value="0" Name="ChartInfoLevel" ValueChanged="ChartInfoLevel_OnValueChanged" LostFocus="ChartInfoLevel_LostFocus" HorizontalAlignment="Right" Margin="0,2,0,2" Width="130"/>
+                            
+                            <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.ChartInfo_Clear}" Margin="0,2,0,2"/>
+                            <fluent:NumberBox Value="0" Name="ChartInfoClearThreshold" ValueChanged="ChartInfoClearThreshold_OnValueChanged" LostFocus="ChartInfoClearThreshold_LostFocus" HorizontalAlignment="Right" Margin="0,2,0,2" Width="130"/>
+                            
+                            <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.ChartInfo_BpmText}" Margin="0,2,0,2"/>
+                            <TextBox Text="" Name="ChartInfoBpmText" TextChanged="ChartInfoBpmText_OnTextChanged" LostFocus="ChartInfoBpmText_LostFocus" HorizontalAlignment="Right" Margin="0,2,0,2" Width="130"/>
                         </UniformGrid>
-                        
-                        <Button Content="{x:Static lang:Resources.ChartProperties_PlayPreview}" HorizontalAlignment="Stretch" Name="ChartInfoPlayPreview" Margin="0,2,0,0" Click="ChartInfoPlayPreview_OnClick"/>
                         
                         <Separator/>
                         
                         <UniformGrid Columns="2">
-                            <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.ChartProperties_Offset}" Margin="0,2,0,2"/>
-                            <fluent:NumberBox Value="0" Name="ChartInfoOffset" ValueChanged="ChartInfoOffset_OnValueChanged" HorizontalAlignment="Right" Margin="0,2,0,2" Width="130"/>
+                            <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.ChartInfo_PreviewStart}" Margin="0,2,0,2"/>
+                            <fluent:NumberBox Value="0" Name="ChartInfoPreviewStart" ValueChanged="ChartInfoPreviewStart_OnValueChanged" LostFocus="ChartInfoPreviewStart_LostFocus" HorizontalAlignment="Right" Margin="0,2,0,2" Width="130"/>
                             
-                            <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.ChartProperties_MovieOffset}" Margin="0,2,0,2"/>
-                            <fluent:NumberBox Value="0" Name="ChartInfoMovieOffset" ValueChanged="ChartInfoMovieOffset_OnValueChanged" HorizontalAlignment="Right" Margin="0,2,0,2" Width="130"/>
+                            <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.ChartInfo_PreviewTime}" Margin="0,2,0,2"/>
+                            <fluent:NumberBox Value="10" Name="ChartInfoPreviewTime" ValueChanged="ChartInfoPreviewTime_OnValueChanged" LostFocus="ChartInfoPreviewTime_LostFocus" HorizontalAlignment="Right" Margin="0,2,0,2" Width="130"/>
                         </UniformGrid>
+                        
+                        <Button Content="{x:Static lang:Resources.ChartInfo_PlayPreview}" HorizontalAlignment="Stretch" Name="ChartInfoPlayPreview" Margin="0,2,0,0" Click="ChartInfoPlayPreview_OnClick"/>
+
+                        <Separator/>
+                        
+                        <UniformGrid Columns="2">
+                            <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.ChartInfo_BgmOffset}" Margin="0,2,0,2"/>
+                            <fluent:NumberBox Value="0" Name="ChartInfoBgmOffset" ValueChanged="ChartInfoBgmOffset_OnValueChanged" LostFocus="ChartInfoBgmOffset_LostFocus" HorizontalAlignment="Right" Margin="0,2,0,2" Width="130"/>
+                            
+                            <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.ChartInfo_Bgm}" Margin="0,2,0,2"/>
+                            <Button Content="{x:Static lang:Resources.Generic_SelectFile}" Name="ChartInfoSelectBgm" Click="ChartInfoSelectBgm_OnClick" Width="130" Height="35" HorizontalAlignment="Right" Margin="0,2,0,2"/>
+                        </UniformGrid>
+                        
+                        <TextBlock Name="ChartInfoBgmFilepath" Text=""/>
+                        
+                        <Separator/>
+                        
+                        <UniformGrid Columns="2">
+                            <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.ChartInfo_BgaOffset}" Margin="0,2,0,2"/>
+                            <fluent:NumberBox Value="0" Name="ChartInfoBgaOffset" ValueChanged="ChartInfoBgaOffset_OnValueChanged" LostFocus="ChartInfoBgaOffset_LostFocus" HorizontalAlignment="Right" Margin="0,2,0,2" Width="130"/>
+                            
+                            <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.ChartInfo_Bga}" Margin="0,2,0,2"/>
+                            <Button Content="{x:Static lang:Resources.Generic_SelectFile}" Name="ChartInfoSelectBga" Click="ChartInfoSelectBga_OnClick" Width="130" Height="35" HorizontalAlignment="Right" Margin="0,2,0,2"/>
+                        </UniformGrid>
+                        
+                        <TextBlock Name="ChartInfoBgaFilepath" Text=""/>
+                        
+                        <Separator/>
+                       
+                        <TextBlock Name="ChartInfoJacketFilepath" Text=""/>
+                        
+                        <UniformGrid Columns="2">
+                            <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.ChartInfo_Jacket}" Margin="0,2,0,2"/>
+                            <Button Content="{x:Static lang:Resources.Generic_SelectFile}" Name="ChartInfoSelectJacket" Click="ChartInfoSelectJacket_OnClick" Width="130" Height="35" HorizontalAlignment="Right" Margin="0,2,0,2"/>
+                        </UniformGrid>
+                        
+                        <Border Background="Black" Width="270" Height="270" HorizontalAlignment="Right" Margin="0,5,0,0" CornerRadius="9">
+                            <Border ClipToBounds="True" CornerRadius="8" Margin="1">
+                                <Panel>
+                                    <Image Name="ChartInfoJacketFallback" Source="/Assets/EmptyJacket.png"/>
+                                    <Image Name="ChartInfoJacket" IsVisible="False"/>
+                                </Panel>
+                            </Border>
+                        </Border>
                     </StackPanel>
                 </Expander>
                 
@@ -543,6 +612,29 @@
                             
                             <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_ShowSpeedChanges}"/>
                             <CheckBox Name="QuickSettingsCheckBoxShowHiSpeed" HorizontalAlignment="Right" IsCheckedChanged="QuickSettingsShowHiSpeed_OnIsCheckedChanged"/>
+                        </UniformGrid>
+                        
+                        <Separator/>
+                        
+                        <UniformGrid Columns="2">
+                            <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.QuickSettings_ShowMarvelousWindow}"/>
+                            <CheckBox Name="QuickSettingsCheckBoxShowJudgementWindowMarvelous" HorizontalAlignment="Right" IsCheckedChanged="QuickSettingsShowJudgementWindowMarvelous_OnIsCheckedChanged"/>
+                            
+                            <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.QuickSettings_ShowGreatWindow}"/>
+                            <CheckBox Name="QuickSettingsCheckBoxShowJudgementWindowGreat" HorizontalAlignment="Right" IsCheckedChanged="QuickSettingsShowJudgementWindowGreat_OnIsCheckedChanged"/>
+                            
+                            <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.QuickSettings_ShowGoodWindow}"/>
+                            <CheckBox Name="QuickSettingsCheckBoxShowJudgementWindowGood" HorizontalAlignment="Right" IsCheckedChanged="QuickSettingsShowJudgementWindowGood_OnIsCheckedChanged"/>
+                        </UniformGrid>
+                        
+                        <Separator/>
+                        
+                        <UniformGrid Columns="2">
+                            <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.QuickSettings_CutEarlyJudgementWindowOnHolds}"/>
+                            <CheckBox Name="QuickSettingsCheckBoxCutEarlyJudgementWindowOnHolds" HorizontalAlignment="Right" IsCheckedChanged="QuickSettingsCutEarlyJudgementWindowOnHolds_OnIsCheckedChanged"/>
+                            
+                            <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.QuickSettings_CutOverlappingJudgementWindows}"/>
+                            <CheckBox Name="QuickSettingsCheckBoxCutOverlappingJudgementWindows" HorizontalAlignment="Right" IsCheckedChanged="QuickSettingsCutOverlappingJudgementWindows_OnIsCheckedChanged"/>
                         </UniformGrid>
                         
                         <Separator Margin="0,5,0,12"/>

@@ -5,9 +5,11 @@ using MercuryMapper.Config;
 using MercuryMapper.Data;
 using MercuryMapper.Editor;
 using MercuryMapper.Enums;
+using MercuryMapper.MultiCharting;
 using MercuryMapper.Utils;
 using MercuryMapper.Views;
 using SkiaSharp;
+using static MercuryMapper.Rendering.RenderMath;
 
 namespace MercuryMapper.Rendering;
 
@@ -63,11 +65,18 @@ public class RenderEngine(MainView mainView)
         
         DrawMeasureLines(canvas, Chart);
         
+        if (!IsPlaying || (IsPlaying && RenderConfig.ShowOtherUsersDuringPlayback)) DrawPeers(canvas, Chart);
+        
         if ((!IsPlaying || (IsPlaying && RenderConfig.ShowGimmickNotesDuringPlayback)) && mainView.ChartEditor.LayerGimmickActive) DrawGimmickNotes(canvas, Chart);
         if ((!IsPlaying || (IsPlaying && RenderConfig.ShowMaskDuringPlayback)) && mainView.ChartEditor.LayerMaskActive) DrawMaskNotes(canvas, Chart);
         
         if (mainView.ChartEditor.LayerNoteActive)
         {
+            if (RenderConfig.ShowJudgementWindowMarvelous || RenderConfig.ShowJudgementWindowGreat || RenderConfig.ShowJudgementWindowGood)
+            {
+                DrawJudgementWindows(canvas, Chart);
+            }
+            
             DrawSyncs(canvas, Chart); // Hold Surfaces normally render under syncs but the syncs poke into the note a bit, and it looks shit.
             
             if (RenderConfig.HoldRenderMethod == 0) DrawHolds(canvas, Chart);
@@ -322,8 +331,8 @@ public class RenderEngine(MainView mainView)
 
         for (int i = 0 + offset; i < 360 + offset; i += interval)
         {
-            SKPoint startPoint = RenderMath.GetPointOnArc(canvasCenter, canvasRadius, i);
-            SKPoint endPoint = RenderMath.GetPointOnArc(canvasCenter, innerRadius, i);
+            SKPoint startPoint = GetPointOnArc(canvasCenter, canvasRadius, i);
+            SKPoint endPoint = GetPointOnArc(canvasCenter, innerRadius, i);
 
             canvas.DrawLine(startPoint, endPoint, brushes.GetGuideLinePen(startPoint, endPoint));
         }
@@ -410,21 +419,21 @@ public class RenderEngine(MainView mainView)
     {
         for (int i = 0; i < 60; i++)
         {
-            SKPoint startPoint = RenderMath.GetPointOnArc(canvasCenter, canvasRadius + brushes.NoteWidthMultiplier * 0.5f, i * 6);
+            SKPoint startPoint = GetPointOnArc(canvasCenter, canvasRadius + brushes.NoteWidthMultiplier * 0.5f, i * 6);
             SKPoint endPoint;
             float tickLength = canvasRadius / 14.25f;
 
             if (i % 15 == 0)
             {
-                endPoint = RenderMath.GetPointOnArc(canvasCenter, canvasRadius - tickLength * 3.5f, i * 6);
+                endPoint = GetPointOnArc(canvasCenter, canvasRadius - tickLength * 3.5f, i * 6);
             }
             else if (i % 5 == 0)
             {
-                endPoint = RenderMath.GetPointOnArc(canvasCenter, canvasRadius - tickLength * 2.5f, i * 6);
+                endPoint = GetPointOnArc(canvasCenter, canvasRadius - tickLength * 2.5f, i * 6);
             }
             else
             {
-                endPoint = RenderMath.GetPointOnArc(canvasCenter, canvasRadius - tickLength, i * 6);
+                endPoint = GetPointOnArc(canvasCenter, canvasRadius - tickLength, i * 6);
             }
             
             canvas.DrawLine(startPoint, endPoint, brushes.AngleTickPen);
@@ -482,10 +491,24 @@ public class RenderEngine(MainView mainView)
     private void DrawMirrorAxis(SKCanvas canvas, int axis)
     {
         int angle = -axis * 3;
-        SKPoint p0 = RenderMath.GetPointOnArc(canvasCenter, canvasMaxRadius, angle);
-        SKPoint p1 = RenderMath.GetPointOnArc(canvasCenter, canvasMaxRadius, angle + 180);
+        SKPoint p0 = GetPointOnArc(canvasCenter, canvasMaxRadius, angle);
+        SKPoint p1 = GetPointOnArc(canvasCenter, canvasMaxRadius, angle + 180);
         
         canvas.DrawLine(p0, p1, brushes.AngleTickPen);
+    }
+
+    private void DrawPeers(SKCanvas canvas, Chart chart)
+    {
+        foreach (KeyValuePair<int, Peer> peer in mainView.PeerManager.Peers)
+        {
+            float measureDecimal = chart.Timestamp2MeasureDecimal(peer.Value.Timestamp);
+            if (!MathExtensions.GreaterAlmostEqual(measureDecimal, CurrentMeasureDecimal) || chart.GetScaledMeasureDecimal(measureDecimal, RenderConfig.ShowHiSpeed) > ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal) return;
+            
+            float scale = GetNoteScale(chart, measureDecimal);
+            SKRect rect = GetRect(scale);
+            
+            canvas.DrawOval(rect, brushes.GetPeerPen(peer.Value.SkiaColor, scale));
+        }
     }
     
     // ____ NOTES
@@ -503,7 +526,7 @@ public class RenderEngine(MainView mainView)
                 
             float scale = GetNoteScale(chart, i);
             SKRect rect = GetRect(scale);
-            if (!RenderMath.InRange(scale)) continue;
+            if (!InRange(scale)) continue;
 
             bool isMeasure = Math.Abs(i - (int)i) < 0.001f;
             canvas.DrawOval(rect, isMeasure ? brushes.MeasurePen : brushes.BeatPen);
@@ -528,7 +551,7 @@ public class RenderEngine(MainView mainView)
             
             float scale = GetNoteScale(chart, current.BeatData.MeasureDecimal);
             
-            if (!RenderMath.InRange(scale)) continue;
+            if (!InRange(scale)) continue;
             
             SKRect rect = GetRect(scale);
             
@@ -576,11 +599,11 @@ public class RenderEngine(MainView mainView)
                 float currentPos = current.Position * -6 - 2.5f;
                 float currentSweep = current.Size * -6 + 5;
 
-                SKPoint control1 = RenderMath.GetPointOnArc(canvasCenter, rect.Width * 0.5f, currentPos + currentSweep - controlOffset);
-                SKPoint arcEdge1 = RenderMath.GetPointOnArc(canvasCenter, rect.Width * 0.5f - outlineOffset, currentPos + currentSweep);
+                SKPoint control1 = GetPointOnArc(canvasCenter, rect.Width * 0.5f, currentPos + currentSweep - controlOffset);
+                SKPoint arcEdge1 = GetPointOnArc(canvasCenter, rect.Width * 0.5f - outlineOffset, currentPos + currentSweep);
             
-                SKPoint control2 = RenderMath.GetPointOnArc(canvasCenter, rect.Width * 0.5f, currentPos + controlOffset);
-                SKPoint arcEdge2 = RenderMath.GetPointOnArc(canvasCenter, rect.Width * 0.5f + outlineOffset, currentPos);
+                SKPoint control2 = GetPointOnArc(canvasCenter, rect.Width * 0.5f, currentPos + controlOffset);
+                SKPoint arcEdge2 = GetPointOnArc(canvasCenter, rect.Width * 0.5f + outlineOffset, currentPos);
 
                 path1.ArcTo(rectOuter, currentPos, currentSweep, true);
                 path1.QuadTo(control1, arcEdge1);
@@ -599,11 +622,11 @@ public class RenderEngine(MainView mainView)
                 float previousPos = previous.Position * -6 - 2.5f;
                 float previousSweep = previous.Size * -6 + 5;
             
-                SKPoint control3 = RenderMath.GetPointOnArc(canvasCenter, rect.Width * 0.5f, previousPos + previousSweep - controlOffset);
-                SKPoint arcEdge3 = RenderMath.GetPointOnArc(canvasCenter, rect.Width * 0.5f - outlineOffset, previousPos + previousSweep);
+                SKPoint control3 = GetPointOnArc(canvasCenter, rect.Width * 0.5f, previousPos + previousSweep - controlOffset);
+                SKPoint arcEdge3 = GetPointOnArc(canvasCenter, rect.Width * 0.5f - outlineOffset, previousPos + previousSweep);
             
-                SKPoint control4 = RenderMath.GetPointOnArc(canvasCenter, rect.Width * 0.5f, previousPos + controlOffset);
-                SKPoint arcEdge4 = RenderMath.GetPointOnArc(canvasCenter, rect.Width * 0.5f + outlineOffset, previousPos);
+                SKPoint control4 = GetPointOnArc(canvasCenter, rect.Width * 0.5f, previousPos + controlOffset);
+                SKPoint arcEdge4 = GetPointOnArc(canvasCenter, rect.Width * 0.5f + outlineOffset, previousPos);
 
                 path1.ArcTo(rectOuter, previousPos, previousSweep, true);
                 path1.QuadTo(control3, arcEdge3);
@@ -692,9 +715,9 @@ public class RenderEngine(MainView mainView)
             float angleA = startAngle + i * -6;
             float angleB = startAngle + (i + 1) * -6;
             
-            path.MoveTo(RenderMath.GetPointOnArc(canvasCenter, radiusInner, isEven ? angleA : angleB));
-            path.LineTo(RenderMath.GetPointOnArc(canvasCenter, radiusOuter, isEven ? angleA : angleB));
-            path.LineTo(RenderMath.GetPointOnArc(canvasCenter, radiusInner, isEven ? angleB : angleA));
+            path.MoveTo(GetPointOnArc(canvasCenter, radiusInner, isEven ? angleA : angleB));
+            path.LineTo(GetPointOnArc(canvasCenter, radiusOuter, isEven ? angleA : angleB));
+            path.LineTo(GetPointOnArc(canvasCenter, radiusInner, isEven ? angleB : angleA));
         }
 
         canvas.DrawPath(path, brushes.BonusFill);
@@ -778,7 +801,7 @@ public class RenderEngine(MainView mainView)
                 if (i == 0)
                 {
                     // If the hold start is visible there's no need to interpolate.
-                    if (note.NoteType is NoteType.HoldStart or NoteType.HoldStartRNote)
+                    if (note.NoteType is NoteType.HoldStart)
                     {
                         path.ArcTo(currentData.Rect, currentData.StartAngle, currentData.SweepAngle, true);
                     }
@@ -812,7 +835,7 @@ public class RenderEngine(MainView mainView)
                 if ((i == 0 && note.NoteType is NoteType.HoldSegment or NoteType.HoldEnd) || (i != 0 && i != hold.Segments.Count - 1))
                 {
                     // Line to right edge
-                    path.LineTo(RenderMath.GetPointOnArc(canvasCenter, currentData.Rect.Width * 0.5f, currentData.StartAngle + currentData.SweepAngle));
+                    path.LineTo(GetPointOnArc(canvasCenter, currentData.Rect.Width * 0.5f, currentData.StartAngle + currentData.SweepAngle));
                 } 
                 
                 if (i == hold.Segments.Count - 1)
@@ -821,7 +844,7 @@ public class RenderEngine(MainView mainView)
                     if (note.NextReferencedNote != null)
                     {
                         // Line to right edge
-                        path.LineTo(RenderMath.GetPointOnArc(canvasCenter, currentData.Rect.Width * 0.5f, currentData.StartAngle + currentData.SweepAngle));
+                        path.LineTo(GetPointOnArc(canvasCenter, currentData.Rect.Width * 0.5f, currentData.StartAngle + currentData.SweepAngle));
                         path.LineTo(canvasCenter);
                     }
                     else
@@ -838,10 +861,10 @@ public class RenderEngine(MainView mainView)
                 Note note = hold.Segments[i];
                 
                 // *technically unnecessary to skip, but doing it just for consistency.
-                if (i == 0 && note.NoteType is NoteType.HoldStart or NoteType.HoldStartRNote) continue;
+                if (i == 0 && note.NoteType is NoteType.HoldStart) continue;
                 
                 ArcData currentData = getArcData(note, TruncateMode.Hold);
-                path.LineTo(RenderMath.GetPointOnArc(canvasCenter, currentData.Rect.Width * 0.5f, currentData.StartAngle));
+                path.LineTo(GetPointOnArc(canvasCenter, currentData.Rect.Width * 0.5f, currentData.StartAngle));
             }
             
             canvas.DrawPath(path, brushes.HoldFill);
@@ -859,7 +882,7 @@ public class RenderEngine(MainView mainView)
             
             ArcData currentData = getArcData(note, TruncateMode.Hold);
             
-            if (!RenderMath.InRange(currentData.Scale) || note.BeatData.MeasureDecimal < CurrentMeasureDecimal) continue;
+            if (!InRange(currentData.Scale) || note.BeatData.MeasureDecimal < CurrentMeasureDecimal) continue;
             
             canvas.DrawArc(currentData.Rect, currentData.StartAngle, currentData.SweepAngle, false, brushes.GetHoldEndPen(canvasScale * currentData.Scale));
             
@@ -874,11 +897,11 @@ public class RenderEngine(MainView mainView)
 
             ArcData data = GetArc(chart, note);
             
-            if (!RenderMath.InRange(data.Scale) || note.BeatData.MeasureDecimal < CurrentMeasureDecimal) continue;
+            if (!InRange(data.Scale) || note.BeatData.MeasureDecimal < CurrentMeasureDecimal) continue;
 
             if (note.IsRNote) DrawRNote(canvas, note, data);
             
-            if (note.NoteType is NoteType.HoldStart or NoteType.HoldStartRNote)
+            if (note.NoteType is NoteType.HoldStart)
             {
                 if (note.Size != 60)
                 {
@@ -1021,7 +1044,7 @@ public class RenderEngine(MainView mainView)
             
             ArcData currentData = getArcData(note);
             
-            if (!RenderMath.InRange(currentData.Scale) || note.BeatData.MeasureDecimal < CurrentMeasureDecimal) continue;
+            if (!InRange(currentData.Scale) || note.BeatData.MeasureDecimal < CurrentMeasureDecimal) continue;
             
             canvas.DrawArc(currentData.Rect, currentData.StartAngle, currentData.SweepAngle, false, brushes.GetHoldEndPen(canvasScale * currentData.Scale));
             
@@ -1036,11 +1059,11 @@ public class RenderEngine(MainView mainView)
 
             ArcData currentData = getArcData(note);
             
-            if (!RenderMath.InRange(currentData.Scale) || note.BeatData.MeasureDecimal < CurrentMeasureDecimal) continue;
+            if (!InRange(currentData.Scale) || note.BeatData.MeasureDecimal < CurrentMeasureDecimal) continue;
 
             if (note.IsRNote) DrawRNote(canvas, note, currentData);
             
-            if (note.NoteType is NoteType.HoldStart or NoteType.HoldStartRNote)
+            if (note.NoteType is NoteType.HoldStart)
             {
                 if (note.Size != 60) DrawNoteCaps(canvas, currentData.Rect, currentData.StartAngle, currentData.SweepAngle, currentData.Scale);
                 canvas.DrawArc(currentData.Rect, currentData.StartAngle, currentData.SweepAngle, false, brushes.GetNotePen(note, canvasScale * currentData.Scale));
@@ -1080,7 +1103,7 @@ public class RenderEngine(MainView mainView)
         {
             ArcData data = GetArc(chart, note);
 
-            if (!RenderMath.InRange(data.Scale)) continue;
+            if (!InRange(data.Scale)) continue;
 
             if (note.IsRNote) DrawRNote(canvas, note, data);
 
@@ -1097,7 +1120,7 @@ public class RenderEngine(MainView mainView)
 
             if (note.IsBonus) DrawBonusFill(canvas, note, data);
             
-            if (RenderConfig.ShowChainStripes && note.NoteType is NoteType.Chain or NoteType.ChainRNote)
+            if (RenderConfig.ShowChainStripes && note.NoteType is NoteType.Chain)
             {
                 int stripes = note.Size * 2;
                 float radiusInner = 0.5f * (data.Rect.Width - brushes.NoteWidthMultiplier * canvasScale * data.Scale);
@@ -1112,9 +1135,9 @@ public class RenderEngine(MainView mainView)
 
                     if (note.Size != 60 && i == 1)
                     {
-                        SKPoint t0 = RenderMath.GetPointOnArc(canvasCenter, radiusInner, data.StartAngle + i * -3 + 3);
-                        SKPoint t1 = RenderMath.GetPointOnArc(canvasCenter, radiusInner, data.StartAngle + i * -3 + 1.5f);
-                        SKPoint t2 = RenderMath.GetPointOnArc(canvasCenter, radiusOuter, data.StartAngle + i * -3 + 3);
+                        SKPoint t0 = GetPointOnArc(canvasCenter, radiusInner, data.StartAngle + i * -3 + 3);
+                        SKPoint t1 = GetPointOnArc(canvasCenter, radiusInner, data.StartAngle + i * -3 + 1.5f);
+                        SKPoint t2 = GetPointOnArc(canvasCenter, radiusOuter, data.StartAngle + i * -3 + 3);
                         
                         path.MoveTo(t0);
                         path.LineTo(t1);
@@ -1123,9 +1146,9 @@ public class RenderEngine(MainView mainView)
 
                     if (note.Size != 60 && i == stripes - 4)
                     {
-                        SKPoint t1 = RenderMath.GetPointOnArc(canvasCenter, radiusInner, data.StartAngle + i * -3);
-                        SKPoint t2 = RenderMath.GetPointOnArc(canvasCenter, radiusOuter, data.StartAngle + i * -3);
-                        SKPoint t3 = RenderMath.GetPointOnArc(canvasCenter, radiusOuter, data.StartAngle + i * -3 + 1.5f);
+                        SKPoint t1 = GetPointOnArc(canvasCenter, radiusInner, data.StartAngle + i * -3);
+                        SKPoint t2 = GetPointOnArc(canvasCenter, radiusOuter, data.StartAngle + i * -3);
+                        SKPoint t3 = GetPointOnArc(canvasCenter, radiusOuter, data.StartAngle + i * -3 + 1.5f);
                         
                         path.MoveTo(t1);
                         path.LineTo(t2);
@@ -1134,10 +1157,10 @@ public class RenderEngine(MainView mainView)
                         continue;
                     }
                     
-                    SKPoint p0 = RenderMath.GetPointOnArc(canvasCenter, radiusInner, data.StartAngle + i * -3);
-                    SKPoint p1 = RenderMath.GetPointOnArc(canvasCenter, radiusInner, data.StartAngle + i * -3 - 1.5f);
-                    SKPoint p2 = RenderMath.GetPointOnArc(canvasCenter, radiusOuter, data.StartAngle + i * -3);
-                    SKPoint p3 = RenderMath.GetPointOnArc(canvasCenter, radiusOuter, data.StartAngle + i * -3 + 1.5f);
+                    SKPoint p0 = GetPointOnArc(canvasCenter, radiusInner, data.StartAngle + i * -3);
+                    SKPoint p1 = GetPointOnArc(canvasCenter, radiusInner, data.StartAngle + i * -3 - 1.5f);
+                    SKPoint p2 = GetPointOnArc(canvasCenter, radiusOuter, data.StartAngle + i * -3);
+                    SKPoint p3 = GetPointOnArc(canvasCenter, radiusOuter, data.StartAngle + i * -3 + 1.5f);
                     
                     path.MoveTo(p0);
                     path.LineTo(p1);
@@ -1164,7 +1187,7 @@ public class RenderEngine(MainView mainView)
         {
             ArcData data = GetArc(chart, note);
 
-            if (!RenderMath.InRange(data.Scale)) continue;
+            if (!InRange(data.Scale)) continue;
             
             canvas.DrawArc(data.Rect, data.StartAngle, data.SweepAngle, false, brushes.GetNotePen(note, canvasScale * data.Scale));
 
@@ -1183,7 +1206,7 @@ public class RenderEngine(MainView mainView)
         {
             ArcData data = GetArc(chart, gimmick);
             
-            if (!RenderMath.InRange(data.Scale)) continue;
+            if (!InRange(data.Scale)) continue;
             
             canvas.DrawOval(data.Rect, brushes.GetGimmickPen(gimmick, canvasScale * data.Scale));
             if (gimmick == mainView.ChartEditor.HighlightedElement) DrawHighlight(canvas, data);
@@ -1211,32 +1234,26 @@ public class RenderEngine(MainView mainView)
         foreach (Note note in visibleNotes)
         {
             float scale = GetNoteScale(chart, note.BeatData.MeasureDecimal);
-            if (!RenderMath.InRange(scale)) continue;
+            if (!InRange(scale)) continue;
             
             SKRect rect = GetRect(scale);
 
             int arrowDirection = note.NoteType switch
             {
                 NoteType.SlideClockwise => 1,
-                NoteType.SlideClockwiseBonus => 1,
-                NoteType.SlideClockwiseRNote => 1,
                 NoteType.SnapForward => 1,
-                NoteType.SnapForwardRNote => 1,
                 NoteType.SlideCounterclockwise => -1,
-                NoteType.SlideCounterclockwiseBonus => -1,
-                NoteType.SlideCounterclockwiseRNote => -1,
                 NoteType.SnapBackward => -1,
-                NoteType.SnapBackwardRNote => -1,
                 _ => 0
             };
 
-            if (note.IsSnap) drawSnap(note, rect, scale, arrowDirection);
+            if (note.IsSnap) drawSnap(note, rect, arrowDirection);
             else drawSlide(note, rect, scale, arrowDirection);
         }
 
         return;
         
-        void drawSnap(Note note, SKRect rect, float scale, int arrowDirection)
+        void drawSnap(Note note, SKRect rect, int arrowDirection)
         {
             int arrowCount = note.Size / 3;
             float radius = rect.Width * 0.53f;
@@ -1262,19 +1279,19 @@ public class RenderEngine(MainView mainView)
                 //  |/        \|
                 //  p6        p4
                 
-                SKPoint  p1 = RenderMath.GetPointOnArc(canvasCenter, radius * snapRadiusOffset, i + snapArrowWidth);
-                SKPoint  p2 = RenderMath.GetPointOnArc(canvasCenter, radius * (snapRadiusOffset - snapArrowLength * arrowDirection), i);
-                SKPoint  p3 = RenderMath.GetPointOnArc(canvasCenter, radius * snapRadiusOffset, i - snapArrowWidth);
-                SKPoint  p4 = RenderMath.GetPointOnArc(canvasCenter, snapArrowThickness + radius * snapRadiusOffset, i - snapArrowWidth);
-                SKPoint  p5 = RenderMath.GetPointOnArc(canvasCenter, snapArrowThickness + radius * (snapRadiusOffset - snapArrowLength * arrowDirection), i);
-                SKPoint  p6 = RenderMath.GetPointOnArc(canvasCenter, snapArrowThickness + radius * snapRadiusOffset, i + snapArrowWidth);
+                SKPoint  p1 = GetPointOnArc(canvasCenter, radius * snapRadiusOffset, i + snapArrowWidth);
+                SKPoint  p2 = GetPointOnArc(canvasCenter, radius * (snapRadiusOffset - snapArrowLength * arrowDirection), i);
+                SKPoint  p3 = GetPointOnArc(canvasCenter, radius * snapRadiusOffset, i - snapArrowWidth);
+                SKPoint  p4 = GetPointOnArc(canvasCenter, snapArrowThickness + radius * snapRadiusOffset, i - snapArrowWidth);
+                SKPoint  p5 = GetPointOnArc(canvasCenter, snapArrowThickness + radius * (snapRadiusOffset - snapArrowLength * arrowDirection), i);
+                SKPoint  p6 = GetPointOnArc(canvasCenter, snapArrowThickness + radius * snapRadiusOffset, i + snapArrowWidth);
                 
-                SKPoint  p7 = RenderMath.GetPointOnArc(canvasCenter, snapRowOffset + radius * snapRadiusOffset, i + snapArrowWidth);
-                SKPoint  p8 = RenderMath.GetPointOnArc(canvasCenter, snapRowOffset + radius * (snapRadiusOffset - snapArrowLength * arrowDirection), i);
-                SKPoint  p9 = RenderMath.GetPointOnArc(canvasCenter, snapRowOffset + radius * snapRadiusOffset, i - snapArrowWidth);
-                SKPoint p10 = RenderMath.GetPointOnArc(canvasCenter, snapRowOffset + snapArrowThickness + radius * snapRadiusOffset, i - snapArrowWidth);
-                SKPoint p11 = RenderMath.GetPointOnArc(canvasCenter, snapRowOffset + snapArrowThickness + radius * (snapRadiusOffset - snapArrowLength * arrowDirection), i);
-                SKPoint p12 = RenderMath.GetPointOnArc(canvasCenter, snapRowOffset + snapArrowThickness + radius * snapRadiusOffset, i + snapArrowWidth);
+                SKPoint  p7 = GetPointOnArc(canvasCenter, snapRowOffset + radius * snapRadiusOffset, i + snapArrowWidth);
+                SKPoint  p8 = GetPointOnArc(canvasCenter, snapRowOffset + radius * (snapRadiusOffset - snapArrowLength * arrowDirection), i);
+                SKPoint  p9 = GetPointOnArc(canvasCenter, snapRowOffset + radius * snapRadiusOffset, i - snapArrowWidth);
+                SKPoint p10 = GetPointOnArc(canvasCenter, snapRowOffset + snapArrowThickness + radius * snapRadiusOffset, i - snapArrowWidth);
+                SKPoint p11 = GetPointOnArc(canvasCenter, snapRowOffset + snapArrowThickness + radius * (snapRadiusOffset - snapArrowLength * arrowDirection), i);
+                SKPoint p12 = GetPointOnArc(canvasCenter, snapRowOffset + snapArrowThickness + radius * snapRadiusOffset, i + snapArrowWidth);
 
                 SKPath path1 = new();
                 SKPath path2 = new();
@@ -1332,10 +1349,10 @@ public class RenderEngine(MainView mainView)
                 float t0 = loopedPosition / arrowCount;
                 float t1 = (loopedPosition + 0.5f) / arrowCount;
                 
-                float radiusOutside0 = float.Max(radiusCenter + (arrowWidth * maskFunction(t0) * scale), radiusCenter);
-                float radiusOutside1 = float.Max(radiusCenter + (arrowWidth * maskFunction(t1) * scale), radiusCenter);
-                float radiusInside0 = float.Min(radiusCenter - (arrowWidth * maskFunction(t0) * scale), radiusCenter);
-                float radiusInside1 = float.Min(radiusCenter - (arrowWidth * maskFunction(t1) * scale), radiusCenter);
+                float radiusOutside0 = float.Max(radiusCenter + (arrowWidth * maskFunction(t0) * scale * canvasScale), radiusCenter);
+                float radiusOutside1 = float.Max(radiusCenter + (arrowWidth * maskFunction(t1) * scale * canvasScale), radiusCenter);
+                float radiusInside0 = float.Min(radiusCenter - (arrowWidth * maskFunction(t0) * scale * canvasScale), radiusCenter);
+                float radiusInside1 = float.Min(radiusCenter - (arrowWidth * maskFunction(t1) * scale * canvasScale), radiusCenter);
 
                 SKPoint p1;
                 SKPoint p2;
@@ -1347,22 +1364,22 @@ public class RenderEngine(MainView mainView)
                 if (arrowDirection < 0)
                 {
                     // Counterclockwise
-                    p1 = RenderMath.GetPointOnArc(canvasCenter, radiusOutside1, float.Clamp(startAngle - arrowTipOffset,                            maxAngle, minAngle));
-                    p2 = RenderMath.GetPointOnArc(canvasCenter, radiusCenter,   float.Clamp(startAngle - arrowTipOffset * (1 + (t1 * 0.5f + 0.5f)), maxAngle, minAngle));
-                    p3 = RenderMath.GetPointOnArc(canvasCenter, radiusInside1,  float.Clamp(startAngle - arrowTipOffset,                            maxAngle, minAngle));
-                    p4 = RenderMath.GetPointOnArc(canvasCenter, radiusInside0,  float.Clamp(startAngle,                                             maxAngle, minAngle));
-                    p5 = RenderMath.GetPointOnArc(canvasCenter, radiusCenter,   float.Clamp(startAngle - arrowTipOffset * (t0 * 0.5f + 0.5f),       maxAngle, minAngle));
-                    p6 = RenderMath.GetPointOnArc(canvasCenter, radiusOutside0, float.Clamp(startAngle,                                             maxAngle, minAngle));
+                    p1 = GetPointOnArc(canvasCenter, radiusOutside1, float.Clamp(startAngle - arrowTipOffset,                            maxAngle, minAngle));
+                    p2 = GetPointOnArc(canvasCenter, radiusCenter,   float.Clamp(startAngle - arrowTipOffset * (1 + (t1 * 0.5f + 0.5f)), maxAngle, minAngle));
+                    p3 = GetPointOnArc(canvasCenter, radiusInside1,  float.Clamp(startAngle - arrowTipOffset,                            maxAngle, minAngle));
+                    p4 = GetPointOnArc(canvasCenter, radiusInside0,  float.Clamp(startAngle,                                             maxAngle, minAngle));
+                    p5 = GetPointOnArc(canvasCenter, radiusCenter,   float.Clamp(startAngle - arrowTipOffset * (t0 * 0.5f + 0.5f),       maxAngle, minAngle));
+                    p6 = GetPointOnArc(canvasCenter, radiusOutside0, float.Clamp(startAngle,                                             maxAngle, minAngle));
                 }
                 else
                 {
                     // Clockwise
-                    p1 = RenderMath.GetPointOnArc(canvasCenter, radiusOutside1, maxAngle - float.Clamp(startAngle - arrowTipOffset,                            maxAngle, minAngle) + minAngle);
-                    p2 = RenderMath.GetPointOnArc(canvasCenter, radiusCenter,   maxAngle - float.Clamp(startAngle - arrowTipOffset * (1 + (t1 * 0.5f + 0.5f)), maxAngle, minAngle) + minAngle);
-                    p3 = RenderMath.GetPointOnArc(canvasCenter, radiusInside1,  maxAngle - float.Clamp(startAngle - arrowTipOffset,                            maxAngle, minAngle) + minAngle);
-                    p4 = RenderMath.GetPointOnArc(canvasCenter, radiusInside0,  maxAngle - float.Clamp(startAngle,                                             maxAngle, minAngle) + minAngle);
-                    p5 = RenderMath.GetPointOnArc(canvasCenter, radiusCenter,   maxAngle - float.Clamp(startAngle - arrowTipOffset * (t0 * 0.5f + 0.5f),       maxAngle, minAngle) + minAngle);
-                    p6 = RenderMath.GetPointOnArc(canvasCenter, radiusOutside0, maxAngle - float.Clamp(startAngle,                                             maxAngle, minAngle) + minAngle);
+                    p1 = GetPointOnArc(canvasCenter, radiusOutside1, maxAngle - float.Clamp(startAngle - arrowTipOffset,                            maxAngle, minAngle) + minAngle);
+                    p2 = GetPointOnArc(canvasCenter, radiusCenter,   maxAngle - float.Clamp(startAngle - arrowTipOffset * (1 + (t1 * 0.5f + 0.5f)), maxAngle, minAngle) + minAngle);
+                    p3 = GetPointOnArc(canvasCenter, radiusInside1,  maxAngle - float.Clamp(startAngle - arrowTipOffset,                            maxAngle, minAngle) + minAngle);
+                    p4 = GetPointOnArc(canvasCenter, radiusInside0,  maxAngle - float.Clamp(startAngle,                                             maxAngle, minAngle) + minAngle);
+                    p5 = GetPointOnArc(canvasCenter, radiusCenter,   maxAngle - float.Clamp(startAngle - arrowTipOffset * (t0 * 0.5f + 0.5f),       maxAngle, minAngle) + minAngle);
+                    p6 = GetPointOnArc(canvasCenter, radiusOutside0, maxAngle - float.Clamp(startAngle,                                             maxAngle, minAngle) + minAngle);
                 }
                 
                 SKPath path = new SKPath();   
@@ -1385,6 +1402,218 @@ public class RenderEngine(MainView mainView)
             return t < 0.88f ? 0.653f * t + 0.175f : -6.25f * t + 6.25f;
         }
     }
+
+    private void DrawJudgementWindows(SKCanvas canvas, Chart chart)
+    {
+        // Iterate backwards
+        for (int i = chart.Notes.Count - 1; i >= 0; i--)
+        {
+            Note note = chart.Notes[i];
+            
+            if (note.IsMask) continue;
+            if (note.NoteType is NoteType.HoldSegment or NoteType.HoldEnd) continue;
+
+            TimingWindow window = GetTimingWindow(note.NoteType);
+
+            // Cut early window on Hold End
+            if (RenderConfig.CutEarlyJudgementWindowOnHolds)
+            {
+                bool holdEndFound = false;
+                Note? next = null;
+                
+                // Iterate forward until next note either doesn't exist, or it's FullTick is > current note's FullTick.
+                for (int j = i; j < chart.Notes.Count; j++)
+                {
+                    next = chart.Notes[j];
+                    
+                    if (next.BeatData.FullTick > note.BeatData.FullTick) break;
+                    if (next.NoteType == NoteType.HoldEnd && MathExtensions.IsPartiallyOverlapping(note.Position, note.Position + note.Size, next!.Position, next.Position + next.Size))
+                    {
+                        holdEndFound = true;
+                        break;
+                    }
+                }
+
+                // If that didnt work, iterate backward until next note either doesn't exist, or it's FullTick is < current note's FullTick.
+                if (holdEndFound == false)
+                {
+                    for (int j = i; j >= 0; j--)
+                    {
+                        next = chart.Notes[j];
+                        
+                        if (next.BeatData.FullTick < note.BeatData.FullTick) break;
+                        if (next.NoteType == NoteType.HoldEnd && MathExtensions.IsPartiallyOverlapping(note.Position, note.Position + note.Size, next!.Position, next.Position + next.Size))
+                        {
+                            holdEndFound = true;
+                            break;
+                        }
+                    }
+                }
+                
+                // Overlapping Hold end Found, cut window.
+                if (holdEndFound)
+                {
+                    window.GoodEarly = window.MarvelousEarly;
+                    window.GreatEarly = window.MarvelousEarly;
+                }
+            }
+            
+            bool drawMarvelous = window.MarvelousEarly != 0 && window.MarvelousLate != 0;
+            bool drawGreat = window.GreatEarly != 0 && window.GreatLate != 0;
+            bool drawGood = window.GoodEarly != 0 && window.GoodLate != 0;
+
+            float noteTimestamp = chart.MeasureDecimal2Timestamp(note.BeatData.MeasureDecimal);
+
+            window.MarvelousEarly += noteTimestamp;
+            window.MarvelousLate += noteTimestamp;
+            window.GreatEarly += noteTimestamp;
+            window.GreatLate += noteTimestamp;
+            window.GoodEarly += noteTimestamp;
+            window.GoodLate += noteTimestamp;
+
+            window.MarvelousEarly = chart.Timestamp2MeasureDecimal(window.MarvelousEarly);
+            window.MarvelousLate = chart.Timestamp2MeasureDecimal(window.MarvelousLate);
+            window.GreatEarly = chart.Timestamp2MeasureDecimal(window.GreatEarly);
+            window.GreatLate = chart.Timestamp2MeasureDecimal(window.GreatLate);
+            window.GoodEarly = chart.Timestamp2MeasureDecimal(window.GoodEarly);
+            window.GoodLate = chart.Timestamp2MeasureDecimal(window.GoodLate);
+
+            float minEarly = float.Min(float.Min(window.MarvelousEarly, window.GreatEarly), window.GoodEarly);
+            float maxLate = float.Max(float.Max(window.MarvelousLate, window.GreatLate), window.GoodLate);
+            
+            if (maxLate < CurrentMeasureDecimal) continue;
+            if (chart.GetScaledMeasureDecimal(minEarly, RenderConfig.ShowHiSpeed) > ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal) continue;
+
+            // Cut overlapping windows
+            if (RenderConfig.CutOverlappingJudgementWindows)
+            {
+                // Iterate forwards until overlapping note is found, or next note is out of range.
+                for (int j = i; j < chart.Notes.Count; j++)
+                {
+                    Note next = chart.Notes[j];
+                    
+                    if (next.NoteType is NoteType.None or NoteType.HoldSegment or NoteType.HoldEnd or NoteType.MaskAdd or NoteType.MaskRemove) continue;
+                    if (next.BeatData.FullTick == note.BeatData.FullTick) continue;
+                    if (!MathExtensions.IsPartiallyOverlapping(note.Position, note.Position + note.Size, next.Position, next.Position + next.Size)) continue;
+                    
+                    TimingWindow nextWindow = GetTimingWindow(next.NoteType);
+                    float nextTimestamp = chart.MeasureDecimal2Timestamp(next.BeatData.MeasureDecimal);
+
+                    nextWindow.MarvelousEarly += nextTimestamp;
+                    nextWindow.GreatEarly += nextTimestamp;
+                    nextWindow.GoodEarly += nextTimestamp;
+
+                    nextWindow.MarvelousEarly = chart.Timestamp2MeasureDecimal(nextWindow.MarvelousEarly);
+                    nextWindow.GreatEarly = chart.Timestamp2MeasureDecimal(nextWindow.GreatEarly);
+                    nextWindow.GoodEarly = chart.Timestamp2MeasureDecimal(nextWindow.GoodEarly);
+                    
+                    float minNextEarly = float.Min(float.Min(nextWindow.MarvelousEarly, nextWindow.GreatEarly), nextWindow.GoodEarly);
+
+                    if (minNextEarly >= maxLate) break;
+
+                    float centerMeasureDecimal = (next.BeatData.MeasureDecimal + note.BeatData.MeasureDecimal) * 0.5f;
+                    
+                    // Cut Timing window
+                    window.MarvelousLate = float.Min(window.MarvelousLate, centerMeasureDecimal);
+                    window.GreatLate = float.Min(window.GreatLate, centerMeasureDecimal);
+                    window.GoodLate = float.Min(window.GoodLate, centerMeasureDecimal);
+                }
+
+                // Iterate backwards until overlapping note is found, or prev note is out of range.
+                for (int j = i; j >= 0; j--)
+                {
+                    Note prev = chart.Notes[j];
+                    
+                    if (prev.NoteType is NoteType.None or NoteType.HoldSegment or NoteType.HoldEnd or NoteType.MaskAdd or NoteType.MaskRemove) continue;
+                    if (prev.BeatData.FullTick == note.BeatData.FullTick) continue;
+                    if (!MathExtensions.IsPartiallyOverlapping(note.Position, note.Position + note.Size, prev.Position, prev.Position + prev.Size)) continue;
+                    
+                    TimingWindow prevWindow = GetTimingWindow(prev.NoteType);
+                    float prevTimestamp = chart.MeasureDecimal2Timestamp(prev.BeatData.MeasureDecimal);
+
+                    prevWindow.MarvelousLate += prevTimestamp;
+                    prevWindow.GreatLate += prevTimestamp;
+                    prevWindow.GoodLate += prevTimestamp;
+
+                    prevWindow.MarvelousLate = chart.Timestamp2MeasureDecimal(prevWindow.MarvelousLate);
+                    prevWindow.GreatLate = chart.Timestamp2MeasureDecimal(prevWindow.GreatLate);
+                    prevWindow.GoodLate = chart.Timestamp2MeasureDecimal(prevWindow.GoodLate);
+                    
+                    float maxPrevLate = float.Max(float.Max(prevWindow.MarvelousLate, prevWindow.GreatLate), prevWindow.GoodLate);
+
+                    if (maxPrevLate <= minEarly) break;
+
+                    float centerMeasureDecimal = (prev.BeatData.MeasureDecimal + note.BeatData.MeasureDecimal) * 0.5f;
+                    
+                    // Cut Timing window
+                    window.MarvelousEarly = float.Max(window.MarvelousEarly, centerMeasureDecimal);
+                    window.GreatEarly = float.Max(window.GreatEarly, centerMeasureDecimal);
+                    window.GoodEarly = float.Max(window.GoodEarly, centerMeasureDecimal);
+                }
+            }
+            
+            float startAngle = note.Position * -6;
+            float sweepAngle = note.Size * -6 + 0.1f;
+            
+            float marvelousEarlyScale = float.Clamp(GetNoteScale(chart, window.MarvelousEarly), 0, 1);
+            float marvelousLateScale = float.Clamp(GetNoteScale(chart, window.MarvelousLate), 0, 1);
+            float greatEarlyScale = float.Clamp(GetNoteScale(chart, window.GreatEarly), 0, 1);
+            float greatLateScale = float.Clamp(GetNoteScale(chart, window.GreatLate), 0, 1);
+            float goodEarlyScale = float.Clamp(GetNoteScale(chart, window.GoodEarly), 0, 1);
+            float goodLateScale = float.Clamp(GetNoteScale(chart, window.GoodLate), 0, 1);
+            
+            // hacky but prevents a graphical glitch caused by scale jank.
+            if (marvelousEarlyScale < marvelousLateScale) marvelousEarlyScale = 1; 
+            if (greatEarlyScale < greatLateScale) greatEarlyScale = 1;
+            if (goodEarlyScale < goodLateScale) goodEarlyScale = 1;
+
+            SKRect marvelousEarlyRect = GetRect(marvelousEarlyScale);
+            SKRect marvelousLateRect = GetRect(marvelousLateScale);
+            SKRect greatEarlyRect = GetRect(greatEarlyScale);
+            SKRect greatLateRect = GetRect(greatLateScale);
+            SKRect goodEarlyRect = GetRect(goodEarlyScale);
+            SKRect goodLateRect = GetRect(goodLateScale);
+
+            if (drawGood && RenderConfig.ShowJudgementWindowGood)
+            {
+                SKPath goodPath = new();
+                goodPath.ArcTo(goodEarlyRect, startAngle, sweepAngle, true);
+                goodPath.ArcTo(greatEarlyRect, startAngle + sweepAngle, -sweepAngle, false);
+                goodPath.Close();
+                goodPath.ArcTo(greatLateRect, startAngle, sweepAngle, true);
+                goodPath.ArcTo(goodLateRect, startAngle + sweepAngle, -sweepAngle, false);
+                goodPath.Close();
+            
+                canvas.DrawPath(goodPath, brushes.JudgementGoodFill);
+                canvas.DrawPath(goodPath, brushes.JudgementGoodPen);
+            }
+            
+            if (drawGreat && RenderConfig.ShowJudgementWindowGreat)
+            {
+                SKPath greatPath = new();
+                greatPath.ArcTo(greatEarlyRect, startAngle, sweepAngle, true);
+                greatPath.ArcTo(marvelousEarlyRect, startAngle + sweepAngle, -sweepAngle, false);
+                greatPath.Close();
+                greatPath.ArcTo(marvelousLateRect, startAngle, sweepAngle, true);
+                greatPath.ArcTo(greatLateRect, startAngle + sweepAngle, -sweepAngle, false);
+                greatPath.Close();
+            
+                canvas.DrawPath(greatPath, brushes.JudgementGreatFill);
+                canvas.DrawPath(greatPath, brushes.JudgementGreatPen);
+            }
+            
+            if (drawMarvelous && RenderConfig.ShowJudgementWindowMarvelous)
+            {
+                SKPath marvelousPath = new();
+                marvelousPath.ArcTo(marvelousEarlyRect, startAngle, sweepAngle, true);
+                marvelousPath.ArcTo(marvelousLateRect, startAngle + sweepAngle, -sweepAngle, false);
+                marvelousPath.Close();
+            
+                canvas.DrawPath(marvelousPath, brushes.JudgementMarvelousFill);
+                canvas.DrawPath(marvelousPath, brushes.JudgementMarvelousPen);
+            }
+        }
+    }
 }
 
 internal struct ArcData(SKRect rect, float scale, float startAngle, float sweepAngle)
@@ -1397,6 +1626,38 @@ internal struct ArcData(SKRect rect, float scale, float startAngle, float sweepA
 
 internal static class RenderMath
 {
+    internal struct TimingWindow(float marvelousEarly, float marvelousLate, float greatEarly, float greatLate, float goodEarly, float goodLate)
+    {
+        private const float Frame = 16.6666f;
+        
+        public float MarvelousEarly = marvelousEarly * Frame;
+        public float MarvelousLate = marvelousLate * Frame;
+        public float GreatEarly = greatEarly * Frame;
+        public float GreatLate = greatLate * Frame;
+        public float GoodEarly = goodEarly * Frame;
+        public float GoodLate = goodLate * Frame;
+    }
+    
+    internal static TimingWindow GetTimingWindow(NoteType noteType)
+    {
+        return noteType switch
+        {
+            NoteType.None => new(0, 0, 0, 0, 0, 0),
+            NoteType.Touch => new(-3, 3, -5, 5, -6, 6),
+            NoteType.SnapForward => new(-5, 7, -8, 10, -10, 10),
+            NoteType.SnapBackward => new(-7, 5, -10, 8, -10, 10),
+            NoteType.SlideClockwise => new(-5, 5, -8, 10, -10, 10),
+            NoteType.SlideCounterclockwise => new(-5, 5, -8, 10, -10, 10),
+            NoteType.HoldStart => new(-3, 3, -5, 5, -6, 6),
+            NoteType.HoldSegment => new(0, 0, 0, 0, 0, 0),
+            NoteType.HoldEnd => new(0, 0, 0, 0, 0, 0),
+            NoteType.MaskAdd => new(0, 0, 0, 0, 0, 0),
+            NoteType.MaskRemove => new(0, 0, 0, 0, 0, 0),
+            NoteType.Chain => new(-4, 4, 0, 0, 0, 0),
+            _ => throw new ArgumentOutOfRangeException(nameof(noteType), noteType, null)
+        };
+    }
+    
     /// <summary>
     /// Returns an SKPoint on an arc described by the centerpoint (x,y), radius and angle.
     /// </summary>

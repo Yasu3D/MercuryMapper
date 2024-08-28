@@ -33,6 +33,7 @@
                     <TreeViewItem Name="EditorSetLoopEnd" Header="{x:Static lang:Resources.Editor_SetLoopEnd}" />
                     <TreeViewItem Name="EditorIncreasePlaybackSpeed" Header="{x:Static lang:Resources.Editor_IncreasePlaybackSpeed}" />
                     <TreeViewItem Name="EditorDecreasePlaybackSpeed" Header="{x:Static lang:Resources.Editor_DecreasePlaybackSpeed}" />
+                    <TreeViewItem Name="EditorAddComment" Header="{x:Static lang:Resources.Editor_AddComment}" />
                 </TreeViewItem>
 
                 <TreeViewItem Header="{x:Static lang:Resources.Settings_Header_Selection}" Classes="HideKeybind">
@@ -85,7 +86,6 @@
                     <TreeViewItem Name="EditorNoteTypeHold" Header="{x:Static lang:Resources.Note_Hold}" />
                     <TreeViewItem Name="EditorNoteTypeMaskAdd" Header="{x:Static lang:Resources.Note_MaskAdd}" />
                     <TreeViewItem Name="EditorNoteTypeMaskRemove" Header="{x:Static lang:Resources.Note_MaskRemove}" />
-                    <TreeViewItem Name="EditorNoteTypeEndOfChart" Header="{x:Static lang:Resources.Note_EndOfChart}" />
                     <TreeViewItem Name="EditorTypeRadio1" Header="{x:Static lang:Resources.Settings_Keymap_TypeRadio1}" />
                     <TreeViewItem Name="EditorTypeRadio2" Header="{x:Static lang:Resources.Settings_Keymap_TypeRadio2}" />
                     <TreeViewItem Name="EditorTypeRadio3" Header="{x:Static lang:Resources.Settings_Keymap_TypeRadio3}" />

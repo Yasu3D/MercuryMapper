@@ -24,6 +24,7 @@ public class Brushes(UserConfig userConfig)
     private const float SyncPenStrokeWidth = 6;
     private const float RNotePenStrokeWidth = 17;
     private const float BoxSelectOutlinePenStrokeWidth = 4;
+    private const float PeerPenStrokeWidth = 15;
     
     public float NoteWidthMultiplier = 1;
     private float cursorWidthMultiplier = 1;
@@ -41,7 +42,6 @@ public class Brushes(UserConfig userConfig)
     private SKColor colorNoteHoldSegmentNoRender;
     private SKColor colorNoteMaskAdd;
     private SKColor colorNoteMaskRemove;
-    private SKColor colorNoteEndOfChart;
     private SKColor colorNoteCaps;
 
     private SKColor colorGimmickBpmChange;
@@ -49,6 +49,7 @@ public class Brushes(UserConfig userConfig)
     private SKColor colorGimmickHiSpeedChange;
     private SKColor colorGimmickReverse;
     private SKColor colorGimmickStop;
+    private SKColor colorGimmickEndOfChart;
     
     // ________ Private Brushes
     private readonly SKPaint guideLinePen = new()
@@ -145,6 +146,13 @@ public class Brushes(UserConfig userConfig)
         Style = SKPaintStyle.Stroke,
         IsAntialias = true
     };
+
+    private readonly SKPaint peerPen = new()
+    {
+        StrokeWidth = PeerPenStrokeWidth,
+        Style = SKPaintStyle.Stroke,
+        IsAntialias = true
+    };
     
     // ________ Public Brushes
     public SKColor BackgroundColor = new(0xFF1A1A1A);
@@ -217,6 +225,42 @@ public class Brushes(UserConfig userConfig)
     };
 
     public readonly SKPaint BonusFill = new()
+    {
+        Style = SKPaintStyle.Fill,
+        IsAntialias = false
+    };
+    
+    public readonly SKPaint JudgementMarvelousPen = new()
+    {
+        StrokeWidth = 2,
+        Style = SKPaintStyle.Stroke
+    };
+    
+    public readonly SKPaint JudgementGreatPen = new()
+    {
+        StrokeWidth = 2,
+        Style = SKPaintStyle.Stroke
+    };
+    
+    public readonly SKPaint JudgementGoodPen = new()
+    {
+        StrokeWidth = 2,
+        Style = SKPaintStyle.Stroke
+    };
+    
+    public readonly SKPaint JudgementMarvelousFill = new()
+    {
+        Style = SKPaintStyle.Fill,
+        IsAntialias = false
+    };
+    
+    public readonly SKPaint JudgementGreatFill = new()
+    {
+        Style = SKPaintStyle.Fill,
+        IsAntialias = false
+    };
+    
+    public readonly SKPaint JudgementGoodFill = new()
     {
         Style = SKPaintStyle.Fill,
         IsAntialias = false
@@ -327,34 +371,30 @@ public class Brushes(UserConfig userConfig)
         bonusPen.StrokeWidth = rNoteWidthMultiplier * scale;
         return bonusPen;
     }
+
+    public SKPaint GetPeerPen(SKColor color, float scale)
+    {
+        peerPen.StrokeWidth = PeerPenStrokeWidth * scale;
+        peerPen.Color = color;
+        return peerPen;
+    }
     
     // ________ Other
     private SKColor NoteType2Color(NoteType type, bool render = true)
     {
         return type switch
         {
-            NoteType.Touch
-                or NoteType.TouchBonus
-                or NoteType.TouchRNote => colorNoteTouch,
-            NoteType.SnapForward
-                or NoteType.SnapForwardRNote => colorNoteSnapForward,
-            NoteType.SnapBackward
-                or NoteType.SnapBackwardRNote => colorNoteSnapBackward,
-            NoteType.SlideClockwise
-                or NoteType.SlideClockwiseBonus
-                or NoteType.SlideClockwiseRNote => colorNoteSlideClockwise,
-            NoteType.SlideCounterclockwise
-                or NoteType.SlideCounterclockwiseBonus
-                or NoteType.SlideCounterclockwiseRNote => colorNoteSlideCounterclockwise,
-            NoteType.Chain
-                or NoteType.ChainRNote => colorNoteChain,
-            NoteType.HoldStart 
-                or NoteType.HoldStartRNote => colorNoteHoldStart,
+            NoteType.Touch => colorNoteTouch,
+            NoteType.SnapForward => colorNoteSnapForward,
+            NoteType.SnapBackward => colorNoteSnapBackward,
+            NoteType.SlideClockwise => colorNoteSlideClockwise,
+            NoteType.SlideCounterclockwise => colorNoteSlideCounterclockwise,
+            NoteType.Chain => colorNoteChain,
+            NoteType.HoldStart => colorNoteHoldStart,
             NoteType.HoldSegment => render ? colorNoteHoldSegment : colorNoteHoldSegmentNoRender,
             NoteType.HoldEnd => colorNoteHoldSegment,
             NoteType.MaskAdd => colorNoteMaskAdd,
             NoteType.MaskRemove => colorNoteMaskRemove,
-            NoteType.EndOfChart => colorNoteEndOfChart,
             _ => throw new ArgumentOutOfRangeException()
         };
     }
@@ -372,6 +412,7 @@ public class Brushes(UserConfig userConfig)
             or GimmickType.ReverseNoteEnd => colorGimmickReverse,
             GimmickType.StopStart
             or GimmickType.StopEnd => colorGimmickStop,
+            GimmickType.EndOfChart => colorGimmickEndOfChart,
             _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
         };
     }
@@ -396,7 +437,7 @@ public class Brushes(UserConfig userConfig)
             colorNoteHoldSegmentNoRender = SKColor.Parse(colors["ColorNoteHoldSegmentNoRender"]);
             colorNoteMaskAdd = SKColor.Parse(colors["ColorNoteMaskAdd"]);
             colorNoteMaskRemove = SKColor.Parse(colors["ColorNoteMaskRemove"]);
-            colorNoteEndOfChart = SKColor.Parse(colors["ColorNoteEndOfChart"]);
+            colorGimmickEndOfChart = SKColor.Parse(colors["ColorNoteEndOfChart"]);
             colorNoteCaps = SKColor.Parse(colors["ColorNoteCaps"]);
             
             colorGimmickBpmChange = SKColor.Parse(colors["ColorGimmickBpmChange"]);
@@ -404,6 +445,13 @@ public class Brushes(UserConfig userConfig)
             colorGimmickHiSpeedChange = SKColor.Parse(colors["ColorGimmickHiSpeedChange"]);
             colorGimmickReverse = SKColor.Parse(colors["ColorGimmickStop"]);
             colorGimmickStop = SKColor.Parse(colors["ColorGimmickReverse"]);
+
+            JudgementMarvelousFill.Color = SKColor.Parse(colors["ColorJudgementMarvelous"]).WithAlpha(0xAA);
+            JudgementGreatFill.Color = SKColor.Parse(colors["ColorJudgementGreat"]).WithAlpha(0xAA);
+            JudgementGoodFill.Color = SKColor.Parse(colors["ColorJudgementGood"]).WithAlpha(0xAA);
+            JudgementMarvelousPen.Color = SKColor.Parse(colors["ColorJudgementMarvelous"]).WithAlpha(0xFF);
+            JudgementGreatPen.Color = SKColor.Parse(colors["ColorJudgementGreat"]).WithAlpha(0xFF);
+            JudgementGoodPen.Color = SKColor.Parse(colors["ColorJudgementGood"]).WithAlpha(0xFF);
             
             BonusFill.Color = SKColor.Parse(colors["ColorBonusFill"]);
             syncPen.Color = SKColor.Parse(colors["ColorSync"]);

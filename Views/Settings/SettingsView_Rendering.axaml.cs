@@ -29,7 +29,13 @@ public partial class SettingsView_Rendering : UserControl
         NumericBeatDivision.Value = RenderConfig.BeatDivision;
         CheckBoxShowMaskDuringPlayback.IsChecked = RenderConfig.ShowMaskDuringPlayback;
         CheckBoxShowGimmickNotesDuringPlayback.IsChecked = RenderConfig.ShowGimmickNotesDuringPlayback;
+        CheckBoxShowOtherUsersDuringPlayback.IsChecked = RenderConfig.ShowOtherUsersDuringPlayback;
         CheckBoxShowChainStripes.IsChecked = RenderConfig.ShowChainStripes;
+        CheckBoxShowJudgementWindowMarvelous.IsChecked = RenderConfig.ShowJudgementWindowMarvelous;
+        CheckBoxShowJudgementWindowGreat.IsChecked = RenderConfig.ShowJudgementWindowGreat;
+        CheckBoxShowJudgementWindowGood.IsChecked = RenderConfig.ShowJudgementWindowGood;
+        CheckBoxCutEarlyJudgementWindowOnHolds.IsChecked = RenderConfig.CutEarlyJudgementWindowOnHolds;
+        CheckBoxCutOverlappingJudgementWindows.IsChecked = RenderConfig.CutOverlappingJudgementWindows;
     }
     
     private void RefreshRate_OnValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
@@ -73,6 +79,11 @@ public partial class SettingsView_Rendering : UserControl
     {
         RenderConfig.ShowGimmickNotesDuringPlayback = CheckBoxShowGimmickNotesDuringPlayback.IsChecked ?? false;
     }
+    
+    private void CheckBoxShowOtherUsersDuringPlayback_OnIsCheckedChanged(object? sender, RoutedEventArgs e)
+    {
+        RenderConfig.ShowOtherUsersDuringPlayback = CheckBoxShowOtherUsersDuringPlayback.IsChecked ?? false;
+    }
 
     private void ComboHoldRenderMethod_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
@@ -80,8 +91,33 @@ public partial class SettingsView_Rendering : UserControl
         RenderConfig.HoldRenderMethod = ComboHoldRenderMethod.SelectedIndex;
     }
 
-    private void ShowChainStripes_OnIsCheckedChanged(object? sender, RoutedEventArgs e)
+    private void CheckBoxShowChainStripes_OnIsCheckedChanged(object? sender, RoutedEventArgs e)
     {
         RenderConfig.ShowChainStripes = CheckBoxShowChainStripes.IsChecked ?? true;
+    }
+    
+    private void CheckBoxShowJudgementWindowMarvelous_OnIsCheckedChanged(object? sender, RoutedEventArgs e)
+    {
+        RenderConfig.ShowJudgementWindowMarvelous = CheckBoxShowJudgementWindowMarvelous.IsChecked ?? true;
+    }
+    
+    private void CheckBoxShowJudgementWindowGreat_OnIsCheckedChanged(object? sender, RoutedEventArgs e)
+    {
+        RenderConfig.ShowJudgementWindowGreat = CheckBoxShowJudgementWindowGreat.IsChecked ?? true;
+    }
+    
+    private void CheckBoxShowJudgementWindowGood_OnIsCheckedChanged(object? sender, RoutedEventArgs e)
+    {
+        RenderConfig.ShowJudgementWindowGood = CheckBoxShowJudgementWindowGood.IsChecked ?? true;
+    }
+    
+    private void CheckBoxCutEarlyJudgementWindowOnHolds_OnIsCheckedChanged(object? sender, RoutedEventArgs e)
+    {
+        RenderConfig.CutEarlyJudgementWindowOnHolds = CheckBoxCutEarlyJudgementWindowOnHolds.IsChecked ?? true;
+    }
+    
+    private void CheckBoxCutOverlappingJudgementWindows_OnIsCheckedChanged(object? sender, RoutedEventArgs e)
+    {
+        RenderConfig.CutOverlappingJudgementWindows = CheckBoxCutOverlappingJudgementWindows.IsChecked ?? true;
     }
 }

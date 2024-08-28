@@ -16,6 +16,11 @@
                     Minimum="0" Maximum="100" Value="50" Name="SliderHitsound" ValueChanged="SliderHitsound_OnValueChanged"/>
             
             <Separator/>
+            
+            <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_MuteHitsoundsOnPreview}"/>
+            <CheckBox Name="CheckBoxMuteHitsoundsOnPreview" HorizontalAlignment="Right" IsCheckedChanged="MuteHitsoundsOnPreview_IsCheckedChanged"/>
+            
+            <Separator/>
                 
             <TextBlock VerticalAlignment="Center" Margin="0,0,0,-7" Text="{x:Static lang:Resources.Settings_Hitsound_Touch}"/>
             <Slider Classes="Compact" Margin="0,0,0,20" TickFrequency="5" TickPlacement="TopLeft"

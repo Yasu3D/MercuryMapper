@@ -10,5 +10,6 @@ public enum GimmickType
     ReverseEffectEnd = 7,
     ReverseNoteEnd = 8,
     StopStart = 9,
-    StopEnd = 10
+    StopEnd = 10,
+    EndOfChart = 11,
 }

@@ -1,933 +1,1170 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <root>
-    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-        <xsd:element name="root" msdata:IsDataSet="true">
-            
-        </xsd:element>
-    </xsd:schema>
-    <resheader name="resmimetype">
-        <value>text/microsoft-resx</value>
-    </resheader>
-    <resheader name="version">
-        <value>1.3</value>
-    </resheader>
-    <resheader name="reader">
-        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-    </resheader>
-    <resheader name="writer">
-        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-    </resheader>
-    <data name="Menu_New" xml:space="preserve">
-        <value>New</value>
-    </data>
-    <data name="Menu_Open" xml:space="preserve">
-        <value>Open</value>
-    </data>
-    <data name="Menu_Save" xml:space="preserve">
-        <value>Save</value>
-    </data>
-    <data name="Menu_SaveAs" xml:space="preserve">
-        <value>Save As</value>
-    </data>
-    <data name="Menu_Settings" xml:space="preserve">
-        <value>Settings</value>
-    </data>
-    <data name="Menu_Exit" xml:space="preserve">
-        <value>Exit</value>
-    </data>
-    <data name="MenuHeader_File" xml:space="preserve">
-        <value>File</value>
-    </data>
-    <data name="MenuHeader_Edit" xml:space="preserve">
-        <value>Edit</value>
-    </data>
-    <data name="Menu_Undo" xml:space="preserve">
-        <value>Undo</value>
-    </data>
-    <data name="Menu_Redo" xml:space="preserve">
-        <value>Redo</value>
-    </data>
-    <data name="Menu_Cut" xml:space="preserve">
-        <value>Cut</value>
-    </data>
-    <data name="Menu_Copy" xml:space="preserve">
-        <value>Copy</value>
-    </data>
-    <data name="Menu_Paste" xml:space="preserve">
-        <value>Paste</value>
-    </data>
-    <data name="MenuHeader_Select" xml:space="preserve">
-        <value>Select</value>
-    </data>
-    <data name="Note_Touch" xml:space="preserve">
-        <value>Touch</value>
-    </data>
-    <data name="Note_Chain" xml:space="preserve">
-        <value>Chain</value>
-    </data>
-    <data name="Note_SnapForward" xml:space="preserve">
-        <value>↑ Snap FW</value>
-    </data>
-    <data name="Note_SnapBackward" xml:space="preserve">
-        <value>↓ Snap BW</value>
-    </data>
-    <data name="Note_SlideClockwise" xml:space="preserve">
-        <value>↩ Slide CW</value>
-    </data>
-    <data name="Note_SlideCounterclockwise" xml:space="preserve">
-        <value>↪ Slide CCW</value>
-    </data>
-    <data name="Note_Hold" xml:space="preserve">
-        <value>Hold</value>
-    </data>
-    <data name="Note_EndOfChart" xml:space="preserve">
-        <value>End of Chart</value>
-    </data>
-    <data name="Note_MaskAdd" xml:space="preserve">
-        <value>Mask Add</value>
-    </data>
-    <data name="Note_MaskRemove" xml:space="preserve">
-        <value>Mask Remove</value>
-    </data>
-    <data name="BonusType_None" xml:space="preserve">
-        <value>None</value>
-    </data>
-    <data name="BonusType_Bonus" xml:space="preserve">
-        <value>Bonus</value>
-    </data>
-    <data name="BonusType_RNote" xml:space="preserve">
-        <value>R Note</value>
-    </data>
-    <data name="MaskDirection_Clockwise" xml:space="preserve">
-        <value>Clockwise</value>
-    </data>
-    <data name="MaskDirection_Counterclockwise" xml:space="preserve">
-        <value>Counterclockwise</value>
-    </data>
-    <data name="MaskDirection_Center" xml:space="preserve">
-        <value>From Center</value>
-    </data>
-    <data name="Gimmick_BpmChange" xml:space="preserve">
-        <value>BPM</value>
-    </data>
-    <data name="Gimmick_TimeSigChange" xml:space="preserve">
-        <value>Time Signature</value>
-    </data>
-    <data name="Gimmick_HiSpeedChange" xml:space="preserve">
-        <value>HiSpeed</value>
-    </data>
-    <data name="Gimmick_Stop" xml:space="preserve">
-        <value>Stop</value>
-    </data>
-    <data name="Gimmick_Reverse" xml:space="preserve">
-        <value>Reverse</value>
-    </data>
-    <data name="Generic_Close" xml:space="preserve">
-        <value>Close</value>
-    </data>
-    <data name="Menu_Export" xml:space="preserve">
-        <value>Export</value>
-    </data>
-    <data name="Menu_ExportMercury" xml:space="preserve">
-        <value>Export for Mercury</value>
-    </data>
-    <data name="Menu_ExportSaturn" xml:space="preserve">
-        <value>Export for Saturn</value>
-    </data>
-    <data name="Settings_Header_Appearance" xml:space="preserve">
-        <value>Appearance</value>
-    </data>
-    <data name="Settings_Header_Colors" xml:space="preserve">
-        <value>Colors</value>
-    </data>
-    <data name="Settings_Header_Gimmicks" xml:space="preserve">
-        <value>Gimmicks</value>
-    </data>
-    <data name="Settings_Header_Editor" xml:space="preserve">
-        <value>Editor</value>
-    </data>
-    <data name="Settings_Header_Keymap" xml:space="preserve">
-        <value>Keymap</value>
-    </data>
-    <data name="Note_HoldStart" xml:space="preserve">
-        <value>Hold Start</value>
-    </data>
-    <data name="Note_HoldSegment" xml:space="preserve">
-        <value>Hold Segment</value>
-    </data>
-    <data name="Note_HoldEnd" xml:space="preserve">
-        <value>Hold End</value>
-    </data>
-    <data name="Note_HoldSurfaceNear" xml:space="preserve">
-        <value>Hold Surface Near</value>
-    </data>
-    <data name="Note_HoldSurfaceFar" xml:space="preserve">
-        <value>Hold Surface Far</value>
-    </data>
-    <data name="Settings_Header_Rendering" xml:space="preserve">
-        <value>Rendering</value>
-    </data>
-    <data name="Editor_Insert" xml:space="preserve">
-        <value>Insert</value>
-    </data>
-    <data name="Editor_Play" xml:space="preserve">
-        <value>Play</value>
-    </data>
-    <data name="Editor_Pause" xml:space="preserve">
-        <value>Pause</value>
-    </data>
-    <data name="Note_Highlight" xml:space="preserve">
-        <value>Highlight</value>
-    </data>
-    <data name="Note_Selection" xml:space="preserve">
-        <value>Selection</value>
-    </data>
-    <data name="Generic_SaveAndClose" xml:space="preserve">
-        <value>Save and Close</value>
-    </data>
-    <data name="Generic_Yes" xml:space="preserve">
-        <value>Yes</value>
-    </data>
-    <data name="Generic_No" xml:space="preserve">
-        <value>No</value>
-    </data>
-    <data name="Generic_Cancel" xml:space="preserve">
-        <value>Cancel</value>
-    </data>
-    <data name="Generic_SaveWarning" xml:space="preserve">
-        <value>Chart is unsaved. Would you like to save?</value>
-    </data>
-    <data name="Settings_Keymap_WaitingForInput" xml:space="preserve">
-        <value>Waiting for input...</value>
-    </data>
-    <data name="Editor_IncreasePlaybackSpeed" xml:space="preserve">
-        <value>Decrease Playback Speed</value>
-    </data>
-    <data name="Editor_DecreasePlaybackSpeed" xml:space="preserve">
-        <value>Increase Playback Speed</value>
-    </data>
-    <data name="Editor_NewChart" xml:space="preserve">
-        <value>New Chart</value>
-    </data>
-    <data name="ChartProperties_Bpm" xml:space="preserve">
-        <value>BPM</value>
-    </data>
-    <data name="ChartProperties_TimeSignature" xml:space="preserve">
-        <value>Time Signature</value>
-    </data>
-    <data name="ChartProperties_Author" xml:space="preserve">
-        <value>Chart Author</value>
-    </data>
-    <data name="ChartProperties_Level" xml:space="preserve">
-        <value>Level</value>
-    </data>
-    <data name="ChartProperties_PreviewTime" xml:space="preserve">
-        <value>Preview Start</value>
-    </data>
-    <data name="ChartProperties_PreviewLength" xml:space="preserve">
-        <value>Preview Length</value>
-    </data>
-    <data name="ChartProperties_MusicFilePath" xml:space="preserve">
-        <value>Music Filepath</value>
-    </data>
-    <data name="ChartProperties_Offset" xml:space="preserve">
-        <value>Offset</value>
-    </data>
-    <data name="ChartProperties_MovieOffset" xml:space="preserve">
-        <value>Movie Offset</value>
-    </data>
-    <data name="ChartProperties_Artist" xml:space="preserve">
-        <value>Artist</value>
-    </data>
-    <data name="ChartProperties_Title" xml:space="preserve">
-        <value>Title</value>
-    </data>
-    <data name="ChartProperties_ClearThreshold" xml:space="preserve">
-        <value>Clear Threshold</value>
-    </data>
-    <data name="Generic_Ok" xml:space="preserve">
-        <value>Ok</value>
-    </data>
-    <data name="Editor_NewChartInvalidBpm" xml:space="preserve">
-        <value>Chart has invalid BPM. BPM must be above zero.</value>
-    </data>
-    <data name="Editor_NewChartInvalidTimeSig" xml:space="preserve">
-        <value>Chart has invalid Time Signature. Upper and Lower must be above zero.</value>
-    </data>
-    <data name="Editor_NewChartInvalidAudio" xml:space="preserve">
-        <value>Selected audio file couldn't be found.</value>
-    </data>
-    <data name="Editor_Position" xml:space="preserve">
-        <value>Position</value>
-    </data>
-    <data name="Editor_Size" xml:space="preserve">
-        <value>Size</value>
-    </data>
-    <data name="Editor_EndHold" xml:space="preserve">
-        <value>End Hold</value>
-    </data>
-    <data name="Editor_Measure" xml:space="preserve">
-        <value>Measure</value>
-    </data>
-    <data name="Editor_EditHold" xml:space="preserve">
-        <value>Edit Hold</value>
-    </data>
-    <data name="Settings_Color_JudgementLinePrimary" xml:space="preserve">
-        <value>Judgement Line Primary</value>
-    </data>
-    <data name="Settings_Color_JudgementLineSecondary" xml:space="preserve">
-        <value>Judgement Line Secondary</value>
-    </data>
-    <data name="Generic_SelectAudioPrompt" xml:space="preserve">
-        <value>Chart either has no audio or the specified audio file was not found.
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Menu_New" xml:space="preserve">
+    <value>New</value>
+  </data>
+  <data name="Menu_Open" xml:space="preserve">
+    <value>Open</value>
+  </data>
+  <data name="Menu_Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="Menu_SaveAs" xml:space="preserve">
+    <value>Save As</value>
+  </data>
+  <data name="Menu_Settings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="Menu_Exit" xml:space="preserve">
+    <value>Exit</value>
+  </data>
+  <data name="MenuHeader_File" xml:space="preserve">
+    <value>File</value>
+  </data>
+  <data name="MenuHeader_Edit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="Menu_Undo" xml:space="preserve">
+    <value>Undo</value>
+  </data>
+  <data name="Menu_Redo" xml:space="preserve">
+    <value>Redo</value>
+  </data>
+  <data name="Menu_Cut" xml:space="preserve">
+    <value>Cut</value>
+  </data>
+  <data name="Menu_Copy" xml:space="preserve">
+    <value>Copy</value>
+  </data>
+  <data name="Menu_Paste" xml:space="preserve">
+    <value>Paste</value>
+  </data>
+  <data name="MenuHeader_Select" xml:space="preserve">
+    <value>Select</value>
+  </data>
+  <data name="Note_Touch" xml:space="preserve">
+    <value>Touch</value>
+  </data>
+  <data name="Note_Chain" xml:space="preserve">
+    <value>Chain</value>
+  </data>
+  <data name="Note_SnapForward" xml:space="preserve">
+    <value>↑ Snap FW</value>
+  </data>
+  <data name="Note_SnapBackward" xml:space="preserve">
+    <value>↓ Snap BW</value>
+  </data>
+  <data name="Note_SlideClockwise" xml:space="preserve">
+    <value>↩ Slide CW</value>
+  </data>
+  <data name="Note_SlideCounterclockwise" xml:space="preserve">
+    <value>↪ Slide CCW</value>
+  </data>
+  <data name="Note_Hold" xml:space="preserve">
+    <value>Hold</value>
+  </data>
+  <data name="Gimmick_EndOfChart" xml:space="preserve">
+    <value>End of Chart</value>
+  </data>
+  <data name="Note_MaskAdd" xml:space="preserve">
+    <value>Mask Add</value>
+  </data>
+  <data name="Note_MaskRemove" xml:space="preserve">
+    <value>Mask Remove</value>
+  </data>
+  <data name="BonusType_None" xml:space="preserve">
+    <value>None</value>
+  </data>
+  <data name="BonusType_Bonus" xml:space="preserve">
+    <value>Bonus</value>
+  </data>
+  <data name="BonusType_RNote" xml:space="preserve">
+    <value>R Note</value>
+  </data>
+  <data name="MaskDirection_Clockwise" xml:space="preserve">
+    <value>Clockwise</value>
+  </data>
+  <data name="MaskDirection_Counterclockwise" xml:space="preserve">
+    <value>Counterclockwise</value>
+  </data>
+  <data name="MaskDirection_Center" xml:space="preserve">
+    <value>From Center</value>
+  </data>
+  <data name="Gimmick_BpmChange" xml:space="preserve">
+    <value>BPM</value>
+  </data>
+  <data name="Gimmick_TimeSigChange" xml:space="preserve">
+    <value>Time Signature</value>
+  </data>
+  <data name="Gimmick_HiSpeedChange" xml:space="preserve">
+    <value>HiSpeed</value>
+  </data>
+  <data name="Gimmick_Stop" xml:space="preserve">
+    <value>Stop</value>
+  </data>
+  <data name="Gimmick_Reverse" xml:space="preserve">
+    <value>Reverse</value>
+  </data>
+  <data name="Generic_Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="Menu_Export" xml:space="preserve">
+    <value>Export</value>
+  </data>
+  <data name="Generic_Join" xml:space="preserve">
+    <value>Join</value>
+  </data>
+  <data name="Menu_ExportSaturn" xml:space="preserve">
+    <value>Export for Saturn</value>
+  </data>
+  <data name="Settings_Header_Appearance" xml:space="preserve">
+    <value>Appearance</value>
+  </data>
+  <data name="Settings_Header_Colors" xml:space="preserve">
+    <value>Colors</value>
+  </data>
+  <data name="Settings_Header_Gimmicks" xml:space="preserve">
+    <value>Gimmicks</value>
+  </data>
+  <data name="Settings_Header_Editor" xml:space="preserve">
+    <value>Editor</value>
+  </data>
+  <data name="Settings_Header_Keymap" xml:space="preserve">
+    <value>Keymap</value>
+  </data>
+  <data name="Note_HoldStart" xml:space="preserve">
+    <value>Hold Start</value>
+  </data>
+  <data name="Note_HoldSegment" xml:space="preserve">
+    <value>Hold Segment</value>
+  </data>
+  <data name="Note_HoldEnd" xml:space="preserve">
+    <value>Hold End</value>
+  </data>
+  <data name="Note_HoldSurfaceNear" xml:space="preserve">
+    <value>Hold Surface Near</value>
+  </data>
+  <data name="Note_HoldSurfaceFar" xml:space="preserve">
+    <value>Hold Surface Far</value>
+  </data>
+  <data name="Settings_Header_Rendering" xml:space="preserve">
+    <value>Rendering</value>
+  </data>
+  <data name="Editor_Insert" xml:space="preserve">
+    <value>Insert</value>
+  </data>
+  <data name="Editor_Play" xml:space="preserve">
+    <value>Play</value>
+  </data>
+  <data name="Editor_Pause" xml:space="preserve">
+    <value>Pause</value>
+  </data>
+  <data name="Note_Highlight" xml:space="preserve">
+    <value>Highlight</value>
+  </data>
+  <data name="Note_Selection" xml:space="preserve">
+    <value>Selection</value>
+  </data>
+  <data name="Generic_SaveAndClose" xml:space="preserve">
+    <value>Save and Close</value>
+  </data>
+  <data name="Generic_Yes" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="Generic_No" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="Generic_Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Generic_SaveWarning" xml:space="preserve">
+    <value>Chart is unsaved. Would you like to save?</value>
+  </data>
+  <data name="Settings_Keymap_WaitingForInput" xml:space="preserve">
+    <value>Waiting for input...</value>
+  </data>
+  <data name="Editor_IncreasePlaybackSpeed" xml:space="preserve">
+    <value>Decrease Playback Speed</value>
+  </data>
+  <data name="Editor_DecreasePlaybackSpeed" xml:space="preserve">
+    <value>Increase Playback Speed</value>
+  </data>
+  <data name="Editor_NewChart" xml:space="preserve">
+    <value>New Chart</value>
+  </data>
+  <data name="Generic_Ok" xml:space="preserve">
+    <value>Ok</value>
+  </data>
+  <data name="Editor_NewChartInvalidBpm" xml:space="preserve">
+    <value>Chart has invalid BPM. BPM must be above zero.</value>
+  </data>
+  <data name="Editor_NewChartInvalidTimeSig" xml:space="preserve">
+    <value>Chart has invalid Time Signature. Upper and Lower must be above zero.</value>
+  </data>
+  <data name="Editor_NewChartInvalidAudio" xml:space="preserve">
+    <value>Selected audio file couldn't be found.</value>
+  </data>
+  <data name="Editor_Position" xml:space="preserve">
+    <value>Position</value>
+  </data>
+  <data name="Editor_Size" xml:space="preserve">
+    <value>Size</value>
+  </data>
+  <data name="Editor_EndHold" xml:space="preserve">
+    <value>End Hold</value>
+  </data>
+  <data name="Editor_Measure" xml:space="preserve">
+    <value>Measure</value>
+  </data>
+  <data name="Editor_EditHold" xml:space="preserve">
+    <value>Edit Hold</value>
+  </data>
+  <data name="Settings_Color_JudgementLinePrimary" xml:space="preserve">
+    <value>Judgement Line Primary</value>
+  </data>
+  <data name="Settings_Color_JudgementLineSecondary" xml:space="preserve">
+    <value>Judgement Line Secondary</value>
+  </data>
+  <data name="Generic_SelectAudioPrompt" xml:space="preserve">
+    <value>Chart either has no audio or the specified audio file was not found.
 Would you like to manually select a file?</value>
-    </data>
-    <data name="Generic_InvalidAudioWarning" xml:space="preserve">
-        <value>Audio not found.</value>
-    </data>
-    <data name="Settings_RefreshRate" xml:space="preserve">
-        <value>Refresh Rate [Hz]</value>
-    </data>
-    <data name="Settings_Color_Sync" xml:space="preserve">
-        <value>Sync</value>
-    </data>
-    <data name="Settings_Color_MeasureLine" xml:space="preserve">
-        <value>Measure Line</value>
-    </data>
-    <data name="Settings_Color_BeatLine" xml:space="preserve">
-        <value>Beat Line</value>
-    </data>
-    <data name="Settings_Color_BackgroundNear" xml:space="preserve">
-        <value>Background Near</value>
-    </data>
-    <data name="Settings_Color_GuideLines" xml:space="preserve">
-        <value>Guide Lines</value>
-    </data>
-    <data name="Settings_Color_BackgroundFar" xml:space="preserve">
-        <value>Background Far</value>
-    </data>
-    <data name="Settings_Color_BackgroundNoMask" xml:space="preserve">
-        <value>Background [No Mask]</value>
-    </data>
-    <data name="Editor_EditNoteShapeProperties" xml:space="preserve">
-        <value>Edit [Both]</value>
-    </data>
-    <data name="Editor_EditNoteShape" xml:space="preserve">
-        <value>Edit [Shape]</value>
-    </data>
-    <data name="Editor_EditNoteProperties" xml:space="preserve">
-        <value>Edit [Type]</value>
-    </data>
-    <data name="Editor_Delete" xml:space="preserve">
-        <value>Delete</value>
-    </data>
-    <data name="Editor_NoteCaps" xml:space="preserve">
-        <value>Note Caps</value>
-    </data>
-    <data name="Settings_NoteSize" xml:space="preserve">
-        <value>Note Thickness</value>
-    </data>
-    <data name="Settings_NoteSpeed" xml:space="preserve">
-        <value>Note Speed</value>
-    </data>
-    <data name="Settings_ShowSpeedChanges" xml:space="preserve">
-        <value>Show Speed Changes</value>
-    </data>
-    <data name="Settings_GuideLineType" xml:space="preserve">
-        <value>Guide Line Type</value>
-    </data>
-    <data name="Settings_Color_AngleTicks" xml:space="preserve">
-        <value>Angle Ticks</value>
-    </data>
-    <data name="Settings_BeatDivision" xml:space="preserve">
-        <value>Beat Division</value>
-    </data>
-    <data name="Settings_Keymap_TypeRadio1" xml:space="preserve">
-        <value>Type Selection 1</value>
-    </data>
-    <data name="Settings_Keymap_TypeRadio2" xml:space="preserve">
-        <value>Type Selection 2</value>
-    </data>
-    <data name="Settings_Keymap_TypeRadio3" xml:space="preserve">
-        <value>Type Selection 3</value>
-    </data>
-    <data name="Settings_Keymap_IncreaseNoteSpeed" xml:space="preserve">
-        <value>Increase Note Speed</value>
-    </data>
-    <data name="Settings_Keymap_DecreaseNoteSpeed" xml:space="preserve">
-        <value>Decrease Note Speed</value>
-    </data>
-    <data name="Generic_Create" xml:space="preserve">
-        <value>Create</value>
-    </data>
-    <data name="Settings_Header_Audio" xml:space="preserve">
-        <value>Audio</value>
-    </data>
-    <data name="Settings_Hitsound_Touch" xml:space="preserve">
-        <value>Touch Hitsound</value>
-    </data>
-    <data name="Settings_Hitsound_Guide" xml:space="preserve">
-        <value>Guide Hitsound</value>
-    </data>
-    <data name="Settings_Hitsound_Swipe" xml:space="preserve">
-        <value>Swipe Hitsound</value>
-    </data>
-    <data name="Settings_Hitsound_Bonus" xml:space="preserve">
-        <value>Bonus Hitsound</value>
-    </data>
-    <data name="Settings_Hitsound_RNote" xml:space="preserve">
-        <value>R-Note Hitsound</value>
-    </data>
-    <data name="Settings_Audio_MusicVolume" xml:space="preserve">
-        <value>Music Volume</value>
-    </data>
-    <data name="Settings_Audio_HitsoundVolume" xml:space="preserve">
-        <value>Hitsound Volume</value>
-    </data>
-    <data name="Settings_ShowMaskDuringPlayback" xml:space="preserve">
-        <value>Show Mask Notes during Playback</value>
-    </data>
-    <data name="Settings_ShowGimmickNotesDuringPlayback" xml:space="preserve">
-        <value>Show Gimmick Notes during Playback</value>
-    </data>
-    <data name="Editor_SelectAll" xml:space="preserve">
-        <value>Select All</value>
-    </data>
-    <data name="Editor_DeselectAll" xml:space="preserve">
-        <value>Deselect All</value>
-    </data>
-    <data name="Editor_HighlightNextNote" xml:space="preserve">
-        <value>Highlight Next Note</value>
-    </data>
-    <data name="Editor_HighlightPrevNote" xml:space="preserve">
-        <value>Highlight Prev Note</value>
-    </data>
-    <data name="Editor_SelectHighlightedNote" xml:space="preserve">
-        <value>Select Highlighted Note</value>
-    </data>
-    <data name="Editor_MirrorNote" xml:space="preserve">
-        <value>Mirror</value>
-    </data>
-    <data name="Editor_BakeHoldNote" xml:space="preserve">
-        <value>Bake Hold</value>
-    </data>
-    <data name="Settings_RevertToDefault" xml:space="preserve">
-        <value>Revert to Default Settings</value>
-    </data>
-    <data name="Settings_RevertWarning" xml:space="preserve">
-        <value>Are you sure you want to revert your Settings?</value>
-    </data>
-    <data name="Generic_SelectFile" xml:space="preserve">
-        <value>Select File</value>
-    </data>
-    <data name="Editor_AddGimmick" xml:space="preserve">
-        <value>Add Gimmick</value>
-    </data>
-    <data name="Editor_EditGimmick" xml:space="preserve">
-        <value>Edit Gimmick</value>
-    </data>
-    <data name="Editor_QuickEditDecreaseSize" xml:space="preserve">
-        <value>Size - [Quick Edit]</value>
-    </data>
-    <data name="Editor_QuickEditIncreasePosition" xml:space="preserve">
-        <value>Position + [Quick Edit]</value>
-    </data>
-    <data name="Editor_QuickEditIncreaseSize" xml:space="preserve">
-        <value>Size + [Quick Edit]</value>
-    </data>
-    <data name="Editor_QuickEditDecreasePosition" xml:space="preserve">
-        <value>Position - [Quick Edit]</value>
-    </data>
-    <data name="Editor_QuickEditDecreaseTimestamp" xml:space="preserve">
-        <value>Timestamp - [Quick Edit]</value>
-    </data>
-    <data name="Editor_QuickEditIncreaseTimestamp" xml:space="preserve">
-        <value>Timestamp + [Quick Edit]</value>
-    </data>
-    <data name="Editor_ExpanderHeader_SelectionInfo" xml:space="preserve">
-        <value>Selection Info</value>
-    </data>
-    <data name="Editor_ExpanderHeader_ModifyNotes" xml:space="preserve">
-        <value>Modify Notes</value>
-    </data>
-    <data name="Editor_ExpanderHeader_QuickSettings" xml:space="preserve">
-        <value>Quick Settings</value>
-    </data>
-    <data name="Editor_ExpanderHeader_ModifyGimmicks" xml:space="preserve">
-        <value>Modify Gimmicks</value>
-    </data>
-    <data name="Editor_ExpanderHeader_ChartInfo" xml:space="preserve">
-        <value>Chart Info</value>
-    </data>
-    <data name="Gimmick_ReverseEffectStart" xml:space="preserve">
-        <value>Reverse Effect Start</value>
-    </data>
-    <data name="Gimmick_ReverseEffectEnd" xml:space="preserve">
-        <value>Reverse Effect End</value>
-    </data>
-    <data name="Gimmick_ReverseNoteEnd" xml:space="preserve">
-        <value>Reverse Note Zone End</value>
-    </data>
-    <data name="Gimmick_StopStart" xml:space="preserve">
-        <value>Stop Start</value>
-    </data>
-    <data name="Gimmick_StopEnd" xml:space="preserve">
-        <value>Stop End</value>
-    </data>
-    <data name="Generic_None" xml:space="preserve">
-        <value>None</value>
-    </data>
-    <data name="Editor_HighlightNearest" xml:space="preserve">
-        <value>Nearest</value>
-    </data>
-    <data name="Editor_HighlightNext" xml:space="preserve">
-        <value>Next &gt;</value>
-    </data>
-    <data name="Editor_HighlightPrev" xml:space="preserve">
-        <value>&lt; Previous</value>
-    </data>
-    <data name="Editor_SelectionInfo_SelectedNotes" xml:space="preserve">
-        <value>Selected Notes</value>
-    </data>
-    <data name="Editor_Beat" xml:space="preserve">
-        <value>Beat</value>
-    </data>
-    <data name="Editor_NoteType" xml:space="preserve">
-        <value>Note Type</value>
-    </data>
-    <data name="Editor_GimmickType" xml:space="preserve">
-        <value>Gimmick Type</value>
-    </data>
-    <data name="Editor_MaskDirection" xml:space="preserve">
-        <value>Mask Direction</value>
-    </data>
-    <data name="Editor_DeleteGimmick" xml:space="preserve">
-        <value>Delete Gimmick</value>
-    </data>
-    <data name="Editor_DeleteSelection" xml:space="preserve">
-        <value>Delete Selection</value>
-    </data>
-    <data name="Editor_MirrorAxis" xml:space="preserve">
-        <value>Mirror Axis</value>
-    </data>
-    <data name="Editor_ChartInfo_ChartAudio" xml:space="preserve">
-        <value>Chart Audio</value>
-    </data>
-    <data name="Editor_HighlightNearestNote" xml:space="preserve">
-        <value>Highlight Nearest Note</value>
-    </data>
-    <data name="Editor_SelectHoldReferences" xml:space="preserve">
-        <value>Select Hold Note References</value>
-    </data>
-    <data name="Editor_InsertHoldSegment" xml:space="preserve">
-        <value>Insert Segment</value>
-    </data>
-    <data name="Settings_Audio_HitsoundOffset" xml:space="preserve">
-        <value>Hitsound Offset</value>
-    </data>
-    <data name="MenuHeader_Tools" xml:space="preserve">
-        <value>Tools</value>
-    </data>
-    <data name="Menu_ShiftChart" xml:space="preserve">
-        <value>Shift Chart</value>
-    </data>
-    <data name="Menu_MirrorChart" xml:space="preserve">
-        <value>Mirror Chart</value>
-    </data>
-    <data name="Tools_ShiftBy" xml:space="preserve">
-        <value>Shift by</value>
-    </data>
-    <data name="ChartProperties_PlayPreview" xml:space="preserve">
-        <value>Play Preview</value>
-    </data>
-    <data name="Editor_HoldEase_Linear" xml:space="preserve">
-        <value>Linear</value>
-    </data>
-    <data name="Editor_HoldEase_SmoothOut" xml:space="preserve">
-        <value>Smooth Out</value>
-    </data>
-    <data name="Editor_HoldEase_SharpOut" xml:space="preserve">
-        <value>Sharp Out</value>
-    </data>
-    <data name="Editor_HoldEaseHeader" xml:space="preserve">
-        <value>Hold Ease</value>
-    </data>
-    <data name="Settings_Editor_QuantizeOnPause" xml:space="preserve">
-        <value>Quantize on Pause</value>
-    </data>
-    <data name="Editor_SetRenderTrue" xml:space="preserve">
-        <value>Set Render True</value>
-    </data>
-    <data name="Editor_SetRenderFalse" xml:space="preserve">
-        <value>Set Render False</value>
-    </data>
-    <data name="Note_HoldSegmentNoRender" xml:space="preserve">
-        <value>Hold Segment [No Render]</value>
-    </data>
-    <data name="Editor_HoldEase_SineIn" xml:space="preserve">
-        <value>Sine In</value>
-    </data>
-    <data name="Editor_HoldEase_SharpIn" xml:space="preserve">
-        <value>Sharp In</value>
-    </data>
-    <data name="Editor_HoldEase_SineOut" xml:space="preserve">
-        <value>Sine Out</value>
-    </data>
-    <data name="Editor_HoldEase_SmoothIn" xml:space="preserve">
-        <value>Smooth In</value>
-    </data>
-    <data name="Editor_HoldEase_QuadIn" xml:space="preserve">
-        <value>Quad In</value>
-    </data>
-    <data name="Editor_HoldEase_QuadOut" xml:space="preserve">
-        <value>Quad Out</value>
-    </data>
-    <data name="Settings_Editor_HighlightPlacedNote" xml:space="preserve">
-        <value>Highlight Placed Note</value>
-    </data>
-    <data name="Editor_StitchHold" xml:space="preserve">
-        <value>Stitch Hold</value>
-    </data>
-    <data name="Generic_AutosaveFound" xml:space="preserve">
-        <value>Autosave found. Timestamp:</value>
-    </data>
-    <data name="Generic_AutosavePrompt" xml:space="preserve">
-        <value>Would you like to open it?</value>
-    </data>
-    <data name="Menu_FixOffByOneErrors" xml:space="preserve">
-        <value>Fix off-by-one Errors</value>
-    </data>
-    <data name="Tools_FixOffByOneTitle" xml:space="preserve">
-        <value>Fix off-by-one Errors</value>
-    </data>
-    <data name="Tools_FixOffByOneDescription" xml:space="preserve">
-        <value>This will quantize all notes to common beat divisions to fix errors like a note on [0 1919] instead of [1 0].
+  </data>
+  <data name="Generic_InvalidAudioWarning" xml:space="preserve">
+    <value>Audio not found.</value>
+  </data>
+  <data name="Settings_RefreshRate" xml:space="preserve">
+    <value>Refresh Rate [Hz]</value>
+  </data>
+  <data name="Settings_Color_Sync" xml:space="preserve">
+    <value>Sync</value>
+  </data>
+  <data name="Settings_Color_MeasureLine" xml:space="preserve">
+    <value>Measure Line</value>
+  </data>
+  <data name="Settings_Color_BeatLine" xml:space="preserve">
+    <value>Beat Line</value>
+  </data>
+  <data name="Settings_Color_BackgroundNear" xml:space="preserve">
+    <value>Background Near</value>
+  </data>
+  <data name="Settings_Color_GuideLines" xml:space="preserve">
+    <value>Guide Lines</value>
+  </data>
+  <data name="Settings_Color_BackgroundFar" xml:space="preserve">
+    <value>Background Far</value>
+  </data>
+  <data name="Settings_Color_BackgroundNoMask" xml:space="preserve">
+    <value>Background [No Mask]</value>
+  </data>
+  <data name="Editor_EditNoteShapeProperties" xml:space="preserve">
+    <value>Edit [Both]</value>
+  </data>
+  <data name="Editor_EditNoteShape" xml:space="preserve">
+    <value>Edit [Shape]</value>
+  </data>
+  <data name="Editor_EditNoteProperties" xml:space="preserve">
+    <value>Edit [Type]</value>
+  </data>
+  <data name="Editor_Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="Editor_NoteCaps" xml:space="preserve">
+    <value>Note Caps</value>
+  </data>
+  <data name="Settings_NoteSize" xml:space="preserve">
+    <value>Note Thickness</value>
+  </data>
+  <data name="Settings_NoteSpeed" xml:space="preserve">
+    <value>Note Speed</value>
+  </data>
+  <data name="Settings_ShowSpeedChanges" xml:space="preserve">
+    <value>Show Speed Changes</value>
+  </data>
+  <data name="Settings_GuideLineType" xml:space="preserve">
+    <value>Guide Line Type</value>
+  </data>
+  <data name="Settings_Color_AngleTicks" xml:space="preserve">
+    <value>Angle Ticks</value>
+  </data>
+  <data name="Settings_BeatDivision" xml:space="preserve">
+    <value>Beat Division</value>
+  </data>
+  <data name="Settings_Keymap_TypeRadio1" xml:space="preserve">
+    <value>Type Selection 1</value>
+  </data>
+  <data name="Settings_Keymap_TypeRadio2" xml:space="preserve">
+    <value>Type Selection 2</value>
+  </data>
+  <data name="Settings_Keymap_TypeRadio3" xml:space="preserve">
+    <value>Type Selection 3</value>
+  </data>
+  <data name="Settings_Keymap_IncreaseNoteSpeed" xml:space="preserve">
+    <value>Increase Note Speed</value>
+  </data>
+  <data name="Settings_Keymap_DecreaseNoteSpeed" xml:space="preserve">
+    <value>Decrease Note Speed</value>
+  </data>
+  <data name="Generic_Create" xml:space="preserve">
+    <value>Create</value>
+  </data>
+  <data name="Settings_Header_Audio" xml:space="preserve">
+    <value>Audio</value>
+  </data>
+  <data name="Settings_Hitsound_Touch" xml:space="preserve">
+    <value>Touch Hitsound</value>
+  </data>
+  <data name="Settings_Hitsound_Guide" xml:space="preserve">
+    <value>Guide Hitsound</value>
+  </data>
+  <data name="Settings_Hitsound_Swipe" xml:space="preserve">
+    <value>Swipe Hitsound</value>
+  </data>
+  <data name="Settings_Hitsound_Bonus" xml:space="preserve">
+    <value>Bonus Hitsound</value>
+  </data>
+  <data name="Settings_Hitsound_RNote" xml:space="preserve">
+    <value>R-Note Hitsound</value>
+  </data>
+  <data name="Settings_Audio_MusicVolume" xml:space="preserve">
+    <value>Music Volume</value>
+  </data>
+  <data name="Settings_Audio_HitsoundVolume" xml:space="preserve">
+    <value>Hitsound Volume</value>
+  </data>
+  <data name="Settings_ShowMaskDuringPlayback" xml:space="preserve">
+    <value>Show Mask Notes during Playback</value>
+  </data>
+  <data name="Settings_ShowGimmickNotesDuringPlayback" xml:space="preserve">
+    <value>Show Gimmick Notes during Playback</value>
+  </data>
+  <data name="Editor_SelectAll" xml:space="preserve">
+    <value>Select All</value>
+  </data>
+  <data name="Editor_DeselectAll" xml:space="preserve">
+    <value>Deselect All</value>
+  </data>
+  <data name="Editor_HighlightNextNote" xml:space="preserve">
+    <value>Highlight Next Note</value>
+  </data>
+  <data name="Editor_HighlightPrevNote" xml:space="preserve">
+    <value>Highlight Prev Note</value>
+  </data>
+  <data name="Editor_SelectHighlightedNote" xml:space="preserve">
+    <value>Select Highlighted Note</value>
+  </data>
+  <data name="Editor_MirrorNote" xml:space="preserve">
+    <value>Mirror</value>
+  </data>
+  <data name="Editor_BakeHoldNote" xml:space="preserve">
+    <value>Bake Hold</value>
+  </data>
+  <data name="Settings_RevertToDefault" xml:space="preserve">
+    <value>Revert to Default Settings</value>
+  </data>
+  <data name="Settings_RevertWarning" xml:space="preserve">
+    <value>Are you sure you want to revert your Settings?</value>
+  </data>
+  <data name="Generic_SelectFile" xml:space="preserve">
+    <value>Select File</value>
+  </data>
+  <data name="Editor_AddGimmick" xml:space="preserve">
+    <value>Add Gimmick</value>
+  </data>
+  <data name="Editor_EditGimmick" xml:space="preserve">
+    <value>Edit Gimmick</value>
+  </data>
+  <data name="Editor_QuickEditDecreaseSize" xml:space="preserve">
+    <value>Size - [Quick Edit]</value>
+  </data>
+  <data name="Editor_QuickEditIncreasePosition" xml:space="preserve">
+    <value>Position + [Quick Edit]</value>
+  </data>
+  <data name="Editor_QuickEditIncreaseSize" xml:space="preserve">
+    <value>Size + [Quick Edit]</value>
+  </data>
+  <data name="Editor_QuickEditDecreasePosition" xml:space="preserve">
+    <value>Position - [Quick Edit]</value>
+  </data>
+  <data name="Editor_QuickEditDecreaseTimestamp" xml:space="preserve">
+    <value>Timestamp - [Quick Edit]</value>
+  </data>
+  <data name="Editor_QuickEditIncreaseTimestamp" xml:space="preserve">
+    <value>Timestamp + [Quick Edit]</value>
+  </data>
+  <data name="Editor_ExpanderHeader_SelectionInfo" xml:space="preserve">
+    <value>Selection Info</value>
+  </data>
+  <data name="Editor_ExpanderHeader_ModifyNotes" xml:space="preserve">
+    <value>Modify Notes</value>
+  </data>
+  <data name="Editor_ExpanderHeader_QuickSettings" xml:space="preserve">
+    <value>Quick Settings</value>
+  </data>
+  <data name="Editor_ExpanderHeader_ModifyGimmicks" xml:space="preserve">
+    <value>Modify Gimmicks</value>
+  </data>
+  <data name="Editor_ExpanderHeader_ChartInfo" xml:space="preserve">
+    <value>Chart Info</value>
+  </data>
+  <data name="Gimmick_ReverseEffectStart" xml:space="preserve">
+    <value>Reverse Effect Start</value>
+  </data>
+  <data name="Gimmick_ReverseEffectEnd" xml:space="preserve">
+    <value>Reverse Effect End</value>
+  </data>
+  <data name="Gimmick_ReverseNoteEnd" xml:space="preserve">
+    <value>Reverse Note Zone End</value>
+  </data>
+  <data name="Gimmick_StopStart" xml:space="preserve">
+    <value>Stop Start</value>
+  </data>
+  <data name="Gimmick_StopEnd" xml:space="preserve">
+    <value>Stop End</value>
+  </data>
+  <data name="Generic_None" xml:space="preserve">
+    <value>None</value>
+  </data>
+  <data name="Editor_HighlightNearest" xml:space="preserve">
+    <value>Nearest</value>
+  </data>
+  <data name="Editor_HighlightNext" xml:space="preserve">
+    <value>Next &gt;</value>
+  </data>
+  <data name="Editor_HighlightPrev" xml:space="preserve">
+    <value>&lt; Previous</value>
+  </data>
+  <data name="Editor_SelectionInfo_SelectedNotes" xml:space="preserve">
+    <value>Selected Notes</value>
+  </data>
+  <data name="Editor_Beat" xml:space="preserve">
+    <value>Beat</value>
+  </data>
+  <data name="Editor_NoteType" xml:space="preserve">
+    <value>Note Type</value>
+  </data>
+  <data name="Editor_GimmickType" xml:space="preserve">
+    <value>Gimmick Type</value>
+  </data>
+  <data name="Editor_MaskDirection" xml:space="preserve">
+    <value>Mask Direction</value>
+  </data>
+  <data name="Editor_DeleteGimmick" xml:space="preserve">
+    <value>Delete Gimmick</value>
+  </data>
+  <data name="Editor_DeleteSelection" xml:space="preserve">
+    <value>Delete Selection</value>
+  </data>
+  <data name="Editor_MirrorAxis" xml:space="preserve">
+    <value>Mirror Axis</value>
+  </data>
+  <data name="Editor_ChartInfo_ChartAudio" xml:space="preserve">
+    <value>Chart Audio</value>
+  </data>
+  <data name="Editor_HighlightNearestNote" xml:space="preserve">
+    <value>Highlight Nearest Note</value>
+  </data>
+  <data name="Editor_SelectHoldReferences" xml:space="preserve">
+    <value>Select Hold Note References</value>
+  </data>
+  <data name="Editor_InsertHoldSegment" xml:space="preserve">
+    <value>Insert Segment</value>
+  </data>
+  <data name="Settings_Audio_HitsoundOffset" xml:space="preserve">
+    <value>Hitsound Offset</value>
+  </data>
+  <data name="MenuHeader_Tools" xml:space="preserve">
+    <value>Tools</value>
+  </data>
+  <data name="Menu_ShiftChart" xml:space="preserve">
+    <value>Shift Chart</value>
+  </data>
+  <data name="Menu_MirrorChart" xml:space="preserve">
+    <value>Mirror Chart</value>
+  </data>
+  <data name="Tools_ShiftBy" xml:space="preserve">
+    <value>Shift by</value>
+  </data>
+  <data name="ChartInfo_PlayPreview" xml:space="preserve">
+    <value>Play Preview</value>
+  </data>
+  <data name="Editor_HoldEase_Linear" xml:space="preserve">
+    <value>Linear</value>
+  </data>
+  <data name="Editor_HoldEase_SmoothOut" xml:space="preserve">
+    <value>Smooth Out</value>
+  </data>
+  <data name="Editor_HoldEase_SharpOut" xml:space="preserve">
+    <value>Sharp Out</value>
+  </data>
+  <data name="Editor_HoldEaseHeader" xml:space="preserve">
+    <value>Hold Ease</value>
+  </data>
+  <data name="Settings_Editor_QuantizeOnPause" xml:space="preserve">
+    <value>Quantize on Pause</value>
+  </data>
+  <data name="Editor_SetRenderTrue" xml:space="preserve">
+    <value>Set Render True</value>
+  </data>
+  <data name="Editor_SetRenderFalse" xml:space="preserve">
+    <value>Set Render False</value>
+  </data>
+  <data name="Note_HoldSegmentNoRender" xml:space="preserve">
+    <value>Hold Segment [No Render]</value>
+  </data>
+  <data name="Editor_HoldEase_SineIn" xml:space="preserve">
+    <value>Sine In</value>
+  </data>
+  <data name="Editor_HoldEase_SharpIn" xml:space="preserve">
+    <value>Sharp In</value>
+  </data>
+  <data name="Editor_HoldEase_SineOut" xml:space="preserve">
+    <value>Sine Out</value>
+  </data>
+  <data name="Editor_HoldEase_SmoothIn" xml:space="preserve">
+    <value>Smooth In</value>
+  </data>
+  <data name="Editor_HoldEase_QuadIn" xml:space="preserve">
+    <value>Quad In</value>
+  </data>
+  <data name="Editor_HoldEase_QuadOut" xml:space="preserve">
+    <value>Quad Out</value>
+  </data>
+  <data name="Settings_Editor_HighlightPlacedNote" xml:space="preserve">
+    <value>Highlight Placed Note</value>
+  </data>
+  <data name="Editor_StitchHold" xml:space="preserve">
+    <value>Stitch Hold</value>
+  </data>
+  <data name="Generic_AutosaveFound" xml:space="preserve">
+    <value>Autosave found. Timestamp:</value>
+  </data>
+  <data name="Generic_AutosavePrompt" xml:space="preserve">
+    <value>Would you like to open it?</value>
+  </data>
+  <data name="Menu_FixOffByOneErrors" xml:space="preserve">
+    <value>Fix off-by-one Errors</value>
+  </data>
+  <data name="Tools_FixOffByOneTitle" xml:space="preserve">
+    <value>Fix off-by-one Errors</value>
+  </data>
+  <data name="Tools_FixOffByOneDescription" xml:space="preserve">
+    <value>This will quantize all notes to common beat divisions to fix errors like a note on [0 1919] instead of [1 0].
 
 Continue?</value>
-    </data>
-    <data name="Editor_LayerNote" xml:space="preserve">
-        <value>Layer: Note</value>
-    </data>
-    <data name="Editor_LayerMask" xml:space="preserve">
-        <value>Layer: Mask</value>
-    </data>
-    <data name="Editor_LayerGimmick" xml:space="preserve">
-        <value>Layer: Gimmick</value>
-    </data>
-    <data name="ToolTip_HoldRender_Modern" xml:space="preserve">
-        <value>Performs better than the original by batching all segments into one shape, saving dozens, if not hundreds of calls to SkiaSharp. Also fixes the tv-static-looking seams on dense holds.</value>
-    </data>
-    <data name="ToolTip_HoldRender_Legacy" xml:space="preserve">
-        <value>Original rendering method that draws holds segment-by-segment. Bad performance, but technically more mature.</value>
-    </data>
-    <data name="Settings_HoldRenderMethod" xml:space="preserve">
-        <value>Hold Render Method</value>
-    </data>
-    <data name="Editor_HoldEase_LinearPlusIn" xml:space="preserve">
-        <value>Linear+ In</value>
-    </data>
-    <data name="Editor_HoldEase_LinearPlusOut" xml:space="preserve">
-        <value>Linear+ Out</value>
-    </data>
-    <data name="Menu_ExportSaturnFolder" xml:space="preserve">
-        <value>Create Saturn Folder</value>
-    </data>
-    <data name="SaturnExport_Title" xml:space="preserve">
-        <value>Title</value>
-    </data>
-    <data name="SaturnExport_Rubi" xml:space="preserve">
-        <value>Rubi</value>
-    </data>
-    <data name="SaturnExport_Artist" xml:space="preserve">
-        <value>Artist</value>
-    </data>
-    <data name="SaturnExport_Genre" xml:space="preserve">
-        <value>Genre</value>
-    </data>
-    <data name="SaturnExport_Bpm" xml:space="preserve">
-        <value>BPM</value>
-    </data>
-    <data name="SaturnExport_Jacket" xml:space="preserve">
-        <value>Jacket</value>
-    </data>
-    <data name="SaturnExport_Music" xml:space="preserve">
-        <value>Music</value>
-    </data>
-    <data name="Generic_Export" xml:space="preserve">
-        <value>Export</value>
-    </data>
-    <data name="SaturnExport_WindowTitle" xml:space="preserve">
-        <value>Export Saturn Folder</value>
-    </data>
-    <data name="SaturnExport_Folder" xml:space="preserve">
-        <value>Export Folder</value>
-    </data>
-    <data name="SaturnExport_DiffNormal" xml:space="preserve">
-        <value>Normal Diff</value>
-    </data>
-    <data name="SaturnExport_DiffHard" xml:space="preserve">
-        <value>Hard Diff</value>
-    </data>
-    <data name="SaturnExport_DiffExpert" xml:space="preserve">
-        <value>Expert Diff</value>
-    </data>
-    <data name="SaturnExport_DiffInferno" xml:space="preserve">
-        <value>Inferno Diff</value>
-    </data>
-    <data name="SaturnExport_DiffBeyond" xml:space="preserve">
-        <value>Beyond Diff</value>
-    </data>
-    <data name="Menu_JaggedHolds" xml:space="preserve">
-        <value>Generate Jagged Holds</value>
-    </data>
-    <data name="Menu_ReconstructHolds" xml:space="preserve">
-        <value>Reconstruct Holds</value>
-    </data>
-    <data name="Generic_Generate" xml:space="preserve">
-        <value>Generate</value>
-    </data>
-    <data name="Tools_Interval" xml:space="preserve">
-        <value>Interval [Beat Division]</value>
-    </data>
-    <data name="Tools_GeneratorType" xml:space="preserve">
-        <value>Generator Type</value>
-    </data>
-    <data name="Tools_Reconstruct_HoldToHold" xml:space="preserve">
-        <value>Hold to Hold</value>
-    </data>
-    <data name="Tools_Reconstruct_HoldToChain" xml:space="preserve">
-        <value>Hold to Chain</value>
-    </data>
-    <data name="Tools_Jagged_Spikes" xml:space="preserve">
-        <value>Spikes</value>
-    </data>
-    <data name="Tools_Jagged_Noise" xml:space="preserve">
-        <value>Noise</value>
-    </data>
-    <data name="Tools_Jagged_LeftEdge" xml:space="preserve">
-        <value>Left Edge</value>
-    </data>
-    <data name="Tools_Jagged_LeftEdgeMax" xml:space="preserve">
-        <value>Left Edge [Max]</value>
-    </data>
-    <data name="Tools_Jagged_LeftEdgeMin" xml:space="preserve">
-        <value>Left Edge [Min]</value>
-    </data>
-    <data name="Tools_Jagged_RightEdge" xml:space="preserve">
-        <value>Right Edge</value>
-    </data>
-    <data name="Tools_Jagged_RightEdgeMax" xml:space="preserve">
-        <value>Right Edge [Max]</value>
-    </data>
-    <data name="Tools_Jagged_RightEdgeMin" xml:space="preserve">
-        <value>Right Edge [Min]</value>
-    </data>
-    <data name="Editor_NoHoldsSelected" xml:space="preserve">
-        <value>No Holds selected!</value>
-    </data>
-    <data name="Editor_NoHoldsSelectedTip" xml:space="preserve">
-        <value>Select any segment of a hold note to run this algorithm on it.</value>
-    </data>
-    <data name="Settings_ShowChainStripes" xml:space="preserve">
-        <value>Show Chain Stripes</value>
-    </data>
-    <data name="ToolTip_NoteTypes" xml:space="preserve">
-        <value>Currently selected NoteType.</value>
-    </data>
-    <data name="ToolTip_BonusType_Bonus" xml:space="preserve">
-        <value>Bonus Note [extra clear points, sparkly sound]</value>
-    </data>
-    <data name="ToolTip_BonusType_None" xml:space="preserve">
-        <value>Standard Note [no effects]</value>
-    </data>
-    <data name="ToolTip_BonusType_RNote" xml:space="preserve">
-        <value>R-Note [worth double, rainbow effect, loud splash sound]</value>
-    </data>
-    <data name="ToolTip_MaskDirection_Clockwise" xml:space="preserve">
-        <value>Mask Animation will propagate from one edge of the Note to the other Clockwise.</value>
-    </data>
-    <data name="ToolTip_MaskDirection_CounterClockwise" xml:space="preserve">
-        <value>Mask Animation will propagate from one edge of the Note to the other Counterclockwise.</value>
-    </data>
-    <data name="ToolTip_MaskDirection_Center" xml:space="preserve">
-        <value>Mask Animation will propagate from the center of the Note outwards.</value>
-    </data>
-    <data name="ToolTip_BPM" xml:space="preserve">
-        <value>Inserts a BPM change.</value>
-    </data>
-    <data name="ToolTip_TimeSignature" xml:space="preserve">
-        <value>Inserts a Time Signature change.</value>
-    </data>
-    <data name="ToolTip_HiSpeed" xml:space="preserve">
-        <value>Inserts a HiSpeed change. [aka. Scroll Speed / Soflan]</value>
-    </data>
-    <data name="ToolTip_Stop" xml:space="preserve">
-        <value>Inserts a Stop Effect that freezes Note scroll between Start and End.</value>
-    </data>
-    <data name="ToolTip_Reverse" xml:space="preserve">
-        <value>Inserts a Reverse Effect that scrolls Notes backwards for a set amount of time. [not rendered yet]</value>
-    </data>
-    <data name="ToolTip_LayerNote" xml:space="preserve">
-        <value>Show/Hide Playable Notes.</value>
-    </data>
-    <data name="ToolTip_LayerMask" xml:space="preserve">
-        <value>Show/Hide Mask Notes.</value>
-    </data>
-    <data name="ToolTip_LayerGimmick" xml:space="preserve">
-        <value>Show/Hide Gimmick Markers.</value>
-    </data>
-    <data name="ToolTip_Insert" xml:space="preserve">
-        <value>Inserts a Note at the current timestamp, with the currently selected properties.</value>
-    </data>
-    <data name="ToolTip_EditHold" xml:space="preserve">
-        <value>Highlight any Note of a Hold, then click [Edit Hold] to continue editing where you left off.</value>
-    </data>
-    <data name="ToolTip_ChartInfo" xml:space="preserve">
-        <value>Info about a chart, such as the audio, author and level.</value>
-    </data>
-    <data name="ToolTip_SelectionInfo" xml:space="preserve">
-        <value>Info about selection and highlighting.</value>
-    </data>
-    <data name="ToolTip_QuickSettings" xml:space="preserve">
-        <value>Quick access to some commonly changed settings.</value>
-    </data>
-    <data name="ToolTip_ModifyNotes" xml:space="preserve">
-        <value>Note-related functions, like Edit and Delete.</value>
-    </data>
-    <data name="ToolTip_ModifyGimmicks" xml:space="preserve">
-        <value>Gimmick-related functions.</value>
-    </data>
-    <data name="ToolTip_Previous" xml:space="preserve">
-        <value>Highlight the previous Note.</value>
-    </data>
-    <data name="ToolTip_Nearest" xml:space="preserve">
-        <value>Highlight the nearest Note to the current timestamp.</value>
-    </data>
-    <data name="ToolTip_Next" xml:space="preserve">
-        <value>Highlight the next Note.</value>
-    </data>
-    <data name="ToolTip_EditShape" xml:space="preserve">
-        <value>Edit Note Size and Position.</value>
-    </data>
-    <data name="ToolTip_EditType" xml:space="preserve">
-        <value>Edit Note Type and Bonus Type.</value>
-    </data>
-    <data name="ToolTip_EditBoth" xml:space="preserve">
-        <value>Edit both Shape and Type at once.</value>
-    </data>
-    <data name="ToolTip_Mirror" xml:space="preserve">
-        <value>Mirror Notes around the mirror axis. Hover over the number to see the axis.</value>
-    </data>
-    <data name="ToolTip_HoldEase" xml:space="preserve">
-        <value>Options for differently shaped Hold Notes. Just try them out to see :]</value>
-    </data>
-    <data name="ToolTip_BakeHold" xml:space="preserve">
-        <value>Inserts Hold segments in front of the selected segment.</value>
-    </data>
-    <data name="ToolTip_StitchHold" xml:space="preserve">
-        <value>Connects the end of a Hold Note to the start of another to stitch them into one. Must select ONLY a Hold End and a Hold Start.</value>
-    </data>
-    <data name="ToolTip_InsertHold" xml:space="preserve">
-        <value>Inserts a single Hold segment at the current timestamp. Highlight any segment to specify which Hold to insert it in.</value>
-    </data>
-    <data name="ToolTip_SetRenderTrue" xml:space="preserve">
-        <value>Sets the render flag on a Hold Note to true. See [Set Render False] for more info.</value>
-    </data>
-    <data name="ToolTip_SetRenderFalse" xml:space="preserve">
-        <value>Sets the render flag on a Hold Note to false. This means the game will ignore it when generating the visuals for a Hold Note, smoothing out any irregular size/position changes. Judgement still follows the segments!</value>
-    </data>
-    <data name="ToolTip_QuantizeOnPause" xml:space="preserve">
-        <value>Quantizes the playhead to the current beat division when pausing.</value>
-    </data>
-    <data name="ToolTip_HighlightPlacedNote" xml:space="preserve">
-        <value>Automatically highlights a Note after placing it.</value>
-    </data>
-    <data name="ToolTip_PlaybackSpeed" xml:space="preserve">
-        <value>Adjust playback speed.</value>
-    </data>
-    <data name="ToolTip_PlayPause" xml:space="preserve">
-        <value>Play/Pause</value>
-    </data>
-    <data name="ToolTip_Reverse_EffectStart" xml:space="preserve">
-        <value>Notes begin scrolling backwards from this point.</value>
-    </data>
-    <data name="ToolTip_Reverse_EffectEnd" xml:space="preserve">
-        <value>Notes stop scrolling backwards and scroll forwards again from this point.</value>
-    </data>
-    <data name="ToolTip_Reverse_NoteZoneEnd" xml:space="preserve">
-        <value>The Notes between this timestamp and [Effect End] are scrolled backwards.</value>
-    </data>
-    <data name="Tools_Jagged_OffsetEven" xml:space="preserve">
-        <value>Offset Even Index</value>
-    </data>
-    <data name="Generic_EndOfChartWarning" xml:space="preserve">
-        <value>End of Chart Note is missing!</value>
-    </data>
-    <data name="Generic_EndOfChartWarningExplanation" xml:space="preserve">
-        <value>Place an End of Chart note at least a Measure after the last playable note. Without it, the game would crash.</value>
-    </data>
-    <data name="Editor_BoxSelect" xml:space="preserve">
-        <value>Box Select</value>
-    </data>
-    <data name="Editor_Loop" xml:space="preserve">
-        <value>Loop</value>
-    </data>
-    <data name="Editor_SetLoopStart" xml:space="preserve">
-        <value>Set Loop Start</value>
-    </data>
-    <data name="Editor_SetLoopEnd" xml:space="preserve">
-        <value>Set Loop End</value>
-    </data>
-    <data name="Editor_ExpanderHeader_LoopOptions" xml:space="preserve">
-        <value>Loop Options</value>
-    </data>
-    <data name="Editor_ToggleLoop" xml:space="preserve">
-        <value>Toggle Loop</value>
-    </data>
-    <data name="Settings_Header_Playback" xml:space="preserve">
-        <value>Playback</value>
-    </data>
-    <data name="Settings_Header_Selection" xml:space="preserve">
-        <value>Selection</value>
-    </data>
-    <data name="Settings_Header_EditHolds" xml:space="preserve">
-        <value>Edit Holds</value>
-    </data>
-    <data name="Settings_Header_EditNotes" xml:space="preserve">
-        <value>Edit Notes</value>
-    </data>
-    <data name="Settings_Header_NoteTypes" xml:space="preserve">
-        <value>Note Types</value>
-    </data>
-    <data name="Settings_Hitsound_Metronome" xml:space="preserve">
-        <value>Metronome</value>
-    </data>
-    <data name="Generic_Edit" xml:space="preserve">
-        <value>Edit</value>
-    </data>
-    <data name="Editor_BakeHoldNoteNoRender" xml:space="preserve">
-        <value>Bake Hold [No Render]</value>
-    </data>
-    <data name="Settings_Color_BonusGlow" xml:space="preserve">
-        <value>Bonus Glow</value>
-    </data>
-    <data name="Settings_Color_BonusTriangles" xml:space="preserve">
-        <value>Bonus Triangles</value>
-    </data>
-    <data name="Editor_SplitHold" xml:space="preserve">
-        <value>Split Hold</value>
-    </data>
-    <data name="ToolTip_SplitHold" xml:space="preserve">
-        <value>Splits a Hold into two at the highlighted Segment.</value>
-    </data>
-    <data name="Editor_CheckerDeselect" xml:space="preserve">
-        <value>Checker Deselect</value>
-    </data>
-    <data name="Editor_ConvertToInstantMask" xml:space="preserve">
-        <value>Convert to Instant Mask</value>
-    </data>
-    <data name="ToolTip_ConvertToInstantMask" xml:space="preserve">
-        <value>Destructively converts a single Mask Note into smaller Notes that animate instantly.</value>
-    </data>
+  </data>
+  <data name="Editor_LayerNote" xml:space="preserve">
+    <value>Layer: Note</value>
+  </data>
+  <data name="Editor_LayerMask" xml:space="preserve">
+    <value>Layer: Mask</value>
+  </data>
+  <data name="Editor_LayerGimmick" xml:space="preserve">
+    <value>Layer: Gimmick</value>
+  </data>
+  <data name="ToolTip_HoldRender_Modern" xml:space="preserve">
+    <value>Performs better than the original by batching all segments into one shape, saving dozens, if not hundreds of calls to SkiaSharp. Also fixes the tv-static-looking seams on dense holds.</value>
+  </data>
+  <data name="ToolTip_HoldRender_Legacy" xml:space="preserve">
+    <value>Original rendering method that draws holds segment-by-segment. Bad performance, but technically more mature.</value>
+  </data>
+  <data name="Settings_HoldRenderMethod" xml:space="preserve">
+    <value>Hold Render Method</value>
+  </data>
+  <data name="Editor_HoldEase_LinearPlusIn" xml:space="preserve">
+    <value>Linear+ In</value>
+  </data>
+  <data name="Editor_HoldEase_LinearPlusOut" xml:space="preserve">
+    <value>Linear+ Out</value>
+  </data>
+  <data name="Menu_ExportSaturnFolder" xml:space="preserve">
+    <value>Create Saturn Folder</value>
+  </data>
+  <data name="SaturnExport_Title" xml:space="preserve">
+    <value>Title</value>
+  </data>
+  <data name="SaturnExport_Rubi" xml:space="preserve">
+    <value>Ruby</value>
+  </data>
+  <data name="SaturnExport_Artist" xml:space="preserve">
+    <value>Artist</value>
+  </data>
+  <data name="SaturnExport_Genre" xml:space="preserve">
+    <value>Genre</value>
+  </data>
+  <data name="SaturnExport_Bpm" xml:space="preserve">
+    <value>BPM</value>
+  </data>
+  <data name="SaturnExport_Jacket" xml:space="preserve">
+    <value>Jacket</value>
+  </data>
+  <data name="SaturnExport_Music" xml:space="preserve">
+    <value>Music</value>
+  </data>
+  <data name="Generic_Export" xml:space="preserve">
+    <value>Export</value>
+  </data>
+  <data name="SaturnExport_WindowTitle" xml:space="preserve">
+    <value>Export Saturn Folder</value>
+  </data>
+  <data name="SaturnExport_Folder" xml:space="preserve">
+    <value>Export Folder</value>
+  </data>
+  <data name="SaturnExport_DiffNormal" xml:space="preserve">
+    <value>Normal Diff</value>
+  </data>
+  <data name="SaturnExport_DiffHard" xml:space="preserve">
+    <value>Hard Diff</value>
+  </data>
+  <data name="SaturnExport_DiffExpert" xml:space="preserve">
+    <value>Expert Diff</value>
+  </data>
+  <data name="SaturnExport_DiffInferno" xml:space="preserve">
+    <value>Inferno Diff</value>
+  </data>
+  <data name="SaturnExport_DiffBeyond" xml:space="preserve">
+    <value>Beyond Diff</value>
+  </data>
+  <data name="Menu_JaggedHolds" xml:space="preserve">
+    <value>Generate Jagged Holds</value>
+  </data>
+  <data name="Menu_ReconstructHolds" xml:space="preserve">
+    <value>Reconstruct Holds</value>
+  </data>
+  <data name="Generic_Generate" xml:space="preserve">
+    <value>Generate</value>
+  </data>
+  <data name="Tools_Interval" xml:space="preserve">
+    <value>Interval [Beat Division]</value>
+  </data>
+  <data name="Tools_GeneratorType" xml:space="preserve">
+    <value>Generator Type</value>
+  </data>
+  <data name="Tools_Reconstruct_HoldToHold" xml:space="preserve">
+    <value>Hold to Hold</value>
+  </data>
+  <data name="Tools_Reconstruct_HoldToChain" xml:space="preserve">
+    <value>Hold to Chain</value>
+  </data>
+  <data name="Tools_Jagged_Spikes" xml:space="preserve">
+    <value>Spikes</value>
+  </data>
+  <data name="Tools_Jagged_Noise" xml:space="preserve">
+    <value>Noise</value>
+  </data>
+  <data name="Tools_Jagged_LeftEdge" xml:space="preserve">
+    <value>Left Edge</value>
+  </data>
+  <data name="Tools_Jagged_LeftEdgeMax" xml:space="preserve">
+    <value>Left Edge [Max]</value>
+  </data>
+  <data name="Tools_Jagged_LeftEdgeMin" xml:space="preserve">
+    <value>Left Edge [Min]</value>
+  </data>
+  <data name="Tools_Jagged_RightEdge" xml:space="preserve">
+    <value>Right Edge</value>
+  </data>
+  <data name="Tools_Jagged_RightEdgeMax" xml:space="preserve">
+    <value>Right Edge [Max]</value>
+  </data>
+  <data name="Tools_Jagged_RightEdgeMin" xml:space="preserve">
+    <value>Right Edge [Min]</value>
+  </data>
+  <data name="Editor_NoHoldsSelected" xml:space="preserve">
+    <value>No Holds selected!</value>
+  </data>
+  <data name="Editor_NoHoldsSelectedTip" xml:space="preserve">
+    <value>Select any segment of a hold note to run this algorithm on it.</value>
+  </data>
+  <data name="Settings_ShowChainStripes" xml:space="preserve">
+    <value>Show Chain Stripes</value>
+  </data>
+  <data name="ToolTip_NoteTypes" xml:space="preserve">
+    <value>Currently selected NoteType.</value>
+  </data>
+  <data name="ToolTip_BonusType_Bonus" xml:space="preserve">
+    <value>Bonus Note [extra clear points, sparkly sound]</value>
+  </data>
+  <data name="ToolTip_BonusType_None" xml:space="preserve">
+    <value>Standard Note [no effects]</value>
+  </data>
+  <data name="ToolTip_BonusType_RNote" xml:space="preserve">
+    <value>R-Note [worth double, rainbow effect, loud splash sound]</value>
+  </data>
+  <data name="ToolTip_MaskDirection_Clockwise" xml:space="preserve">
+    <value>Mask Animation will propagate from one edge of the Note to the other Clockwise.</value>
+  </data>
+  <data name="ToolTip_MaskDirection_CounterClockwise" xml:space="preserve">
+    <value>Mask Animation will propagate from one edge of the Note to the other Counterclockwise.</value>
+  </data>
+  <data name="ToolTip_MaskDirection_Center" xml:space="preserve">
+    <value>Mask Animation will propagate from the center of the Note outwards.</value>
+  </data>
+  <data name="ToolTip_BPM" xml:space="preserve">
+    <value>Inserts a BPM change.</value>
+  </data>
+  <data name="ToolTip_TimeSignature" xml:space="preserve">
+    <value>Inserts a Time Signature change.</value>
+  </data>
+  <data name="ToolTip_HiSpeed" xml:space="preserve">
+    <value>Inserts a HiSpeed change. [aka. Scroll Speed / Soflan]</value>
+  </data>
+  <data name="ToolTip_Stop" xml:space="preserve">
+    <value>Inserts a Stop Effect that freezes Note scroll between Start and End.</value>
+  </data>
+  <data name="ToolTip_Reverse" xml:space="preserve">
+    <value>Inserts a Reverse Effect that scrolls Notes backwards for a set amount of time. [not rendered yet]</value>
+  </data>
+  <data name="ToolTip_LayerNote" xml:space="preserve">
+    <value>Show/Hide Playable Notes.</value>
+  </data>
+  <data name="ToolTip_LayerMask" xml:space="preserve">
+    <value>Show/Hide Mask Notes.</value>
+  </data>
+  <data name="ToolTip_LayerGimmick" xml:space="preserve">
+    <value>Show/Hide Gimmick Markers.</value>
+  </data>
+  <data name="ToolTip_Insert" xml:space="preserve">
+    <value>Inserts a Note at the current timestamp, with the currently selected properties.</value>
+  </data>
+  <data name="ToolTip_EditHold" xml:space="preserve">
+    <value>Highlight any Note of a Hold, then click [Edit Hold] to continue editing where you left off.</value>
+  </data>
+  <data name="ToolTip_ChartInfo" xml:space="preserve">
+    <value>Info about a chart, such as the audio, author and level.</value>
+  </data>
+  <data name="ToolTip_SelectionInfo" xml:space="preserve">
+    <value>Info about selection and highlighting.</value>
+  </data>
+  <data name="ToolTip_QuickSettings" xml:space="preserve">
+    <value>Quick access to some commonly changed settings.</value>
+  </data>
+  <data name="ToolTip_ModifyNotes" xml:space="preserve">
+    <value>Note-related functions, like Edit and Delete.</value>
+  </data>
+  <data name="ToolTip_ModifyGimmicks" xml:space="preserve">
+    <value>Gimmick-related functions.</value>
+  </data>
+  <data name="ToolTip_Previous" xml:space="preserve">
+    <value>Highlight the previous Note.</value>
+  </data>
+  <data name="ToolTip_Nearest" xml:space="preserve">
+    <value>Highlight the nearest Note to the current timestamp.</value>
+  </data>
+  <data name="ToolTip_Next" xml:space="preserve">
+    <value>Highlight the next Note.</value>
+  </data>
+  <data name="ToolTip_EditShape" xml:space="preserve">
+    <value>Edit Note Size and Position.</value>
+  </data>
+  <data name="ToolTip_EditType" xml:space="preserve">
+    <value>Edit Note Type and Bonus Type.</value>
+  </data>
+  <data name="ToolTip_EditBoth" xml:space="preserve">
+    <value>Edit both Shape and Type at once.</value>
+  </data>
+  <data name="ToolTip_Mirror" xml:space="preserve">
+    <value>Mirror Notes around the mirror axis. Hover over the number to see the axis.</value>
+  </data>
+  <data name="ToolTip_HoldEase" xml:space="preserve">
+    <value>Options for differently shaped Hold Notes. Just try them out to see :]</value>
+  </data>
+  <data name="ToolTip_BakeHold" xml:space="preserve">
+    <value>Inserts Hold segments in front of the selected segment.</value>
+  </data>
+  <data name="ToolTip_StitchHold" xml:space="preserve">
+    <value>Connects the end of a Hold Note to the start of another to stitch them into one. Must select ONLY a Hold End and a Hold Start.</value>
+  </data>
+  <data name="ToolTip_InsertHold" xml:space="preserve">
+    <value>Inserts a single Hold segment at the current timestamp. Highlight any segment to specify which Hold to insert it in.</value>
+  </data>
+  <data name="ToolTip_SetRenderTrue" xml:space="preserve">
+    <value>Sets the render flag on a Hold Note to true. See [Set Render False] for more info.</value>
+  </data>
+  <data name="ToolTip_SetRenderFalse" xml:space="preserve">
+    <value>Sets the render flag on a Hold Note to false. This means the game will ignore it when generating the visuals for a Hold Note, smoothing out any irregular size/position changes. Judgement still follows the segments!</value>
+  </data>
+  <data name="ToolTip_QuantizeOnPause" xml:space="preserve">
+    <value>Quantizes the playhead to the current beat division when pausing.</value>
+  </data>
+  <data name="ToolTip_HighlightPlacedNote" xml:space="preserve">
+    <value>Automatically highlights a Note after placing it.</value>
+  </data>
+  <data name="ToolTip_PlaybackSpeed" xml:space="preserve">
+    <value>Adjust playback speed.</value>
+  </data>
+  <data name="ToolTip_PlayPause" xml:space="preserve">
+    <value>Play/Pause</value>
+  </data>
+  <data name="ToolTip_Reverse_EffectStart" xml:space="preserve">
+    <value>Notes begin scrolling backwards from this point.</value>
+  </data>
+  <data name="ToolTip_Reverse_EffectEnd" xml:space="preserve">
+    <value>Notes stop scrolling backwards and scroll forwards again from this point.</value>
+  </data>
+  <data name="ToolTip_Reverse_NoteZoneEnd" xml:space="preserve">
+    <value>The Notes between this timestamp and [Effect End] are scrolled backwards.</value>
+  </data>
+  <data name="Tools_Jagged_OffsetEven" xml:space="preserve">
+    <value>Offset Even Index</value>
+  </data>
+  <data name="Generic_EndOfChartWarning" xml:space="preserve">
+    <value>End of Chart Note is missing!</value>
+  </data>
+  <data name="Generic_EndOfChartWarningExplanation" xml:space="preserve">
+    <value>Place an End of Chart note at least a Measure after the last playable note. Without it, the game would crash.</value>
+  </data>
+  <data name="Editor_BoxSelect" xml:space="preserve">
+    <value>Box Select</value>
+  </data>
+  <data name="Editor_Loop" xml:space="preserve">
+    <value>Loop</value>
+  </data>
+  <data name="Editor_SetLoopStart" xml:space="preserve">
+    <value>Set Loop Start</value>
+  </data>
+  <data name="Editor_SetLoopEnd" xml:space="preserve">
+    <value>Set Loop End</value>
+  </data>
+  <data name="Editor_ExpanderHeader_LoopOptions" xml:space="preserve">
+    <value>Loop Options</value>
+  </data>
+  <data name="Editor_ToggleLoop" xml:space="preserve">
+    <value>Toggle Loop</value>
+  </data>
+  <data name="Settings_Header_Playback" xml:space="preserve">
+    <value>Playback</value>
+  </data>
+  <data name="Settings_Header_Selection" xml:space="preserve">
+    <value>Selection</value>
+  </data>
+  <data name="Settings_Header_EditHolds" xml:space="preserve">
+    <value>Edit Holds</value>
+  </data>
+  <data name="Settings_Header_EditNotes" xml:space="preserve">
+    <value>Edit Notes</value>
+  </data>
+  <data name="Settings_Header_NoteTypes" xml:space="preserve">
+    <value>Note Types</value>
+  </data>
+  <data name="Settings_Hitsound_Metronome" xml:space="preserve">
+    <value>Metronome</value>
+  </data>
+  <data name="Generic_Edit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="Editor_BakeHoldNoteNoRender" xml:space="preserve">
+    <value>Bake Hold [No Render]</value>
+  </data>
+  <data name="Settings_Color_BonusGlow" xml:space="preserve">
+    <value>Bonus Glow</value>
+  </data>
+  <data name="Settings_Color_BonusTriangles" xml:space="preserve">
+    <value>Bonus Triangles</value>
+  </data>
+  <data name="Editor_SplitHold" xml:space="preserve">
+    <value>Split Hold</value>
+  </data>
+  <data name="ToolTip_SplitHold" xml:space="preserve">
+    <value>Splits a Hold into two at the highlighted Segment.</value>
+  </data>
+  <data name="Editor_CheckerDeselect" xml:space="preserve">
+    <value>Checker Deselect</value>
+  </data>
+  <data name="Editor_ConvertToInstantMask" xml:space="preserve">
+    <value>Convert to Instant Mask</value>
+  </data>
+  <data name="ToolTip_ConvertToInstantMask" xml:space="preserve">
+    <value>Destructively converts a single Mask Note into smaller Notes that animate instantly.</value>
+  </data>
+  <data name="Menu_Online" xml:space="preserve">
+    <value>Online</value>
+  </data>
+  <data name="Menu_CreateSession" xml:space="preserve">
+    <value>Create Session</value>
+  </data>
+  <data name="Menu_JoinSession" xml:space="preserve">
+    <value>Join Session</value>
+  </data>
+  <data name="Online_Username" xml:space="preserve">
+    <value>Username</value>
+  </data>
+  <data name="Online_UserColor" xml:space="preserve">
+    <value>User Color</value>
+  </data>
+  <data name="Online_ServerAddress" xml:space="preserve">
+    <value>Server Address</value>
+  </data>
+  <data name="Menu_ExportMercury" xml:space="preserve">
+    <value>Export for Mercury</value>
+  </data>
+  <data name="Online_SessionCode" xml:space="preserve">
+    <value>Session Code</value>
+  </data>
+  <data name="Menu_Disconnect" xml:space="preserve">
+    <value>Disconnect</value>
+  </data>
+  <data name="Online_SessionOpened" xml:space="preserve">
+    <value>Session Open. Code:</value>
+  </data>
+  <data name="Online_SessionClosed" xml:space="preserve">
+    <value>Session closed.</value>
+  </data>
+  <data name="Online_InvalidSessionCode" xml:space="preserve">
+    <value>Invalid session code!</value>
+  </data>
+  <data name="Generic_NoChartLoaded" xml:space="preserve">
+    <value>No Chart Loaded :]</value>
+  </data>
+  <data name="Online_ConnectionFailed" xml:space="preserve">
+    <value>Connection Failed.</value>
+  </data>
+  <data name="Online_ConnectionFailedDetails" xml:space="preserve">
+    <value>Ensure that the specified address is correct and that the server is running.</value>
+  </data>
+  <data name="Settings_ShowOtherUsersDuringPlayback" xml:space="preserve">
+    <value>Show other Users during Playback in Multi-Charting</value>
+  </data>
+  <data name="Settings_MuteHitsoundsOnPreview" xml:space="preserve">
+    <value>Mute Hitsounds on preview</value>
+  </data>
+  <data name="ChartInfo_Version" xml:space="preserve">
+    <value>Version</value>
+  </data>
+  <data name="ChartInfo_Title" xml:space="preserve">
+    <value>Title</value>
+  </data>
+  <data name="ChartInfo_Rubi" xml:space="preserve">
+    <value>Ruby</value>
+  </data>
+  <data name="ChartInfo_Artist" xml:space="preserve">
+    <value>Artist</value>
+  </data>
+  <data name="ChartInfo_Author" xml:space="preserve">
+    <value>Chart Author</value>
+  </data>
+  <data name="ChartInfo_Diff" xml:space="preserve">
+    <value>Diff</value>
+  </data>
+  <data name="ChartInfo_Level" xml:space="preserve">
+    <value>Level</value>
+  </data>
+  <data name="ChartInfo_Clear" xml:space="preserve">
+    <value>Clear Threshold</value>
+  </data>
+  <data name="ChartInfo_BpmText" xml:space="preserve">
+    <value>BPM Text</value>
+  </data>
+  <data name="ChartInfo_PreviewStart" xml:space="preserve">
+    <value>Preview Start</value>
+  </data>
+  <data name="ChartInfo_PreviewTime" xml:space="preserve">
+    <value>Preview Length</value>
+  </data>
+  <data name="ChartInfo_Bgm" xml:space="preserve">
+    <value>BGM</value>
+  </data>
+  <data name="ChartInfo_Bga" xml:space="preserve">
+    <value>BGA</value>
+  </data>
+  <data name="ChartInfo_BgmOffset" xml:space="preserve">
+    <value>BGM Offset</value>
+  </data>
+  <data name="ChartInfo_BgaOffset" xml:space="preserve">
+    <value>BGA Offset</value>
+  </data>
+  <data name="ChartInfo_Jacket" xml:space="preserve">
+    <value>Jacket</value>
+  </data>
+  <data name="Editor_InvalidBga" xml:space="preserve">
+    <value>Selected video file couldn't be found.</value>
+  </data>
+  <data name="Editor_InvalidJacket" xml:space="preserve">
+    <value>Selected image file couldn't be found.</value>
+  </data>
+  <data name="Generic_DeleteComment" xml:space="preserve">
+    <value>Delete Comment?</value>
+  </data>
+  <data name="Generic_Add" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="Editor_AddComment" xml:space="preserve">
+    <value>Add Comment</value>
+  </data>
+  <data name="Editor_Comment" xml:space="preserve">
+    <value>Comment</value>
+  </data>
+  <data name="Editor_CommentHint" xml:space="preserve">
+    <value>Hint: You can delete a comment by holding Alt and clicking it!</value>
+  </data>
+  <data name="Menu_Proofread" xml:space="preserve">
+    <value>Proofread</value>
+  </data>
+  <data name="Judgement_Marvelous" xml:space="preserve">
+    <value>Marvelous Judgement</value>
+  </data>
+  <data name="Judgement_Great" xml:space="preserve">
+    <value>Great Judgement</value>
+  </data>
+  <data name="Judgement_Good" xml:space="preserve">
+    <value>Good Judgement</value>
+  </data>
+  <data name="Settings_ShowJudgementWindowMarvelous" xml:space="preserve">
+    <value>Show Marvelous Judgement Window</value>
+  </data>
+  <data name="Settings_ShowJudgementWindowGreat" xml:space="preserve">
+    <value>Show Great Judgement Window</value>
+  </data>
+  <data name="Settings_ShowJudgementWindowGood" xml:space="preserve">
+    <value>Show Good Judgement Window</value>
+  </data>
+  <data name="QuickSettings_ShowMarvelousWindow" xml:space="preserve">
+    <value>Show Marvelous Window</value>
+  </data>
+  <data name="QuickSettings_ShowGreatWindow" xml:space="preserve">
+    <value>Show Great Window</value>
+  </data>
+  <data name="QuickSettings_ShowGoodWindow" xml:space="preserve">
+    <value>Show Good Window</value>
+  </data>
+  <data name="Settings_CutOverlappingJudgementWindows" xml:space="preserve">
+    <value>Cut overlapping Judgement Windows</value>
+  </data>
+  <data name="Settings_CutEarlyJudgementWindowOnHolds" xml:space="preserve">
+    <value>Cut Early Window on Holds</value>
+  </data>
+  <data name="QuickSettings_CutEarlyJudgementWindowOnHolds" xml:space="preserve">
+    <value>Cut Early on Holds</value>
+  </data>
+  <data name="QuickSettings_CutOverlappingJudgementWindows" xml:space="preserve">
+    <value>Cut Overlapping</value>
+  </data>
+  <data name="Online_TransmittingData" xml:space="preserve">
+    <value>Transmitting Data...</value>
+  </data>
+  <data name="Online_OutdatedClient" xml:space="preserve">
+    <value>Outdated Client!</value>
+  </data>
+  <data name="Online_OutdatedClientDetails" xml:space="preserve">
+    <value>Please update MercuryMapper to the latest version. If you're self-hosting, update your server too.</value>
+  </data>
+  <data name="ToolTip_EndOfChart" xml:space="preserve">
+    <value>Marks the end of a Chart. BGM and Chart playback stops, and the CLEAR or FAIL popup is shown.</value>
+  </data>
 </root>

@@ -133,7 +133,7 @@ public static class MathExtensions
         };
     }
 
-    public static bool IsOverlapping(int startLeftEdge, int startRightEdge, int endLeftEdge, int endRightEdge)
+    public static bool IsFullyOverlapping(int startLeftEdge, int startRightEdge, int endLeftEdge, int endRightEdge)
     {
         // Start and End are identical
         if (startLeftEdge == endLeftEdge && startRightEdge == endRightEdge) return true;
@@ -150,42 +150,40 @@ public static class MathExtensions
             endRightEdge -= 1;
         }
         
-        Console.WriteLine($"Before Re-Scaling | {startLeftEdge} {startRightEdge} | {endLeftEdge} {endRightEdge}");
-        
         // Start overflows - End does not overflow
         if (startRightEdge >= 60 && endRightEdge < 60 && int.Abs(startRightEdge - endRightEdge) >= 60)
         {
-            Console.WriteLine($"Start overflows and i gotta do something about it");
             endLeftEdge += 60;
         }
         
         // End overflows - Start does not overflow
         else if (endRightEdge >= 60 && startRightEdge < 60 && int.Abs(startRightEdge - endRightEdge) >= 60)
         {
-            Console.WriteLine($"End overflows and i gotta do something about it");
             startLeftEdge += 60;
         }
         
-        // Both overflow
-        else if (startRightEdge >= 60 && endRightEdge >= 60)
-        {
-            Console.WriteLine($"BBoth overflow");
-        }
-        
-        // Neither overflow
-        else if (endRightEdge < 60 && startRightEdge < 60)
-        {
-            Console.WriteLine($"Neither overflow");
-        }
-        
-        Console.WriteLine($"After Re-Scaling | {startLeftEdge} {startRightEdge} | {endLeftEdge} {endRightEdge}");
-
         bool caseA = startLeftEdge >= endLeftEdge && startRightEdge <= endRightEdge; // start smaller than end
         bool caseB = startLeftEdge <= endLeftEdge && startRightEdge >= endRightEdge; // start bigger than end
         
-        Console.WriteLine($"Case A | {startLeftEdge} >= {endLeftEdge} | {startRightEdge} <= {endRightEdge} == {caseA}");
-        Console.WriteLine($"Case B | {startLeftEdge} <= {endLeftEdge} | {startRightEdge} >= {endRightEdge} == {caseB}");
-        
         return caseA || caseB;
+    }
+
+    public static bool IsPartiallyOverlapping(int startLeftEdge, int startRightEdge, int endLeftEdge, int endRightEdge)
+    {
+        startLeftEdge %= 60;
+        startRightEdge %= 60;
+        endLeftEdge %= 60;
+        endRightEdge %= 60;
+
+        // one or either notes are size 60, they must be overlapping.
+        if (startLeftEdge == startRightEdge || endLeftEdge == endRightEdge) return true;
+        
+        if (startLeftEdge > startRightEdge)
+        {
+            return endLeftEdge > endRightEdge || IsPartiallyOverlapping(endLeftEdge, endRightEdge, startLeftEdge, startRightEdge);
+        }
+
+        if (endLeftEdge> endRightEdge) return endLeftEdge < startRightEdge || endRightEdge > startLeftEdge;
+        return endLeftEdge < startRightEdge && endRightEdge > startLeftEdge;
     }
 }

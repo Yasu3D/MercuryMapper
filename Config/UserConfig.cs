@@ -24,7 +24,13 @@ public class RenderConfig
     public bool ShowHiSpeed { get; set; } = true;
     public bool ShowMaskDuringPlayback { get; set; } = false;
     public bool ShowGimmickNotesDuringPlayback { get; set; } = false;
+    public bool ShowOtherUsersDuringPlayback { get; set; } = true;
     public bool ShowChainStripes { get; set; } = true;
+    public bool ShowJudgementWindowMarvelous { get; set; } = false;
+    public bool ShowJudgementWindowGreat { get; set; } = false;
+    public bool ShowJudgementWindowGood { get; set; } = false;
+    public bool CutOverlappingJudgementWindows { get; set; } = false;
+    public bool CutEarlyJudgementWindowOnHolds { get; set; } = false;
 }
 
 public class KeymapConfig
@@ -82,6 +88,7 @@ public class KeymapConfig
         ["EditorConvertToInstantMask"] = new(Key.N, true, false, false),
         ["EditorIncreasePlaybackSpeed"] = new(Key.Add),
         ["EditorDecreasePlaybackSpeed"] = new(Key.Subtract),
+        ["EditorAddComment"] = new(Key.K, true, false, false),
         ["EditorNoteTypeTouch"] = new(Key.D1),
         ["EditorNoteTypeSlideClockwise"] = new(Key.D2),
         ["EditorNoteTypeSlideCounterclockwise"] = new(Key.D3),
@@ -91,7 +98,7 @@ public class KeymapConfig
         ["EditorNoteTypeHold"] = new(Key.D7),
         ["EditorNoteTypeMaskAdd"] = new(Key.D8),
         ["EditorNoteTypeMaskRemove"] = new(Key.D9),
-        ["EditorNoteTypeEndOfChart"] = new(Key.D0),
+        ["EditorNoteTypeEndOfChart"] = new(Key.D0), // DEPRECATED
         ["EditorTypeRadio1"] = new(Key.D1, false, true, false),
         ["EditorTypeRadio2"] = new(Key.D2, false, true, false),
         ["EditorTypeRadio3"] = new(Key.D3, false, true, false),
@@ -156,6 +163,9 @@ public class ColorConfig
         ["ColorMeasureLine"] = "FFFFFFFF",
         ["ColorBeatLine"] = "80FFFFFF",
         ["ColorAngleTicks"] = "AAFFFFFF",
+        ["ColorJudgementMarvelous"] = "FFFF3679",
+        ["ColorJudgementGreat"] = "FF8FFF1F",
+        ["ColorJudgementGood"] = "FF50B0FF"
     };
 }
 
@@ -178,6 +188,8 @@ public class AudioConfig
     public string MetronomePath { get; set; } = "";
 
     public float HitsoundOffset { get; set; } = 25;
+
+    public bool MuteHitsoundsOnPreview { get; set; } = false;
 }
 
 public class EditorConfig

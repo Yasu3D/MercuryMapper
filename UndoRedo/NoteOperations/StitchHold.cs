@@ -3,12 +3,12 @@ using MercuryMapper.Enums;
 
 namespace MercuryMapper.UndoRedo.NoteOperations;
 
-public class StitchHold(Chart chart, Note first, Note second) : IOperation
+public class StitchHold(Chart chart, Note first, Note second, NoteType secondType) : IOperation
 {
     public readonly Chart Chart = chart;
     public readonly Note First = first;
     public readonly Note Second = second;
-    public readonly NoteType SecondType = second.NoteType;
+    public readonly NoteType SecondType = secondType;
 
     public void Undo()
     {

@@ -19,6 +19,7 @@ public partial class SettingsView_Audio : UserControl
         this.mainView = mainView;
         SetPaths();
         SetSliders();
+        SetCheckboxes();
 
         HitsoundOffsetNumeric.Value = (decimal)AudioConfig.HitsoundOffset;
     }
@@ -26,6 +27,11 @@ public partial class SettingsView_Audio : UserControl
     private readonly MainView mainView;
     private AudioConfig AudioConfig => mainView.UserConfig.AudioConfig;
 
+    private void SetCheckboxes()
+    {
+        CheckBoxMuteHitsoundsOnPreview.IsChecked = AudioConfig.MuteHitsoundsOnPreview;
+    }
+    
     private void SetPaths()
     {
         TextBoxTouch.Text = AudioConfig.TouchHitsoundPath;
@@ -183,5 +189,10 @@ public partial class SettingsView_Audio : UserControl
     private void HitsoundOffsetNumeric_OnValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
     {
         AudioConfig.HitsoundOffset = (float)(e.NewValue ?? 0);
+    }
+
+    private void MuteHitsoundsOnPreview_IsCheckedChanged(object? sender, RoutedEventArgs e)
+    {
+        AudioConfig.MuteHitsoundsOnPreview = CheckBoxMuteHitsoundsOnPreview.IsChecked ?? false;
     }
 }
