@@ -390,6 +390,7 @@ public partial class MainView : UserControl
         TimestampDetailed.Text = TimeSpan.FromMilliseconds(AudioManager.CurrentSong.Position).ToString(@"hh\:mm\:ss\.fff");
         TimestampSeconds.Text = $"{AudioManager.CurrentSong.Position * 0.001f:F3}";
         ToggleInsertButton();
+        UpdateCurrentTimeScaleInfo();
 
         UpdateSource = TimeUpdateSource.None;
     }
@@ -642,6 +643,21 @@ public partial class MainView : UserControl
         LockState = lockState;
     }
 
+    public void UpdateCurrentTimeScaleInfo()
+    {
+        TimeSig? timeSig = ChartEditor.Chart.Gimmicks.LastOrDefault(x => x.BeatData.FullTick <= ChartEditor.CurrentBeatData.FullTick && x.GimmickType is GimmickType.TimeSigChange)?.TimeSig;
+        float bpm = ChartEditor.Chart.Gimmicks.LastOrDefault(x => x.BeatData.FullTick <= ChartEditor.CurrentBeatData.FullTick && x.GimmickType is GimmickType.BpmChange)?.Bpm ?? 0;
+        float hiSpeed = ChartEditor.Chart.Gimmicks.LastOrDefault(x => x.BeatData.FullTick <= ChartEditor.CurrentBeatData.FullTick && x.GimmickType is GimmickType.HiSpeedChange)?.HiSpeed ?? 1;
+
+        if (timeSig == null) return;
+
+        TextCurrentHiSpeed.Text = $"[ {hiSpeed,3:F} ]";
+        TextCurrentVisualSpeed.Text = $"[ {hiSpeed * UserConfig.RenderConfig.NoteSpeed,3:F} ]";
+        
+        TextCurrentBpm.Text = $"[ {bpm,3:F} ]";
+        TextCurrentTimeSig.Text = $"[ {timeSig.Upper} / {timeSig.Lower} ]";
+    }
+    
     // ________________ Input
 
     private void OnKeyDown(object sender, KeyEventArgs e)
@@ -1347,6 +1363,7 @@ public partial class MainView : UserControl
                 ClearAutosaves();
                 ResetLoopMarkers(AudioManager.CurrentSong?.Length ?? 0);
                 SetUiLockState(UiLockState.Loaded);
+                UpdateCurrentTimeScaleInfo();
             }
         });
     }
@@ -2347,6 +2364,7 @@ public partial class MainView : UserControl
         SetButtonColors(); // Update button colors if they were changed
         SetMenuItemInputGestureText(); // Update InputGesture text in case stuff was rebound
         SetQuickSettings();
+        UpdateCurrentTimeScaleInfo();
         RenderEngine.UpdateBrushes();
         RenderEngine.UpdateVisibleTime();
         AudioManager.LoadHitsoundSamples();
@@ -2656,6 +2674,7 @@ public partial class MainView : UserControl
         ChartEditor.UpdateCommentMarkers();
         ResetLoopMarkers(AudioManager.CurrentSong?.Length ?? 0);
         SetUiLockState(UiLockState.Loaded);
+        UpdateCurrentTimeScaleInfo();
     }
 
     public void OpenChartFromNetwork(string data, string bgmFilepath)

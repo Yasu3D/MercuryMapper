@@ -434,9 +434,15 @@
                 
                 <ToggleButton Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Margin="50,0,2,2" Name="ToggleButtonLoop" IsCheckedChanged="ToggleButtonLoop_IsCheckedChanged" Content="{x:Static lang:Resources.Editor_Loop}"/>
                 
-                <Grid Grid.Row="1" Grid.Column="2" RowDefinitions="*,*" HorizontalAlignment="Right" Margin="0,0,20,0">
-                    <TextBlock Grid.Row="0" Name="TimestampDetailed" Text="00:00:00.000" HorizontalAlignment="Right"/>
-                    <TextBlock Grid.Row="1" Name="TimestampSeconds" Text="0.000" HorizontalAlignment="Right"/>
+                <Grid Grid.Row="1" Grid.Column="2" RowDefinitions="*,*" ColumnDefinitions="*,*,*" HorizontalAlignment="Right" Margin="0,0,20,0">
+                    <TextBlock Grid.Row="0" Grid.Column="0" Name="TextCurrentHiSpeed" Text="[ 1.0 ]" HorizontalAlignment="Right" Margin="0,0,10,0"/>
+                    <TextBlock Grid.Row="1" Grid.Column="0" Name="TextCurrentVisualSpeed" Text="[ 1.0 ]" HorizontalAlignment="Right" Margin="0,0,10,0"/>
+                    
+                    <TextBlock Grid.Row="0" Grid.Column="1" Name="TextCurrentBpm" Text="[ 000.00 ]" HorizontalAlignment="Right" Margin="0,0,10,0"/>
+                    <TextBlock Grid.Row="1" Grid.Column="1" Name="TextCurrentTimeSig" Text="[ 0 / 0 ]" HorizontalAlignment="Right" Margin="0,0,10,0"/>
+                    
+                    <TextBlock Grid.Row="0" Grid.Column="2" Name="TimestampDetailed" Text="00:00:00.000" HorizontalAlignment="Right"/>
+                    <TextBlock Grid.Row="1" Grid.Column="2" Name="TimestampSeconds" Text="0.000" HorizontalAlignment="Right"/>
                 </Grid>
             </Grid>
             

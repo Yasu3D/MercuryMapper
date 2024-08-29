@@ -36,6 +36,7 @@ public class ChartEditor
             
             mainView.ToggleInsertButton();
             mainView.SetSelectionInfo();
+            mainView.UpdateCurrentTimeScaleInfo();
             
             UpdateLastPlacedHold();
             
