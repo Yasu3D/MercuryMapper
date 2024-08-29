@@ -1,11 +1,15 @@
 # What is .SAT?
 `.SAT` is a custom format for MERCURY/SATURN chart files. It's designed to be more readable than `.MER` and to reduce unnecessary information.
 # Structure
-`.SAT` files consist of three parts: Metadata, Gimmicks, and Objects.
+`.SAT` files consist of four parts: Metadata, Comments, Gimmicks, and Objects.
 Data is defined line-by-line. That means two objects cannot be defined on the same line.
 
 A file begins with all necessary Metadata tags that describe the chart and song.
+
+Then, the list of Comments is declared with the Metadata tag `@COMMENTS`, and each line describes one comment.
+
 Then, the list of Gimmicks is declared with the Metadata tag `@GIMMICKS`, and each line describes one gimmick.
+
 Then, the list of Objects is declared with the Metadata tag `@OBJECTS`, and each line describes one object.
 
 # Metadata Tags
