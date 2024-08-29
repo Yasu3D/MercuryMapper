@@ -1,5 +1,5 @@
 # What is .SAT?
-`.SAT` is a custom format for SATURN chart files. It's designed to be more readable than `.MER` and to reduce unnecessary information.
+`.SAT` is a custom format for MERCURY/SATURN chart files. It's designed to be more readable than `.MER` and to reduce unnecessary information.
 # Structure
 `.SAT` files consist of three parts: Metadata, Gimmicks, and Objects.
 Data is defined line-by-line. That means two objects cannot be defined on the same line.
