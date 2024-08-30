@@ -1167,4 +1167,31 @@ Fortfahren?</value>
   <data name="ToolTip_EndOfChart" xml:space="preserve">
     <value>Kennzeichnet das Ende einer Chart. Musik- und Chart-Wiedergabe stoppen, und CLEAR oder FAIL wird angezeigt.</value>
   </data>
+  <data name="Editor_SelectSimilar" xml:space="preserve">
+    <value>Wähle Ähnliche aus...</value>
+  </data>
+  <data name="Editor_SelectSimilar_ByPosition" xml:space="preserve">
+    <value>Nach Position</value>
+  </data>
+  <data name="Editor_SelectSimilar_BySize" xml:space="preserve">
+    <value>Nach Größe</value>
+  </data>
+  <data name="Editor_SelectSimilar_ByType" xml:space="preserve">
+    <value>Nach Typ</value>
+  </data>
+  <data name="SelectView_Threshold" xml:space="preserve">
+    <value>Schwelle</value>
+  </data>
+  <data name="Editor_BonusType" xml:space="preserve">
+    <value>Bonus-Art</value>
+  </data>
+  <data name="Generic_Any" xml:space="preserve">
+    <value>Alle</value>
+  </data>
+  <data name="SelectView_FilterSelection" xml:space="preserve">
+    <value>Auswahl Filtern</value>
+  </data>
+  <data name=" Editor_NoNoteHighlighted" xml:space="preserve">
+    <value>Keine Note ist Hervorgehoben!</value>
+  </data>
 </root>

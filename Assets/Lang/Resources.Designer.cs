@@ -60,6 +60,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No Note is highlighted!.
+        /// </summary>
+        public static string _Editor_NoNoteHighlighted {
+            get {
+                return ResourceManager.GetString(" Editor_NoNoteHighlighted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Bonus.
         /// </summary>
         public static string BonusType_Bonus {
@@ -281,6 +290,15 @@ namespace MercuryMapper.Assets.Lang {
         public static string Editor_Beat {
             get {
                 return ResourceManager.GetString("Editor_Beat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bonus Type.
+        /// </summary>
+        public static string Editor_BonusType {
+            get {
+                return ResourceManager.GetString("Editor_BonusType", resourceCulture);
             }
         }
         
@@ -969,6 +987,42 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Select Similar....
+        /// </summary>
+        public static string Editor_SelectSimilar {
+            get {
+                return ResourceManager.GetString("Editor_SelectSimilar", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to By Position.
+        /// </summary>
+        public static string Editor_SelectSimilar_ByPosition {
+            get {
+                return ResourceManager.GetString("Editor_SelectSimilar_ByPosition", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to By Size.
+        /// </summary>
+        public static string Editor_SelectSimilar_BySize {
+            get {
+                return ResourceManager.GetString("Editor_SelectSimilar_BySize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to By Type.
+        /// </summary>
+        public static string Editor_SelectSimilar_ByType {
+            get {
+                return ResourceManager.GetString("Editor_SelectSimilar_ByType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Set Loop End.
         /// </summary>
         public static string Editor_SetLoopEnd {
@@ -1046,6 +1100,15 @@ namespace MercuryMapper.Assets.Lang {
         public static string Generic_Add {
             get {
                 return ResourceManager.GetString("Generic_Add", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Any.
+        /// </summary>
+        public static string Generic_Any {
+            get {
+                return ResourceManager.GetString("Generic_Any", resourceCulture);
             }
         }
         
@@ -2091,6 +2154,24 @@ namespace MercuryMapper.Assets.Lang {
         public static string SaturnExport_WindowTitle {
             get {
                 return ResourceManager.GetString("SaturnExport_WindowTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Filter Selection.
+        /// </summary>
+        public static string SelectView_FilterSelection {
+            get {
+                return ResourceManager.GetString("SelectView_FilterSelection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Threshold.
+        /// </summary>
+        public static string SelectView_Threshold {
+            get {
+                return ResourceManager.GetString("SelectView_Threshold", resourceCulture);
             }
         }
         

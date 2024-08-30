@@ -28,6 +28,7 @@ using MercuryMapper.Utils;
 using MercuryMapper.Views.Gimmicks;
 using MercuryMapper.Views.Misc;
 using MercuryMapper.Views.Online;
+using MercuryMapper.Views.Select;
 using MercuryMapper.Views.Tools;
 using SkiaSharp;
 using Tomlyn;
@@ -1578,6 +1579,104 @@ public partial class MainView : UserControl
 
     private void MenuItemSelectHighlightedNote_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.SelectHighlightedNote();
 
+    private async void MenuItemSelectSimilarByPosition_OnClick(object? sender, RoutedEventArgs e)
+    {
+        if (ChartEditor.HighlightedElement is not Note)
+        {
+            ShowWarningMessage(Assets.Lang.Resources._Editor_NoNoteHighlighted);
+            return;
+        }
+            
+        SelectView_Threshold threshold = new();
+        
+        ContentDialog dialog = new()
+        {
+            Title = Assets.Lang.Resources.Editor_SelectSimilar,
+            Content = threshold,
+            PrimaryButtonText = Assets.Lang.Resources.MenuHeader_Select,
+            CloseButtonText = Assets.Lang.Resources.Generic_Cancel
+        };
+        
+        ContentDialogResult result = await dialog.ShowAsync();
+
+        if (result != ContentDialogResult.Primary) return;
+        
+        if (threshold.CheckBoxFilterSelection.IsChecked ?? false) ChartEditor.FilterSelection(SelectSimilarType.Position, (int)threshold.SliderThreshold.Value, 0, 0);
+        else ChartEditor.SelectSimilar(SelectSimilarType.Position, (int)threshold.SliderThreshold.Value, 0, 0);
+    }
+    
+    private async void MenuItemSelectSimilarBySize_OnClick(object? sender, RoutedEventArgs e)
+    {
+        if (ChartEditor.HighlightedElement is not Note)
+        {
+            ShowWarningMessage(Assets.Lang.Resources._Editor_NoNoteHighlighted);
+            return;
+        }
+            
+        SelectView_Threshold threshold = new();
+        
+        ContentDialog dialog = new()
+        {
+            Title = Assets.Lang.Resources.Editor_SelectSimilar,
+            Content = threshold,
+            PrimaryButtonText = Assets.Lang.Resources.MenuHeader_Select,
+            CloseButtonText = Assets.Lang.Resources.Generic_Cancel
+        };
+        
+        ContentDialogResult result = await dialog.ShowAsync();
+
+        if (result != ContentDialogResult.Primary) return;
+        
+        if (threshold.CheckBoxFilterSelection.IsChecked ?? false) ChartEditor.FilterSelection(SelectSimilarType.Size, (int)threshold.SliderThreshold.Value, 0, 0);
+        else ChartEditor.SelectSimilar(SelectSimilarType.Size, (int)threshold.SliderThreshold.Value, 0, 0);
+    }
+    
+    private async void MenuItemSelectSimilarByType_OnClick(object? sender, RoutedEventArgs e)
+    {
+        SelectView_Type type = new();
+        
+        ContentDialog dialog = new()
+        {
+            Title = Assets.Lang.Resources.Editor_SelectSimilar,
+            Content = type,
+            PrimaryButtonText = Assets.Lang.Resources.MenuHeader_Select,
+            CloseButtonText = Assets.Lang.Resources.Generic_Cancel
+        };
+        
+        ContentDialogResult result = await dialog.ShowAsync();
+
+        if (result != ContentDialogResult.Primary) return;
+        
+        int noteType = type.ComboBoxNoteType.SelectedIndex switch
+        {
+            0 => -1,
+            1 => 1,
+            2 => 4,
+            3 => 5,
+            4 => 2,
+            5 => 3,
+            6 => 12,
+            7 => 6,
+            8 => 7,
+            9 => 8,
+            10 => 9,
+            11 => 10,
+            _ => -1
+        };
+        
+        int bonusType = type.ComboBoxBonusType.SelectedIndex switch
+        {
+            0 => -1,
+            1 => 0,
+            2 => 1,
+            3 => 2,
+            _ => -1
+        };
+        
+        if (type.CheckBoxFilterSelection.IsChecked ?? false) ChartEditor.FilterSelection(SelectSimilarType.Type, 0, noteType, bonusType);
+        else ChartEditor.SelectSimilar(SelectSimilarType.Type, 0, noteType, bonusType);
+    }
+    
     private void MenuItemBoxSelect_OnClick(object? sender, RoutedEventArgs e)
     {
         if (ChartEditor.EditorState is not ChartEditorState.InsertNote) return;

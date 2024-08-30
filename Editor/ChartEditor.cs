@@ -504,6 +504,58 @@ public class ChartEditor
         EditorState = ChartEditorState.InsertNote;
     }
     
+    public void SelectSimilar(SelectSimilarType type, int threshold, int noteType, int bonusType)
+    {
+        if (HighlightedElement is not Note note) return;
+
+        List<Note> similarNotes = type switch
+        {
+            SelectSimilarType.Position => Chart.Notes.Where(x => int.Abs(x.Position - note.Position) <= threshold).ToList(),
+            SelectSimilarType.Size => Chart.Notes.Where(x => int.Abs(x.Size - note.Size) <= threshold).ToList(),
+            SelectSimilarType.Type => Chart.Notes.Where(x =>
+                {
+                    bool sameNoteType = noteType == -1 || x.NoteType == (NoteType)noteType;
+                    bool sameBonusType = bonusType == -1 || x.BonusType == (BonusType)noteType;
+
+                    return sameNoteType && sameBonusType;
+                }).ToList(),
+            _ => []
+        };
+        
+        foreach (Note similarNote in similarNotes)
+        {
+            SelectNote(similarNote);
+        }
+        
+        mainView.SetSelectionInfo();
+    }
+
+    public void FilterSelection(SelectSimilarType type, int threshold, int noteType, int bonusType)
+    {
+        if (HighlightedElement is not Note note) return;
+        
+        List<Note> differentNotes = type switch
+        {
+            SelectSimilarType.Position => SelectedNotes.Where(x => int.Abs(x.Position - note.Position) > threshold).ToList(),
+            SelectSimilarType.Size => SelectedNotes.Where(x => int.Abs(x.Size - note.Size) > threshold).ToList(),
+            SelectSimilarType.Type => SelectedNotes.Where(x =>
+            {
+                bool sameNoteType = noteType == -1 || x.NoteType == (NoteType)noteType;
+                bool sameBonusType = noteType == -1 || x.NoteType == (NoteType)noteType;
+
+                return !sameNoteType || !sameBonusType;
+            }).ToList(),
+            _ => []
+        };
+
+        foreach (Note differentNote in differentNotes)
+        {
+            SelectedNotes.Remove(differentNote);
+        }
+        
+        mainView.SetSelectionInfo();
+    }
+    
     // ________________ Highlighting
     public void HighlightElement(ChartElement? element)
     {

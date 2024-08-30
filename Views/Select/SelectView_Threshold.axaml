@@ -1,0 +1,18 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:lang="clr-namespace:MercuryMapper.Assets.Lang"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="MercuryMapper.Views.Select.SelectView_Threshold">
+    <Grid RowDefinitions="*,*" ColumnDefinitions="*,*,*">
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="{x:Static lang:Resources.SelectView_FilterSelection}"/>
+        <CheckBox Grid.Row="0" Grid.Column="2" Name="CheckBoxFilterSelection" IsChecked="False" Margin="0,0,0,5"/>
+        
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="{x:Static lang:Resources.SelectView_Threshold}"/>
+        <Slider Grid.Row="1" Grid.Column="1" Classes="Compact" Width="170" HorizontalAlignment="Left" Margin="10,0,15,0" Name="SliderThreshold"
+                Minimum="0" Maximum="60" Value="0" TickFrequency="1" TickPlacement="TopLeft" IsSnapToTickEnabled="True" ValueChanged="SliderThreshold_OnValueChanged"/>
+        <NumericUpDown Name="NumericThreshold" Grid.Row="1" Grid.Column="2" Width="30" 
+                       Maximum="60" Minimum="-1" Increment="1" Value="0" ValueChanged="NumericThreshold_OnValueChanged"/>
+    </Grid>
+</UserControl>

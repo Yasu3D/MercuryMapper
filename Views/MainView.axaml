@@ -91,6 +91,11 @@
                     <Separator/>
                     <MenuItem Header="{x:Static lang:Resources.Editor_CheckerDeselect}" Name="MenuItemCheckerDeselect"
                               Click="MenuItemCheckerDeselect_OnClick"/>
+                    <MenuItem Header="{x:Static lang:Resources.Editor_SelectSimilar}" Name="MenuItemSelectSimilar">
+                        <MenuItem Header="{x:Static lang:Resources.Editor_SelectSimilar_BySize}" Click="MenuItemSelectSimilarBySize_OnClick"/>
+                        <MenuItem Header="{x:Static lang:Resources.Editor_SelectSimilar_ByPosition}" Click="MenuItemSelectSimilarByPosition_OnClick"/>
+                        <MenuItem Header="{x:Static lang:Resources.Editor_SelectSimilar_ByType}" Click="MenuItemSelectSimilarByType_OnClick"/>
+                    </MenuItem>
                     <Separator/>
                     <MenuItem Header="{x:Static lang:Resources.Editor_BoxSelect}" Name="MenuItemBoxSelect" 
                               Click="MenuItemBoxSelect_OnClick"/>
