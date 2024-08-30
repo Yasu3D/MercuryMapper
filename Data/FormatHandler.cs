@@ -439,18 +439,18 @@ internal static class SatHandler
             if (FormatHandler.ContainsTag(line, "@ARTIST ", out result)) chart.Artist = result;
             if (FormatHandler.ContainsTag(line, "@AUTHOR ", out result)) chart.Author = result;
 
-            if (FormatHandler.ContainsTag(line, "@DIFF ", out result)) chart.Diff = Convert.ToInt32(result);
-            if (FormatHandler.ContainsTag(line, "@LEVEL ", out result)) chart.Level = Convert.ToDecimal(result);
-            if (FormatHandler.ContainsTag(line, "@CLEAR ", out result)) chart.ClearThreshold = Convert.ToDecimal(result);
+            if (FormatHandler.ContainsTag(line, "@DIFF ", out result)) chart.Diff = Convert.ToInt32(result, CultureInfo.InvariantCulture);
+            if (FormatHandler.ContainsTag(line, "@LEVEL ", out result)) chart.Level = Convert.ToDecimal(result, CultureInfo.InvariantCulture);
+            if (FormatHandler.ContainsTag(line, "@CLEAR ", out result)) chart.ClearThreshold = Convert.ToDecimal(result, CultureInfo.InvariantCulture);
             if (FormatHandler.ContainsTag(line, "@BPM_TEXT ", out result)) chart.BpmText = result;
 
-            if (FormatHandler.ContainsTag(line, "@PREVIEW_START ", out result)) chart.PreviewStart = Convert.ToDecimal(result);
-            if (FormatHandler.ContainsTag(line, "@PREVIEW_TIME ", out result)) chart.PreviewTime = Convert.ToDecimal(result);
+            if (FormatHandler.ContainsTag(line, "@PREVIEW_START ", out result)) chart.PreviewStart = Convert.ToDecimal(result, CultureInfo.InvariantCulture);
+            if (FormatHandler.ContainsTag(line, "@PREVIEW_TIME ", out result)) chart.PreviewTime = Convert.ToDecimal(result, CultureInfo.InvariantCulture);
 
             if (FormatHandler.ContainsTag(line, "@BGM ", out result)) chart.BgmFilepath = Path.Combine(Path.GetDirectoryName(chart.Filepath) ?? "", result);
-            if (FormatHandler.ContainsTag(line, "@BGM_OFFSET ", out result)) chart.BgmOffset = Convert.ToDecimal(result);
+            if (FormatHandler.ContainsTag(line, "@BGM_OFFSET ", out result)) chart.BgmOffset = Convert.ToDecimal(result, CultureInfo.InvariantCulture);
             if (FormatHandler.ContainsTag(line, "@BGA ", out result)) chart.BgaFilepath = result == "" ? "" : Path.Combine(Path.GetDirectoryName(chart.Filepath) ?? "", result);
-            if (FormatHandler.ContainsTag(line, "@BGA_OFFSET ", out result)) chart.BgaOffset = Convert.ToDecimal(result);
+            if (FormatHandler.ContainsTag(line, "@BGA_OFFSET ", out result)) chart.BgaOffset = Convert.ToDecimal(result, CultureInfo.InvariantCulture);
             if (FormatHandler.ContainsTag(line, "@JACKET ", out result)) chart.JacketFilepath = result == "" ? "" : Path.Combine(Path.GetDirectoryName(chart.Filepath) ?? "", result);
         }
     }
@@ -473,8 +473,8 @@ internal static class SatHandler
             // match3 is the index, can be skipped
             string match4 = match.Groups[4].Value;
 
-            int measure = Convert.ToInt32(match1);
-            int tick = Convert.ToInt32(match2);
+            int measure = Convert.ToInt32(match1, CultureInfo.InvariantCulture);
+            int tick = Convert.ToInt32(match2, CultureInfo.InvariantCulture);
 
             chart.ChartEditor.AddComment(new(measure, tick), match4);
         }
@@ -488,8 +488,8 @@ internal static class SatHandler
             string[] split = line.Split(" ", StringSplitOptions.RemoveEmptyEntries);
             if (split.Length < 4) continue;
 
-            int measure = Convert.ToInt32(split[0]);
-            int tick = Convert.ToInt32(split[1]);
+            int measure = Convert.ToInt32(split[0], CultureInfo.InvariantCulture);
+            int tick = Convert.ToInt32(split[1], CultureInfo.InvariantCulture);
 
             GimmickType gimmickType = String2GimmickType(split[3]);
 
@@ -522,11 +522,11 @@ internal static class SatHandler
             string[] split = line.Split(" ", StringSplitOptions.RemoveEmptyEntries);
             if (split.Length < 6) continue;
 
-            int measure = Convert.ToInt32(split[0]);
-            int tick = Convert.ToInt32(split[1]);
-            int index = Convert.ToInt32(split[2]);
-            int position = Convert.ToInt32(split[3]);
-            int size = Convert.ToInt32(split[4]);
+            int measure = Convert.ToInt32(split[0], CultureInfo.InvariantCulture);
+            int tick = Convert.ToInt32(split[1], CultureInfo.InvariantCulture);
+            int index = Convert.ToInt32(split[2], CultureInfo.InvariantCulture);
+            int position = Convert.ToInt32(split[3], CultureInfo.InvariantCulture);
+            int size = Convert.ToInt32(split[4], CultureInfo.InvariantCulture);
 
             string[] modifiers = split[5].Split('.', StringSplitOptions.RemoveEmptyEntries);
 
@@ -558,10 +558,10 @@ internal static class SatHandler
             string[] split = line.Split(" ", StringSplitOptions.RemoveEmptyEntries);
             if (split.Length < 4) continue;
 
-            Guid guid = Guid.Parse(split[0]);
+            Guid guid = Guid.Parse(split[0], CultureInfo.InvariantCulture);
             
-            int measure = Convert.ToInt32(split[1]);
-            int tick = Convert.ToInt32(split[2]);
+            int measure = Convert.ToInt32(split[1], CultureInfo.InvariantCulture);
+            int tick = Convert.ToInt32(split[2], CultureInfo.InvariantCulture);
 
             GimmickType gimmickType = String2GimmickType(split[4]);
 
@@ -594,13 +594,13 @@ internal static class SatHandler
             string[] split = line.Split(" ", StringSplitOptions.RemoveEmptyEntries);
             if (split.Length < 6) continue;
 
-            Guid guid = Guid.Parse(split[0]);
+            Guid guid = Guid.Parse(split[0], CultureInfo.InvariantCulture);
             
-            int measure = Convert.ToInt32(split[1]);
-            int tick = Convert.ToInt32(split[2]);
-            int index = Convert.ToInt32(split[3]);
-            int position = Convert.ToInt32(split[4]);
-            int size = Convert.ToInt32(split[5]);
+            int measure = Convert.ToInt32(split[1], CultureInfo.InvariantCulture);
+            int tick = Convert.ToInt32(split[2], CultureInfo.InvariantCulture);
+            int index = Convert.ToInt32(split[3], CultureInfo.InvariantCulture);
+            int position = Convert.ToInt32(split[4], CultureInfo.InvariantCulture);
+            int size = Convert.ToInt32(split[5], CultureInfo.InvariantCulture);
 
             string[] modifiers = split[6].Split('.', StringSplitOptions.RemoveEmptyEntries);
 
