@@ -164,21 +164,21 @@ internal static class MerHandler
 
                 if (FormatHandler.ContainsTag(line, "#EDITOR_AUDIO ", out result)) chart.BgmFilepath = Path.Combine(Path.GetDirectoryName(chart.Filepath) ?? "", result);
                 if (FormatHandler.ContainsTag(line, "#EDITOR_AUTHOR ", out result)) chart.Author = result;
-                if (FormatHandler.ContainsTag(line, "#EDITOR_LEVEL ", out result)) chart.Level = Convert.ToDecimal(result);
-                if (FormatHandler.ContainsTag(line, "#EDITOR_CLEAR_THRESHOLD ", out result)) chart.ClearThreshold = Convert.ToDecimal(result);
-                if (FormatHandler.ContainsTag(line, "#EDITOR_PREVIEW_TIME ", out result)) chart.PreviewStart = Convert.ToDecimal(result);
-                if (FormatHandler.ContainsTag(line, "#EDITOR_PREVIEW_LENGTH ", out result)) chart.PreviewTime = Convert.ToDecimal(result);
-                if (FormatHandler.ContainsTag(line, "#EDITOR_OFFSET ", out result)) chart.BgmOffset = Convert.ToDecimal(result);
-                if (FormatHandler.ContainsTag(line, "#EDITOR_MOVIEOFFSET ", out result)) chart.BgaOffset = Convert.ToDecimal(result);
+                if (FormatHandler.ContainsTag(line, "#EDITOR_LEVEL ", out result)) chart.Level = Convert.ToDecimal(result, CultureInfo.InvariantCulture);
+                if (FormatHandler.ContainsTag(line, "#EDITOR_CLEAR_THRESHOLD ", out result)) chart.ClearThreshold = Convert.ToDecimal(result, CultureInfo.InvariantCulture);
+                if (FormatHandler.ContainsTag(line, "#EDITOR_PREVIEW_TIME ", out result)) chart.PreviewStart = Convert.ToDecimal(result, CultureInfo.InvariantCulture);
+                if (FormatHandler.ContainsTag(line, "#EDITOR_PREVIEW_LENGTH ", out result)) chart.PreviewTime = Convert.ToDecimal(result, CultureInfo.InvariantCulture);
+                if (FormatHandler.ContainsTag(line, "#EDITOR_OFFSET ", out result)) chart.BgmOffset = Convert.ToDecimal(result, CultureInfo.InvariantCulture);
+                if (FormatHandler.ContainsTag(line, "#EDITOR_MOVIEOFFSET ", out result)) chart.BgaOffset = Convert.ToDecimal(result, CultureInfo.InvariantCulture);
 
                 if (FormatHandler.ContainsTag(line, "#AUDIO ", out result)) chart.BgmFilepath = Path.Combine(Path.GetDirectoryName(chart.Filepath) ?? "", result);
                 if (FormatHandler.ContainsTag(line, "#AUTHOR ", out result)) chart.Author = result;
-                if (FormatHandler.ContainsTag(line, "#LEVEL ", out result)) chart.Level = Convert.ToDecimal(result);
-                if (FormatHandler.ContainsTag(line, "#CLEAR_THRESHOLD ", out result)) chart.ClearThreshold = Convert.ToDecimal(result);
-                if (FormatHandler.ContainsTag(line, "#PREVIEW_TIME ", out result)) chart.PreviewStart = Convert.ToDecimal(result);
-                if (FormatHandler.ContainsTag(line, "#PREVIEW_LENGTH ", out result)) chart.PreviewTime = Convert.ToDecimal(result);
-                if (FormatHandler.ContainsTag(line, "#OFFSET ", out result)) chart.BgmOffset = Convert.ToDecimal(result);
-                if (FormatHandler.ContainsTag(line, "#MOVIEOFFSET ", out result)) chart.BgaOffset = Convert.ToDecimal(result);
+                if (FormatHandler.ContainsTag(line, "#LEVEL ", out result)) chart.Level = Convert.ToDecimal(result, CultureInfo.InvariantCulture);
+                if (FormatHandler.ContainsTag(line, "#CLEAR_THRESHOLD ", out result)) chart.ClearThreshold = Convert.ToDecimal(result, CultureInfo.InvariantCulture);
+                if (FormatHandler.ContainsTag(line, "#PREVIEW_TIME ", out result)) chart.PreviewStart = Convert.ToDecimal(result, CultureInfo.InvariantCulture);
+                if (FormatHandler.ContainsTag(line, "#PREVIEW_LENGTH ", out result)) chart.PreviewTime = Convert.ToDecimal(result, CultureInfo.InvariantCulture);
+                if (FormatHandler.ContainsTag(line, "#OFFSET ", out result)) chart.BgmOffset = Convert.ToDecimal(result, CultureInfo.InvariantCulture);
+                if (FormatHandler.ContainsTag(line, "#MOVIEOFFSET ", out result)) chart.BgaOffset = Convert.ToDecimal(result, CultureInfo.InvariantCulture);
             }
         }
 
@@ -190,9 +190,9 @@ internal static class MerHandler
                 string[] split = line.Split(" ", StringSplitOptions.RemoveEmptyEntries);
                 if (split.Length < 3) continue;
 
-                int measure = Convert.ToInt32(split[0]);
-                int tick = Convert.ToInt32(split[1]);
-                int objectId = Convert.ToInt32(split[2]);
+                int measure = Convert.ToInt32(split[0], CultureInfo.InvariantCulture);
+                int tick = Convert.ToInt32(split[1], CultureInfo.InvariantCulture);
+                int objectId = Convert.ToInt32(split[2], CultureInfo.InvariantCulture);
 
                 // Invalid
                 if (objectId is < 1 or > 10) continue;
@@ -200,12 +200,12 @@ internal static class MerHandler
                 // Notes
                 if (objectId == 1)
                 {
-                    int noteTypeId = Convert.ToInt32(split[3]);
-                    int noteIndex = Convert.ToInt32(split[4]);
-                    int position = Convert.ToInt32(split[5]);
-                    int size = Convert.ToInt32(split[6]);
+                    int noteTypeId = Convert.ToInt32(split[3], CultureInfo.InvariantCulture);
+                    int noteIndex = Convert.ToInt32(split[4], CultureInfo.InvariantCulture);
+                    int position = Convert.ToInt32(split[5], CultureInfo.InvariantCulture);
+                    int size = Convert.ToInt32(split[6], CultureInfo.InvariantCulture);
                     
-                    bool renderSegment = noteTypeId != 10 || Convert.ToBoolean(Convert.ToInt32(split[7])); // Set to true by default if note is not a hold segment.
+                    bool renderSegment = noteTypeId != 10 || Convert.ToBoolean(Convert.ToInt32(split[7], CultureInfo.InvariantCulture), CultureInfo.InvariantCulture); // Set to true by default if note is not a hold segment.
 
                     // End Of Chart
                     if (noteTypeId == 14)
@@ -223,12 +223,12 @@ internal static class MerHandler
                     // hold start & segments
                     if (noteTypeId is 9 or 10 or 25 && split.Length >= 9)
                     {
-                        nextReferencedIndex[noteIndex] = Convert.ToInt32(split[8]);
+                        nextReferencedIndex[noteIndex] = Convert.ToInt32(split[8], CultureInfo.InvariantCulture);
                     }
 
                     if (noteTypeId is 12 or 13 && split.Length >= 9)
                     {
-                        int direction = Convert.ToInt32(split[8]);
+                        int direction = Convert.ToInt32(split[8], CultureInfo.InvariantCulture);
                         newNote.MaskDirection = (MaskDirection)direction;
                     }
 
