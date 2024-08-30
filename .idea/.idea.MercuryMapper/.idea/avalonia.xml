@@ -32,6 +32,7 @@
         <entry key="Views/Online/OnlineView_OpenSession.axaml" value="MercuryMapper.csproj" />
         <entry key="Views/SaturnFolderExportView.axaml" value="MercuryMapper.csproj" />
         <entry key="Views/Select/SelectView_Threshold.axaml" value="MercuryMapper.csproj" />
+        <entry key="Views/Select/SelectView_Type.axaml" value="MercuryMapper.csproj" />
         <entry key="Views/Settings/SettingsView_Audio.axaml" value="MercuryMapper.csproj" />
         <entry key="Views/Settings/SettingsView_Colors.axaml" value="MercuryMapper.csproj" />
         <entry key="Views/Settings/SettingsView_Editor.axaml" value="MercuryMapper.csproj" />
