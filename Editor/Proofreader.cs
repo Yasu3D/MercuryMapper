@@ -8,6 +8,7 @@ using Avalonia.Threading;
 using MercuryMapper.Data;
 using MercuryMapper.Enums;
 using MercuryMapper.Utils;
+using MercuryMapper.Views;
 
 namespace MercuryMapper.Editor;
 
@@ -48,13 +49,14 @@ public static class Proofreader
         Dispatcher.UIThread.Invoke(() => textBlock.Inlines.Add(message));
     }
     
-    public static void Proofread(SelectableTextBlock textBlock, Chart chart)
+    public static void Proofread(SelectableTextBlock textBlock, Chart chart, bool limitToMercuryBonusTypes)
     {
         checkEndOfChart();
         checkNotesAfterEndOfChart();
         checkNotesBeforeEndOfChart();
         checkSmallNotes();
         checkSmallerThanLegalNotes();
+        if (limitToMercuryBonusTypes) checkBonusNotes();
         checkBrokenNotes();
         checkUnbakedHolds();
         checkFullyOverlappingNotes();
@@ -156,6 +158,25 @@ public static class Proofreader
             }
         }
 
+        void checkBonusNotes()
+        {
+            bool error = false;
+            
+            foreach (Note note in chart.Notes)
+            {
+                if (note.BonusType is BonusType.Bonus && note.NoteType is not (NoteType.Touch or NoteType.SlideClockwise or NoteType.SlideCounterclockwise))
+                {
+                    AddMessage(textBlock, MessageType.Warning, $"{note.NoteType} @ {note.BeatData.Measure} {note.BeatData.Tick} is unsupported in Mercury..\n");
+                    error = true;
+                }
+            }
+
+            if (error)
+            {
+                AddMessage(textBlock, MessageType.None, "Notes smaller than their intended minimum size may look broken or feel unplayable.\n\n");
+            }
+        }
+        
         void checkBrokenNotes()
         {
             bool error = false;

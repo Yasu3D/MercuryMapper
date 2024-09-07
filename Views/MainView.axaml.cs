@@ -71,7 +71,7 @@ public partial class MainView : UserControl
     }
 
     public bool CanShutdown;
-    public const string AppVersion = "v3.1.1";
+    public const string AppVersion = "v3.1.2 DEV";
     public const string ServerVersion = "1.0.0";
     private const string ConfigPath = "UserConfig.toml";
 
@@ -1793,7 +1793,7 @@ public partial class MainView : UserControl
     private void MenuItemProofread_OnClick(object? sender, RoutedEventArgs e)
     {
         MiscView_Proofread proofreadView = new();
-        Proofreader.Proofread(proofreadView.TextBlockProofreadResults, ChartEditor.Chart);
+        Proofreader.Proofread(proofreadView.TextBlockProofreadResults, ChartEditor.Chart, UserConfig.EditorConfig.LimitToMercuryBonusTypes);
 
         if (proofreadView.TextBlockProofreadResults.Inlines?.Count == 0)
         {
@@ -2772,6 +2772,26 @@ public partial class MainView : UserControl
         ResetLoopMarkers(AudioManager.CurrentSong?.Length ?? 0);
         SetUiLockState(UiLockState.Loaded);
         UpdateCurrentTimeScaleInfo();
+
+        if (UserConfig.EditorConfig.LimitToMercuryBonusTypes && ChartEditor.Chart.GetNonMercuryBonusTypeNotes().Count != 0)
+        { 
+            ContentDialog mercuryBonusTypeWarning = new()
+            {
+                Title = Assets.Lang.Resources.Editor_MercuryBonusTypeTitle,
+                Content = Assets.Lang.Resources.Editor_MercuryBonusTypeReplacePrompt,
+                PrimaryButtonText = Assets.Lang.Resources.Editor_MercuryBonusType_ReplaceNotes,
+                SecondaryButtonText = Assets.Lang.Resources.Editor_MercuryBonusType_SwitchMode
+            };
+            
+            ContentDialogResult result = await mercuryBonusTypeWarning.ShowAsync();
+            
+            if (result is ContentDialogResult.Primary) ChartEditor.Chart.ConvertNonMercuryBonusTypeNotes();
+            if (result is ContentDialogResult.Secondary)
+            {
+                UserConfig.EditorConfig.LimitToMercuryBonusTypes = false;
+                ApplySettings();
+            }
+        }
     }
 
     public void OpenChartFromNetwork(string data, string bgmFilepath)
@@ -2817,7 +2837,7 @@ public partial class MainView : UserControl
         if (string.IsNullOrEmpty(filepath)) return;
         
         MiscView_Proofread proofreadView = new();
-        Proofreader.Proofread(proofreadView.TextBlockProofreadResults, ChartEditor.Chart);
+        Proofreader.Proofread(proofreadView.TextBlockProofreadResults, ChartEditor.Chart, UserConfig.EditorConfig.LimitToMercuryBonusTypes);
 
         if (proofreadView.TextBlockProofreadResults.Inlines?.Count != 0)
         {

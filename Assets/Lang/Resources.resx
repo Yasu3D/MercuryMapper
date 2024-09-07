@@ -1197,4 +1197,16 @@ Continue?</value>
   <data name="Settings_Editor_LimitToMercuryBonusTypes" xml:space="preserve">
     <value>Limit to Mercury Bonus Types</value>
   </data>
+  <data name="Editor_MercuryBonusTypeTitle" xml:space="preserve">
+    <value>Invalid Bonus Notes found!</value>
+  </data>
+  <data name="Editor_MercuryBonusTypeReplacePrompt" xml:space="preserve">
+    <value>Would you like to replace all invalid Bonus Notes, or switch to expanded Bonus Types?</value>
+  </data>
+  <data name="Editor_MercuryBonusType_ReplaceNotes" xml:space="preserve">
+    <value>Replace Notes</value>
+  </data>
+  <data name="Editor_MercuryBonusType_SwitchMode" xml:space="preserve">
+    <value>Switch to expanded Bonus Types</value>
+  </data>
 </root>

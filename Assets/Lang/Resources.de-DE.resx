@@ -1197,4 +1197,16 @@ Fortfahren?</value>
   <data name="Settings_Editor_LimitToMercuryBonusTypes" xml:space="preserve">
     <value>Bonus-Typen auf Mercury begrenzen</value>
   </data>
+  <data name="Editor_MercuryBonusTypeReplacePrompt" xml:space="preserve">
+    <value>Möchten Sie alle ungültigen Bonus Noten ersetzen oder zu erweiterten Bonus-Arten wechseln?</value>
+  </data>
+  <data name="Editor_MercuryBonusTypeTitle" xml:space="preserve">
+    <value>Ungültige Bonus-Noten gefunden!</value>
+  </data>
+  <data name="Editor_MercuryBonusType_ReplaceNotes" xml:space="preserve">
+    <value>Noten Ersetzen</value>
+  </data>
+  <data name="Editor_MercuryBonusType_SwitchMode" xml:space="preserve">
+    <value>Zu erweiterten Bonus-Arten wechseln</value>
+  </data>
 </root>

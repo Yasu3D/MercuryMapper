@@ -355,4 +355,26 @@ public class Chart(ChartEditor editor)
     {
         return Gimmicks.LastOrDefault(x => x.Guid.ToString() == guid);
     }
+
+    /// <summary>
+    /// Returns all Notes that do not have valid BonusTypes for Mercury.
+    /// </summary>
+    public List<Note> GetNonMercuryBonusTypeNotes()
+    {
+        return Notes.Where(x => x.BonusType is BonusType.Bonus && x.NoteType is not (NoteType.Touch or NoteType.SlideClockwise or NoteType.SlideCounterclockwise)).ToList();
+    }
+
+    /// <summary>
+    /// Converts all Notes that do not have valid BonusTypes for Mercury to BonusType None.
+    /// </summary>
+    public void ConvertNonMercuryBonusTypeNotes()
+    {
+        foreach (Note note in Notes)
+        {
+            if (note.BonusType is BonusType.Bonus && note.NoteType is not (NoteType.Touch or NoteType.SlideClockwise or NoteType.SlideCounterclockwise))
+            {
+                note.BonusType = BonusType.None;
+            }
+        }
+    }
 }

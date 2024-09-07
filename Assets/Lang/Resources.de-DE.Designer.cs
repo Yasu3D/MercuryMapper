@@ -780,6 +780,42 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Noten Ersetzen.
+        /// </summary>
+        public static string Editor_MercuryBonusType_ReplaceNotes {
+            get {
+                return ResourceManager.GetString("Editor_MercuryBonusType_ReplaceNotes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zu erweiterten Bonus-Arten wechseln.
+        /// </summary>
+        public static string Editor_MercuryBonusType_SwitchMode {
+            get {
+                return ResourceManager.GetString("Editor_MercuryBonusType_SwitchMode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Möchten Sie alle ungültigen Bonus Noten ersetzen oder zu erweiterten Bonus-Arten wechseln?.
+        /// </summary>
+        public static string Editor_MercuryBonusTypeReplacePrompt {
+            get {
+                return ResourceManager.GetString("Editor_MercuryBonusTypeReplacePrompt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ungültige Bonus-Noten gefunden!.
+        /// </summary>
+        public static string Editor_MercuryBonusTypeTitle {
+            get {
+                return ResourceManager.GetString("Editor_MercuryBonusTypeTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Spiegel-Achse.
         /// </summary>
         public static string Editor_MirrorAxis {
