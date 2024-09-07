@@ -901,6 +901,8 @@ public class RenderEngine(MainView mainView)
 
             if (note.IsRNote) DrawRNote(canvas, note, data);
             
+            if (note.IsBonus) DrawBonusGlow(canvas, note, data);
+            
             if (note.NoteType is NoteType.HoldStart)
             {
                 if (note.Size != 60)
@@ -918,6 +920,8 @@ public class RenderEngine(MainView mainView)
                 
                 canvas.DrawArc(data.Rect, data.StartAngle + 2f, data.SweepAngle - 4f, false, brushes.GetNotePen(note, canvasScale * data.Scale * 0.5f));
             }
+            
+            if (note.IsBonus) DrawBonusFill(canvas, note, data);
             
             if (mainView.ChartEditor.SelectedNotes.Contains(note)) DrawSelection(canvas, chart, note);
             if (note == mainView.ChartEditor.HighlightedElement) DrawHighlight(canvas, chart, note);
