@@ -1831,12 +1831,9 @@ public partial class MainView : UserControl
 
         ChartEditor.CurrentNoteType = noteType;
         ChartEditor.UpdateCursorNoteType();
-
-        bool isMask = noteType is NoteType.MaskAdd or NoteType.MaskRemove;
-        bool bonusAvailable = noteType is NoteType.Touch or NoteType.SlideClockwise or NoteType.SlideCounterclockwise;
-
-        ToggleTypeRadio(isMask);
-        ToggleBonusTypeRadios(bonusAvailable);
+        
+        ToggleTypeRadio(noteType is NoteType.MaskAdd or NoteType.MaskRemove);
+        ToggleBonusTypeRadios(ChartEditor.BonusAvailable(noteType));
     }
 
     private void RadioBonusType_IsCheckedChanged(object? sender, RoutedEventArgs e)
@@ -2468,6 +2465,7 @@ public partial class MainView : UserControl
         RenderEngine.UpdateVisibleTime();
         AudioManager.LoadHitsoundSamples();
         AudioManager.UpdateVolume();
+        ToggleBonusTypeRadios(ChartEditor.BonusAvailable(ChartEditor.CurrentNoteType));
         
         // I know some maniac is going to change their refresh rate while playing a song.
         updateInterval = TimeSpan.FromSeconds(1.0 / UserConfig.RenderConfig.RefreshRate);

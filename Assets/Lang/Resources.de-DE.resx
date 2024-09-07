@@ -1194,4 +1194,7 @@ Fortfahren?</value>
   <data name=" Editor_NoNoteHighlighted" xml:space="preserve">
     <value>Keine Note ist Hervorgehoben!</value>
   </data>
+  <data name="Settings_Editor_LimitToMercuryBonusTypes" xml:space="preserve">
+    <value>Bonus-Typen auf Mercury begrenzen</value>
+  </data>
 </root>

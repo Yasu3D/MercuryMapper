@@ -1194,4 +1194,7 @@ Continue?</value>
   <data name=" Editor_NoNoteHighlighted" xml:space="preserve">
     <value>No Note is highlighted!</value>
   </data>
+  <data name="Settings_Editor_LimitToMercuryBonusTypes" xml:space="preserve">
+    <value>Limit to Mercury Bonus Types</value>
+  </data>
 </root>

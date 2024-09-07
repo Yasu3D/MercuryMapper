@@ -63,6 +63,8 @@ public class ChartEditor
     public bool LayerNoteActive = true;
     public bool LayerMaskActive = true;
     public bool LayerGimmickActive = true;
+
+    public bool BonusAvailable(NoteType type) => !mainView.UserConfig.EditorConfig.LimitToMercuryBonusTypes || type is NoteType.Touch or NoteType.SlideClockwise or NoteType.SlideCounterclockwise;
     
     public List<Note> SelectedNotes { get; } = [];
     public Note? LastSelectedNote;
@@ -1124,25 +1126,30 @@ public class ChartEditor
 
         NoteType editNoteType(Note note, NoteType currentNoteType)
         {
-            // EndOfChart, HoldSegment and HoldEnd are not editable.
-            if (note.NoteType is NoteType.HoldSegment or NoteType.HoldEnd) return note.NoteType;
+            // HoldStart, HoldSegment and HoldEnd are not editable.
+            if (note.NoteType is NoteType.HoldStart or NoteType.HoldSegment or NoteType.HoldEnd) return note.NoteType;
             
-            // Cannot edit a note into EndOfChart, HoldSegment or HoldEnd.
-            if (currentNoteType is NoteType.HoldSegment or NoteType.HoldEnd) return note.NoteType;
-
-            // HoldStart and HoldStartRNote cannot be edited into other note types.
-            if (note.NoteType is NoteType.HoldStart && currentNoteType is not NoteType.HoldStart) return note.NoteType;
-
-            // Other note types cannot be edited into HoldStart and HoldStartRNote.
-            if (note.NoteType is not NoteType.HoldStart && currentNoteType is NoteType.HoldStart) return note.NoteType;
+            // Cannot edit a note into HoldStart, HoldSegment or HoldEnd.
+            if (currentNoteType is NoteType.HoldStart or NoteType.HoldSegment or NoteType.HoldEnd) return note.NoteType;
             
             return currentNoteType;
         }
 
         BonusType editBonusType(Note note, BonusType currentBonusType)
         {
-            // EndOfChart, HoldSegment and HoldEnd are not editable.
-            return note.NoteType is NoteType.HoldSegment or NoteType.HoldEnd ? note.BonusType : currentBonusType;
+            // Always default to none for HoldSegment and HoldEnd.
+            if (note.NoteType is NoteType.HoldSegment or NoteType.HoldEnd)
+            {
+                return BonusType.None;
+            }
+            
+            // Set BonusType to None if NoteType cannot be Bonus in Mercury.
+            if (currentBonusType is BonusType.Bonus && !BonusAvailable(note.NoteType))
+            {
+                return BonusType.None;
+            }
+
+            return currentBonusType;
         }
     }
 

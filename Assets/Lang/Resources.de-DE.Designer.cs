@@ -2347,6 +2347,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Bonus-Typen auf Mercury begrenzen.
+        /// </summary>
+        public static string Settings_Editor_LimitToMercuryBonusTypes {
+            get {
+                return ResourceManager.GetString("Settings_Editor_LimitToMercuryBonusTypes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Quantisieren bei Pause.
         /// </summary>
         public static string Settings_Editor_QuantizeOnPause {

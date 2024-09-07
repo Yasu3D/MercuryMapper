@@ -196,4 +196,5 @@ public class EditorConfig
 {
     public bool QuantizeOnPause { get; set; }
     public bool HighlightPlacedNote { get; set; }
+    public bool LimitToMercuryBonusTypes { get; set; } = true;
 }

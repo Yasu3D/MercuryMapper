@@ -22,6 +22,7 @@ public partial class SettingsView_Editor : UserControl
     {
         CheckBoxQuantizeOnPause.IsChecked = Config.QuantizeOnPause;
         CheckBoxHighlightPlacedNote.IsChecked = Config.HighlightPlacedNote;
+        CheckBoxLimitToMercuryBonusTypes.IsChecked = Config.LimitToMercuryBonusTypes;
     }
     
     private void QuantizeOnPause_OnIsCheckedChanged(object? sender, RoutedEventArgs e)
@@ -32,5 +33,10 @@ public partial class SettingsView_Editor : UserControl
     private void CheckBoxHighlightPlacedNote_OnIsCheckedChanged(object? sender, RoutedEventArgs e)
     {
         Config.HighlightPlacedNote = CheckBoxHighlightPlacedNote.IsChecked ?? false;
+    }
+
+    private void CheckBoxLimitToMercuryBonusTypes_OnIsCheckedChanged(object? sender, RoutedEventArgs e)
+    {
+        Config.LimitToMercuryBonusTypes = CheckBoxLimitToMercuryBonusTypes.IsChecked ?? false;
     }
 }
