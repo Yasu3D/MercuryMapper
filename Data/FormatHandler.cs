@@ -543,6 +543,7 @@ internal static class SatHandler
             {
                 note.PrevReferencedNote = previousNote;
                 if (previousNote != null) previousNote.NextReferencedNote = note;
+                note.BonusType = BonusType.None;
             }
 
             notes.Add(note);
@@ -617,6 +618,7 @@ internal static class SatHandler
             {
                 note.PrevReferencedNote = previousNote;
                 if (previousNote != null) previousNote.NextReferencedNote = note;
+                note.BonusType = BonusType.None;
             }
 
             notes.Add(note);
