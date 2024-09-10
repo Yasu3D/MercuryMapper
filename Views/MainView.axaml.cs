@@ -169,7 +169,7 @@ public partial class MainView : UserControl
         if (RadioNoBonus == null || RadioBonus == null || RadioRNote == null) return;
         RadioBonus.IsEnabled = bonus;
 
-        if ((RadioBonus.IsChecked == true && !bonus) || (RadioRNote.IsChecked == true))
+        if (RadioBonus.IsChecked == true && !bonus)
             RadioNoBonus.IsChecked = true;
     }
 
