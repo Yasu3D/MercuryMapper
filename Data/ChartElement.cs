@@ -325,6 +325,38 @@ public class Note : ChartElement
         return first;
     }
 
+    public Note? PrevVisibleReference(bool skip = false)
+    {
+        if (!IsHold) return null;
+        if (skip) return PrevReferencedNote;
+        
+        Note? prev = PrevReferencedNote;
+
+        while (prev != null)
+        {
+            if (prev.RenderSegment) return prev;
+            prev = prev.PrevReferencedNote;
+        }
+
+        return null;
+    }
+    
+    public Note? NextVisibleReference(bool skip = false)
+    {
+        if (!IsHold) return null;
+        if (skip) return NextReferencedNote;
+        
+        Note? next = NextReferencedNote;
+
+        while (next != null)
+        {
+            if (next.RenderSegment) return next;
+            next = next.NextReferencedNote;
+        }
+
+        return null;
+    }
+    
     public string ToNetworkString()
     {
         string result = $"{Guid} {BeatData.Measure:F0} {BeatData.Tick:F0} {(int)NoteType:F0} {(int)BonusType:F0} {Position:F0} {Size:F0} {(RenderSegment ? 1 : 0)}";

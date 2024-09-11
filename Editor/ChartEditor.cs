@@ -660,6 +660,9 @@ public class ChartEditor
                     Size = Cursor.Size
                 };
                 
+                // Force bonusType to none for masks
+                if (note.IsMask) note.BonusType = BonusType.None;
+                
                 Chart.IsSaved = false;
                 UndoRedoManager.InvokeAndPush(new InsertNote(Chart, SelectedNotes, note));
                 
