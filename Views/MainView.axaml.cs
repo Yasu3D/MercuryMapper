@@ -549,6 +549,7 @@ public partial class MainView : UserControl
         QuickSettingsNumericBeatDivision.Value = UserConfig.RenderConfig.BeatDivision;
         QuickSettingsNumericNoteSpeed.Value = (decimal?)UserConfig.RenderConfig.NoteSpeed;
         QuickSettingsCheckBoxShowHiSpeed.IsChecked = UserConfig.RenderConfig.ShowHiSpeed;
+        QuickSettingsCheckBoxDrawNoRenderHoldSegments.IsChecked = UserConfig.RenderConfig.DrawNoRenderHoldSegments;
         QuickSettingsCheckBoxShowJudgementWindowMarvelous.IsChecked = UserConfig.RenderConfig.ShowJudgementWindowMarvelous;
         QuickSettingsCheckBoxShowJudgementWindowGreat.IsChecked = UserConfig.RenderConfig.ShowJudgementWindowGreat;
         QuickSettingsCheckBoxShowJudgementWindowGood.IsChecked = UserConfig.RenderConfig.ShowJudgementWindowGood;
@@ -2314,6 +2315,13 @@ public partial class MainView : UserControl
         UserConfig.RenderConfig.ShowHiSpeed = QuickSettingsCheckBoxShowHiSpeed.IsChecked ?? true;
         ApplySettings();
     }
+    
+    private void QuickSettingsDrawNoRenderHoldSegments_OnIsCheckedChanged(object? sender, RoutedEventArgs e)
+    {
+        UserConfig.RenderConfig.DrawNoRenderHoldSegments = QuickSettingsCheckBoxDrawNoRenderHoldSegments.IsChecked ?? true;
+        ApplySettings();
+    }
+
     
     private void QuickSettingsShowJudgementWindowMarvelous_OnIsCheckedChanged(object? sender, RoutedEventArgs e)
     {

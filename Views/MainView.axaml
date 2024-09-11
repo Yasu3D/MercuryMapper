@@ -623,6 +623,9 @@
                             
                             <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_ShowSpeedChanges}"/>
                             <CheckBox Name="QuickSettingsCheckBoxShowHiSpeed" HorizontalAlignment="Right" IsCheckedChanged="QuickSettingsShowHiSpeed_OnIsCheckedChanged"/>
+                            
+                            <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_DrawNoRenderHoldSegments}"/>
+                            <CheckBox Name="QuickSettingsCheckBoxDrawNoRenderHoldSegments" HorizontalAlignment="Right" IsCheckedChanged="QuickSettingsDrawNoRenderHoldSegments_OnIsCheckedChanged"/>
                         </UniformGrid>
                         
                         <Separator/>

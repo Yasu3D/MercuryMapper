@@ -1209,4 +1209,7 @@ Continue?</value>
   <data name="Editor_MercuryBonusType_SwitchMode" xml:space="preserve">
     <value>Switch to expanded Bonus Types</value>
   </data>
+  <data name="Settings_DrawNoRenderHoldSegments" xml:space="preserve">
+    <value>Draw No-Render Holds</value>
+  </data>
 </root>

@@ -31,6 +31,7 @@ public class RenderConfig
     public bool ShowJudgementWindowGood { get; set; } = false;
     public bool CutOverlappingJudgementWindows { get; set; } = false;
     public bool CutEarlyJudgementWindowOnHolds { get; set; } = false;
+    public bool DrawNoRenderHoldSegments { get; set; } = true;
 }
 
 public class KeymapConfig

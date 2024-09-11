@@ -2374,6 +2374,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Draw No-Render Holds.
+        /// </summary>
+        public static string Settings_DrawNoRenderHoldSegments {
+            get {
+                return ResourceManager.GetString("Settings_DrawNoRenderHoldSegments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Highlight Placed Note.
         /// </summary>
         public static string Settings_Editor_HighlightPlacedNote {

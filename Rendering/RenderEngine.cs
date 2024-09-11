@@ -741,8 +741,6 @@ public class RenderEngine(MainView mainView)
         HashSet<Note> checkedNotes = [];
         List<Hold> holdNotes = [];
         
-        bool showNoRender = false;
-        
         foreach (Note note in visibleNotes)
         {
             if (checkedNotes.Contains(note)) continue;
@@ -751,7 +749,7 @@ public class RenderEngine(MainView mainView)
 
             foreach (Note reference in note.References())
             {
-                if (visibleNotes.Contains(reference) && ((reference.RenderSegment && !showNoRender) || showNoRender))
+                if (visibleNotes.Contains(reference) && ((reference.RenderSegment && !RenderConfig.DrawNoRenderHoldSegments) || RenderConfig.DrawNoRenderHoldSegments))
                 {
                     hold.Segments.Add(reference);
                 }
@@ -772,7 +770,7 @@ public class RenderEngine(MainView mainView)
             if (chart.GetScaledMeasureDecimal(hold.Segments[0].BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) < ScaledCurrentMeasureDecimal && hold.Segments.Count == 1)
             {
                 Note prev = hold.Segments[0];
-                Note? next = prev.NextVisibleReference(showNoRender);
+                Note? next = prev.NextVisibleReference(RenderConfig.DrawNoRenderHoldSegments);
 
                 if (next == null) continue;
                 
@@ -813,9 +811,9 @@ public class RenderEngine(MainView mainView)
                     }
                     
                     // If it's a segment, there must be an earlier note off-screen.
-                    else if (note.PrevVisibleReference(showNoRender) != null)
+                    else if (note.PrevVisibleReference(RenderConfig.DrawNoRenderHoldSegments) != null)
                     {
-                        Note prevNote = note.PrevVisibleReference(showNoRender)!;
+                        Note prevNote = note.PrevVisibleReference(RenderConfig.DrawNoRenderHoldSegments)!;
                         ArcData prevData = getArcData(prevNote, TruncateMode.Hold);
                         
                         float ratio = MathExtensions.InverseLerp(ScaledCurrentMeasureDecimal, chart.GetScaledMeasureDecimal(note.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed), chart.GetScaledMeasureDecimal(prevNote.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed));
@@ -847,7 +845,7 @@ public class RenderEngine(MainView mainView)
                 if (i == hold.Segments.Count - 1)
                 {
                     // If there's a next note there can't be a final arc.
-                    if (note.NextVisibleReference(showNoRender) != null)
+                    if (note.NextVisibleReference(RenderConfig.DrawNoRenderHoldSegments) != null)
                     {
                         // Line to right edge
                         path.LineTo(GetPointOnArc(canvasCenter, currentData.Rect.Width * 0.5f, currentData.StartAngle + currentData.SweepAngle));

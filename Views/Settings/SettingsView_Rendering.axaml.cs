@@ -36,6 +36,7 @@ public partial class SettingsView_Rendering : UserControl
         CheckBoxShowJudgementWindowGood.IsChecked = RenderConfig.ShowJudgementWindowGood;
         CheckBoxCutEarlyJudgementWindowOnHolds.IsChecked = RenderConfig.CutEarlyJudgementWindowOnHolds;
         CheckBoxCutOverlappingJudgementWindows.IsChecked = RenderConfig.CutOverlappingJudgementWindows;
+        CheckBoxDrawNoRenderHoldSegments.IsChecked = RenderConfig.DrawNoRenderHoldSegments;
     }
     
     private void RefreshRate_OnValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
@@ -119,5 +120,10 @@ public partial class SettingsView_Rendering : UserControl
     private void CheckBoxCutOverlappingJudgementWindows_OnIsCheckedChanged(object? sender, RoutedEventArgs e)
     {
         RenderConfig.CutOverlappingJudgementWindows = CheckBoxCutOverlappingJudgementWindows.IsChecked ?? true;
+    }
+    
+    private void CheckBoxDrawNoRenderHoldSegments_OnIsCheckedChanged(object? sender, RoutedEventArgs e)
+    {
+        RenderConfig.DrawNoRenderHoldSegments = CheckBoxDrawNoRenderHoldSegments.IsChecked ?? true;
     }
 }
