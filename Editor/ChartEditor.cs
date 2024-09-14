@@ -1981,6 +1981,7 @@ public class ChartEditor
         foreach (Note note in SelectedNotes)
         {
             if (checkedNotes.Contains(note)) continue;
+            if (!note.IsHold) continue;
 
             Hold hold = new();
 
