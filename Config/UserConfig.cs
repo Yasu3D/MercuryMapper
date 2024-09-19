@@ -70,7 +70,7 @@ public class KeymapConfig
         ["EditPaste"] = new(Key.V, true, false, false),
         ["EditorInsert"] = new(Key.I),
         ["EditorPlay"] = new(Key.Space),
-        ["EditorSelectAll"] = new(Key.A, false, false, false),
+        ["EditorSelectAll"] = new(Key.A, true, false, false),
         ["EditorDeselectAll"] = new(Key.A, false, false, true),
         ["EditorCheckerDeselect"] = new(Key.A, false, true, true),
         ["EditorEndHold"] = new(Key.Enter, false, false, false),
