@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Controls.Shapes;
@@ -122,6 +123,7 @@ public class ChartEditor
             Chart.Gimmicks.Add(startTimeSig);
             Chart.StartBpm = startBpm;
             Chart.StartTimeSig = startTimeSig;
+            Chart.BpmText = startBpm.Bpm.ToString(CultureInfo.InvariantCulture);
 
             Chart.GenerateTimeEvents();
             Chart.GenerateTimeScales();

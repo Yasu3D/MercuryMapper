@@ -30,7 +30,7 @@
     
     <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto"
           ColumnDefinitions="Auto,*,*" Margin="10">
-        <TextBlock Grid.Row="0" Grid.Column="0" Text="{x:Static lang:Resources.ChartInfo_BpmText}"/>
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="{x:Static lang:Resources.Gimmick_BpmChange}"/>
         <fluent:NumberBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" Name="BpmNumberBox" Value="120"/>
         
         <TextBlock Grid.Row="1" Grid.Column="0" Text="{x:Static lang:Resources.Gimmick_TimeSigChange}"/>
