@@ -384,6 +384,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Segmente Löschen.
+        /// </summary>
+        public static string Editor_DeleteSegments {
+            get {
+                return ResourceManager.GetString("Editor_DeleteSegments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Auswahl Löschen.
         /// </summary>
         public static string Editor_DeleteSelection {
@@ -2975,6 +2984,15 @@ namespace MercuryMapper.Assets.Lang {
         public static string ToolTip_ConvertToInstantMask {
             get {
                 return ResourceManager.GetString("ToolTip_ConvertToInstantMask", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Löscht alle ausgewählten No-Render Haltesegmente.
+        /// </summary>
+        public static string ToolTip_DeleteSegments {
+            get {
+                return ResourceManager.GetString("ToolTip_DeleteSegments", resourceCulture);
             }
         }
         

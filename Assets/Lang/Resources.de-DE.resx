@@ -1212,4 +1212,10 @@ Fortfahren?</value>
   <data name="Settings_DrawNoRenderHoldSegments" xml:space="preserve">
     <value>Zeichne No-Render Holds</value>
   </data>
+  <data name="Editor_DeleteSegments" xml:space="preserve">
+    <value>Segmente Löschen</value>
+  </data>
+  <data name="ToolTip_DeleteSegments" xml:space="preserve">
+    <value>Löscht alle ausgewählten No-Render Haltesegmente</value>
+  </data>
 </root>

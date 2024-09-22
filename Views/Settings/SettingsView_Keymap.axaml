@@ -56,6 +56,7 @@
                     <TreeViewItem Name="EditorStitchHold" Header="{x:Static lang:Resources.Editor_StitchHold}" />
                     <TreeViewItem Name="EditorSplitHold" Header="{x:Static lang:Resources.Editor_SplitHold}"/>
                     <TreeViewItem Name="EditorInsertHoldSegment" Header="{x:Static lang:Resources.Editor_InsertHoldSegment}" />
+                    <TreeViewItem Name="EditorDeleteSegments" Header="{x:Static lang:Resources.Editor_DeleteSegments}" />
                 </TreeViewItem>
 
                 <TreeViewItem Header="{x:Static lang:Resources.Settings_Header_EditNotes}" Classes="HideKeybind">

@@ -844,6 +844,12 @@ public partial class MainView : UserControl
             e.Handled = true;
             return;
         }
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorDeleteSegments"]))
+        {
+            ChartEditor.DeleteSegments();
+            e.Handled = true;
+            return;
+        }
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorInsertHoldSegment"]))
         {
             ChartEditor.InsertHoldSegment();
@@ -2371,6 +2377,8 @@ public partial class MainView : UserControl
     private void ButtonSplitHold_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.SplitHold();
     
     private void ButtonInsertHoldSegment_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.InsertHoldSegment();
+
+    private void ButtonDeleteSegments_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.DeleteSegments();
     
     private void NumericMirrorAxis_OnValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
     {

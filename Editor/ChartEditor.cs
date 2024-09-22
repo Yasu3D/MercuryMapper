@@ -1705,6 +1705,35 @@ public class ChartEditor
         Chart.IsSaved = false;
         HighlightedElement = null;
     }
+
+    public void DeleteSegments()
+    {
+        List<DeleteHoldNote> holdOperationList = [];
+        
+        foreach (Note selected in SelectedNotes.OrderByDescending(x => x.BeatData.FullTick))
+        {
+            if (selected.NoteType != NoteType.HoldSegment || selected.RenderSegment) continue;
+            
+            addOperation(selected);   
+        }
+        
+        // Temporarily undo all hold operations
+        foreach (DeleteHoldNote _ in holdOperationList)
+        {
+            UndoRedoManager.Undo(false);
+        }
+        
+        UndoRedoManager.InvokeAndPush(new CompositeOperation(holdOperationList));
+        Chart.IsSaved = false;
+        return;
+
+        void addOperation(Note note)
+        {
+            DeleteHoldNote holdOp = new(Chart, SelectedNotes, note, note.References().FirstOrDefault()?.BonusType ?? BonusType.None);
+            holdOperationList.Add(holdOp);
+            UndoRedoManager.InvokeAndPush(holdOp);
+        }
+    }
     
     public void EditHold()
     {
