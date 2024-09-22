@@ -405,7 +405,8 @@ public class ConnectionManager(MainView main)
             {
                 string opData = $"{stitchHold.First.ToNetworkString()}\n" +
                                 $"{stitchHold.Second.ToNetworkString()}\n" + 
-                                $"{(int)stitchHold.SecondType}";
+                                $"{(int)stitchHold.SecondNoteType}\n" +
+                                $"{(int)stitchHold.SecondBonusType}";
                 SendMessage(new MessageSerializer(MessageTypes.StitchHold, [ opData ], [ (int)operationDirection ]));
                 break;
             }
@@ -1031,9 +1032,10 @@ public class ConnectionManager(MainView main)
                         Note? second = Chart.FindNoteByGuid(secondData[0]);
                         if (first == null || second == null) return;
 
-                        NoteType secondType = (NoteType)Convert.ToInt32(operationData[2], CultureInfo.InvariantCulture);
+                        NoteType secondNoteType = (NoteType)Convert.ToInt32(operationData[2], CultureInfo.InvariantCulture);
+                        BonusType secondBonusType = operationData.Length == 4 ? (BonusType)Convert.ToInt32(operationData[3], CultureInfo.InvariantCulture) : BonusType.None;
 
-                        StitchHold operation = new(Chart, first, second, secondType);
+                        StitchHold operation = new(Chart, first, second, secondNoteType, secondBonusType);
                         operation.Undo();
                         ChartEditor.UndoRedoManager.Invoke();
                     }
@@ -1044,9 +1046,10 @@ public class ConnectionManager(MainView main)
                         Note? second = Chart.FindNoteByGuid(secondData[0]);
                         if (first == null || second == null) return;
 
-                        NoteType secondType = (NoteType)Convert.ToInt32(operationData[2], CultureInfo.InvariantCulture);
+                        NoteType secondNoteType = (NoteType)Convert.ToInt32(operationData[2], CultureInfo.InvariantCulture);
+                        BonusType secondBonusType = operationData.Length == 4 ? (BonusType)Convert.ToInt32(operationData[3], CultureInfo.InvariantCulture) : BonusType.None;
 
-                        StitchHold operation = new(Chart, first, second, secondType);
+                        StitchHold operation = new(Chart, first, second, secondNoteType, secondBonusType);
 
                         operation.Redo();
                         ChartEditor.UndoRedoManager.Invoke();

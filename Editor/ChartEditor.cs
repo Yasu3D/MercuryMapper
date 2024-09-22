@@ -1674,7 +1674,7 @@ public class ChartEditor
         if (first.NoteType is not NoteType.HoldEnd) return;
         if (second.NoteType is not (NoteType.HoldStart)) return;
 
-        UndoRedoManager.InvokeAndPush(new StitchHold(Chart, first, second, second.NoteType));
+        UndoRedoManager.InvokeAndPush(new StitchHold(Chart, first, second, second.NoteType, second.BonusType));
         Chart.IsSaved = false;
     }
 
@@ -1772,6 +1772,8 @@ public class ChartEditor
         
         void addOperationNote(Note note)
         {
+            if (note.BeatData.FullTick == 0) return;
+            
             Note newNote = new(note, note.Guid)
             {
                 BeatData = new(note.BeatData.FullTick + ticks)
@@ -1782,6 +1784,8 @@ public class ChartEditor
 
         void addOperationGimmick(Gimmick gimmick)
         {
+            if (gimmick.BeatData.FullTick == 0) return;
+            
             Gimmick newGimmick = new(gimmick)
             {
                 BeatData = new(gimmick.BeatData.FullTick + ticks)
