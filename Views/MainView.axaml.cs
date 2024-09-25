@@ -71,7 +71,7 @@ public partial class MainView : UserControl
     }
 
     public bool CanShutdown;
-    public const string AppVersion = "v3.2.0";
+    public const string AppVersion = "v3.2.1";
     public const string ServerVersion = "1.0.0";
     private const string ConfigPath = "UserConfig.toml";
 
@@ -1433,7 +1433,7 @@ public partial class MainView : UserControl
             CloseButtonText = Assets.Lang.Resources.Generic_Cancel,
             Resources =
             {
-                ["ContentDialogMaxWidth"] = 730
+                ["ContentDialogMaxWidth"] = 730.0
             }
         };
 
