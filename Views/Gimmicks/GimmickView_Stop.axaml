@@ -16,13 +16,13 @@
     
     <Grid RowDefinitions="*,*" ColumnDefinitions="*,*,*,*">
         <TextBlock Grid.Row="0" Grid.Column="0" Text="{x:Static lang:Resources.Gimmick_StopStart}"/>
-        <NumericUpDown Grid.Row="0" Grid.Column="1" Margin="0,0,12,2" Name="StopStartMeasureNumeric" Increment="1" Value="0"/>
-        <NumericUpDown Grid.Row="0" Grid.Column="2" Margin="2,0,2,2" Name="StopStartBeatNumeric" Increment="1" Value="0"/>
-        <NumericUpDown Grid.Row="0" Grid.Column="3" Margin="2,0,0,2" Name="StopStartDivisionNumeric" Minimum="1" Maximum="1920" Increment="1" Value="16"/>
+        <NumericUpDown Grid.Row="0" Grid.Column="1" Margin="0,0,12,2" Name="StopStartMeasureNumeric" Minimum="0" Increment="1" Value="0"/>
+        <NumericUpDown Grid.Row="0" Grid.Column="2" Margin="2,0,2,2" Name="StopStartBeatNumeric" Minimum="-1" Increment="1" Value="0" ValueChanged="StopStartBeatNumeric_OnValueChanged"/>
+        <NumericUpDown Grid.Row="0" Grid.Column="3" Margin="2,0,0,2" Name="StopStartDivisionNumeric" Minimum="1" Maximum="1920" Increment="1" Value="16" ValueChanged="StopStartDivisionNumeric_OnValueChanged"/>
         
         <TextBlock Grid.Row="1" Grid.Column="0" Text="{x:Static lang:Resources.Gimmick_StopEnd}"/>
-        <NumericUpDown Grid.Row="1" Grid.Column="1" Margin="0,2,12,0" Name="StopEndMeasureNumeric" Increment="1" Value="0"/>
-        <NumericUpDown Grid.Row="1" Grid.Column="2" Margin="2,2,2,0" Name="StopEndBeatNumeric" Increment="1" Value="0"/>
-        <NumericUpDown Grid.Row="1" Grid.Column="3" Margin="2,2,0,0" Name="StopEndDivisionNumeric" Minimum="1" Maximum="1920" Increment="1" Value="16"/>
+        <NumericUpDown Grid.Row="1" Grid.Column="1" Margin="0,2,12,0" Name="StopEndMeasureNumeric" Minimum="0" Increment="1" Value="0"/>
+        <NumericUpDown Grid.Row="1" Grid.Column="2" Margin="2,2,2,0" Name="StopEndBeatNumeric" Minimum="-1" Increment="1" Value="0" ValueChanged="StopEndBeatNumeric_OnValueChanged"/>
+        <NumericUpDown Grid.Row="1" Grid.Column="3" Margin="2,2,0,0" Name="StopEndDivisionNumeric" Minimum="1" Maximum="1920" Increment="1" Value="16" ValueChanged="StopEndDivisionNumeric_OnValueChanged"/>
     </Grid>
 </UserControl>

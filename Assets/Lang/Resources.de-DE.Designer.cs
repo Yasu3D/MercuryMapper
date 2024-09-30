@@ -3355,5 +3355,32 @@ namespace MercuryMapper.Assets.Lang {
                 return ResourceManager.GetString("ToolTip_TimeSignature", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Gimmick konnte nicht Eingefügt werden..
+        /// </summary>
+        public static string Warning_CouldntInsertGimmick {
+            get {
+                return ResourceManager.GetString("Warning_CouldntInsertGimmick", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Die individuellen Bestandteile eines Reverse Gimmicks müssen in korrekter Reihenfolge bleiben. Jeder Zeitstempel muss später als der vorherige sein..
+        /// </summary>
+        public static string Warning_ReverseOrder {
+            get {
+                return ResourceManager.GetString("Warning_ReverseOrder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ein Stopp-Ende kann nicht vor einem Stopp-Anfang sein..
+        /// </summary>
+        public static string Warning_StopOrder {
+            get {
+                return ResourceManager.GetString("Warning_StopOrder", resourceCulture);
+            }
+        }
     }
 }

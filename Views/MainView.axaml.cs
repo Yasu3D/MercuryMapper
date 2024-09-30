@@ -71,7 +71,7 @@ public partial class MainView : UserControl
     }
 
     public bool CanShutdown;
-    public const string AppVersion = "v3.2.1";
+    public const string AppVersion = "v3.2.2";
     public const string ServerVersion = "1.0.0";
     private const string ConfigPath = "UserConfig.toml";
 
@@ -1698,7 +1698,7 @@ public partial class MainView : UserControl
         ContentDialog dialog = new()
         {
             Content = shiftView,
-            Title = Assets.Lang.Resources.Editor_AddGimmick,
+            Title = Assets.Lang.Resources.Menu_ShiftChart,
             CloseButtonText = Assets.Lang.Resources.Generic_Cancel,
             PrimaryButtonText = Assets.Lang.Resources.Generic_Ok
         };
@@ -1960,6 +1960,12 @@ public partial class MainView : UserControl
             ContentDialogResult result = await dialog.ShowAsync();
             if (result is not ContentDialogResult.Primary) return;
             if (gimmickView.IsValueNull) return;
+            
+            if (gimmickView.StartMeasureDecimal > gimmickView.EndMeasureDecimal)
+            {
+                ShowWarningMessage(Assets.Lang.Resources.Warning_CouldntInsertGimmick, Assets.Lang.Resources.Warning_StopOrder);
+                return;
+            }
 
             ChartEditor.InsertStop(gimmickView.StartMeasureDecimal, gimmickView.EndMeasureDecimal);
         });
@@ -1981,6 +1987,14 @@ public partial class MainView : UserControl
             ContentDialogResult result = await dialog.ShowAsync();
             if (result is not ContentDialogResult.Primary) return;
             if (gimmickView.IsValueNull) return;
+            
+            if (gimmickView.EffectStartMeasureDecimal > gimmickView.EffectEndMeasureDecimal ||
+                gimmickView.EffectStartMeasureDecimal > gimmickView.NoteEndMeasureDecimal ||
+                gimmickView.EffectEndMeasureDecimal > gimmickView.NoteEndMeasureDecimal)
+            {
+                ShowWarningMessage(Assets.Lang.Resources.Warning_CouldntInsertGimmick, Assets.Lang.Resources.Warning_ReverseOrder);
+                return;
+            }
 
             ChartEditor.InsertReverse(gimmickView.EffectStartMeasureDecimal, gimmickView.EffectEndMeasureDecimal, gimmickView.NoteEndMeasureDecimal);
         });

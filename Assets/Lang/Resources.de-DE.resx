@@ -1218,4 +1218,13 @@ Fortfahren?</value>
   <data name="ToolTip_DeleteSegments" xml:space="preserve">
     <value>Löscht alle ausgewählten No-Render Haltesegmente</value>
   </data>
+  <data name="Warning_StopOrder" xml:space="preserve">
+    <value>Ein Stopp-Ende kann nicht vor einem Stopp-Anfang sein.</value>
+  </data>
+  <data name="Warning_ReverseOrder" xml:space="preserve">
+    <value>Die individuellen Bestandteile eines Reverse Gimmicks müssen in korrekter Reihenfolge bleiben. Jeder Zeitstempel muss später als der vorherige sein.</value>
+  </data>
+  <data name="Warning_CouldntInsertGimmick" xml:space="preserve">
+    <value>Gimmick konnte nicht Eingefügt werden.</value>
+  </data>
 </root>

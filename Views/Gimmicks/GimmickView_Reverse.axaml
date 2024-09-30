@@ -16,18 +16,18 @@
     
     <Grid RowDefinitions="*,*,*" ColumnDefinitions="2*,*,*,*" Margin="10">
         <TextBlock Grid.Row="0" Grid.Column="0" Text="{x:Static lang:Resources.Gimmick_ReverseEffectStart}" ToolTip.Tip="{x:Static lang:Resources.ToolTip_Reverse_EffectStart}"/>
-        <NumericUpDown Grid.Row="0" Grid.Column="1" Margin="0,0,12,2" Name="ReverseEffectStartMeasureNumeric" Increment="1" Value="0"/>
-        <NumericUpDown Grid.Row="0" Grid.Column="2" Margin="2,0,2,2" Name="ReverseEffectStartBeatNumeric" Increment="1" Value="0"/>
-        <NumericUpDown Grid.Row="0" Grid.Column="3" Margin="2,0,0,2" Name="ReverseEffectStartDivisionNumeric" Minimum="1" Maximum="1920" Increment="1" Value="16"/>
+        <NumericUpDown Grid.Row="0" Grid.Column="1" Margin="0,0,12,2" Name="ReverseEffectStartMeasureNumeric" Minimum="0" Increment="1" Value="0"/>
+        <NumericUpDown Grid.Row="0" Grid.Column="2" Margin="2,0,2,2" Name="ReverseEffectStartBeatNumeric" Minimum="-1" Increment="1" Value="0" ValueChanged="ReverseEffectStartBeatNumeric_OnValueChanged"/>
+        <NumericUpDown Grid.Row="0" Grid.Column="3" Margin="2,0,0,2" Name="ReverseEffectStartDivisionNumeric" Minimum="1" Maximum="1920" Increment="1" Value="16" ValueChanged="ReverseEffectStartDivisionNumeric_OnValueChanged"/>
         
         <TextBlock Grid.Row="1" Grid.Column="0" Text="{x:Static lang:Resources.Gimmick_ReverseEffectEnd}" ToolTip.Tip="{x:Static lang:Resources.ToolTip_Reverse_EffectEnd}"/>
-        <NumericUpDown Grid.Row="1" Grid.Column="1" Margin="0,2,12,0" Name="ReverseEffectEndMeasureNumeric" Increment="1" Value="0"/>
-        <NumericUpDown Grid.Row="1" Grid.Column="2" Margin="2,2,2,0" Name="ReverseEffectEndBeatNumeric" Increment="1" Value="0"/>
-        <NumericUpDown Grid.Row="1" Grid.Column="3" Margin="2,2,0,0" Name="ReverseEffectEndDivisionNumeric" Minimum="1" Maximum="1920" Increment="1" Value="16"/>
+        <NumericUpDown Grid.Row="1" Grid.Column="1" Margin="0,2,12,0" Name="ReverseEffectEndMeasureNumeric" Minimum="0" Increment="1" Value="0"/>
+        <NumericUpDown Grid.Row="1" Grid.Column="2" Margin="2,2,2,0" Name="ReverseEffectEndBeatNumeric" Minimum="-1" Increment="1" Value="0" ValueChanged="ReverseEffectEndBeatNumeric_OnValueChanged"/>
+        <NumericUpDown Grid.Row="1" Grid.Column="3" Margin="2,2,0,0" Name="ReverseEffectEndDivisionNumeric" Minimum="1" Maximum="1920" Increment="1" Value="16" ValueChanged="ReverseEffectEndDivisionNumeric_OnValueChanged"/>
         
         <TextBlock Grid.Row="2" Grid.Column="0" Text="{x:Static lang:Resources.Gimmick_ReverseNoteEnd}" ToolTip.Tip="{x:Static lang:Resources.ToolTip_Reverse_NoteZoneEnd}"/>
-        <NumericUpDown Grid.Row="2" Grid.Column="1" Margin="0,2,12,0" Name="ReverseNoteEndMeasureNumeric" Increment="1" Value="0"/>
-        <NumericUpDown Grid.Row="2" Grid.Column="2" Margin="2,2,2,0" Name="ReverseNoteEndBeatNumeric" Increment="1" Value="0"/>
-        <NumericUpDown Grid.Row="2" Grid.Column="3" Margin="2,2,0,0" Name="ReverseNoteEndDivisionNumeric" Minimum="1" Maximum="1920" Increment="1" Value="16"/>
+        <NumericUpDown Grid.Row="2" Grid.Column="1" Margin="0,2,12,0" Name="ReverseNoteEndMeasureNumeric" Minimum="0" Increment="1" Value="0"/>
+        <NumericUpDown Grid.Row="2" Grid.Column="2" Margin="2,2,2,0" Name="ReverseNoteEndBeatNumeric" Minimum="-1" Increment="1" Value="0" ValueChanged="ReverseNoteEndBeatNumeric_OnValueChanged"/>
+        <NumericUpDown Grid.Row="2" Grid.Column="3" Margin="2,2,0,0" Name="ReverseNoteEndDivisionNumeric" Minimum="1" Maximum="1920" Increment="1" Value="16" ValueChanged="ReverseNoteEndDivisionNumeric_OnValueChanged"/>
     </Grid>
 </UserControl>

@@ -1218,4 +1218,13 @@ Continue?</value>
   <data name="ToolTip_DeleteSegments" xml:space="preserve">
     <value>Deletes all selected No-Render Hold Segments</value>
   </data>
+  <data name="Warning_StopOrder" xml:space="preserve">
+    <value>A Stop End cannot be in front of a Stop Start.</value>
+  </data>
+  <data name="Warning_ReverseOrder" xml:space="preserve">
+    <value>A Reverse's individual gimmicks cannot be out of order. Each timestamp must be greater than the previous.</value>
+  </data>
+  <data name="Warning_CouldntInsertGimmick" xml:space="preserve">
+    <value>Couldn't Insert Gimmick</value>
+  </data>
 </root>

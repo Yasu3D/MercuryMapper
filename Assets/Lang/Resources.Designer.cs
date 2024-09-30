@@ -3355,5 +3355,32 @@ namespace MercuryMapper.Assets.Lang {
                 return ResourceManager.GetString("ToolTip_TimeSignature", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Couldn&apos;t Insert Gimmick.
+        /// </summary>
+        public static string Warning_CouldntInsertGimmick {
+            get {
+                return ResourceManager.GetString("Warning_CouldntInsertGimmick", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A Reverse&apos;s individual gimmicks cannot be out of order. Each timestamp must be greater than the previous..
+        /// </summary>
+        public static string Warning_ReverseOrder {
+            get {
+                return ResourceManager.GetString("Warning_ReverseOrder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A Stop End cannot be in front of a Stop Start..
+        /// </summary>
+        public static string Warning_StopOrder {
+            get {
+                return ResourceManager.GetString("Warning_StopOrder", resourceCulture);
+            }
+        }
     }
 }
