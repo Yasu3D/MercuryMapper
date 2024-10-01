@@ -1987,8 +1987,9 @@ public class ChartEditor
                 int left = random.Next(lMin, lMax);
                 int right = random.Next(rMin, rMax);
 
-                int position = (note.Position - left) % 60;
+                int position = MathExtensions.Modulo(note.Position - left, 60);
                 int size = int.Clamp(note.Size + left + right, Note.MinSize(note.NoteType, note.BonusType), 60);
+                
                 
                 Note newNote = new(note, note.Guid)
                 {
