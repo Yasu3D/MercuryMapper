@@ -1465,10 +1465,6 @@ public class RenderEngine(MainView mainView)
                     window.GreatEarly = window.MarvelousEarly;
                 }
             }
-            
-            bool drawMarvelous = window.MarvelousEarly != 0 && window.MarvelousLate != 0;
-            bool drawGreat = window.GreatEarly != 0 && window.GreatLate != 0;
-            bool drawGood = window.GoodEarly != 0 && window.GoodLate != 0;
 
             float noteTimestamp = chart.MeasureDecimal2Timestamp(note.BeatData.MeasureDecimal);
 
@@ -1491,7 +1487,7 @@ public class RenderEngine(MainView mainView)
             
             if (maxLate < CurrentMeasureDecimal) continue;
             if (chart.GetScaledMeasureDecimal(minEarly, RenderConfig.ShowHiSpeed) > ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal) continue;
-
+            
             // Cut overlapping windows
             if (RenderConfig.CutOverlappingJudgementWindows)
             {
@@ -1558,7 +1554,19 @@ public class RenderEngine(MainView mainView)
                     window.GreatEarly = float.Max(window.GreatEarly, centerMeasureDecimal);
                     window.GoodEarly = float.Max(window.GoodEarly, centerMeasureDecimal);
                 }
+                
+                // Recalculate maxLate/minEarly after cutting timing windows
+                minEarly = float.Min(float.Min(window.MarvelousEarly, window.GreatEarly), window.GoodEarly);
+                maxLate = float.Max(float.Max(window.MarvelousLate, window.GreatLate), window.GoodLate);
+                
+                if (maxLate < CurrentMeasureDecimal) continue;
+                if (chart.GetScaledMeasureDecimal(minEarly, RenderConfig.ShowHiSpeed) > ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal) continue;
             }
+            
+            bool drawGreatEarly = window.GreatEarly < window.MarvelousEarly;
+            bool drawGreatLate = window.GreatLate > window.MarvelousLate;
+            bool drawGoodEarly = window.GoodEarly < window.GreatEarly;
+            bool drawGoodLate = window.GoodLate > window.GreatLate;
             
             float startAngle = note.Position * -6;
             float sweepAngle = note.Size * -6 + 0.1f;
@@ -1582,35 +1590,49 @@ public class RenderEngine(MainView mainView)
             SKRect goodEarlyRect = GetRect(goodEarlyScale);
             SKRect goodLateRect = GetRect(goodLateScale);
 
-            if (drawGood && RenderConfig.ShowJudgementWindowGood)
+            if (drawGoodEarly || drawGoodLate && RenderConfig.ShowJudgementWindowGood)
             {
                 SKPath goodPath = new();
-                goodPath.ArcTo(goodEarlyRect, startAngle, sweepAngle, true);
-                goodPath.ArcTo(greatEarlyRect, startAngle + sweepAngle, -sweepAngle, false);
-                goodPath.Close();
-                goodPath.ArcTo(greatLateRect, startAngle, sweepAngle, true);
-                goodPath.ArcTo(goodLateRect, startAngle + sweepAngle, -sweepAngle, false);
-                goodPath.Close();
+                if (drawGoodEarly)
+                {
+                    goodPath.ArcTo(goodEarlyRect, startAngle, sweepAngle, true);
+                    goodPath.ArcTo(greatEarlyRect, startAngle + sweepAngle, -sweepAngle, false);
+                    goodPath.Close();
+                }
+
+                if (drawGoodLate)
+                {
+                    goodPath.ArcTo(greatLateRect, startAngle, sweepAngle, true);
+                    goodPath.ArcTo(goodLateRect, startAngle + sweepAngle, -sweepAngle, false);
+                    goodPath.Close();
+                }
             
                 canvas.DrawPath(goodPath, brushes.JudgementGoodFill);
                 canvas.DrawPath(goodPath, brushes.JudgementGoodPen);
             }
             
-            if (drawGreat && RenderConfig.ShowJudgementWindowGreat)
+            if (drawGreatEarly || drawGreatLate && RenderConfig.ShowJudgementWindowGreat)
             {
                 SKPath greatPath = new();
-                greatPath.ArcTo(greatEarlyRect, startAngle, sweepAngle, true);
-                greatPath.ArcTo(marvelousEarlyRect, startAngle + sweepAngle, -sweepAngle, false);
-                greatPath.Close();
-                greatPath.ArcTo(marvelousLateRect, startAngle, sweepAngle, true);
-                greatPath.ArcTo(greatLateRect, startAngle + sweepAngle, -sweepAngle, false);
-                greatPath.Close();
+                if (drawGreatEarly)
+                {
+                    greatPath.ArcTo(greatEarlyRect, startAngle, sweepAngle, true);
+                    greatPath.ArcTo(marvelousEarlyRect, startAngle + sweepAngle, -sweepAngle, false);
+                    greatPath.Close();
+                }
+
+                if (drawGreatLate)
+                {
+                    greatPath.ArcTo(marvelousLateRect, startAngle, sweepAngle, true);
+                    greatPath.ArcTo(greatLateRect, startAngle + sweepAngle, -sweepAngle, false);
+                    greatPath.Close();
+                }
             
                 canvas.DrawPath(greatPath, brushes.JudgementGreatFill);
                 canvas.DrawPath(greatPath, brushes.JudgementGreatPen);
             }
             
-            if (drawMarvelous && RenderConfig.ShowJudgementWindowMarvelous)
+            if (RenderConfig.ShowJudgementWindowMarvelous)
             {
                 SKPath marvelousPath = new();
                 marvelousPath.ArcTo(marvelousEarlyRect, startAngle, sweepAngle, true);
