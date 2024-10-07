@@ -492,7 +492,9 @@ public class ChartEditor
                 bool inTimeRange = x.BeatData.FullTick >= BoxSelect.SelectionStart.FullTick &&
                                    x.BeatData.FullTick <= BoxSelect.SelectionEnd.FullTick;
 
-                return inTimeRange && MathExtensions.IsPartiallyOverlapping(x.Position, x.Position + x.Size, BoxSelect.Position, BoxSelect.Position + BoxSelect.Size);
+                bool isLayerActive = x.IsMask && LayerMaskActive || !x.IsMask && LayerNoteActive;
+
+                return inTimeRange && isLayerActive && MathExtensions.IsPartiallyOverlapping(x.Position, x.Position + x.Size, BoxSelect.Position, BoxSelect.Position + BoxSelect.Size);
             });
             
             foreach (Note note in selectable)
