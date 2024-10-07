@@ -1144,8 +1144,8 @@ public class ChartEditor
 
         BonusType editBonusType(Note note, BonusType currentBonusType)
         {
-            // Always default to none for HoldSegment and HoldEnd.
-            if (note.NoteType is NoteType.HoldSegment or NoteType.HoldEnd)
+            // Always default to none for MaskAdd, MaskRemove, HoldSegment and HoldEnd.
+            if (note.NoteType is NoteType.MaskAdd or NoteType.MaskRemove or NoteType.HoldSegment or NoteType.HoldEnd)
             {
                 return BonusType.None;
             }

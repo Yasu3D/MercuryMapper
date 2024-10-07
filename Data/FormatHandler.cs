@@ -537,7 +537,11 @@ internal static class SatHandler
 
             Note note = new(measure, tick, noteType, bonusType, index, position, size, renderSegment);
 
-            if (note.IsMask) note.MaskDirection = maskDirection;
+            if (note.IsMask)
+            {
+                note.MaskDirection = maskDirection;
+                note.BonusType = BonusType.None;
+            }
 
             if (noteType is NoteType.HoldSegment or NoteType.HoldEnd)
             {
@@ -612,7 +616,11 @@ internal static class SatHandler
 
             Note note = new(measure, tick, noteType, bonusType, index, position, size, renderSegment, guid);
 
-            if (note.IsMask) note.MaskDirection = maskDirection;
+            if (note.IsMask)
+            {
+                note.MaskDirection = maskDirection;
+                note.BonusType = BonusType.None;
+            }
 
             if (noteType is NoteType.HoldSegment or NoteType.HoldEnd)
             {
