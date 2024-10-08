@@ -2237,6 +2237,7 @@ public class ChartEditor
         Comment newComment = new(guid, beatData, text, marker);
         
         Chart.Comments.Add(newComment.Guid.ToString(), newComment);
+        Chart.Comments = Chart.Comments.OrderBy(x => x.Value.BeatData.FullTick).ToDictionary();
         mainView.PanelCommentMarker.Children.Add(marker);
         ToolTip.SetTip(marker, text);
         ToolTip.SetShowDelay(marker, 10);
