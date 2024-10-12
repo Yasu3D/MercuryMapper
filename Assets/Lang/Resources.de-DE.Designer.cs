@@ -735,6 +735,42 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Beat Rückwärts Springen.
+        /// </summary>
+        public static string Editor_JumpBeatDown {
+            get {
+                return ResourceManager.GetString("Editor_JumpBeatDown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Beat Vorwärts Springen.
+        /// </summary>
+        public static string Editor_JumpBeatUp {
+            get {
+                return ResourceManager.GetString("Editor_JumpBeatUp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Takt Rückwärts Springen.
+        /// </summary>
+        public static string Editor_JumpMeasureDown {
+            get {
+                return ResourceManager.GetString("Editor_JumpMeasureDown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Takt Vorwärts Springen.
+        /// </summary>
+        public static string Editor_JumpMeasureUp {
+            get {
+                return ResourceManager.GetString("Editor_JumpMeasureUp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Layer: Gimmick.
         /// </summary>
         public static string Editor_LayerGimmick {

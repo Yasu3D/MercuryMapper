@@ -1092,6 +1092,46 @@ public partial class MainView : UserControl
             return;
         }
 
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorJumpMeasureUp"]))
+        {
+            // I know some gremlin would try this.
+            if (NumericMeasure.Value >= NumericMeasure.Maximum && NumericBeatValue.Value >= NumericBeatDivisor.Value - 1) return;
+            
+            if (AudioManager.CurrentSong == null || AudioManager.CurrentSong.IsPlaying) return;
+            NumericMeasure.Value++;
+            
+            e.Handled = true;
+            return;
+        }
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorJumpMeasureDown"]))
+        {
+            if (AudioManager.CurrentSong == null || AudioManager.CurrentSong.IsPlaying) return;
+            NumericMeasure.Value++;
+            
+            e.Handled = true;
+            return;
+        }
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorJumpBeatUp"]))
+        {
+            // I know some gremlin would try this.
+            if (NumericMeasure.Value >= NumericMeasure.Maximum && NumericBeatValue.Value >= NumericBeatDivisor.Value - 1) return;
+            
+            if (AudioManager.CurrentSong == null || AudioManager.CurrentSong.IsPlaying) return;
+            NumericBeatValue.Value++;
+            
+            e.Handled = true;
+            return;
+        }
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorJumpBeatDown"]))
+        {
+            if (AudioManager.CurrentSong == null || AudioManager.CurrentSong.IsPlaying) return;
+            NumericBeatValue.Value--;
+            
+            e.Handled = true;
+            return;
+        }
+        
+        
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["RenderIncreaseNoteSpeed"]))
         {
             UserConfig.RenderConfig.NoteSpeed = double.Min(UserConfig.RenderConfig.NoteSpeed + 0.1, 6);

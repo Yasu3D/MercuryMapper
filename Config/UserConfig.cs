@@ -120,6 +120,10 @@ public class KeymapConfig
         ["EditorQuickEditDecreasePosition"] = new(Key.Left, false, true, false),
         ["EditorQuickEditIncreaseTimestamp"] = new(Key.Up, true, false, false),
         ["EditorQuickEditDecreaseTimestamp"] = new(Key.Down, true, false, false),
+        ["EditorJumpMeasureUp"] = new(Key.Right),
+        ["EditorJumpMeasureDown"] = new(Key.Left),
+        ["EditorJumpBeatUp"] = new(Key.Up),
+        ["EditorJumpBeatDown"] = new(Key.Down),
         ["RenderIncreaseNoteSpeed"] = new(Key.Add, false, true, false),
         ["RenderDecreaseNoteSpeed"] = new(Key.Subtract, false, true, false)
     };

@@ -1227,4 +1227,16 @@ Continue?</value>
   <data name="Warning_CouldntInsertGimmick" xml:space="preserve">
     <value>Couldn't Insert Gimmick</value>
   </data>
+  <data name="Editor_JumpMeasureUp" xml:space="preserve">
+    <value>Jump Measure Forward</value>
+  </data>
+  <data name="Editor_JumpMeasureDown" xml:space="preserve">
+    <value>Jump Measure Back</value>
+  </data>
+  <data name="Editor_JumpBeatUp" xml:space="preserve">
+    <value>Jump Beat Forward</value>
+  </data>
+  <data name="Editor_JumpBeatDown" xml:space="preserve">
+    <value>Jump Beat Back</value>
+  </data>
 </root>

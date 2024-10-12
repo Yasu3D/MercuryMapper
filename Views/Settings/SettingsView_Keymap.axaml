@@ -33,6 +33,10 @@
                     <TreeViewItem Name="EditorSetLoopEnd" Header="{x:Static lang:Resources.Editor_SetLoopEnd}" />
                     <TreeViewItem Name="EditorIncreasePlaybackSpeed" Header="{x:Static lang:Resources.Editor_IncreasePlaybackSpeed}" />
                     <TreeViewItem Name="EditorDecreasePlaybackSpeed" Header="{x:Static lang:Resources.Editor_DecreasePlaybackSpeed}" />
+                    <TreeViewItem Name="EditorJumpMeasureUp" Header="{x:Static lang:Resources.Editor_JumpMeasureUp}" />
+                    <TreeViewItem Name="EditorJumpMeasureDown" Header="{x:Static lang:Resources.Editor_JumpMeasureDown}" />
+                    <TreeViewItem Name="EditorJumpBeatUp" Header="{x:Static lang:Resources.Editor_JumpBeatUp}" />
+                    <TreeViewItem Name="EditorJumpBeatDown" Header="{x:Static lang:Resources.Editor_JumpBeatDown}" />
                     <TreeViewItem Name="EditorAddComment" Header="{x:Static lang:Resources.Editor_AddComment}" />
                 </TreeViewItem>
 

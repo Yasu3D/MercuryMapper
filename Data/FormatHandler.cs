@@ -108,7 +108,7 @@ public static class FormatHandler
             result = input[(input.IndexOf(tag, StringComparison.Ordinal) + tag.Length)..].Trim();
             return true;
         }
-
+  
         result = "";
         return false;
     }
