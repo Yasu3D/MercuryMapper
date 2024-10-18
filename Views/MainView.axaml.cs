@@ -2212,13 +2212,13 @@ public partial class MainView : UserControl
 
     private void ChartInfoLevel_OnValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
     {
-        ChartEditor.Chart.Level = (decimal)ChartInfoLevel.Value;
+        ChartEditor.Chart.Level = double.IsNaN(ChartInfoLevel.Value) ? 0 : (decimal)ChartInfoLevel.Value;
     }
     private void ChartInfoLevel_LostFocus(object? sender, RoutedEventArgs e) => ConnectionManager.SendMessage(new ConnectionManager.MessageSerializer(ConnectionManager.MessageTypes.LevelChange, null, null, [ ChartEditor.Chart.Level ]));
 
     private void ChartInfoClearThreshold_OnValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
     {
-        ChartEditor.Chart.ClearThreshold = (decimal)ChartInfoClearThreshold.Value;
+        ChartEditor.Chart.ClearThreshold = double.IsNaN(ChartInfoLevel.Value) ? 0 : (decimal)ChartInfoClearThreshold.Value;
     }
     private void ChartInfoClearThreshold_LostFocus(object? sender, RoutedEventArgs e) => ConnectionManager.SendMessage(new ConnectionManager.MessageSerializer(ConnectionManager.MessageTypes.ClearThresholdChange, null, null, [ ChartEditor.Chart.ClearThreshold ]));
 
@@ -2242,13 +2242,13 @@ public partial class MainView : UserControl
 
     private void ChartInfoBgmOffset_OnValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
     {
-        ChartEditor.Chart.BgmOffset = (decimal)ChartInfoBgmOffset.Value;
+        ChartEditor.Chart.BgmOffset = double.IsNaN(ChartInfoLevel.Value) ? 0 : (decimal)ChartInfoBgmOffset.Value;
     }
     private void ChartInfoBgmOffset_LostFocus(object? sender, RoutedEventArgs e) => ConnectionManager.SendMessage(new ConnectionManager.MessageSerializer(ConnectionManager.MessageTypes.BgmOffsetChange, null, null, [ ChartEditor.Chart.BgmOffset ]));
 
     private void ChartInfoBgaOffset_OnValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
     {
-        ChartEditor.Chart.BgaOffset = (decimal)ChartInfoBgaOffset.Value;
+        ChartEditor.Chart.BgaOffset = double.IsNaN(ChartInfoLevel.Value) ? 0 : (decimal)ChartInfoBgaOffset.Value;
     }
     private void ChartInfoBgaOffset_LostFocus(object? sender, RoutedEventArgs e) => ConnectionManager.SendMessage(new ConnectionManager.MessageSerializer(ConnectionManager.MessageTypes.BgaOffsetChange, null, null, [ ChartEditor.Chart.BgaOffset ]));
 
