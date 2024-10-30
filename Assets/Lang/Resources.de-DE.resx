@@ -1239,4 +1239,7 @@ Fortfahren?</value>
   <data name="Editor_JumpMeasureUp" xml:space="preserve">
     <value>Takt Vorwärts Springen</value>
   </data>
+  <data name="ToolTip_LimitToMercuryBonusTypes" xml:space="preserve">
+    <value>Erlaubt jede Bonus-Art für jede Noten-Art wenn deaktiviert. Die resultierende Chart wird nicht mit Mercury kompatibel sein! </value>
+  </data>
 </root>

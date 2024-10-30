@@ -488,7 +488,7 @@
                                 <ComboBoxItem Content="HARD"/>
                                 <ComboBoxItem Content="EXPERT"/>
                                 <ComboBoxItem Content="INFERNO"/>
-                                <ComboBoxItem Content="ABYSS"/>
+                                <ComboBoxItem Content="WORLD'S END"/>
                             </ComboBox>
                             
                             <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.ChartInfo_Level}" Margin="0,2,0,2"/>

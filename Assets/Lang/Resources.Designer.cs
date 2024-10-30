@@ -3168,6 +3168,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Allows any Note Type to use any Bonus Type when unchecked. The resulting chart will not be compatible with Mercury!.
+        /// </summary>
+        public static string ToolTip_LimitToMercuryBonusTypes {
+            get {
+                return ResourceManager.GetString("ToolTip_LimitToMercuryBonusTypes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mask Animation will propagate from the center of the Note outwards..
         /// </summary>
         public static string ToolTip_MaskDirection_Center {

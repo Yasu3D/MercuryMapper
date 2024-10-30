@@ -14,8 +14,8 @@
                 <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_Editor_HighlightPlacedNote}" ToolTip.Tip="{x:Static lang:Resources.ToolTip_HighlightPlacedNote}"/>
                 <CheckBox Name="CheckBoxHighlightPlacedNote" HorizontalAlignment="Right" IsCheckedChanged="CheckBoxHighlightPlacedNote_OnIsCheckedChanged" ToolTip.Tip="{x:Static lang:Resources.ToolTip_HighlightPlacedNote}"/>
                 
-                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_Editor_LimitToMercuryBonusTypes}" ToolTip.Tip="{x:Static lang:Resources.ToolTip_HighlightPlacedNote}"/>
-                <CheckBox Name="CheckBoxLimitToMercuryBonusTypes" HorizontalAlignment="Right" IsCheckedChanged="CheckBoxLimitToMercuryBonusTypes_OnIsCheckedChanged" ToolTip.Tip="{x:Static lang:Resources.ToolTip_HighlightPlacedNote}"/>
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_Editor_LimitToMercuryBonusTypes}" ToolTip.Tip="{x:Static lang:Resources.ToolTip_LimitToMercuryBonusTypes}"/>
+                <CheckBox Name="CheckBoxLimitToMercuryBonusTypes" HorizontalAlignment="Right" IsCheckedChanged="CheckBoxLimitToMercuryBonusTypes_OnIsCheckedChanged" ToolTip.Tip="{x:Static lang:Resources.ToolTip_LimitToMercuryBonusTypes}"/>
             </UniformGrid>
         </StackPanel>
     </ScrollViewer>

@@ -3168,6 +3168,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Erlaubt jede Bonus-Art für jede Noten-Art wenn deaktiviert. Die resultierende Chart wird nicht mit Mercury kompatibel sein! .
+        /// </summary>
+        public static string ToolTip_LimitToMercuryBonusTypes {
+            get {
+                return ResourceManager.GetString("ToolTip_LimitToMercuryBonusTypes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Die Maskenanimation breitet sich von der Mitte der Note nach außen aus..
         /// </summary>
         public static string ToolTip_MaskDirection_Center {

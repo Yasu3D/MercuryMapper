@@ -1239,4 +1239,7 @@ Continue?</value>
   <data name="Editor_JumpBeatDown" xml:space="preserve">
     <value>Jump Beat Back</value>
   </data>
+  <data name="ToolTip_LimitToMercuryBonusTypes" xml:space="preserve">
+    <value>Allows any Note Type to use any Bonus Type when unchecked. The resulting chart will not be compatible with Mercury!</value>
+  </data>
 </root>
