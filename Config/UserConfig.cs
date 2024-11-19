@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Avalonia.Input;
-using Avalonia.Media;
 
 namespace MercuryMapper.Config;
 

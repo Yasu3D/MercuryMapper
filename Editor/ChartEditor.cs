@@ -111,7 +111,6 @@ public class ChartEditor
             Note startMask = new()
             {
                 BeatData = new(0, 0),
-                GimmickType = GimmickType.None,
                 NoteType = NoteType.MaskAdd,
                 MaskDirection = MaskDirection.Center,
                 Position = 15,
@@ -656,7 +655,6 @@ public class ChartEditor
                 Note note = new()
                 {
                     BeatData = CurrentBeatData,
-                    GimmickType = GimmickType.None,
                     MaskDirection = CurrentMaskDirection,
                     NoteType = CurrentNoteType,
                     BonusType = CurrentBonusType,
@@ -692,7 +690,6 @@ public class ChartEditor
                 Note note = new()
                 {
                     BeatData = CurrentBeatData,
-                    GimmickType = GimmickType.None,
                     MaskDirection = CurrentMaskDirection,
                     NoteType = NoteType.HoldEnd,
                     BonusType = BonusType.None,
@@ -1641,7 +1638,6 @@ public class ChartEditor
         Note note = new()
         {
             BeatData = CurrentBeatData,
-            GimmickType = GimmickType.None,
             MaskDirection = CurrentMaskDirection,
             NoteType = NoteType.HoldSegment,
             Position = Cursor.Position,
@@ -2064,7 +2060,6 @@ public class ChartEditor
                 Note note = new()
                 {
                     BeatData = new(i),
-                    GimmickType = GimmickType.None,
                     MaskDirection = MaskDirection.Center,
                     NoteType = last != null ? NoteType.HoldEnd : NoteType.HoldStart,
                     BonusType = last != null ? BonusType.None : bonusType,
@@ -2110,7 +2105,6 @@ public class ChartEditor
                 Note note = new()
                 {
                     BeatData = new(i),
-                    GimmickType = GimmickType.None,
                     MaskDirection = MaskDirection.Center,
                     NoteType = NoteType.Chain,
                     Position = pos % 60,

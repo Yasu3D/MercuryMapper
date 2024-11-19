@@ -315,7 +315,7 @@ internal static class MerHandler
         {
             result += $"{note.BeatData.Measure,4:F0} " +
                       $"{note.BeatData.Tick,4:F0} " +
-                      $"{(int)note.GimmickType,4:F0} " +
+                      $"   1 " +
                       $"{note.NoteToMerId(),4:F0} " +
                       $"{chart.Notes.IndexOf(note),4:F0} " +
                       $"{note.Position,4:F0} " +

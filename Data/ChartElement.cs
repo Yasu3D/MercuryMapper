@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.Metrics;
 using System.Globalization;
 using System.Linq;
 using Avalonia.Controls.Shapes;
@@ -78,7 +77,6 @@ public class TimeSig(int upper, int lower)
 public class ChartElement
 {
     public BeatData BeatData { get; set; } = new(-1, 0);
-    public GimmickType GimmickType { get; set; } = GimmickType.None;
     public Guid Guid { get; set; } = Guid.NewGuid();
 }
 
@@ -88,6 +86,7 @@ public class Gimmick : ChartElement
     public TimeSig TimeSig { get; set; } = new(4, 4);
     public float HiSpeed { get; set; }
     public float TimeStamp { get; set; }
+    public GimmickType GimmickType { get; set; } = GimmickType.None;
 
     public Gimmick() { }
     
@@ -204,7 +203,6 @@ public class Note : ChartElement
     {
         Guid = guid ?? Guid;
         BeatData = new(measure, tick);
-        GimmickType = GimmickType.None;
         NoteType = noteType;
         BonusType = bonusType;
         Position = position;
