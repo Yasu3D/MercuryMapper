@@ -4,5 +4,5 @@ public enum SelectSimilarType
 {
     Position,
     Size,
-    Type
+    Type,
 }

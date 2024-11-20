@@ -19,7 +19,7 @@ public static class Enums2String
             GimmickType.StopStart => Resources.Gimmick_StopStart,
             GimmickType.StopEnd => Resources.Gimmick_StopEnd, 
             GimmickType.EndOfChart => Resources.Gimmick_EndOfChart,
-            _ => type.ToString()
+            _ => type.ToString(),
         };
     }
 
@@ -62,7 +62,7 @@ public static class Enums2String
 
             (NoteType.MaskAdd, _) => Resources.Note_MaskAdd,
             (NoteType.MaskRemove, _) => Resources.Note_MaskRemove,
-            _ => "Unknown Note"
+            _ => "Unknown Note",
         };
     }
 
@@ -73,7 +73,7 @@ public static class Enums2String
             MaskDirection.Counterclockwise => Resources.MaskDirection_Counterclockwise,
             MaskDirection.Clockwise => Resources.MaskDirection_Clockwise,
             MaskDirection.Center => Resources.MaskDirection_Center,
-            _ => direction.ToString()
+            _ => direction.ToString(),
         };
     }
 }

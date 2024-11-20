@@ -155,7 +155,7 @@ public class Chart(ChartEditor editor)
             ScaledMeasureDecimalHiSpeed = 0,
             HiSpeed = 1,
             TimeSigRatio = 1,
-            BpmRatio = 1
+            BpmRatio = 1,
         };
 
         for (int i = 0; i < Gimmicks.Count; i++)
@@ -177,7 +177,7 @@ public class Chart(ChartEditor editor)
             ScaledMeasureDecimalHiSpeed = float.PositiveInfinity,
             HiSpeed = lastData.HiSpeed,
             TimeSigRatio = lastData.TimeSigRatio,
-            BpmRatio = lastData.BpmRatio
+            BpmRatio = lastData.BpmRatio,
         });
         
         return;
@@ -215,7 +215,7 @@ public class Chart(ChartEditor editor)
                 ScaledMeasureDecimalHiSpeed = lastData.ScaledMeasureDecimalHiSpeed + float.Abs(gimmick.BeatData.MeasureDecimal - lastData.MeasureDecimal) * (lastData.BpmRatio * lastData.TimeSigRatio * lastData.HiSpeed),
                 BpmRatio = newBpm ?? lastData.BpmRatio,
                 TimeSigRatio = newTimeSig ?? lastData.TimeSigRatio,
-                HiSpeed = newHiSpeed ?? lastData.HiSpeed
+                HiSpeed = newHiSpeed ?? lastData.HiSpeed,
             };
         }
     }

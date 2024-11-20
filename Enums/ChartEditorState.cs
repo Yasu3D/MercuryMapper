@@ -5,5 +5,5 @@ public enum ChartEditorState
     InsertNote,
     InsertHold,
     BoxSelectStart,
-    BoxSelectEnd
+    BoxSelectEnd,
 }

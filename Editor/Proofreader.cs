@@ -20,7 +20,7 @@ public static class Proofreader
         Suggestion = 1,
         Warning = 2,
         Error = 3,
-        Debug = 4
+        Debug = 4,
     }
     
     private static void AddMessage(SelectableTextBlock textBlock, MessageType messageType, string message)

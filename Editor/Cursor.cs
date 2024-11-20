@@ -6,7 +6,7 @@ public class Cursor
     {
         None,
         Counterclockwise,
-        Clockwise
+        Clockwise,
     }
     
     public int Position { get; set; } = 0;

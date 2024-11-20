@@ -5,6 +5,7 @@ using System.Linq;
 using Avalonia.Controls.Shapes;
 using MercuryMapper.Enums;
 using MercuryMapper.Utils;
+using SkiaSharp;
 
 namespace MercuryMapper.Data;
 
@@ -140,7 +141,7 @@ public class Gimmick : ChartElement
             GimmickType.BpmChange => $" {Bpm.ToString("F6", CultureInfo.InvariantCulture)}\n",
             GimmickType.HiSpeedChange => $" {HiSpeed.ToString("F6", CultureInfo.InvariantCulture)}\n",
             GimmickType.TimeSigChange => $" {TimeSig.Upper:F0} {TimeSig.Lower:F0}\n",
-            _ => "\n"
+            _ => "\n",
         };
         
         return result;
@@ -280,7 +281,7 @@ public class Note : ChartElement
             (NoteType.MaskAdd, _) => 1,
             (NoteType.MaskRemove, _) => 1,
             
-            _ => 5
+            _ => 5,
         };
     }
 
@@ -432,7 +433,7 @@ public class Note : ChartElement
             (NoteType.Chain, BonusType.None) => 16,
             (NoteType.Chain, BonusType.Bonus) => 16,
             (NoteType.Chain, BonusType.RNote) => 26,
-            _ => 1
+            _ => 1,
         };
     }
     
@@ -451,7 +452,7 @@ public class Note : ChartElement
             12 => NoteType.MaskAdd,
             13 => NoteType.MaskRemove,
             16 or 26 => NoteType.Chain,
-            _ => NoteType.None
+            _ => throw new ArgumentOutOfRangeException($"Invalid Note ID {id}"),
         };
     }
 
@@ -462,14 +463,24 @@ public class Note : ChartElement
             1 or 3 or 4 or 5 or 7 or 9 or 10 or 11 or 12 or 13 or 14 or 16 => BonusType.None,
             2 or 6 or 8 => BonusType.Bonus,
             20 or 21 or 22 or 23 or 24 or 25 or 26 => BonusType.RNote,
-            _ => BonusType.None
+            _ => throw new ArgumentOutOfRangeException($"Invalid Note ID {id}"),
         };
     }
 }
 
-public struct Hold()
+public class NoteChain
 {
     public List<Note> Segments = [];
+}
+
+public class Hold : NoteChain
+{
+    public List<Note> RenderedSegments => Segments.Where(x => x.RenderSegment == true).ToList();
+}
+
+public class Trace : NoteChain
+{
+    public SKColor Color;
 }
 
 public class Comment(Guid guid, BeatData beatData, string text, Rectangle marker)

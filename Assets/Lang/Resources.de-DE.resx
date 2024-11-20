@@ -1242,4 +1242,19 @@ Fortfahren?</value>
   <data name="ToolTip_LimitToMercuryBonusTypes" xml:space="preserve">
     <value>Erlaubt jede Bonus-Art für jede Noten-Art wenn deaktiviert. Die resultierende Chart wird nicht mit Mercury kompatibel sein! </value>
   </data>
+  <data name="Note_Trace" xml:space="preserve">
+    <value>Linie</value>
+  </data>
+  <data name="Note_Damage" xml:space="preserve">
+    <value>Schaden</value>
+  </data>
+  <data name="Note_DamageSpark" xml:space="preserve">
+    <value>Schaden Blitz</value>
+  </data>
+  <data name="Note_TraceSegment" xml:space="preserve">
+    <value>Linien-Segment</value>
+  </data>
+  <data name="Note_TraceStart" xml:space="preserve">
+    <value>Linien-Start</value>
+  </data>
 </root>

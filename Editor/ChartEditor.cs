@@ -97,7 +97,7 @@ public class ChartEditor
                 BeatData = new(0, 0),
                 GimmickType = GimmickType.BpmChange,
                 Bpm = bpm,
-                TimeStamp = 0
+                TimeStamp = 0,
             };
 
             Gimmick startTimeSig = new()
@@ -105,7 +105,7 @@ public class ChartEditor
                 BeatData = new(0, 0),
                 GimmickType = GimmickType.TimeSigChange,
                 TimeSig = new(timeSigUpper, timeSigLower),
-                TimeStamp = 0
+                TimeStamp = 0,
             };
 
             Note startMask = new()
@@ -115,7 +115,7 @@ public class ChartEditor
                 MaskDirection = MaskDirection.Center,
                 Position = 15,
                 Size = 60,
-                RenderSegment = true
+                RenderSegment = true,
             };
             
             Chart.Gimmicks.Add(startBpm);
@@ -524,7 +524,7 @@ public class ChartEditor
 
                     return sameNoteType && sameBonusType;
                 }).ToList(),
-            _ => []
+            _ => [],
         };
         
         foreach (Note similarNote in similarNotes)
@@ -550,7 +550,7 @@ public class ChartEditor
 
                 return !sameNoteType || !sameBonusType;
             }).ToList(),
-            _ => []
+            _ => [],
         };
 
         foreach (Note differentNote in differentNotes)
@@ -659,7 +659,7 @@ public class ChartEditor
                     NoteType = CurrentNoteType,
                     BonusType = CurrentBonusType,
                     Position = Cursor.Position,
-                    Size = Cursor.Size
+                    Size = Cursor.Size,
                 };
                 
                 // Force bonusType to none for masks
@@ -695,7 +695,7 @@ public class ChartEditor
                     BonusType = BonusType.None,
                     Position = Cursor.Position,
                     Size = Cursor.Size,
-                    PrevReferencedNote = LastPlacedHold
+                    PrevReferencedNote = LastPlacedHold,
                 };
 
                 LastPlacedHold.NextReferencedNote = note;
@@ -728,7 +728,7 @@ public class ChartEditor
         {
             BeatData = CurrentBeatData,
             Bpm = bpm,
-            GimmickType = GimmickType.BpmChange
+            GimmickType = GimmickType.BpmChange,
         };
         
         UndoRedoManager.InvokeAndPush(new InsertGimmick(Chart, gimmick));
@@ -743,7 +743,7 @@ public class ChartEditor
         {
             BeatData = CurrentBeatData,
             TimeSig = new(upper, lower),
-            GimmickType = GimmickType.TimeSigChange
+            GimmickType = GimmickType.TimeSigChange,
         };
         
         UndoRedoManager.InvokeAndPush(new InsertGimmick(Chart, gimmick));
@@ -758,7 +758,7 @@ public class ChartEditor
         {
             BeatData = CurrentBeatData,
             HiSpeed = hiSpeed,
-            GimmickType = GimmickType.HiSpeedChange
+            GimmickType = GimmickType.HiSpeedChange,
         };
         
         UndoRedoManager.InvokeAndPush(new InsertGimmick(Chart, gimmick));
@@ -775,13 +775,13 @@ public class ChartEditor
         Gimmick startGimmick = new()
         {
             BeatData = new(start),
-            GimmickType = GimmickType.StopStart
+            GimmickType = GimmickType.StopStart,
         };
 
         Gimmick endGimmick = new()
         {
             BeatData = new(end),
-            GimmickType = GimmickType.StopEnd
+            GimmickType = GimmickType.StopEnd,
         };
         
         UndoRedoManager.InvokeAndPush(new CompositeOperation([new InsertGimmick(Chart, startGimmick), new InsertGimmick(Chart, endGimmick)]));
@@ -798,19 +798,19 @@ public class ChartEditor
         Gimmick effectStartGimmick = new()
         {
             BeatData = new(effectStart),
-            GimmickType = GimmickType.ReverseEffectStart
+            GimmickType = GimmickType.ReverseEffectStart,
         };
 
         Gimmick effectEndGimmick = new()
         {
             BeatData = new(effectEnd),
-            GimmickType = GimmickType.ReverseEffectEnd
+            GimmickType = GimmickType.ReverseEffectEnd,
         };
         
         Gimmick noteEndGimmick = new()
         {
             BeatData = new(noteEnd),
-            GimmickType = GimmickType.ReverseNoteEnd
+            GimmickType = GimmickType.ReverseNoteEnd,
         };
         
         UndoRedoManager.InvokeAndPush(new CompositeOperation([new InsertGimmick(Chart, effectStartGimmick), new InsertGimmick(Chart, effectEndGimmick), new InsertGimmick(Chart, noteEndGimmick)]));
@@ -825,7 +825,7 @@ public class ChartEditor
         Gimmick gimmick = new()
         {
             BeatData = CurrentBeatData,
-            GimmickType = GimmickType.EndOfChart
+            GimmickType = GimmickType.EndOfChart,
         };
         
         UndoRedoManager.InvokeAndPush(new InsertGimmick(Chart, gimmick));
@@ -863,7 +863,7 @@ public class ChartEditor
 
                 Gimmick newGimmick = new(highlightedGimmick)
                 {
-                    Bpm = (float)gimmickView.BpmNumberBox.Value
+                    Bpm = (float)gimmickView.BpmNumberBox.Value,
                 };
                 
                 UndoRedoManager.InvokeAndPush(new EditGimmick(Chart, highlightedGimmick, newGimmick));
@@ -878,7 +878,7 @@ public class ChartEditor
                 Content = gimmickView,
                 Title = Assets.Lang.Resources.Editor_EditGimmick,
                 CloseButtonText = Assets.Lang.Resources.Generic_Cancel,
-                PrimaryButtonText = Assets.Lang.Resources.Generic_Edit
+                PrimaryButtonText = Assets.Lang.Resources.Generic_Edit,
             };
         
             Dispatcher.UIThread.Post(async () =>
@@ -894,7 +894,7 @@ public class ChartEditor
 
                 Gimmick newGimmick = new(highlightedGimmick)
                 {
-                    TimeSig = new((int)gimmickView.TimeSigUpperNumberBox.Value, (int)gimmickView.TimeSigLowerNumberBox.Value)
+                    TimeSig = new((int)gimmickView.TimeSigUpperNumberBox.Value, (int)gimmickView.TimeSigLowerNumberBox.Value),
                 };
                 
                 UndoRedoManager.InvokeAndPush(new EditGimmick(Chart, highlightedGimmick, newGimmick));
@@ -909,7 +909,7 @@ public class ChartEditor
                 Content = gimmickView,
                 Title = Assets.Lang.Resources.Editor_EditGimmick,
                 CloseButtonText = Assets.Lang.Resources.Generic_Cancel,
-                PrimaryButtonText = Assets.Lang.Resources.Generic_Edit
+                PrimaryButtonText = Assets.Lang.Resources.Generic_Edit,
             };
         
             Dispatcher.UIThread.Post(async () =>
@@ -919,7 +919,7 @@ public class ChartEditor
 
                 Gimmick newGimmick = new(highlightedGimmick)
                 {
-                    HiSpeed = (float)gimmickView.HiSpeedNumberBox.Value
+                    HiSpeed = (float)gimmickView.HiSpeedNumberBox.Value,
                 };
                 
                 UndoRedoManager.InvokeAndPush(new EditGimmick(Chart, highlightedGimmick, newGimmick));
@@ -1122,7 +1122,7 @@ public class ChartEditor
                 Size = int.Max(newSize, Note.MinSize(newNoteType, newBonusType)),
                 NoteType = newNoteType,
                 BonusType = newBonusType,
-                MaskDirection = newDirection
+                MaskDirection = newDirection,
             };
 
             operationList.Add(new EditNote(note, newNote));
@@ -1180,7 +1180,7 @@ public class ChartEditor
         {
             Note newNote = new(note, note.Guid)
             {
-                RenderSegment = render
+                RenderSegment = render,
             };
 
             operationList.Add(new EditNote(note, newNote));
@@ -1210,7 +1210,7 @@ public class ChartEditor
             Note newNote = new(note, note.Guid)
             {
                 Position = note.Position,
-                Size = int.Clamp(note.Size + delta, Note.MinSize(note.NoteType, note.BonusType), 60)
+                Size = int.Clamp(note.Size + delta, Note.MinSize(note.NoteType, note.BonusType), 60),
             };
 
             operationList.Add(new EditNote(note, newNote));
@@ -1240,7 +1240,7 @@ public class ChartEditor
             Note newNote = new(note, note.Guid)
             {
                 Position = MathExtensions.Modulo(note.Position + delta, 60),
-                Size = note.Size
+                Size = note.Size,
             };
 
             operationList.Add(new EditNote(note, newNote));
@@ -1287,7 +1287,7 @@ public class ChartEditor
         {
             Note newNote = new(note, note.Guid)
             {
-                BeatData = new(float.Clamp(note.BeatData.MeasureDecimal + divisor, 0, endOfChartMeasureDecimal))
+                BeatData = new(float.Clamp(note.BeatData.MeasureDecimal + divisor, 0, endOfChartMeasureDecimal)),
             };
             
             if (newNote.PrevReferencedNote != null && newNote.BeatData.FullTick <= newNote.PrevReferencedNote.BeatData.FullTick) return;
@@ -1375,7 +1375,7 @@ public class ChartEditor
             
             Gimmick newGimmick = new(gimmick)
             {
-                BeatData = new(float.Clamp(gimmick.BeatData.MeasureDecimal + divisor, min, max))
+                BeatData = new(float.Clamp(gimmick.BeatData.MeasureDecimal + divisor, min, max)),
             };
 
             EditGimmick edit = new(Chart, gimmick, newGimmick);
@@ -1412,15 +1412,15 @@ public class ChartEditor
                 {
                     NoteType.SlideClockwise => NoteType.SlideCounterclockwise,
                     NoteType.SlideCounterclockwise => NoteType.SlideClockwise,
-                    _ => note.NoteType
+                    _ => note.NoteType,
                 },
                 MaskDirection = note.MaskDirection switch
                 {
                     MaskDirection.Counterclockwise => MaskDirection.Clockwise,
                     MaskDirection.Clockwise => MaskDirection.Counterclockwise,
                     MaskDirection.Center => MaskDirection.Center,
-                    _ => MaskDirection.Center
-                }
+                    _ => MaskDirection.Center,
+                },
             };
 
             operationList.Add(new EditNote(note, newNote));
@@ -1432,13 +1432,13 @@ public class ChartEditor
         Clockwise,
         Counterclockwise,
         Symmetrical,
-        None
+        None,
     }
 
     private enum HoldSide
     {
         Left,
-        Right
+        Right,
     }
     
     public void BakeHold(MathExtensions.HoldEaseType easeType, bool forceNoRender)
@@ -1543,7 +1543,7 @@ public class ChartEditor
                 HoldDirection.Symmetrical => shortestSide == HoldSide.Left
                 ? shortestDirection == HoldDirection.Counterclockwise ? leftEdgeOffsetCcw : -leftEdgeOffsetCw
                 : shortestDirection != HoldDirection.Counterclockwise ? leftEdgeOffsetCcw : -leftEdgeOffsetCw,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(),
             };
 
             int signedRightEdgeOffset = finalDirection switch
@@ -1553,7 +1553,7 @@ public class ChartEditor
                 HoldDirection.Symmetrical => shortestSide == HoldSide.Right
                 ? shortestDirection == HoldDirection.Counterclockwise ? rightEdgeOffsetCcw : -rightEdgeOffsetCw
                 : shortestDirection != HoldDirection.Counterclockwise ? rightEdgeOffsetCcw : -rightEdgeOffsetCw,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(),
             };
             
             // Create local positions relative to start note.
@@ -1603,7 +1603,7 @@ public class ChartEditor
                     Size = size,
                     RenderSegment = renderSegment,
                     PrevReferencedNote = previousNote,
-                    NextReferencedNote = endNote
+                    NextReferencedNote = endNote,
                 };
 
                 previousNote.NextReferencedNote = newNote;
@@ -1622,13 +1622,13 @@ public class ChartEditor
         if (HighlightedElement is not Note highlighted) return;
         if (!highlighted.IsHold) return;
 
-        Hold hold = new() { Segments = highlighted.References().ToList() };
+        NoteChain noteChain = new() { Segments = highlighted.References().ToList() };
 
-        if (CurrentBeatData.FullTick <= hold.Segments[0].BeatData.FullTick) return;
-        if (CurrentBeatData.FullTick >= hold.Segments[^1].BeatData.FullTick) return;
+        if (CurrentBeatData.FullTick <= noteChain.Segments[0].BeatData.FullTick) return;
+        if (CurrentBeatData.FullTick >= noteChain.Segments[^1].BeatData.FullTick) return;
 
-        Note? previous = hold.Segments.LastOrDefault(x => x.BeatData.FullTick <= CurrentBeatData.FullTick);
-        Note? next = hold.Segments.FirstOrDefault(x => x.BeatData.FullTick >= CurrentBeatData.FullTick);
+        Note? previous = noteChain.Segments.LastOrDefault(x => x.BeatData.FullTick <= CurrentBeatData.FullTick);
+        Note? next = noteChain.Segments.FirstOrDefault(x => x.BeatData.FullTick >= CurrentBeatData.FullTick);
 
         if (previous is null || next is null) return;
 
@@ -1643,7 +1643,7 @@ public class ChartEditor
             Position = Cursor.Position,
             Size = Cursor.Size,
             NextReferencedNote = next,
-            PrevReferencedNote = previous
+            PrevReferencedNote = previous,
         };
 
         previous.NextReferencedNote = note;
@@ -1689,14 +1689,14 @@ public class ChartEditor
         {
             PrevReferencedNote = null,
             NextReferencedNote = highlighted.NextReferencedNote,
-            NoteType = NoteType.HoldStart
+            NoteType = NoteType.HoldStart,
         };
 
         Note newEnd = new(highlighted, Guid.NewGuid())
         {
             PrevReferencedNote = highlighted.PrevReferencedNote,
             NextReferencedNote = null,
-            NoteType = NoteType.HoldEnd
+            NoteType = NoteType.HoldEnd,
         };
         
         UndoRedoManager.InvokeAndPush(new SplitHold(Chart, highlighted, newStart, newEnd));
@@ -1803,7 +1803,7 @@ public class ChartEditor
             
             Note newNote = new(note, note.Guid)
             {
-                BeatData = new(note.BeatData.FullTick + ticks)
+                BeatData = new(note.BeatData.FullTick + ticks),
             };
 
             operationList.Add(new EditNote(note, newNote));
@@ -1815,7 +1815,7 @@ public class ChartEditor
             
             Gimmick newGimmick = new(gimmick)
             {
-                BeatData = new(gimmick.BeatData.FullTick + ticks)
+                BeatData = new(gimmick.BeatData.FullTick + ticks),
             };
 
             operationList.Add(new EditGimmick(Chart, gimmick, newGimmick));
@@ -1846,15 +1846,15 @@ public class ChartEditor
                 {
                     NoteType.SlideClockwise => NoteType.SlideCounterclockwise,
                     NoteType.SlideCounterclockwise => NoteType.SlideClockwise,
-                    _ => note.NoteType
+                    _ => note.NoteType,
                 },
                 MaskDirection = note.MaskDirection switch
                 {
                     MaskDirection.Counterclockwise => MaskDirection.Clockwise,
                     MaskDirection.Clockwise => MaskDirection.Counterclockwise,
                     MaskDirection.Center => MaskDirection.Center,
-                    _ => MaskDirection.Center
-                }
+                    _ => MaskDirection.Center,
+                },
             };
 
             operationList.Add(new EditNote(note, newNote));
@@ -1900,25 +1900,25 @@ public class ChartEditor
         if (EditorState is ChartEditorState.InsertHold) return;
         
         HashSet<Note> checkedNotes = [];
-        List<Hold> holdNotes = [];
+        List<NoteChain> holdNotes = [];
         List<IOperation> operationList = [];
         
         foreach (Note note in SelectedNotes)
         {
             if (checkedNotes.Contains(note)) continue;
 
-            Hold hold = new();
+            NoteChain noteChain = new();
 
             foreach (Note reference in note.References())
             {
-                hold.Segments.Add(reference);
+                noteChain.Segments.Add(reference);
                 checkedNotes.Add(reference);
             }
             
-            holdNotes.Add(hold);
+            holdNotes.Add(noteChain);
         }
 
-        foreach (Hold hold in holdNotes)
+        foreach (NoteChain hold in holdNotes)
         {
             for (int i = 0; i < hold.Segments.Count; i++)
             {
@@ -1932,7 +1932,7 @@ public class ChartEditor
                 Note newNote = new(note, note.Guid)
                 {
                     Position = position,
-                    Size = size
+                    Size = size,
                 };
 
                 operationList.Add(new EditNote(note, newNote));
@@ -1949,7 +1949,7 @@ public class ChartEditor
         if (EditorState is ChartEditorState.InsertHold) return;
         
         HashSet<Note> checkedNotes = [];
-        List<Hold> holdNotes = [];
+        List<NoteChain> holdNotes = [];
         List<IOperation> operationList = [];
         Random random = new();
         
@@ -1957,18 +1957,18 @@ public class ChartEditor
         {
             if (checkedNotes.Contains(note)) continue;
 
-            Hold hold = new();
+            NoteChain noteChain = new();
 
             foreach (Note reference in note.References())
             {
-                hold.Segments.Add(reference);
+                noteChain.Segments.Add(reference);
                 checkedNotes.Add(reference);
             }
             
-            holdNotes.Add(hold);
+            holdNotes.Add(noteChain);
         }
 
-        foreach (Hold hold in holdNotes)
+        foreach (NoteChain hold in holdNotes)
         {
             for (int i = 0; i < hold.Segments.Count; i++)
             {
@@ -1992,7 +1992,7 @@ public class ChartEditor
                 Note newNote = new(note, note.Guid)
                 {
                     Position = position,
-                    Size = size
+                    Size = size,
                 };
 
                 operationList.Add(new EditNote(note, newNote));
@@ -2009,7 +2009,7 @@ public class ChartEditor
         if (EditorState is ChartEditorState.InsertHold) return;
         
         HashSet<Note> checkedNotes = [];
-        List<Hold> holdNotes = [];
+        List<NoteChain> holdNotes = [];
         List<IOperation> operationList = [];
         
         foreach (Note note in SelectedNotes)
@@ -2017,20 +2017,20 @@ public class ChartEditor
             if (checkedNotes.Contains(note)) continue;
             if (!note.IsHold) continue;
 
-            Hold hold = new();
+            NoteChain noteChain = new();
 
             foreach (Note reference in note.References())
             {
-                hold.Segments.Add(reference);
+                noteChain.Segments.Add(reference);
                 checkedNotes.Add(reference);
             }
             
-            holdNotes.Add(hold);
+            holdNotes.Add(noteChain);
         }
 
         int interval = 1920 / beatDivision;
         
-        foreach (Hold hold in holdNotes)
+        foreach (NoteChain hold in holdNotes)
         {
             int firstTick = hold.Segments[0].BeatData.FullTick;
             int lastTick = hold.Segments[^1].BeatData.FullTick;
@@ -2049,7 +2049,7 @@ public class ChartEditor
         Chart.IsSaved = false;
         return;
 
-        void holdToHold(Hold hold, BonusType bonusType, int firstTick, int lastTick)
+        void holdToHold(NoteChain hold, BonusType bonusType, int firstTick, int lastTick)
         {
             Note? last = null;
             for (int i = firstTick; i <= lastTick; i += interval)
@@ -2095,7 +2095,7 @@ public class ChartEditor
             }
         }
 
-        void holdToChain(Hold hold, int firstTick, int lastTick)
+        void holdToChain(NoteChain hold, int firstTick, int lastTick)
         {
             for (int i = firstTick; i <= lastTick; i += interval)
             {
@@ -2108,14 +2108,14 @@ public class ChartEditor
                     MaskDirection = MaskDirection.Center,
                     NoteType = NoteType.Chain,
                     Position = pos % 60,
-                    Size = int.Max(size, Note.MinSize(NoteType.Chain, BonusType.None))
+                    Size = int.Max(size, Note.MinSize(NoteType.Chain, BonusType.None)),
                 };
 
                 operationList.Add(new InsertNote(Chart, SelectedNotes, note));
             }
         }
         
-        void deleteHold(Hold hold)
+        void deleteHold(NoteChain hold)
         {
             List<DeleteHoldNote> holdOperationList = [];
             
@@ -2173,7 +2173,7 @@ public class ChartEditor
                     Position = MathExtensions.Modulo(note.Position + i * 2, 60),
                     Size = (odd && i == count - 1) ? 1 : 2,
                     NoteType = note.NoteType,
-                    MaskDirection = MaskDirection.Center
+                    MaskDirection = MaskDirection.Center,
                 };
 
                 operationList.Add(new InsertNote(Chart, SelectedNotes, newNote));
@@ -2202,7 +2202,7 @@ public class ChartEditor
         Colors.SlateBlue, 
         Colors.BlueViolet, 
         Colors.MediumPurple, 
-        Colors.DeepPink
+        Colors.DeepPink,
     ];
     
     public void AddComment(BeatData beatData, string text)
@@ -2278,7 +2278,7 @@ public class ChartEditor
             {
                 Title = Assets.Lang.Resources.Generic_DeleteComment,
                 PrimaryButtonText = Assets.Lang.Resources.Generic_Yes,
-                CloseButtonText = Assets.Lang.Resources.Generic_No
+                CloseButtonText = Assets.Lang.Resources.Generic_No,
             };
 
             ContentDialogResult result = await deleteCommentDialog.ShowAsync();

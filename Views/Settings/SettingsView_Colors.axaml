@@ -45,6 +45,24 @@
                 <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Note_HoldSurfaceFar}"/>
                 <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorNoteHoldSurfaceFar"/>
             </UniformGrid>
+            
+            <Separator/>
+            
+            <UniformGrid Columns="2">
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Note_TraceStart}"/>
+                <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorNoteTraceStart"/>
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Note_TraceSegment}"/>
+                <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorNoteTraceSegment"/>
+            </UniformGrid>
+            
+            <Separator/>
+            
+            <UniformGrid Columns="2">
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Note_Damage}"/>
+                <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorNoteDamage"/>
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Note_DamageSpark}"/>
+                <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorNoteDamageSpark"/>
+            </UniformGrid>
                 
             <Separator/>
             

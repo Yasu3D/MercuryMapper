@@ -97,14 +97,14 @@ public partial class MainView : UserControl
         Slider,
         Numeric,
         Timer,
-        MeasureDecimal
+        MeasureDecimal,
     }
 
     private PointerState pointerState = PointerState.Released;
     private enum PointerState
     {
         Released,
-        Pressed
+        Pressed,
     }
 
     private PlayerState playerState = PlayerState.Paused;
@@ -112,14 +112,14 @@ public partial class MainView : UserControl
     {
         Paused,
         Playing,
-        Preview
+        Preview,
     }
 
     public UiLockState LockState = UiLockState.Empty;
     public enum UiLockState
     {
         Empty,
-        Loaded
+        Loaded,
     }
 
     // ________________ Setup & UI Updates
@@ -152,6 +152,8 @@ public partial class MainView : UserControl
         RadioNoteSnapBackward.BorderBrush = new SolidColorBrush(Convert.ToUInt32(UserConfig.ColorConfig.Colors["ColorNoteSnapBackward"], 16));
         RadioNoteChain.BorderBrush = new SolidColorBrush(Convert.ToUInt32(UserConfig.ColorConfig.Colors["ColorNoteChain"], 16));
         RadioNoteHold.BorderBrush = new SolidColorBrush(Convert.ToUInt32(UserConfig.ColorConfig.Colors["ColorNoteHoldStart"], 16));
+        RadioNoteTrace.BorderBrush = new SolidColorBrush(Convert.ToUInt32(UserConfig.ColorConfig.Colors["ColorNoteTrace"], 16));
+        RadioNoteDamage.BorderBrush = new SolidColorBrush(Convert.ToUInt32(UserConfig.ColorConfig.Colors["ColorNoteDamage"], 16));
         RadioNoteMaskAdd.BorderBrush = new SolidColorBrush(Convert.ToUInt32(UserConfig.ColorConfig.Colors["ColorNoteMaskAdd"], 16));
         RadioNoteMaskRemove.BorderBrush = new SolidColorBrush(Convert.ToUInt32(UserConfig.ColorConfig.Colors["ColorNoteMaskRemove"], 16));
     }
@@ -310,7 +312,7 @@ public partial class MainView : UserControl
                 Title = $"{Assets.Lang.Resources.Generic_AutosaveFound} {timestamp}",
                 Content = Assets.Lang.Resources.Generic_AutosavePrompt,
                 PrimaryButtonText = Assets.Lang.Resources.Generic_Yes,
-                CloseButtonText = Assets.Lang.Resources.Generic_No
+                CloseButtonText = Assets.Lang.Resources.Generic_No,
             };
 
             return dialog.ShowAsync();
@@ -1369,7 +1371,7 @@ public partial class MainView : UserControl
             Title = Assets.Lang.Resources.Editor_NewChart,
             Content = newChartView,
             PrimaryButtonText = Assets.Lang.Resources.Generic_Create,
-            CloseButtonText = Assets.Lang.Resources.Generic_Cancel
+            CloseButtonText = Assets.Lang.Resources.Generic_Cancel,
         };
 
         Dispatcher.UIThread.Post(async () =>
@@ -1473,8 +1475,8 @@ public partial class MainView : UserControl
             CloseButtonText = Assets.Lang.Resources.Generic_Cancel,
             Resources =
             {
-                ["ContentDialogMaxWidth"] = 730.0
-            }
+                ["ContentDialogMaxWidth"] = 730.0,
+            },
         };
 
         Dispatcher.UIThread.Post(async () =>
@@ -1532,7 +1534,7 @@ public partial class MainView : UserControl
             Title = Assets.Lang.Resources.Menu_CreateSession,
             Content = createSessionView,
             PrimaryButtonText = Assets.Lang.Resources.Generic_Create,
-            CloseButtonText = Assets.Lang.Resources.Generic_Cancel
+            CloseButtonText = Assets.Lang.Resources.Generic_Cancel,
         };
 
         Dispatcher.UIThread.Post(async () =>
@@ -1558,7 +1560,7 @@ public partial class MainView : UserControl
             Title = Assets.Lang.Resources.Menu_JoinSession,
             Content = joinSessionView,
             PrimaryButtonText = Assets.Lang.Resources.Generic_Join,
-            CloseButtonText = Assets.Lang.Resources.Generic_Cancel
+            CloseButtonText = Assets.Lang.Resources.Generic_Cancel,
         };
 
         Dispatcher.UIThread.Post(async () =>
@@ -1641,7 +1643,7 @@ public partial class MainView : UserControl
             Title = Assets.Lang.Resources.Editor_SelectSimilar,
             Content = threshold,
             PrimaryButtonText = Assets.Lang.Resources.MenuHeader_Select,
-            CloseButtonText = Assets.Lang.Resources.Generic_Cancel
+            CloseButtonText = Assets.Lang.Resources.Generic_Cancel,
         };
         
         ContentDialogResult result = await dialog.ShowAsync();
@@ -1667,7 +1669,7 @@ public partial class MainView : UserControl
             Title = Assets.Lang.Resources.Editor_SelectSimilar,
             Content = threshold,
             PrimaryButtonText = Assets.Lang.Resources.MenuHeader_Select,
-            CloseButtonText = Assets.Lang.Resources.Generic_Cancel
+            CloseButtonText = Assets.Lang.Resources.Generic_Cancel,
         };
         
         ContentDialogResult result = await dialog.ShowAsync();
@@ -1687,7 +1689,7 @@ public partial class MainView : UserControl
             Title = Assets.Lang.Resources.Editor_SelectSimilar,
             Content = type,
             PrimaryButtonText = Assets.Lang.Resources.MenuHeader_Select,
-            CloseButtonText = Assets.Lang.Resources.Generic_Cancel
+            CloseButtonText = Assets.Lang.Resources.Generic_Cancel,
         };
         
         ContentDialogResult result = await dialog.ShowAsync();
@@ -1708,7 +1710,7 @@ public partial class MainView : UserControl
             9 => 8,
             10 => 9,
             11 => 10,
-            _ => -1
+            _ => -1,
         };
         
         int bonusType = type.ComboBoxBonusType.SelectedIndex switch
@@ -1717,7 +1719,7 @@ public partial class MainView : UserControl
             1 => 0,
             2 => 1,
             3 => 2,
-            _ => -1
+            _ => -1,
         };
         
         if (type.CheckBoxFilterSelection.IsChecked ?? false) ChartEditor.FilterSelection(SelectSimilarType.Type, 0, noteType, bonusType);
@@ -1740,7 +1742,7 @@ public partial class MainView : UserControl
             Content = shiftView,
             Title = Assets.Lang.Resources.Menu_ShiftChart,
             CloseButtonText = Assets.Lang.Resources.Generic_Cancel,
-            PrimaryButtonText = Assets.Lang.Resources.Generic_Ok
+            PrimaryButtonText = Assets.Lang.Resources.Generic_Ok,
         };
 
         Dispatcher.UIThread.Post(async () =>
@@ -1766,7 +1768,7 @@ public partial class MainView : UserControl
                 Title = Assets.Lang.Resources.Tools_FixOffByOneTitle,
                 Content = Assets.Lang.Resources.Tools_FixOffByOneDescription,
                 PrimaryButtonText = Assets.Lang.Resources.Generic_Yes,
-                CloseButtonText = Assets.Lang.Resources.Generic_No
+                CloseButtonText = Assets.Lang.Resources.Generic_No,
             };
 
             return dialog.ShowAsync();
@@ -1787,7 +1789,7 @@ public partial class MainView : UserControl
             Content = generatorView,
             Title = Assets.Lang.Resources.Menu_JaggedHolds,
             CloseButtonText = Assets.Lang.Resources.Generic_Cancel,
-            PrimaryButtonText = Assets.Lang.Resources.Generic_Generate
+            PrimaryButtonText = Assets.Lang.Resources.Generic_Generate,
         };
 
         Dispatcher.UIThread.Post(async () =>
@@ -1825,7 +1827,7 @@ public partial class MainView : UserControl
             Content = reconstructView,
             Title = Assets.Lang.Resources.Menu_ReconstructHolds,
             CloseButtonText = Assets.Lang.Resources.Generic_Cancel,
-            PrimaryButtonText = Assets.Lang.Resources.Generic_Generate
+            PrimaryButtonText = Assets.Lang.Resources.Generic_Generate,
         };
 
         Dispatcher.UIThread.Post(async () =>
@@ -1851,7 +1853,7 @@ public partial class MainView : UserControl
         {
             Content = proofreadView,
             Title = Assets.Lang.Resources.Menu_Proofread,
-            CloseButtonText = Assets.Lang.Resources.Generic_Ok
+            CloseButtonText = Assets.Lang.Resources.Generic_Ok,
         };
 
         dialog.ShowAsync();
@@ -1871,9 +1873,11 @@ public partial class MainView : UserControl
             "RadioNoteSnapBackward" => NoteType.SnapBackward,
             "RadioNoteChain" => NoteType.Chain,
             "RadioNoteHold" => NoteType.HoldStart,
+            "RadioNoteTrace" => NoteType.TraceStart,
+            "RadioNoteDamage" => NoteType.Damage,
             "RadioNoteMaskAdd" => NoteType.MaskAdd,
             "RadioNoteMaskRemove" => NoteType.MaskRemove,
-            _ => throw new ArgumentOutOfRangeException()
+            _ => throw new ArgumentOutOfRangeException(),
         };
 
         ChartEditor.CurrentNoteType = noteType;
@@ -1891,7 +1895,7 @@ public partial class MainView : UserControl
             "RadioNoBonus" => BonusType.None,
             "RadioBonus" => BonusType.Bonus,
             "RadioRNote" => BonusType.RNote,
-            _ => throw new ArgumentOutOfRangeException()
+            _ => throw new ArgumentOutOfRangeException(),
         };
 
         ChartEditor.CurrentBonusType = bonusType;
@@ -1906,7 +1910,7 @@ public partial class MainView : UserControl
             "RadioMaskClockwise" => MaskDirection.Clockwise,
             "RadioMaskCounterclockwise" => MaskDirection.Counterclockwise,
             "RadioMaskCenter" => MaskDirection.Center,
-            _ => throw new ArgumentOutOfRangeException()
+            _ => throw new ArgumentOutOfRangeException(),
         };
 
         ChartEditor.CurrentMaskDirection = maskDirection;
@@ -1921,7 +1925,7 @@ public partial class MainView : UserControl
             Content = gimmickView,
             Title = Assets.Lang.Resources.Editor_AddGimmick,
             CloseButtonText = Assets.Lang.Resources.Generic_Cancel,
-            PrimaryButtonText = Assets.Lang.Resources.Generic_Create
+            PrimaryButtonText = Assets.Lang.Resources.Generic_Create,
         };
 
         Dispatcher.UIThread.Post(async () =>
@@ -1947,7 +1951,7 @@ public partial class MainView : UserControl
             Content = gimmickView,
             Title = Assets.Lang.Resources.Editor_AddGimmick,
             CloseButtonText = Assets.Lang.Resources.Generic_Cancel,
-            PrimaryButtonText = Assets.Lang.Resources.Generic_Create
+            PrimaryButtonText = Assets.Lang.Resources.Generic_Create,
         };
 
         Dispatcher.UIThread.Post(async () =>
@@ -1973,7 +1977,7 @@ public partial class MainView : UserControl
             Content = gimmickView,
             Title = Assets.Lang.Resources.Editor_AddGimmick,
             CloseButtonText = Assets.Lang.Resources.Generic_Cancel,
-            PrimaryButtonText = Assets.Lang.Resources.Generic_Create
+            PrimaryButtonText = Assets.Lang.Resources.Generic_Create,
         };
 
         Dispatcher.UIThread.Post(async () =>
@@ -1992,7 +1996,7 @@ public partial class MainView : UserControl
             Content = gimmickView,
             Title = Assets.Lang.Resources.Editor_AddGimmick,
             CloseButtonText = Assets.Lang.Resources.Generic_Cancel,
-            PrimaryButtonText = Assets.Lang.Resources.Generic_Create
+            PrimaryButtonText = Assets.Lang.Resources.Generic_Create,
         };
 
         Dispatcher.UIThread.Post(async () =>
@@ -2019,7 +2023,7 @@ public partial class MainView : UserControl
             Content = gimmickView,
             Title = Assets.Lang.Resources.Editor_AddGimmick,
             CloseButtonText = Assets.Lang.Resources.Generic_Cancel,
-            PrimaryButtonText = Assets.Lang.Resources.Generic_Create
+            PrimaryButtonText = Assets.Lang.Resources.Generic_Create,
         };
 
         Dispatcher.UIThread.Post(async () =>
@@ -2550,7 +2554,7 @@ public partial class MainView : UserControl
         {
             Title = title,
             Content = text,
-            PrimaryButtonText = Assets.Lang.Resources.Generic_Ok
+            PrimaryButtonText = Assets.Lang.Resources.Generic_Ok,
         };
 
         dialog.ShowAsync();
@@ -2559,7 +2563,7 @@ public partial class MainView : UserControl
     private readonly ContentDialog transmittingDataDialog = new()
     {
         Title = Assets.Lang.Resources.Online_TransmittingData,
-        PrimaryButtonText = Assets.Lang.Resources.Menu_Disconnect
+        PrimaryButtonText = Assets.Lang.Resources.Menu_Disconnect,
     };
 
     public void ShowTransmittingDataMessage()
@@ -2581,7 +2585,7 @@ public partial class MainView : UserControl
 
     private readonly ContentDialog sendingDataDialog = new()
     {
-        Title = Assets.Lang.Resources.Online_TransmittingData
+        Title = Assets.Lang.Resources.Online_TransmittingData,
     };
 
     public void SetPlayState(PlayerState state)
@@ -2642,7 +2646,7 @@ public partial class MainView : UserControl
         {
             ContentDialogResult.Primary => await SaveFile(false, ChartEditor.Chart.Filepath),
             ContentDialogResult.Secondary => true,
-            _ => false
+            _ => false,
         };
 
         Task<ContentDialogResult> showSavePrompt()
@@ -2652,7 +2656,7 @@ public partial class MainView : UserControl
                 Title = Assets.Lang.Resources.Generic_SaveWarning,
                 PrimaryButtonText = Assets.Lang.Resources.Generic_Yes,
                 SecondaryButtonText = Assets.Lang.Resources.Generic_No,
-                CloseButtonText = Assets.Lang.Resources.Generic_Cancel
+                CloseButtonText = Assets.Lang.Resources.Generic_Cancel,
             };
             
             return dialog.ShowAsync();
@@ -2671,7 +2675,7 @@ public partial class MainView : UserControl
                 Title = Assets.Lang.Resources.Generic_InvalidAudioWarning,
                 Content = Assets.Lang.Resources.Generic_SelectAudioPrompt,
                 PrimaryButtonText = Assets.Lang.Resources.Generic_Yes,
-                CloseButtonText = Assets.Lang.Resources.Generic_No
+                CloseButtonText = Assets.Lang.Resources.Generic_No,
             };
             
             return dialog.ShowAsync();
@@ -2694,9 +2698,9 @@ public partial class MainView : UserControl
                 new("Audio files")
                 {
                     Patterns = new[] {"*.wav","*.flac","*.mp3","*.ogg"},
-                    AppleUniformTypeIdentifiers = new[] {"public.item"}
-                }
-            }
+                    AppleUniformTypeIdentifiers = new[] {"public.item"},
+                },
+            },
         });
 
         return result.Count != 1 ? null : result[0];
@@ -2712,9 +2716,9 @@ public partial class MainView : UserControl
                 new("Chart files")
                 {
                     Patterns = new[] {"*.mer", "*.map", "*.sat"},
-                    AppleUniformTypeIdentifiers = new[] {"public.item"}
-                }
-            }
+                    AppleUniformTypeIdentifiers = new[] {"public.item"},
+                },
+            },
         });
 
         return result.Count != 1 ? null : result[0];
@@ -2730,9 +2734,9 @@ public partial class MainView : UserControl
                 new("Image files")
                 {
                     Patterns = new[] {"*.png","*.jpg","*.jpeg"},
-                    AppleUniformTypeIdentifiers = new[] {"public.item"}
-                }
-            }
+                    AppleUniformTypeIdentifiers = new[] {"public.item"},
+                },
+            },
         });
 
         return result.Count != 1 ? null : result[0];
@@ -2748,9 +2752,9 @@ public partial class MainView : UserControl
                 new("Video files")
                 {
                     Patterns = new[] {"*.mp4","*.webm"},
-                    AppleUniformTypeIdentifiers = new[] {"public.item"}
-                }
-            }
+                    AppleUniformTypeIdentifiers = new[] {"public.item"},
+                },
+            },
         });
 
         return result.Count != 1 ? null : result[0];
@@ -2775,7 +2779,7 @@ public partial class MainView : UserControl
                 ChartFormatType.Editor => ".map",
                 ChartFormatType.Mercury => ".mer",
                 ChartFormatType.Saturn => ".sat",
-                _ => ""
+                _ => "",
             },
             FileTypeChoices = new[]
             {
@@ -2784,7 +2788,7 @@ public partial class MainView : UserControl
                     ChartFormatType.Editor => "Editor Chart File",
                     ChartFormatType.Mercury => "Mercury Chart File",
                     ChartFormatType.Saturn => "Saturn Chart File",
-                    _ => ""
+                    _ => "",
                 })
                 {
                     Patterns = formatType switch
@@ -2792,11 +2796,11 @@ public partial class MainView : UserControl
                         ChartFormatType.Editor => ["*.map"],
                         ChartFormatType.Mercury => ["*.mer"],
                         ChartFormatType.Saturn => ["*.sat"],
-                        _ => []
+                        _ => [],
                     },
-                    AppleUniformTypeIdentifiers = ["public.item"]
-                }
-            }
+                    AppleUniformTypeIdentifiers = ["public.item"],
+                },
+            },
         });
     }
     
@@ -2850,7 +2854,7 @@ public partial class MainView : UserControl
                 Title = Assets.Lang.Resources.Editor_MercuryBonusTypeTitle,
                 Content = Assets.Lang.Resources.Editor_MercuryBonusTypeReplacePrompt,
                 PrimaryButtonText = Assets.Lang.Resources.Editor_MercuryBonusType_ReplaceNotes,
-                SecondaryButtonText = Assets.Lang.Resources.Editor_MercuryBonusType_SwitchMode
+                SecondaryButtonText = Assets.Lang.Resources.Editor_MercuryBonusType_SwitchMode,
             };
             
             ContentDialogResult result = await mercuryBonusTypeWarning.ShowAsync();
@@ -2915,7 +2919,7 @@ public partial class MainView : UserControl
             {
                 Content = proofreadView,
                 Title = Assets.Lang.Resources.Menu_Proofread,
-                CloseButtonText = Assets.Lang.Resources.Generic_Ok
+                CloseButtonText = Assets.Lang.Resources.Generic_Ok,
             };
         
             await dialog.ShowAsync();

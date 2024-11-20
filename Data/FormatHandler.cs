@@ -307,7 +307,7 @@ internal static class MerHandler
                 GimmickType.BpmChange => $" {gimmick.Bpm.ToString("F6", CultureInfo.InvariantCulture)}\n",
                 GimmickType.HiSpeedChange => $" {gimmick.HiSpeed.ToString("F6", CultureInfo.InvariantCulture)}\n",
                 GimmickType.TimeSigChange => $" {gimmick.TimeSig.Upper,5:F0} {gimmick.TimeSig.Lower,5:F0}\n",
-                _ => "\n"
+                _ => "\n",
             };
         }
         
@@ -794,7 +794,7 @@ internal static class SatHandler
                 "MASK_ADD" => NoteType.MaskAdd,
                 "MASK_SUB" => NoteType.MaskRemove,
 
-                _ => NoteType.None
+                _ => NoteType.None,
             };
         }
 
@@ -807,7 +807,7 @@ internal static class SatHandler
                 "NORMAL" => BonusType.None,
                 "BONUS" => BonusType.Bonus,
                 "RNOTE" => BonusType.RNote,
-                _ => BonusType.None
+                _ => BonusType.None,
             };
         }
 
@@ -820,7 +820,7 @@ internal static class SatHandler
                 "CW" => MaskDirection.Clockwise,
                 "CCW" => MaskDirection.Counterclockwise,
                 "CENTER" => MaskDirection.Center,
-                _ => MaskDirection.None
+                _ => MaskDirection.None,
             };
         }
 
@@ -837,7 +837,7 @@ internal static class SatHandler
                 "STOP_START" => GimmickType.StopStart,
                 "STOP_END" => GimmickType.StopEnd,
                 "CHART_END" => GimmickType.EndOfChart,
-                _ => GimmickType.None
+                _ => GimmickType.None,
             };
         }
     
@@ -855,7 +855,7 @@ internal static class SatHandler
             GimmickType.StopStart => "STOP_START",
             GimmickType.StopEnd => "STOP_END",
             GimmickType.EndOfChart => "CHART_END",
-            _ => ""
+            _ => "",
         };
     }
     
@@ -875,7 +875,7 @@ internal static class SatHandler
             NoteType.MaskAdd => "MASK_ADD",
             NoteType.MaskRemove => "MASK_SUB",
             NoteType.Chain => "CHAIN",
-            _ => ""
+            _ => "",
         };
     }
 
@@ -888,7 +888,7 @@ internal static class SatHandler
             BonusType.None => "",
             BonusType.Bonus => ".BONUS",
             BonusType.RNote => ".RNOTE",
-            _ => ""
+            _ => "",
         };
 
         if (note.IsMask)
@@ -898,7 +898,7 @@ internal static class SatHandler
                 MaskDirection.Clockwise => ".CW",
                 MaskDirection.Counterclockwise => ".CCW",
                 MaskDirection.None => "",
-                _ => ""
+                _ => "",
             };
 
         if (!note.RenderSegment) modifiers += ".NR";

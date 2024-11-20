@@ -199,6 +199,22 @@
                                     
                                 <Separator Margin="0"/>
                                     
+                                <RadioButton Name="RadioNoteTrace" Classes="ToggleRadioStripe"
+                                             BorderBrush="White" 
+                                             ToolTip.Tip="{x:Static lang:Resources.ToolTip_NoteTypes}"
+                                             IsCheckedChanged="RadioNoteType_IsCheckedChanged" GroupName="NoteType"
+                                             Content="{x:Static lang:Resources.Note_Trace}" />
+                                
+                                <Separator Margin="0"/>
+                                    
+                                <RadioButton Name="RadioNoteDamage" Classes="ToggleRadioStripe"
+                                             BorderBrush="White" 
+                                             ToolTip.Tip="{x:Static lang:Resources.ToolTip_NoteTypes}"
+                                             IsCheckedChanged="RadioNoteType_IsCheckedChanged" GroupName="NoteType"
+                                             Content="{x:Static lang:Resources.Note_Damage}" />
+                                
+                                <Separator Margin="0"/>
+                                    
                                 <RadioButton Name="RadioNoteMaskAdd" Classes="ToggleRadioStripe"
                                              BorderBrush="White" 
                                              ToolTip.Tip="{x:Static lang:Resources.ToolTip_NoteTypes}"

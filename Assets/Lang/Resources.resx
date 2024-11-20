@@ -1242,4 +1242,19 @@ Continue?</value>
   <data name="ToolTip_LimitToMercuryBonusTypes" xml:space="preserve">
     <value>Allows any Note Type to use any Bonus Type when unchecked. The resulting chart will not be compatible with Mercury!</value>
   </data>
+  <data name="Note_Trace" xml:space="preserve">
+    <value>Trace</value>
+  </data>
+  <data name="Note_Damage" xml:space="preserve">
+    <value>Damage</value>
+  </data>
+  <data name="Note_DamageSpark" xml:space="preserve">
+    <value>Damage Spark</value>
+  </data>
+  <data name="Note_TraceStart" xml:space="preserve">
+    <value>Trace Start</value>
+  </data>
+  <data name="Note_TraceSegment" xml:space="preserve">
+    <value>Trace Segment</value>
+  </data>
 </root>

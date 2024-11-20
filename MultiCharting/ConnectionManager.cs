@@ -70,12 +70,12 @@ public class ConnectionManager(MainView main)
         InsertGimmick = 209,
         EditGimmick = 210,
         DeleteGimmick = 211,
-        ClientTimestamp = 212
+        ClientTimestamp = 212,
     }
     public enum OperationDirection : int
     {
         Undo = 0,
-        Redo = 1
+        Redo = 1,
     }
 
     public class MessageSerializer(MessageTypes messageType, string[]? stringData = null, int[]? intData = null, decimal[]? decimalData = null)
@@ -113,7 +113,7 @@ public class ConnectionManager(MainView main)
     {
         Local,
         Host,
-        Client 
+        Client,
     }
         
     // UI
@@ -260,7 +260,7 @@ public class ConnectionManager(MainView main)
         webSocketClient = new(serverUri, factory)
         {
             ReconnectTimeout = null,
-            IsReconnectionEnabled = false
+            IsReconnectionEnabled = false,
         };
 
         webSocketClient.DisconnectionHappened.Subscribe(_ =>
@@ -380,7 +380,7 @@ public class ConnectionManager(MainView main)
                 List<string> opData =
                 [
                     $"{bakeHold.Start.ToNetworkString()}",
-                    $"{bakeHold.End.ToNetworkString()}"
+                    $"{bakeHold.End.ToNetworkString()}",
                 ];
 
                 foreach (Note note in bakeHold.Segments)

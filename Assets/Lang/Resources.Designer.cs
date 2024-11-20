@@ -1816,6 +1816,24 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Damage.
+        /// </summary>
+        public static string Note_Damage {
+            get {
+                return ResourceManager.GetString("Note_Damage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Damage Spark.
+        /// </summary>
+        public static string Note_DamageSpark {
+            get {
+                return ResourceManager.GetString("Note_DamageSpark", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Highlight.
         /// </summary>
         public static string Note_Highlight {
@@ -1956,6 +1974,33 @@ namespace MercuryMapper.Assets.Lang {
         public static string Note_Touch {
             get {
                 return ResourceManager.GetString("Note_Touch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Trace.
+        /// </summary>
+        public static string Note_Trace {
+            get {
+                return ResourceManager.GetString("Note_Trace", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Trace Segment.
+        /// </summary>
+        public static string Note_TraceSegment {
+            get {
+                return ResourceManager.GetString("Note_TraceSegment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Trace Start.
+        /// </summary>
+        public static string Note_TraceStart {
+            get {
+                return ResourceManager.GetString("Note_TraceStart", resourceCulture);
             }
         }
         

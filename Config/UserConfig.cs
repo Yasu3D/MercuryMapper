@@ -124,7 +124,7 @@ public class KeymapConfig
         ["EditorJumpBeatUp"] = new(Key.Up),
         ["EditorJumpBeatDown"] = new(Key.Down),
         ["RenderIncreaseNoteSpeed"] = new(Key.Add, false, true, false),
-        ["RenderDecreaseNoteSpeed"] = new(Key.Subtract, false, true, false)
+        ["RenderDecreaseNoteSpeed"] = new(Key.Subtract, false, true, false),
     };
 }
 
@@ -144,6 +144,10 @@ public class ColorConfig
         ["ColorNoteHoldEnd"] = "FFB8B8B8",
         ["ColorNoteHoldSurfaceFar"] = "BEB2B2B2",
         ["ColorNoteHoldSurfaceNear"] = "BEFFFFFF",
+        ["ColorNoteTraceStart"] = "FFEEEEEE",
+        ["ColorNoteTraceSegment"] = "FFEEEEEE",
+        ["ColorNoteDamage"] = "FF2638FF",
+        ["ColorNoteDamageSpark"] = "FF26C2FF",
         ["ColorNoteMaskAdd"] = "FF9B9CD1",
         ["ColorNoteMaskRemove"] = "FF373480",
         ["ColorNoteEndOfChart"] = "80000000",
@@ -170,7 +174,7 @@ public class ColorConfig
         ["ColorAngleTicks"] = "AAFFFFFF",
         ["ColorJudgementMarvelous"] = "FFFF3679",
         ["ColorJudgementGreat"] = "FF8FFF1F",
-        ["ColorJudgementGood"] = "FF50B0FF"
+        ["ColorJudgementGood"] = "FF50B0FF",
     };
 }
 

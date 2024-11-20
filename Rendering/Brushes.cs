@@ -40,6 +40,9 @@ public class Brushes(UserConfig userConfig)
     private SKColor colorNoteHoldStart;
     private SKColor colorNoteHoldSegment;
     private SKColor colorNoteHoldSegmentNoRender;
+    private SKColor colorNoteTraceStart;
+    private SKColor colorNoteTraceSegment;
+    private SKColor colorNoteDamage;
     private SKColor colorNoteMaskAdd;
     private SKColor colorNoteMaskRemove;
     private SKColor colorNoteCaps;
@@ -56,13 +59,13 @@ public class Brushes(UserConfig userConfig)
     {
         StrokeWidth = GuidelinePenStrokeWidth,
         Style = SKPaintStyle.Stroke,
-        IsAntialias = true
+        IsAntialias = true,
     };
     
     private readonly SKPaint tunnelStripesPen = new()
     {
         Style = SKPaintStyle.Stroke,
-        IsAntialias = true
+        IsAntialias = true,
     };
 
     private readonly SKPaint notePen = new()
@@ -81,77 +84,77 @@ public class Brushes(UserConfig userConfig)
     private readonly SKPaint swipeFill = new()
     {
         Style = SKPaintStyle.Fill,
-        IsAntialias = true
+        IsAntialias = true,
     };
 
     private readonly SKPaint cursorPen = new()
     {
         Style = SKPaintStyle.Stroke,
         IsAntialias = true,
-        StrokeWidth = CursorPenStrokeWidth
+        StrokeWidth = CursorPenStrokeWidth,
     };
 
     private readonly SKPaint boxSelectCursorPen = new()
     {
         Style = SKPaintStyle.Stroke,
         IsAntialias = true,
-        StrokeWidth = CursorPenStrokeWidth
+        StrokeWidth = CursorPenStrokeWidth,
     };
 
     private readonly SKPaint boxSelectOutlinePen = new()
     {
         Style = SKPaintStyle.Stroke,
         IsAntialias = true,
-        StrokeWidth = BoxSelectOutlinePenStrokeWidth
+        StrokeWidth = BoxSelectOutlinePenStrokeWidth,
     };
 
     private readonly SKPaint selectionPen = new()
     {
         Style = SKPaintStyle.Stroke,
         IsAntialias = true,
-        StrokeWidth = SelectionPenStrokeWidth
+        StrokeWidth = SelectionPenStrokeWidth,
     };
     
     private readonly SKPaint highlightPen = new()
     {
         Style = SKPaintStyle.Stroke,
         IsAntialias = true,
-        StrokeWidth = SelectionPenStrokeWidth
+        StrokeWidth = SelectionPenStrokeWidth,
     };
     
     private readonly SKPaint syncPen = new()
     {
         StrokeWidth = SyncPenStrokeWidth,
         Style = SKPaintStyle.Stroke,
-        IsAntialias = true
+        IsAntialias = true,
     };
     
     private readonly SKPaint holdEndPen = new()
     {
         StrokeWidth = HoldEndPenStrokeWidth,
         Style = SKPaintStyle.Stroke,
-        StrokeCap = SKStrokeCap.Round
+        StrokeCap = SKStrokeCap.Round,
     };
 
     private readonly SKPaint rNotePen = new()
     {
         StrokeWidth = RNotePenStrokeWidth,
         Style = SKPaintStyle.Stroke,
-        IsAntialias = true
+        IsAntialias = true,
     };
     
     private readonly SKPaint bonusPen = new()
     {
         StrokeWidth = RNotePenStrokeWidth,
         Style = SKPaintStyle.Stroke,
-        IsAntialias = true
+        IsAntialias = true,
     };
 
     private readonly SKPaint peerPen = new()
     {
         StrokeWidth = PeerPenStrokeWidth,
         Style = SKPaintStyle.Stroke,
-        IsAntialias = true
+        IsAntialias = true,
     };
     
     // ________ Public Brushes
@@ -161,54 +164,54 @@ public class Brushes(UserConfig userConfig)
     {
         StrokeWidth = TickPenStrokeWidth,
         Style = SKPaintStyle.Stroke,
-        IsAntialias = true
+        IsAntialias = true,
     };
     
     public readonly SKPaint MeasurePen = new()
     {
         StrokeWidth = MeasurePenStrokeWidth,
         Style = SKPaintStyle.Stroke,
-        IsAntialias = true
+        IsAntialias = true,
     };
 
     public readonly SKPaint BeatPen = new()
     {
         StrokeWidth = BeatPenStrokeWidth,
         Style = SKPaintStyle.Stroke,
-        IsAntialias = true
+        IsAntialias = true,
     };
     
     public readonly SKPaint TunnelFill = new()
     {
         Style = SKPaintStyle.Fill,
         IsAntialias = true,
-        IsDither = true
+        IsDither = true,
     };
 
     public readonly SKPaint JudgementLinePen = new()
     {
         StrokeWidth = NotePenStrokeWidth,
         Style = SKPaintStyle.Stroke,
-        IsAntialias = true
+        IsAntialias = true,
     };
 
     public readonly SKPaint JudgementLineShadingPen = new()
     {
         StrokeWidth = NotePenStrokeWidth,
         Style = SKPaintStyle.Stroke,
-        IsAntialias = true
+        IsAntialias = true,
     };
     
     public readonly SKPaint MaskFill = new()
     {
         Style = SKPaintStyle.Fill,
-        IsAntialias = false
+        IsAntialias = false,
     };
 
     public readonly SKPaint HoldFill = new()
     {
         Style = SKPaintStyle.Fill,
-        IsAntialias = false
+        IsAntialias = false,
     };
     
     public readonly SKPaint ChainStripeFill = new()
@@ -221,49 +224,49 @@ public class Brushes(UserConfig userConfig)
     public readonly SKPaint BoxSelectFill = new()
     {
         Style = SKPaintStyle.Fill,
-        IsAntialias = true
+        IsAntialias = true,
     };
 
     public readonly SKPaint BonusFill = new()
     {
         Style = SKPaintStyle.Fill,
-        IsAntialias = false
+        IsAntialias = false,
     };
     
     public readonly SKPaint JudgementMarvelousPen = new()
     {
         StrokeWidth = 2,
-        Style = SKPaintStyle.Stroke
+        Style = SKPaintStyle.Stroke,
     };
     
     public readonly SKPaint JudgementGreatPen = new()
     {
         StrokeWidth = 2,
-        Style = SKPaintStyle.Stroke
+        Style = SKPaintStyle.Stroke,
     };
     
     public readonly SKPaint JudgementGoodPen = new()
     {
         StrokeWidth = 2,
-        Style = SKPaintStyle.Stroke
+        Style = SKPaintStyle.Stroke,
     };
     
     public readonly SKPaint JudgementMarvelousFill = new()
     {
         Style = SKPaintStyle.Fill,
-        IsAntialias = false
+        IsAntialias = false,
     };
     
     public readonly SKPaint JudgementGreatFill = new()
     {
         Style = SKPaintStyle.Fill,
-        IsAntialias = false
+        IsAntialias = false,
     };
     
     public readonly SKPaint JudgementGoodFill = new()
     {
         Style = SKPaintStyle.Fill,
-        IsAntialias = false
+        IsAntialias = false,
     };
     
     // ________ Dynamic Brushes
@@ -393,9 +396,13 @@ public class Brushes(UserConfig userConfig)
             NoteType.HoldStart => colorNoteHoldStart,
             NoteType.HoldSegment => render ? colorNoteHoldSegment : colorNoteHoldSegmentNoRender,
             NoteType.HoldEnd => colorNoteHoldSegment,
+            NoteType.TraceStart => colorNoteTraceStart,
+            NoteType.TraceSegment => colorNoteTraceSegment,
+            NoteType.TraceEnd => colorNoteTraceSegment,
+            NoteType.Damage => colorNoteDamage,
             NoteType.MaskAdd => colorNoteMaskAdd,
             NoteType.MaskRemove => colorNoteMaskRemove,
-            _ => throw new ArgumentOutOfRangeException()
+            _ => throw new ArgumentOutOfRangeException(),
         };
     }
 
@@ -413,7 +420,7 @@ public class Brushes(UserConfig userConfig)
             GimmickType.StopStart
             or GimmickType.StopEnd => colorGimmickStop,
             GimmickType.EndOfChart => colorGimmickEndOfChart,
-            _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
+            _ => throw new ArgumentOutOfRangeException(nameof(type), type, null),
         };
     }
     
@@ -435,6 +442,9 @@ public class Brushes(UserConfig userConfig)
             colorNoteHoldStart = SKColor.Parse(colors["ColorNoteHoldStart"]);
             colorNoteHoldSegment = SKColor.Parse(colors["ColorNoteHoldSegment"]);
             colorNoteHoldSegmentNoRender = SKColor.Parse(colors["ColorNoteHoldSegmentNoRender"]);
+            colorNoteTraceStart = SKColor.Parse(colors["ColorNoteTraceStart"]);
+            colorNoteTraceSegment = SKColor.Parse(colors["ColorNoteTraceSegment"]);
+            colorNoteDamage = SKColor.Parse(colors["ColorNoteDamage"]);
             colorNoteMaskAdd = SKColor.Parse(colors["ColorNoteMaskAdd"]);
             colorNoteMaskRemove = SKColor.Parse(colors["ColorNoteMaskRemove"]);
             colorGimmickEndOfChart = SKColor.Parse(colors["ColorNoteEndOfChart"]);

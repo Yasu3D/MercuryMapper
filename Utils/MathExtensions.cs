@@ -129,7 +129,7 @@ public static class MathExtensions
             HoldEaseType.SineOut => 1 - float.Cos(x * float.Pi * 0.5f),
             HoldEaseType.QuadIn => 1 - (1 - x) * (1 - x),
             HoldEaseType.QuadOut => x * x,
-            _ => x
+            _ => x,
         };
     }
 

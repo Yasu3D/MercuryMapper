@@ -4,5 +4,5 @@ public enum BonusType
 {
     None = 0,
     Bonus = 1,
-    RNote = 2
+    RNote = 2,
 }
