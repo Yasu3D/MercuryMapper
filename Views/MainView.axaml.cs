@@ -559,14 +559,19 @@ public partial class MainView : UserControl
         QuickSettingsCheckBoxCutOverlappingJudgementWindows.IsChecked = UserConfig.RenderConfig.CutOverlappingJudgementWindows;
     }
 
-    public void SetMinNoteSize(NoteType noteType, BonusType bonusType)
+    public void SetNoteSizeBounds(NoteType noteType, BonusType bonusType)
     {
         int minimum = Note.MinSize(noteType, bonusType);
+        int maximum = Note.MaxSize(noteType);
         SliderNoteSize.Minimum = minimum;
         NumericNoteSize.Minimum = minimum;
         ChartEditor.Cursor.MinSize = minimum;
 
-        SliderNoteSize.Value = double.Max(SliderNoteSize.Value, minimum);
+        SliderNoteSize.Maximum = maximum;
+        NumericNoteSize.Maximum = maximum;
+        ChartEditor.Cursor.MaxSize = maximum;
+
+        SliderNoteSize.Value = double.Clamp(SliderNoteSize.Value, minimum, maximum);
     }
 
     public void UpdateFilepathsInUi()

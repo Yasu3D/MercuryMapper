@@ -4,7 +4,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:view="clr-namespace:MercuryMapper.Views" mc:Ignorable="d" 
         d:DesignWidth="1300" d:DesignHeight="860"
-        Width="1300" Height="860"
+        Width="1300" Height="870"
         MinWidth="1000" MinHeight="500"
         Background="{DynamicResource DarkBrush}"
         WindowStartupLocation="CenterScreen"

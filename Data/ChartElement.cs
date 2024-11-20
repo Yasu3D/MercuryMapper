@@ -281,10 +281,26 @@ public class Note : ChartElement
             (NoteType.MaskAdd, _) => 1,
             (NoteType.MaskRemove, _) => 1,
             
+            (NoteType.Damage, _) => 3,
+            (NoteType.TraceStart, _) => 2,
+            (NoteType.TraceSegment, _) => 2,
+            (NoteType.TraceEnd, _) => 2,
+            
             _ => 5,
         };
     }
 
+    public static int MaxSize(NoteType noteType)
+    {
+        return noteType switch
+        {
+            NoteType.TraceStart => 2,
+            NoteType.TraceSegment => 2,
+            NoteType.TraceEnd => 2,
+            _ => 60,
+        };
+    }
+    
     public IEnumerable<Note> References()
     {
         List<Note> refs = [this];
@@ -468,18 +484,14 @@ public class Note : ChartElement
     }
 }
 
-public class NoteChain
+public struct Hold()
 {
     public List<Note> Segments = [];
 }
 
-public class Hold : NoteChain
+public struct Trace()
 {
-    public List<Note> RenderedSegments => Segments.Where(x => x.RenderSegment == true).ToList();
-}
-
-public class Trace : NoteChain
-{
+    public List<Note> Segments = [];
     public SKColor Color;
 }
 

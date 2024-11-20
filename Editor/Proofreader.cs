@@ -56,6 +56,7 @@ public static class Proofreader
         checkNotesBeforeEndOfChart();
         checkSmallNotes();
         checkSmallerThanLegalNotes();
+        checkLargerThanLegalNotes();
         if (limitToMercuryBonusTypes) checkBonusNotes();
         checkBrokenNotes();
         checkUnbakedHolds();
@@ -155,6 +156,25 @@ public static class Proofreader
             if (error)
             {
                 AddMessage(textBlock, MessageType.None, "Notes smaller than their intended minimum size may look broken or feel unplayable.\n\n");
+            }
+        }
+
+        void checkLargerThanLegalNotes()
+        {
+            bool error = false;
+            
+            foreach (Note note in chart.Notes)
+            {
+                if (note.Size < Note.MaxSize(note.NoteType))
+                {
+                    AddMessage(textBlock, MessageType.Error, $"{note.NoteType} @ {note.BeatData.Measure} {note.BeatData.Tick} is larger than it's legal maximum size [< {Note.MaxSize(note.NoteType)}.\n");
+                    error = true;
+                }
+            }
+
+            if (error)
+            {
+                AddMessage(textBlock, MessageType.None, "Notes larger than their intended maximum size may look broken or crash the game.\n\n");
             }
         }
 

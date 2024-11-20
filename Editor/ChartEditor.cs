@@ -171,7 +171,7 @@ public class ChartEditor
         if (CurrentNoteType is not (NoteType.HoldStart or NoteType.HoldSegment or NoteType.HoldEnd)) EndHold(false);
         mainView.SetHoldContextButton(EditorState);
         mainView.ToggleInsertButton();
-        mainView.SetMinNoteSize(CurrentNoteType, CurrentBonusType);
+        mainView.SetNoteSizeBounds(CurrentNoteType, CurrentBonusType);
     }
 
     // ________________ Edit Menu
@@ -444,7 +444,7 @@ public class ChartEditor
             {
                 BoxSelect = new();
 
-                mainView.SetMinNoteSize(NoteType.None, BonusType.None);
+                mainView.SetNoteSizeBounds(NoteType.None, BonusType.None);
                 EditorState = ChartEditorState.BoxSelectStart;
                 break;
             }
@@ -474,7 +474,7 @@ public class ChartEditor
                 
                 select();
                 mainView.SetSelectionInfo();
-                mainView.SetMinNoteSize(CurrentNoteType, CurrentBonusType);
+                mainView.SetNoteSizeBounds(CurrentNoteType, CurrentBonusType);
                 EditorState = ChartEditorState.InsertNote;
                 break;
             }
@@ -505,7 +505,7 @@ public class ChartEditor
 
     public void StopBoxSelect()
     {
-        mainView.SetMinNoteSize(CurrentNoteType, CurrentBonusType);
+        mainView.SetNoteSizeBounds(CurrentNoteType, CurrentBonusType);
         EditorState = ChartEditorState.InsertNote;
     }
     
@@ -1119,7 +1119,7 @@ public class ChartEditor
             Note newNote = new(note, note.Guid)
             {
                 Position = newPosition,
-                Size = int.Max(newSize, Note.MinSize(newNoteType, newBonusType)),
+                Size = int.Clamp(newSize, Note.MinSize(newNoteType, newBonusType), Note.MaxSize(newNoteType)),
                 NoteType = newNoteType,
                 BonusType = newBonusType,
                 MaskDirection = newDirection,
@@ -1210,7 +1210,7 @@ public class ChartEditor
             Note newNote = new(note, note.Guid)
             {
                 Position = note.Position,
-                Size = int.Clamp(note.Size + delta, Note.MinSize(note.NoteType, note.BonusType), 60),
+                Size = int.Clamp(note.Size + delta, Note.MinSize(note.NoteType, note.BonusType), Note.MaxSize(note.NoteType)),
             };
 
             operationList.Add(new EditNote(note, newNote));
@@ -1622,13 +1622,13 @@ public class ChartEditor
         if (HighlightedElement is not Note highlighted) return;
         if (!highlighted.IsHold) return;
 
-        NoteChain noteChain = new() { Segments = highlighted.References().ToList() };
+        Hold hold = new() { Segments = highlighted.References().ToList() };
 
-        if (CurrentBeatData.FullTick <= noteChain.Segments[0].BeatData.FullTick) return;
-        if (CurrentBeatData.FullTick >= noteChain.Segments[^1].BeatData.FullTick) return;
+        if (CurrentBeatData.FullTick <= hold.Segments[0].BeatData.FullTick) return;
+        if (CurrentBeatData.FullTick >= hold.Segments[^1].BeatData.FullTick) return;
 
-        Note? previous = noteChain.Segments.LastOrDefault(x => x.BeatData.FullTick <= CurrentBeatData.FullTick);
-        Note? next = noteChain.Segments.FirstOrDefault(x => x.BeatData.FullTick >= CurrentBeatData.FullTick);
+        Note? previous = hold.Segments.LastOrDefault(x => x.BeatData.FullTick <= CurrentBeatData.FullTick);
+        Note? next = hold.Segments.FirstOrDefault(x => x.BeatData.FullTick >= CurrentBeatData.FullTick);
 
         if (previous is null || next is null) return;
 
@@ -1900,25 +1900,25 @@ public class ChartEditor
         if (EditorState is ChartEditorState.InsertHold) return;
         
         HashSet<Note> checkedNotes = [];
-        List<NoteChain> holdNotes = [];
+        List<Hold> holdNotes = [];
         List<IOperation> operationList = [];
         
         foreach (Note note in SelectedNotes)
         {
             if (checkedNotes.Contains(note)) continue;
 
-            NoteChain noteChain = new();
+            Hold hold = new();
 
             foreach (Note reference in note.References())
             {
-                noteChain.Segments.Add(reference);
+                hold.Segments.Add(reference);
                 checkedNotes.Add(reference);
             }
             
-            holdNotes.Add(noteChain);
+            holdNotes.Add(hold);
         }
 
-        foreach (NoteChain hold in holdNotes)
+        foreach (Hold hold in holdNotes)
         {
             for (int i = 0; i < hold.Segments.Count; i++)
             {
@@ -1927,7 +1927,7 @@ public class ChartEditor
                 Note note = hold.Segments[i];
 
                 int position = MathExtensions.Modulo(note.Position - left, 60);
-                int size = int.Clamp(note.Size + left + right, Note.MinSize(note.NoteType, note.BonusType), 60);
+                int size = int.Clamp(note.Size + left + right, Note.MinSize(note.NoteType, note.BonusType), Note.MaxSize(note.NoteType));
                 
                 Note newNote = new(note, note.Guid)
                 {
@@ -1949,7 +1949,7 @@ public class ChartEditor
         if (EditorState is ChartEditorState.InsertHold) return;
         
         HashSet<Note> checkedNotes = [];
-        List<NoteChain> holdNotes = [];
+        List<Hold> holdNotes = [];
         List<IOperation> operationList = [];
         Random random = new();
         
@@ -1957,18 +1957,18 @@ public class ChartEditor
         {
             if (checkedNotes.Contains(note)) continue;
 
-            NoteChain noteChain = new();
+            Hold hold = new();
 
             foreach (Note reference in note.References())
             {
-                noteChain.Segments.Add(reference);
+                hold.Segments.Add(reference);
                 checkedNotes.Add(reference);
             }
             
-            holdNotes.Add(noteChain);
+            holdNotes.Add(hold);
         }
 
-        foreach (NoteChain hold in holdNotes)
+        foreach (Hold hold in holdNotes)
         {
             for (int i = 0; i < hold.Segments.Count; i++)
             {
@@ -1986,7 +1986,7 @@ public class ChartEditor
                 int right = random.Next(rMin, rMax);
 
                 int position = MathExtensions.Modulo(note.Position - left, 60);
-                int size = int.Clamp(note.Size + left + right, Note.MinSize(note.NoteType, note.BonusType), 60);
+                int size = int.Clamp(note.Size + left + right, Note.MinSize(note.NoteType, note.BonusType), Note.MaxSize(note.NoteType));
                 
                 
                 Note newNote = new(note, note.Guid)
@@ -2009,7 +2009,7 @@ public class ChartEditor
         if (EditorState is ChartEditorState.InsertHold) return;
         
         HashSet<Note> checkedNotes = [];
-        List<NoteChain> holdNotes = [];
+        List<Hold> holdNotes = [];
         List<IOperation> operationList = [];
         
         foreach (Note note in SelectedNotes)
@@ -2017,20 +2017,20 @@ public class ChartEditor
             if (checkedNotes.Contains(note)) continue;
             if (!note.IsHold) continue;
 
-            NoteChain noteChain = new();
+            Hold hold = new();
 
             foreach (Note reference in note.References())
             {
-                noteChain.Segments.Add(reference);
+                hold.Segments.Add(reference);
                 checkedNotes.Add(reference);
             }
             
-            holdNotes.Add(noteChain);
+            holdNotes.Add(hold);
         }
 
         int interval = 1920 / beatDivision;
         
-        foreach (NoteChain hold in holdNotes)
+        foreach (Hold hold in holdNotes)
         {
             int firstTick = hold.Segments[0].BeatData.FullTick;
             int lastTick = hold.Segments[^1].BeatData.FullTick;
@@ -2049,7 +2049,7 @@ public class ChartEditor
         Chart.IsSaved = false;
         return;
 
-        void holdToHold(NoteChain hold, BonusType bonusType, int firstTick, int lastTick)
+        void holdToHold(Hold hold, BonusType bonusType, int firstTick, int lastTick)
         {
             Note? last = null;
             for (int i = firstTick; i <= lastTick; i += interval)
@@ -2064,7 +2064,7 @@ public class ChartEditor
                     NoteType = last != null ? NoteType.HoldEnd : NoteType.HoldStart,
                     BonusType = last != null ? BonusType.None : bonusType,
                     Position = pos % 60,
-                    Size = int.Max(size, Note.MinSize(last != null ? NoteType.HoldEnd : NoteType.HoldStart, last != null ? BonusType.None : bonusType)),
+                    Size = int.Clamp(size, Note.MinSize(last != null ? NoteType.HoldEnd : NoteType.HoldStart, last != null ? BonusType.None : bonusType), Note.MaxSize(last != null ? NoteType.HoldEnd : NoteType.HoldStart)),
                     PrevReferencedNote = last,
                 };
 
@@ -2095,7 +2095,7 @@ public class ChartEditor
             }
         }
 
-        void holdToChain(NoteChain hold, int firstTick, int lastTick)
+        void holdToChain(Hold hold, int firstTick, int lastTick)
         {
             for (int i = firstTick; i <= lastTick; i += interval)
             {
@@ -2108,14 +2108,14 @@ public class ChartEditor
                     MaskDirection = MaskDirection.Center,
                     NoteType = NoteType.Chain,
                     Position = pos % 60,
-                    Size = int.Max(size, Note.MinSize(NoteType.Chain, BonusType.None)),
+                    Size = int.Clamp(size, Note.MinSize(NoteType.Chain, BonusType.None), Note.MaxSize(NoteType.Chain)),
                 };
 
                 operationList.Add(new InsertNote(Chart, SelectedNotes, note));
             }
         }
         
-        void deleteHold(NoteChain hold)
+        void deleteHold(Hold hold)
         {
             List<DeleteHoldNote> holdOperationList = [];
             

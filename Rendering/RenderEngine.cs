@@ -79,8 +79,8 @@ public class RenderEngine(MainView mainView)
             
             DrawSyncs(canvas, Chart); // Hold Surfaces normally render under syncs but the syncs poke into the note a bit, and it looks shit.
             
-            //if (RenderConfig.HoldRenderMethod == 0) DrawHolds(canvas, Chart);
-            //else DrawHoldsLegacy(canvas, Chart);
+            if (RenderConfig.HoldRenderMethod == 0) DrawHolds(canvas, Chart);
+            else DrawHoldsLegacy(canvas, Chart);
             
             DrawNotes(canvas, Chart);
             DrawArrows(canvas, Chart);
@@ -723,7 +723,7 @@ public class RenderEngine(MainView mainView)
         canvas.DrawPath(path, brushes.BonusFill);
     }
     
-    /*/// <summary>
+    /// <summary>
     /// Performs better than the original by drawing hold-by-hold, not segment-by-segment. Saves dozens, if not hundreds of calls to SkiaSharp and fixes the tv-static-looking seams on dense holds. <br/>
     /// This first batches notes into a "hold" struct, then draws each hold.
     /// </summary>
@@ -739,28 +739,28 @@ public class RenderEngine(MainView mainView)
         }).ToList();
 
         HashSet<Note> checkedNotes = [];
-        List<NoteChain> holdNotes = [];
+        List<Hold> holdNotes = [];
 
         foreach (Note note in visibleNotes)
         {
             if (checkedNotes.Contains(note)) continue;
 
-            NoteChain noteChain = new();
+            Hold hold = new();
 
             foreach (Note reference in note.References())
             {
                 if (visibleNotes.Contains(reference) && ((reference.RenderSegment && !RenderConfig.DrawNoRenderHoldSegments) || RenderConfig.DrawNoRenderHoldSegments))
                 {
-                    noteChain.Segments.Add(reference);
+                    hold.Segments.Add(reference);
                 }
                 checkedNotes.Add(reference);
             }
 
-            holdNotes.Add(noteChain);
+            holdNotes.Add(hold);
         }
 
         // The brainfuck. If there's any questions, ask me, and I'll help you decipher it.
-        foreach (NoteChain hold in holdNotes)
+        foreach (Hold hold in holdNotes)
         {
             if (hold.Segments.Count == 0) continue;
             SKPath path = new();
@@ -1097,7 +1097,7 @@ public class RenderEngine(MainView mainView)
 
             return arc;
         }
-    }*/
+    }
     
     private void DrawNotes(SKCanvas canvas, Chart chart)
     {

@@ -348,7 +348,7 @@ internal static class MerHandler
 
 internal static class SatHandler
 {
-    private const string SatFormatVersion = "1";
+    private const string SatFormatVersion = "2";
 
     /// <summary>
     /// Parses a SAT format file.
