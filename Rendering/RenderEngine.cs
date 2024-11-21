@@ -981,21 +981,7 @@ public class RenderEngine(MainView mainView)
             // Damage
             if (note.NoteType is NoteType.Damage)
             {
-                SKPath sparkPath = new();
-                int steps = int.Min(note.Size + 1, 60);
-            
-                for (int j = 0; j < steps; j++)
-                {
-                    float offset = random.NextSingle() * 0.06f;
-                    SKPoint p = GetPointOnArc(canvasCenter, data.Rect.Width * (0.44f + offset), (note.Position + j) * -6);
-
-                    if (j == 0) sparkPath.MoveTo(p);
-                    sparkPath.LineTo(p);
-                }
-            
-                if (note.Size == 60) sparkPath.Close();
-
-                canvas.DrawPath(sparkPath, brushes.GetDamageSparkPen(data.Scale * canvasScale));
+                DrawDamage(canvas, note, data);
             }
         }
     }
@@ -1557,6 +1543,25 @@ public class RenderEngine(MainView mainView)
                 break;
             }
         }
+    }
+
+    private void DrawDamage(SKCanvas canvas, Note note, ArcData data)
+    {
+        SKPath sparkPath = new();
+        int steps = int.Min(note.Size + 1, 60);
+            
+        for (int j = 0; j < steps; j++)
+        {
+            float offset = random.NextSingle() * 0.06f;
+            SKPoint p = GetPointOnArc(canvasCenter, data.Rect.Width * (0.44f + offset), (note.Position + j) * -6);
+
+            if (j == 0) sparkPath.MoveTo(p);
+            sparkPath.LineTo(p);
+        }
+            
+        if (note.Size == 60) sparkPath.Close();
+
+        canvas.DrawPath(sparkPath, brushes.GetDamageSparkPen(data.Scale * canvasScale));
     }
     
     private void DrawJudgementWindows(SKCanvas canvas, Chart chart)
