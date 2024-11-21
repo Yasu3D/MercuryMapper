@@ -1071,9 +1071,9 @@ public class RenderEngine(MainView mainView)
 
             if (!InRange(data.Scale) || note.BeatData.MeasureDecimal < CurrentMeasureDecimal) continue;
 
-            if (note.IsRNote) DrawRNote(canvas, note, data);
+            if (note.IsRNote && note.LinkType is NoteLinkType.Start or NoteLinkType.Unlinked) DrawRNote(canvas, note, data);
 
-            if (note.IsBonus) DrawBonusGlow(canvas, note, data);
+            if (note.IsBonus && note.LinkType is NoteLinkType.Start or NoteLinkType.Unlinked) DrawBonusGlow(canvas, note, data);
 
             if (note.LinkType is NoteLinkType.Start or NoteLinkType.Unlinked)
             {
@@ -1220,9 +1220,9 @@ public class RenderEngine(MainView mainView)
 
             if (!InRange(currentData.Scale) || note.BeatData.MeasureDecimal < CurrentMeasureDecimal) continue;
 
-            if (note.IsRNote) DrawRNote(canvas, note, currentData);
+            if (note.IsRNote && note.LinkType is NoteLinkType.Start or NoteLinkType.Unlinked) DrawRNote(canvas, note, currentData);
 
-            if (note.LinkType is NoteLinkType.Start)
+            if (note.LinkType is NoteLinkType.Start or NoteLinkType.Unlinked)
             {
                 if (note.Size != 60) DrawNoteCaps(canvas, currentData.Rect, currentData.StartAngle, currentData.SweepAngle, currentData.Scale);
                 canvas.DrawArc(currentData.Rect, currentData.StartAngle, currentData.SweepAngle, false, brushes.GetNotePen(note, canvasScale * currentData.Scale));
