@@ -327,14 +327,14 @@
   <data name="Editor_Size" xml:space="preserve">
     <value>Size</value>
   </data>
-  <data name="Editor_EndHold" xml:space="preserve">
-    <value>End Hold</value>
+  <data name="Editor_EndNoteCollection" xml:space="preserve">
+    <value>End Note Collection</value>
   </data>
   <data name="Editor_Measure" xml:space="preserve">
     <value>Measure</value>
   </data>
-  <data name="Editor_EditHold" xml:space="preserve">
-    <value>Edit Hold</value>
+  <data name="Editor_EditNoteCollection" xml:space="preserve">
+    <value>Edit Note Collection</value>
   </data>
   <data name="Settings_Color_JudgementLinePrimary" xml:space="preserve">
     <value>Judgement Line Primary</value>
@@ -472,8 +472,8 @@ Would you like to manually select a file?</value>
   <data name="Editor_MirrorNote" xml:space="preserve">
     <value>Mirror</value>
   </data>
-  <data name="Editor_BakeHoldNote" xml:space="preserve">
-    <value>Bake Hold</value>
+  <data name="Editor_BakeNotes" xml:space="preserve">
+    <value>Bake Notes</value>
   </data>
   <data name="Settings_RevertToDefault" xml:space="preserve">
     <value>Revert to Default Settings</value>
@@ -580,10 +580,10 @@ Would you like to manually select a file?</value>
   <data name="Editor_HighlightNearestNote" xml:space="preserve">
     <value>Highlight Nearest Note</value>
   </data>
-  <data name="Editor_SelectHoldReferences" xml:space="preserve">
-    <value>Select Hold Note References</value>
+  <data name="Editor_SelectNoteCollectionReferences" xml:space="preserve">
+    <value>Select Note Collection References</value>
   </data>
-  <data name="Editor_InsertHoldSegment" xml:space="preserve">
+  <data name="Editor_InsertSegment" xml:space="preserve">
     <value>Insert Segment</value>
   </data>
   <data name="Settings_Audio_HitsoundOffset" xml:space="preserve">
@@ -604,17 +604,17 @@ Would you like to manually select a file?</value>
   <data name="ChartInfo_PlayPreview" xml:space="preserve">
     <value>Play Preview</value>
   </data>
-  <data name="Editor_HoldEase_Linear" xml:space="preserve">
+  <data name="Editor_Ease_Linear" xml:space="preserve">
     <value>Linear</value>
   </data>
-  <data name="Editor_HoldEase_SmoothOut" xml:space="preserve">
+  <data name="Editor_Ease_SmoothOut" xml:space="preserve">
     <value>Smooth Out</value>
   </data>
-  <data name="Editor_HoldEase_SharpOut" xml:space="preserve">
+  <data name="Editor_Ease_SharpOut" xml:space="preserve">
     <value>Sharp Out</value>
   </data>
-  <data name="Editor_HoldEaseHeader" xml:space="preserve">
-    <value>Hold Ease</value>
+  <data name="Editor_EaseHeader" xml:space="preserve">
+    <value>Ease</value>
   </data>
   <data name="Settings_Editor_QuantizeOnPause" xml:space="preserve">
     <value>Quantize on Pause</value>
@@ -628,29 +628,29 @@ Would you like to manually select a file?</value>
   <data name="Note_HoldSegmentNoRender" xml:space="preserve">
     <value>Hold Segment [No Render]</value>
   </data>
-  <data name="Editor_HoldEase_SineIn" xml:space="preserve">
+  <data name="Editor_Ease_SineIn" xml:space="preserve">
     <value>Sine In</value>
   </data>
-  <data name="Editor_HoldEase_SharpIn" xml:space="preserve">
+  <data name="Editor_Ease_SharpIn" xml:space="preserve">
     <value>Sharp In</value>
   </data>
-  <data name="Editor_HoldEase_SineOut" xml:space="preserve">
+  <data name="Editor_Ease_SineOut" xml:space="preserve">
     <value>Sine Out</value>
   </data>
-  <data name="Editor_HoldEase_SmoothIn" xml:space="preserve">
+  <data name="Editor_Ease_SmoothIn" xml:space="preserve">
     <value>Smooth In</value>
   </data>
-  <data name="Editor_HoldEase_QuadIn" xml:space="preserve">
+  <data name="Editor_Ease_QuadIn" xml:space="preserve">
     <value>Quad In</value>
   </data>
-  <data name="Editor_HoldEase_QuadOut" xml:space="preserve">
+  <data name="Editor_Ease_QuadOut" xml:space="preserve">
     <value>Quad Out</value>
   </data>
   <data name="Settings_Editor_HighlightPlacedNote" xml:space="preserve">
     <value>Highlight Placed Note</value>
   </data>
-  <data name="Editor_StitchHold" xml:space="preserve">
-    <value>Stitch Hold</value>
+  <data name="Editor_StitchNoteCollection" xml:space="preserve">
+    <value>Stitch Note Collection</value>
   </data>
   <data name="Generic_AutosaveFound" xml:space="preserve">
     <value>Autosave found. Timestamp:</value>
@@ -687,10 +687,10 @@ Continue?</value>
   <data name="Settings_HoldRenderMethod" xml:space="preserve">
     <value>Hold Render Method</value>
   </data>
-  <data name="Editor_HoldEase_LinearPlusIn" xml:space="preserve">
+  <data name="Editor_Ease_LinearPlusIn" xml:space="preserve">
     <value>Linear+ In</value>
   </data>
-  <data name="Editor_HoldEase_LinearPlusOut" xml:space="preserve">
+  <data name="Editor_Ease_LinearPlusOut" xml:space="preserve">
     <value>Linear+ Out</value>
   </data>
   <data name="Menu_ExportSaturnFolder" xml:space="preserve">
@@ -741,11 +741,11 @@ Continue?</value>
   <data name="SaturnExport_DiffBeyond" xml:space="preserve">
     <value>Beyond Diff</value>
   </data>
-  <data name="Menu_JaggedHolds" xml:space="preserve">
-    <value>Generate Jagged Holds</value>
+  <data name="Menu_JaggedNoteCollections" xml:space="preserve">
+    <value>Generate Jagged Note Collections</value>
   </data>
-  <data name="Menu_ReconstructHolds" xml:space="preserve">
-    <value>Reconstruct Holds</value>
+  <data name="Menu_ReconstructNoteCollections" xml:space="preserve">
+    <value>Reconstruct Note Groups</value>
   </data>
   <data name="Generic_Generate" xml:space="preserve">
     <value>Generate</value>
@@ -756,11 +756,11 @@ Continue?</value>
   <data name="Tools_GeneratorType" xml:space="preserve">
     <value>Generator Type</value>
   </data>
-  <data name="Tools_Reconstruct_HoldToHold" xml:space="preserve">
-    <value>Hold to Hold</value>
+  <data name="Tools_Reconstruct_NoteCollectionToNoteCollection" xml:space="preserve">
+    <value>Collection to Collection</value>
   </data>
-  <data name="Tools_Reconstruct_HoldToChain" xml:space="preserve">
-    <value>Hold to Chain</value>
+  <data name="Tools_Reconstruct_NoteCollectionToChain" xml:space="preserve">
+    <value>Collection to Chain</value>
   </data>
   <data name="Tools_Jagged_Spikes" xml:space="preserve">
     <value>Spikes</value>
@@ -786,11 +786,11 @@ Continue?</value>
   <data name="Tools_Jagged_RightEdgeMin" xml:space="preserve">
     <value>Right Edge [Min]</value>
   </data>
-  <data name="Editor_NoHoldsSelected" xml:space="preserve">
-    <value>No Holds selected!</value>
+  <data name="Editor_NoNoteCollectionSelected" xml:space="preserve">
+    <value>No Note Collection selected!</value>
   </data>
-  <data name="Editor_NoHoldsSelectedTip" xml:space="preserve">
-    <value>Select any segment of a hold note to run this algorithm on it.</value>
+  <data name="Editor_NoNoteCollectionSelectedTip" xml:space="preserve">
+    <value>Select any segment of a Note Collection to run this algorithm on it.</value>
   </data>
   <data name="Settings_ShowChainStripes" xml:space="preserve">
     <value>Show Chain Stripes</value>
@@ -843,8 +843,8 @@ Continue?</value>
   <data name="ToolTip_Insert" xml:space="preserve">
     <value>Inserts a Note at the current timestamp, with the currently selected properties.</value>
   </data>
-  <data name="ToolTip_EditHold" xml:space="preserve">
-    <value>Highlight any Note of a Hold, then click [Edit Hold] to continue editing where you left off.</value>
+  <data name="ToolTip_EditNoteCollection" xml:space="preserve">
+    <value>Highlight any Note of a Note Collection, then click [Edit Note Collection] to continue editing where you left off.</value>
   </data>
   <data name="ToolTip_ChartInfo" xml:space="preserve">
     <value>Info about a chart, such as the audio, author and level.</value>
@@ -882,23 +882,23 @@ Continue?</value>
   <data name="ToolTip_Mirror" xml:space="preserve">
     <value>Mirror Notes around the mirror axis. Hover over the number to see the axis.</value>
   </data>
-  <data name="ToolTip_HoldEase" xml:space="preserve">
-    <value>Options for differently shaped Hold Notes. Just try them out to see :]</value>
+  <data name="ToolTip_Ease" xml:space="preserve">
+    <value>Options for differently shaped Note Collections. Just try them out to see :]</value>
   </data>
-  <data name="ToolTip_BakeHold" xml:space="preserve">
-    <value>Inserts Hold segments in front of the selected segment.</value>
+  <data name="ToolTip_BakeNoteCollection" xml:space="preserve">
+    <value>Inserts Segments in front of the selected Segment.</value>
   </data>
-  <data name="ToolTip_StitchHold" xml:space="preserve">
-    <value>Connects the end of a Hold Note to the start of another to stitch them into one. Must select ONLY a Hold End and a Hold Start.</value>
+  <data name="ToolTip_StitchCollection" xml:space="preserve">
+    <value>Connects the end of a Note Collection to the start of another to stitch them into one. Must select ONLY an End and a Start Note.</value>
   </data>
-  <data name="ToolTip_InsertHold" xml:space="preserve">
-    <value>Inserts a single Hold segment at the current timestamp. Highlight any segment to specify which Hold to insert it in.</value>
+  <data name="ToolTip_InsertSegment" xml:space="preserve">
+    <value>Inserts a single Segment at the current timestamp. Highlight any Collection Segment to specify which Collection to insert it in.</value>
   </data>
   <data name="ToolTip_SetRenderTrue" xml:space="preserve">
-    <value>Sets the render flag on a Hold Note to true. See [Set Render False] for more info.</value>
+    <value>Sets the render flag on a Note Collection Segment to true. See [Set Render False] for more info.</value>
   </data>
   <data name="ToolTip_SetRenderFalse" xml:space="preserve">
-    <value>Sets the render flag on a Hold Note to false. This means the game will ignore it when generating the visuals for a Hold Note, smoothing out any irregular size/position changes. Judgement still follows the segments!</value>
+    <value>Sets the render flag on a Note Collection Segment to false. This means the game will ignore it when generating the visuals for the Note, smoothing out any irregular size/position changes. Judgement still follows the segments!</value>
   </data>
   <data name="ToolTip_QuantizeOnPause" xml:space="preserve">
     <value>Quantizes the playhead to the current beat division when pausing.</value>
@@ -954,8 +954,8 @@ Continue?</value>
   <data name="Settings_Header_Selection" xml:space="preserve">
     <value>Selection</value>
   </data>
-  <data name="Settings_Header_EditHolds" xml:space="preserve">
-    <value>Edit Holds</value>
+  <data name="Settings_Header_EditNoteCollections" xml:space="preserve">
+    <value>Edit Note Collections</value>
   </data>
   <data name="Settings_Header_EditNotes" xml:space="preserve">
     <value>Edit Notes</value>
@@ -969,8 +969,8 @@ Continue?</value>
   <data name="Generic_Edit" xml:space="preserve">
     <value>Edit</value>
   </data>
-  <data name="Editor_BakeHoldNoteNoRender" xml:space="preserve">
-    <value>Bake Hold [No Render]</value>
+  <data name="Editor_BakeNotesNoRender" xml:space="preserve">
+    <value>Bake Notes [No Render]</value>
   </data>
   <data name="Settings_Color_BonusGlow" xml:space="preserve">
     <value>Bonus Glow</value>
@@ -978,11 +978,11 @@ Continue?</value>
   <data name="Settings_Color_BonusTriangles" xml:space="preserve">
     <value>Bonus Triangles</value>
   </data>
-  <data name="Editor_SplitHold" xml:space="preserve">
-    <value>Split Hold</value>
+  <data name="Editor_SplitNoteCollection" xml:space="preserve">
+    <value>Split Note Collection</value>
   </data>
-  <data name="ToolTip_SplitHold" xml:space="preserve">
-    <value>Splits a Hold into two at the highlighted Segment.</value>
+  <data name="ToolTip_SplitNoteCollection" xml:space="preserve">
+    <value>Splits a Note Collection into two at the highlighted Segment.</value>
   </data>
   <data name="Editor_CheckerDeselect" xml:space="preserve">
     <value>Checker Deselect</value>
@@ -1209,14 +1209,14 @@ Continue?</value>
   <data name="Editor_MercuryBonusType_SwitchMode" xml:space="preserve">
     <value>Switch to expanded Bonus Types</value>
   </data>
-  <data name="Settings_DrawNoRenderHoldSegments" xml:space="preserve">
-    <value>Draw No-Render Holds</value>
+  <data name="Settings_DrawNoRenderSegments" xml:space="preserve">
+    <value>Draw No-Render Segments</value>
   </data>
   <data name="Editor_DeleteSegments" xml:space="preserve">
     <value>Delete No-Render Segments</value>
   </data>
   <data name="ToolTip_DeleteSegments" xml:space="preserve">
-    <value>Deletes all selected No-Render Hold Segments</value>
+    <value>Deletes all selected No-Render Segments</value>
   </data>
   <data name="Warning_StopOrder" xml:space="preserve">
     <value>A Stop End cannot be in front of a Stop Start.</value>

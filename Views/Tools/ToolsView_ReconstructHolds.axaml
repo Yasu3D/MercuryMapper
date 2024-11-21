@@ -10,8 +10,8 @@
         <UniformGrid Columns="2">
             <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Tools_GeneratorType}"/>
             <ComboBox SelectedIndex="0" Name="GeneratorMethod" HorizontalAlignment="Stretch" Margin="5">
-                <ComboBoxItem Content="{x:Static lang:Resources.Tools_Reconstruct_HoldToHold}"/>
-                <ComboBoxItem Content="{x:Static lang:Resources.Tools_Reconstruct_HoldToChain}"/>
+                <ComboBoxItem Content="{x:Static lang:Resources.Tools_Reconstruct_NoteCollectionToNoteCollection}"/>
+                <ComboBoxItem Content="{x:Static lang:Resources.Tools_Reconstruct_NoteCollectionToChain}"/>
             </ComboBox>
                 
             <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Tools_Interval}"/>

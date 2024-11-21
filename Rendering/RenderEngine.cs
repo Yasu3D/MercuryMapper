@@ -605,7 +605,7 @@ public class RenderEngine(MainView mainView)
     {
         List<Note> visibleNotes = chart.Notes.Where(x =>
         {
-            Note? next = x.NextVisibleReference(RenderConfig.DrawNoRenderHoldSegments);
+            Note? next = x.NextVisibleReference(RenderConfig.DrawNoRenderSegments);
             
             float scaledMeasureDecimal = chart.GetScaledMeasureDecimal(x.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed);
             float visibleDistance = ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal;
@@ -631,7 +631,7 @@ public class RenderEngine(MainView mainView)
 
             foreach (Note reference in note.References())
             {
-                if (visibleNotes.Contains(reference) && ((reference.RenderSegment && !RenderConfig.DrawNoRenderHoldSegments) || RenderConfig.DrawNoRenderHoldSegments))
+                if (visibleNotes.Contains(reference) && ((reference.RenderSegment && !RenderConfig.DrawNoRenderSegments) || RenderConfig.DrawNoRenderSegments))
                 {
                     noteCollection.Notes.Add(reference);
                 }
@@ -694,7 +694,7 @@ public class RenderEngine(MainView mainView)
     {
         List<Note> visibleNotes = chart.Notes.Where(x =>
         {
-            Note? next = x.NextVisibleReference(RenderConfig.DrawNoRenderHoldSegments);
+            Note? next = x.NextVisibleReference(RenderConfig.DrawNoRenderSegments);
             
             float scaledMeasureDecimal = chart.GetScaledMeasureDecimal(x.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed);
             float visibleDistance = ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal;
@@ -720,7 +720,7 @@ public class RenderEngine(MainView mainView)
 
             foreach (Note reference in note.References())
             {
-                if (visibleNotes.Contains(reference) && ((reference.RenderSegment && !RenderConfig.DrawNoRenderHoldSegments) || RenderConfig.DrawNoRenderHoldSegments))
+                if (visibleNotes.Contains(reference) && ((reference.RenderSegment && !RenderConfig.DrawNoRenderSegments) || RenderConfig.DrawNoRenderSegments))
                 {
                     noteCollection.Notes.Add(reference);
                 }
@@ -1416,7 +1416,7 @@ public class RenderEngine(MainView mainView)
         if (chart.GetScaledMeasureDecimal(collection.Notes[0].BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) < ScaledCurrentMeasureDecimal && collection.Notes.Count == 1)
         {
             Note prev = collection.Notes[0];
-            Note? next = prev.NextVisibleReference(RenderConfig.DrawNoRenderHoldSegments);
+            Note? next = prev.NextVisibleReference(RenderConfig.DrawNoRenderSegments);
                 
             if (next == null) return;
 
@@ -1459,9 +1459,9 @@ public class RenderEngine(MainView mainView)
                 }
 
                 // If it's a segment, there must be an earlier note off-screen.
-                else if (note.PrevVisibleReference(RenderConfig.DrawNoRenderHoldSegments) != null)
+                else if (note.PrevVisibleReference(RenderConfig.DrawNoRenderSegments) != null)
                 {
-                    Note prevNote = note.PrevVisibleReference(RenderConfig.DrawNoRenderHoldSegments)!;
+                    Note prevNote = note.PrevVisibleReference(RenderConfig.DrawNoRenderSegments)!;
                     ArcData prevData = GetTruncatedArc(chart, prevNote, truncateMode);
 
                     float ratio = MathExtensions.InverseLerp(ScaledCurrentMeasureDecimal, chart.GetScaledMeasureDecimal(note.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed), chart.GetScaledMeasureDecimal(prevNote.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed));
@@ -1493,7 +1493,7 @@ public class RenderEngine(MainView mainView)
             if (i == collection.Notes.Count - 1)
             {
                 // If there's a next note there can't be a final arc.
-                if (note.NextVisibleReference(RenderConfig.DrawNoRenderHoldSegments) != null)
+                if (note.NextVisibleReference(RenderConfig.DrawNoRenderSegments) != null)
                 {
                     // Line to right edge
                     path.LineTo(GetPointOnArc(canvasCenter, currentData.Rect.Width * 0.5f, currentData.StartAngle + currentData.SweepAngle));

@@ -30,7 +30,7 @@ public class RenderConfig
     public bool ShowJudgementWindowGood { get; set; } = false;
     public bool CutOverlappingJudgementWindows { get; set; } = false;
     public bool CutEarlyJudgementWindowOnHolds { get; set; } = false;
-    public bool DrawNoRenderHoldSegments { get; set; } = true;
+    public bool DrawNoRenderSegments { get; set; } = true;
 }
 
 public class KeymapConfig
@@ -72,19 +72,19 @@ public class KeymapConfig
         ["EditorSelectAll"] = new(Key.A, true, false, false),
         ["EditorDeselectAll"] = new(Key.A, false, false, true),
         ["EditorCheckerDeselect"] = new(Key.A, false, true, true),
-        ["EditorEndHold"] = new(Key.Enter, false, false, false),
-        ["EditorEditHold"] = new(Key.Enter, false, true, false),
-        ["EditorBakeHold"] = new(Key.B, false, true, false),
-        ["EditorBakeHoldNoRender"] = new(Key.B, true, true, false),
-        ["EditorStitchHold"] = new(Key.H, true, false, false),
-        ["EditorSplitHold"] = new(Key.H, false, false, true),
+        ["EditorEndNoteCollection"] = new(Key.Enter, false, false, false),
+        ["EditorEditNoteCollection"] = new(Key.Enter, false, true, false),
+        ["EditorBakeNoteCollection"] = new(Key.B, false, true, false),
+        ["EditorBakeNoteCollectionNoRender"] = new(Key.B, true, true, false),
+        ["EditorStitchNoteCollection"] = new(Key.H, true, false, false),
+        ["EditorSplitNoteCollection"] = new(Key.H, false, false, true),
         ["EditorDeleteSegments"] = new(Key.Delete, true, false, false),
-        ["EditorInsertHoldSegment"] = new(Key.H, false, true, false),
+        ["EditorInsertSegment"] = new(Key.H, false, true, false),
         ["EditorHighlightNextNote"] = new(Key.W, false, true, false),
         ["EditorHighlightPrevNote"] = new(Key.S, false, true, false),
         ["EditorHighlightNearestNote"] = new(Key.Q, false, true, false),
         ["EditorSelectHighlightedNote"] = new(Key.Space, false, true, false),
-        ["EditorSelectHoldReferences"] = new(Key.R, false, true, false),
+        ["EditorSelectNoteCollectionReferences"] = new(Key.R, false, true, false),
         ["EditorBoxSelect"] = new(Key.B, true, false, false),
         ["EditorConvertToInstantMask"] = new(Key.N, true, false, false),
         ["EditorFlipNoteDirection"] = new(Key.M, true, false, false),
@@ -101,7 +101,6 @@ public class KeymapConfig
         ["EditorNoteTypeHold"] = new(Key.D7),
         ["EditorNoteTypeMaskAdd"] = new(Key.D8),
         ["EditorNoteTypeMaskRemove"] = new(Key.D9),
-        ["EditorNoteTypeEndOfChart"] = new(Key.D0), // DEPRECATED
         ["EditorTypeRadio1"] = new(Key.D1, false, true, false),
         ["EditorTypeRadio2"] = new(Key.D2, false, true, false),
         ["EditorTypeRadio3"] = new(Key.D3, false, true, false),

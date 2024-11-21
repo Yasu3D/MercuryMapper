@@ -267,20 +267,20 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Hold Vorberechnen.
+        ///   Looks up a localized string similar to Noten Vorberechnen.
         /// </summary>
-        public static string Editor_BakeHoldNote {
+        public static string Editor_BakeNotes {
             get {
-                return ResourceManager.GetString("Editor_BakeHoldNote", resourceCulture);
+                return ResourceManager.GetString("Editor_BakeNotes", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Hold Vorberechnen [No Render].
+        ///   Looks up a localized string similar to Noten Vorberechnen [No Render].
         /// </summary>
-        public static string Editor_BakeHoldNoteNoRender {
+        public static string Editor_BakeNotesNoRender {
             get {
-                return ResourceManager.GetString("Editor_BakeHoldNoteNoRender", resourceCulture);
+                return ResourceManager.GetString("Editor_BakeNotesNoRender", resourceCulture);
             }
         }
         
@@ -510,6 +510,114 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Linear.
+        /// </summary>
+        public static string Editor_Ease_Linear {
+            get {
+                return ResourceManager.GetString("Editor_Ease_Linear", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Linear+ In.
+        /// </summary>
+        public static string Editor_Ease_LinearPlusIn {
+            get {
+                return ResourceManager.GetString("Editor_Ease_LinearPlusIn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Linear+ Out.
+        /// </summary>
+        public static string Editor_Ease_LinearPlusOut {
+            get {
+                return ResourceManager.GetString("Editor_Ease_LinearPlusOut", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Quad In.
+        /// </summary>
+        public static string Editor_Ease_QuadIn {
+            get {
+                return ResourceManager.GetString("Editor_Ease_QuadIn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Quad Out.
+        /// </summary>
+        public static string Editor_Ease_QuadOut {
+            get {
+                return ResourceManager.GetString("Editor_Ease_QuadOut", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sharp In.
+        /// </summary>
+        public static string Editor_Ease_SharpIn {
+            get {
+                return ResourceManager.GetString("Editor_Ease_SharpIn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sharp Out.
+        /// </summary>
+        public static string Editor_Ease_SharpOut {
+            get {
+                return ResourceManager.GetString("Editor_Ease_SharpOut", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sine In.
+        /// </summary>
+        public static string Editor_Ease_SineIn {
+            get {
+                return ResourceManager.GetString("Editor_Ease_SineIn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sine Out.
+        /// </summary>
+        public static string Editor_Ease_SineOut {
+            get {
+                return ResourceManager.GetString("Editor_Ease_SineOut", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Smooth In.
+        /// </summary>
+        public static string Editor_Ease_SmoothIn {
+            get {
+                return ResourceManager.GetString("Editor_Ease_SmoothIn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Smooth Out.
+        /// </summary>
+        public static string Editor_Ease_SmoothOut {
+            get {
+                return ResourceManager.GetString("Editor_Ease_SmoothOut", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Kurve.
+        /// </summary>
+        public static string Editor_EaseHeader {
+            get {
+                return ResourceManager.GetString("Editor_EaseHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Gimmick Bearbeiten.
         /// </summary>
         public static string Editor_EditGimmick {
@@ -519,11 +627,11 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Hold Bearbeiten.
+        ///   Looks up a localized string similar to Notengruppe Bearbeiten.
         /// </summary>
-        public static string Editor_EditHold {
+        public static string Editor_EditNoteCollection {
             get {
-                return ResourceManager.GetString("Editor_EditHold", resourceCulture);
+                return ResourceManager.GetString("Editor_EditNoteCollection", resourceCulture);
             }
         }
         
@@ -555,11 +663,11 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Hold Beenden.
+        ///   Looks up a localized string similar to Notengruppe Beenden.
         /// </summary>
-        public static string Editor_EndHold {
+        public static string Editor_EndNoteCollection {
             get {
-                return ResourceManager.GetString("Editor_EndHold", resourceCulture);
+                return ResourceManager.GetString("Editor_EndNoteCollection", resourceCulture);
             }
         }
         
@@ -690,114 +798,6 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Linear.
-        /// </summary>
-        public static string Editor_HoldEase_Linear {
-            get {
-                return ResourceManager.GetString("Editor_HoldEase_Linear", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Linear+ In.
-        /// </summary>
-        public static string Editor_HoldEase_LinearPlusIn {
-            get {
-                return ResourceManager.GetString("Editor_HoldEase_LinearPlusIn", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Linear+ Out.
-        /// </summary>
-        public static string Editor_HoldEase_LinearPlusOut {
-            get {
-                return ResourceManager.GetString("Editor_HoldEase_LinearPlusOut", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Quad In.
-        /// </summary>
-        public static string Editor_HoldEase_QuadIn {
-            get {
-                return ResourceManager.GetString("Editor_HoldEase_QuadIn", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Quad Out.
-        /// </summary>
-        public static string Editor_HoldEase_QuadOut {
-            get {
-                return ResourceManager.GetString("Editor_HoldEase_QuadOut", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Sharp In.
-        /// </summary>
-        public static string Editor_HoldEase_SharpIn {
-            get {
-                return ResourceManager.GetString("Editor_HoldEase_SharpIn", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Sharp Out.
-        /// </summary>
-        public static string Editor_HoldEase_SharpOut {
-            get {
-                return ResourceManager.GetString("Editor_HoldEase_SharpOut", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Sine In.
-        /// </summary>
-        public static string Editor_HoldEase_SineIn {
-            get {
-                return ResourceManager.GetString("Editor_HoldEase_SineIn", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Sine Out.
-        /// </summary>
-        public static string Editor_HoldEase_SineOut {
-            get {
-                return ResourceManager.GetString("Editor_HoldEase_SineOut", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Smooth In.
-        /// </summary>
-        public static string Editor_HoldEase_SmoothIn {
-            get {
-                return ResourceManager.GetString("Editor_HoldEase_SmoothIn", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Smooth Out.
-        /// </summary>
-        public static string Editor_HoldEase_SmoothOut {
-            get {
-                return ResourceManager.GetString("Editor_HoldEase_SmoothOut", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Hold Kurve.
-        /// </summary>
-        public static string Editor_HoldEaseHeader {
-            get {
-                return ResourceManager.GetString("Editor_HoldEaseHeader", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Wiedergabegeschwindigkeit verringern.
         /// </summary>
         public static string Editor_IncreasePlaybackSpeed {
@@ -818,9 +818,9 @@ namespace MercuryMapper.Assets.Lang {
         /// <summary>
         ///   Looks up a localized string similar to Segment Einfügen.
         /// </summary>
-        public static string Editor_InsertHoldSegment {
+        public static string Editor_InsertSegment {
             get {
-                return ResourceManager.GetString("Editor_InsertHoldSegment", resourceCulture);
+                return ResourceManager.GetString("Editor_InsertSegment", resourceCulture);
             }
         }
         
@@ -1032,20 +1032,20 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Keine Hold Noten ausgewählt!.
+        ///   Looks up a localized string similar to Keine Notengruppe ausgewählt!.
         /// </summary>
-        public static string Editor_NoHoldsSelected {
+        public static string Editor_NoNoteCollectionSelected {
             get {
-                return ResourceManager.GetString("Editor_NoHoldsSelected", resourceCulture);
+                return ResourceManager.GetString("Editor_NoNoteCollectionSelected", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Wähle ein Segment einer Hold Note aus um diesen algorithmus auf dieser auszuführen..
+        ///   Looks up a localized string similar to Wähle irgendein Segment einer Notengruppe aus um diesen algorithmus auf dieser auszuführen..
         /// </summary>
-        public static string Editor_NoHoldsSelectedTip {
+        public static string Editor_NoNoteCollectionSelectedTip {
             get {
-                return ResourceManager.GetString("Editor_NoHoldsSelectedTip", resourceCulture);
+                return ResourceManager.GetString("Editor_NoNoteCollectionSelectedTip", resourceCulture);
             }
         }
         
@@ -1176,20 +1176,20 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Hold-Note Referenzen Auswählen.
-        /// </summary>
-        public static string Editor_SelectHoldReferences {
-            get {
-                return ResourceManager.GetString("Editor_SelectHoldReferences", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Ausgewählte Noten.
         /// </summary>
         public static string Editor_SelectionInfo_SelectedNotes {
             get {
                 return ResourceManager.GetString("Editor_SelectionInfo_SelectedNotes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Notengruppen-Referenzen Auswählen.
+        /// </summary>
+        public static string Editor_SelectNoteCollectionReferences {
+            get {
+                return ResourceManager.GetString("Editor_SelectNoteCollectionReferences", resourceCulture);
             }
         }
         
@@ -1275,20 +1275,20 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Hold Trennen.
+        ///   Looks up a localized string similar to Notengruppe Teilen.
         /// </summary>
-        public static string Editor_SplitHold {
+        public static string Editor_SplitNoteCollection {
             get {
-                return ResourceManager.GetString("Editor_SplitHold", resourceCulture);
+                return ResourceManager.GetString("Editor_SplitNoteCollection", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Hold Verbinden.
+        ///   Looks up a localized string similar to Notengruppen Verbinden.
         /// </summary>
-        public static string Editor_StitchHold {
+        public static string Editor_StitchNoteCollection {
             get {
-                return ResourceManager.GetString("Editor_StitchHold", resourceCulture);
+                return ResourceManager.GetString("Editor_StitchNoteCollection", resourceCulture);
             }
         }
         
@@ -1771,11 +1771,11 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Zackige Hold Notes Generieren.
+        ///   Looks up a localized string similar to Zackige Notengruppen Generieren.
         /// </summary>
-        public static string Menu_JaggedHolds {
+        public static string Menu_JaggedNoteCollections {
             get {
-                return ResourceManager.GetString("Menu_JaggedHolds", resourceCulture);
+                return ResourceManager.GetString("Menu_JaggedNoteCollections", resourceCulture);
             }
         }
         
@@ -1843,11 +1843,11 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Holds Rekonstruieren.
+        ///   Looks up a localized string similar to Notengruppen Rekonstruieren.
         /// </summary>
-        public static string Menu_ReconstructHolds {
+        public static string Menu_ReconstructNoteCollections {
             get {
-                return ResourceManager.GetString("Menu_ReconstructHolds", resourceCulture);
+                return ResourceManager.GetString("Menu_ReconstructNoteCollections", resourceCulture);
             }
         }
         
@@ -2734,11 +2734,11 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Zeichne No-Render Holds.
+        ///   Looks up a localized string similar to Zeichne No-Render Segmente.
         /// </summary>
-        public static string Settings_DrawNoRenderHoldSegments {
+        public static string Settings_DrawNoRenderSegments {
             get {
-                return ResourceManager.GetString("Settings_DrawNoRenderHoldSegments", resourceCulture);
+                return ResourceManager.GetString("Settings_DrawNoRenderSegments", resourceCulture);
             }
         }
         
@@ -2806,11 +2806,11 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Holds Bearbeiten.
+        ///   Looks up a localized string similar to Notengruppen Bearbeiten.
         /// </summary>
-        public static string Settings_Header_EditHolds {
+        public static string Settings_Header_EditNoteCollections {
             get {
-                return ResourceManager.GetString("Settings_Header_EditHolds", resourceCulture);
+                return ResourceManager.GetString("Settings_Header_EditNoteCollections", resourceCulture);
             }
         }
         
@@ -3249,20 +3249,20 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Hold zu Kette.
+        ///   Looks up a localized string similar to Gruppe zu Kette.
         /// </summary>
-        public static string Tools_Reconstruct_HoldToChain {
+        public static string Tools_Reconstruct_NoteCollectionToChain {
             get {
-                return ResourceManager.GetString("Tools_Reconstruct_HoldToChain", resourceCulture);
+                return ResourceManager.GetString("Tools_Reconstruct_NoteCollectionToChain", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Hold zu Hold.
+        ///   Looks up a localized string similar to Gruppe zu Gruppe.
         /// </summary>
-        public static string Tools_Reconstruct_HoldToHold {
+        public static string Tools_Reconstruct_NoteCollectionToNoteCollection {
             get {
-                return ResourceManager.GetString("Tools_Reconstruct_HoldToHold", resourceCulture);
+                return ResourceManager.GetString("Tools_Reconstruct_NoteCollectionToNoteCollection", resourceCulture);
             }
         }
         
@@ -3276,11 +3276,11 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Fügt Hold-Segmente vor dem ausgewählten Segment einer vorhandenen Hold ein..
+        ///   Looks up a localized string similar to Fügt Segmente vor dem ausgewählten Segment einer vorhandenen Notengruppe ein..
         /// </summary>
-        public static string ToolTip_BakeHold {
+        public static string ToolTip_BakeNoteCollection {
             get {
-                return ResourceManager.GetString("ToolTip_BakeHold", resourceCulture);
+                return ResourceManager.GetString("ToolTip_BakeNoteCollection", resourceCulture);
             }
         }
         
@@ -3339,11 +3339,20 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Löscht alle ausgewählten No-Render Haltesegmente.
+        ///   Looks up a localized string similar to Löscht alle ausgewählten No-Render Segmente.
         /// </summary>
         public static string ToolTip_DeleteSegments {
             get {
                 return ResourceManager.GetString("ToolTip_DeleteSegments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Optionen für verschienene Notengruppen Formen. Probier sie einfach aus :].
+        /// </summary>
+        public static string ToolTip_Ease {
+            get {
+                return ResourceManager.GetString("ToolTip_Ease", resourceCulture);
             }
         }
         
@@ -3357,11 +3366,11 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Markiere irgendeine Note einer Hold und clicke [Hold Bearbeiten] um eine Hold Note weiterzuführen..
+        ///   Looks up a localized string similar to Markiere irgendeine Note einer Notengruppe und clicke [Notengruppe Bearbeiten] um eine Notengruppe weiterzuführen..
         /// </summary>
-        public static string ToolTip_EditHold {
+        public static string ToolTip_EditNoteCollection {
             get {
-                return ResourceManager.GetString("ToolTip_EditHold", resourceCulture);
+                return ResourceManager.GetString("ToolTip_EditNoteCollection", resourceCulture);
             }
         }
         
@@ -3420,15 +3429,6 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Optionen für verschienene Hold Noten Formen. Probier sie einfach aus :].
-        /// </summary>
-        public static string ToolTip_HoldEase {
-            get {
-                return ResourceManager.GetString("ToolTip_HoldEase", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Original Render-Methode die Hold Noten Segment für Segment gezeichnet hat. Schlechte performance, aber ausgereifter..
         /// </summary>
         public static string ToolTip_HoldRender_Legacy {
@@ -3456,11 +3456,11 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Fügt ein einzelnes Hold Segment am Aktuellen Zeitstempel ein. Hebe irgendein Segment einer Hold hervor um festzulegen, bei welcher das neue Segment eingefügt wird..
+        ///   Looks up a localized string similar to Fügt ein einzelnes Segment am Aktuellen Zeitstempel ein. Hebe irgendein Segment einer Notengruppe hervor um festzulegen, bei welcher das neue Segment eingefügt wird..
         /// </summary>
-        public static string ToolTip_InsertHold {
+        public static string ToolTip_InsertSegment {
             get {
-                return ResourceManager.GetString("ToolTip_InsertHold", resourceCulture);
+                return ResourceManager.GetString("ToolTip_InsertSegment", resourceCulture);
             }
         }
         
@@ -3690,7 +3690,7 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Setzt die Render-Flag einer Hold Note auf negativ. Das bedeutet, dass das Spiel die Note ignoriert, wenn Visuals generiert werden. Dadurch werden unregelmäßigkeiten ausgeglichen. Die Bewertung der Note folgt aber weiterhin den Segmenten!.
+        ///   Looks up a localized string similar to Setzt die Render-Flag eines Notengruppen-Segments auf negativ. Das bedeutet, dass das Spiel die Note ignoriert, wenn Visuals generiert werden. Dadurch werden unregelmäßigkeiten ausgeglichen. Die Bewertung der Note folgt aber weiterhin den Segmenten!.
         /// </summary>
         public static string ToolTip_SetRenderFalse {
             get {
@@ -3699,7 +3699,7 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Setzt die Render-Flag einer Hold Note auf positiv. Siehe [Render Deaktivieren] für mehr Info..
+        ///   Looks up a localized string similar to Setzt die Render-Flag eines Notengruppen-Segments auf positiv. Siehe [Render Deaktivieren] für mehr Info..
         /// </summary>
         public static string ToolTip_SetRenderTrue {
             get {
@@ -3708,20 +3708,20 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Trennt eine Hold-Note am hervorgehobenen Segment in zwei..
+        ///   Looks up a localized string similar to Trennt eine Notengruppe am hervorgehobenen Segment in zwei..
         /// </summary>
-        public static string ToolTip_SplitHold {
+        public static string ToolTip_SplitNoteCollection {
             get {
-                return ResourceManager.GetString("ToolTip_SplitHold", resourceCulture);
+                return ResourceManager.GetString("ToolTip_SplitNoteCollection", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Verbindet das Ende einer Hold Note mit dem Anfang einer anderen, um sie zu einer Note zusammenzufügen. Sie müssen NUR ein Hold Ende und einen Hold Start auswählen..
+        ///   Looks up a localized string similar to Verbindet das Ende einer Notengruppe mit dem Anfang einer anderen, um sie zu einer zusammenzufügen. Sie dürfen NUR ein Ende und einen Start auswählen..
         /// </summary>
-        public static string ToolTip_StitchHold {
+        public static string ToolTip_StitchCollection {
             get {
-                return ResourceManager.GetString("ToolTip_StitchHold", resourceCulture);
+                return ResourceManager.GetString("ToolTip_StitchCollection", resourceCulture);
             }
         }
         

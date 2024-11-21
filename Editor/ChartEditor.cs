@@ -41,7 +41,7 @@ public class ChartEditor
             
             UpdateLastPlacedHold();
             
-            // Repair holds after every operation to make sure forward references don't get mangled.
+            // Repair collections after every operation to make sure forward references don't get mangled.
             if (mainView.ConnectionManager.NetworkState != ConnectionManager.NetworkConnectionState.Local) RepairHoldsForward();
         };
     }
@@ -437,7 +437,7 @@ public class ChartEditor
         }
     }
     
-    public void SelectHoldReferences()
+    public void SelectNoteCollectionReferences()
     {
         List<Note> tempSelected = SelectedNotes.Where(x => x.IsNoteCollection).ToList();
         foreach (Note note in tempSelected)

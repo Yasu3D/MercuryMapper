@@ -27,7 +27,7 @@
                 <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_ShowChainStripes}"/>
                 <CheckBox Name="CheckBoxShowChainStripes" HorizontalAlignment="Right" IsCheckedChanged="CheckBoxShowChainStripes_OnIsCheckedChanged"/>
                 
-                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_DrawNoRenderHoldSegments}"/>
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_DrawNoRenderSegments}"/>
                 <CheckBox Name="CheckBoxDrawNoRenderHoldSegments" HorizontalAlignment="Right" IsCheckedChanged="CheckBoxDrawNoRenderHoldSegments_OnIsCheckedChanged"/>
             </UniformGrid>
             

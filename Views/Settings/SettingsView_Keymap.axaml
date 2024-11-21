@@ -49,17 +49,17 @@
                     <TreeViewItem Name="EditorCheckerDeselect" Header="{x:Static lang:Resources.Editor_CheckerDeselect}" />
                     <TreeViewItem Name="EditorBoxSelect" Header="{x:Static lang:Resources.Editor_BoxSelect}" />
                     <TreeViewItem Name="EditorSelectHighlightedNote" Header="{x:Static lang:Resources.Editor_SelectHighlightedNote}" />
-                    <TreeViewItem Name="EditorSelectHoldReferences" Header="{x:Static lang:Resources.Editor_SelectHoldReferences}" />
+                    <TreeViewItem Name="EditorSelectNoteCollectionReferences" Header="{x:Static lang:Resources.Editor_SelectNoteCollectionReferences}" />
                 </TreeViewItem>
 
-                <TreeViewItem Header="{x:Static lang:Resources.Settings_Header_EditHolds}" Classes="HideKeybind">
-                    <TreeViewItem Name="EditorEndHold" Header="{x:Static lang:Resources.Editor_EndHold}" />
-                    <TreeViewItem Name="EditorEditHold" Header="{x:Static lang:Resources.Editor_EditHold}" />
-                    <TreeViewItem Name="EditorBakeHold" Header="{x:Static lang:Resources.Editor_BakeHoldNote}" />
-                    <TreeViewItem Name="EditorBakeHoldNoRender" Header="{x:Static lang:Resources.Editor_BakeHoldNoteNoRender}" />
-                    <TreeViewItem Name="EditorStitchHold" Header="{x:Static lang:Resources.Editor_StitchHold}" />
-                    <TreeViewItem Name="EditorSplitHold" Header="{x:Static lang:Resources.Editor_SplitHold}"/>
-                    <TreeViewItem Name="EditorInsertHoldSegment" Header="{x:Static lang:Resources.Editor_InsertHoldSegment}" />
+                <TreeViewItem Header="{x:Static lang:Resources.Settings_Header_EditNoteCollections}" Classes="HideKeybind">
+                    <TreeViewItem Name="EditorEndNoteCollection" Header="{x:Static lang:Resources.Editor_EndNoteCollection}" />
+                    <TreeViewItem Name="EditorEditNoteCollection" Header="{x:Static lang:Resources.Editor_EditNoteCollection}" />
+                    <TreeViewItem Name="EditorBakeNoteCollection" Header="{x:Static lang:Resources.Editor_BakeNotes}" />
+                    <TreeViewItem Name="EditorBakeNoteCollectionNoRender" Header="{x:Static lang:Resources.Editor_BakeNotesNoRender}" />
+                    <TreeViewItem Name="EditorStitchNoteCollection" Header="{x:Static lang:Resources.Editor_StitchNoteCollection}" />
+                    <TreeViewItem Name="EditorSplitNoteCollection" Header="{x:Static lang:Resources.Editor_SplitNoteCollection}"/>
+                    <TreeViewItem Name="EditorInsertSegment" Header="{x:Static lang:Resources.Editor_InsertSegment}" />
                     <TreeViewItem Name="EditorDeleteSegments" Header="{x:Static lang:Resources.Editor_DeleteSegments}" />
                 </TreeViewItem>
 

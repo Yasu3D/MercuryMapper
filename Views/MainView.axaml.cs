@@ -43,6 +43,7 @@ public partial class MainView : UserControl
 
         InitializeComponent();
         LoadUserConfig();
+        MigrateOldSettings();
 
         KeybindEditor = new(UserConfig);
         AudioManager = new(this);
@@ -143,6 +144,20 @@ public partial class MainView : UserControl
         }
     }
 
+    private void MigrateOldSettings()
+    {
+        if (UserConfig.KeymapConfig.Keybinds.TryGetValue("EditorEndHold", out Keybind? k)) UserConfig.KeymapConfig.Keybinds["EditorEndNoteCollection"] = k;
+        if (UserConfig.KeymapConfig.Keybinds.TryGetValue("EditorEditHold", out k)) UserConfig.KeymapConfig.Keybinds["EditorEditNoteCollection"] = k;
+        if (UserConfig.KeymapConfig.Keybinds.TryGetValue("EditorBakeHold", out k)) UserConfig.KeymapConfig.Keybinds["EditorBakeNoteCollection"] = k;
+        if (UserConfig.KeymapConfig.Keybinds.TryGetValue("EditorBakeHoldNoRender", out k)) UserConfig.KeymapConfig.Keybinds["EditorBakeNoteCollectionNoRender"] = k;
+        if (UserConfig.KeymapConfig.Keybinds.TryGetValue("EditorStitchHold", out k)) UserConfig.KeymapConfig.Keybinds["EditorStitchNoteCollection"] = k;
+        if (UserConfig.KeymapConfig.Keybinds.TryGetValue("EditorSplitHold", out k)) UserConfig.KeymapConfig.Keybinds["EditorSplitNoteCollection"] = k;
+        if (UserConfig.KeymapConfig.Keybinds.TryGetValue("EditorInsertHoldSegtment", out k)) UserConfig.KeymapConfig.Keybinds["EditorInsertSegtment"] = k;
+        if (UserConfig.KeymapConfig.Keybinds.TryGetValue("EditorSelectHoldReferences", out k)) UserConfig.KeymapConfig.Keybinds["EditorSelectNoteCollectionReferences"] = k;
+        
+        ApplySettings();
+    }
+    
     private void SetButtonColors()
     {
         RadioNoteTouch.BorderBrush = new SolidColorBrush(Convert.ToUInt32(UserConfig.ColorConfig.Colors["ColorNoteTouch"], 16));
@@ -572,7 +587,7 @@ public partial class MainView : UserControl
         QuickSettingsNumericBeatDivision.Value = UserConfig.RenderConfig.BeatDivision;
         QuickSettingsNumericNoteSpeed.Value = (decimal?)UserConfig.RenderConfig.NoteSpeed;
         QuickSettingsCheckBoxShowHiSpeed.IsChecked = UserConfig.RenderConfig.ShowHiSpeed;
-        QuickSettingsCheckBoxDrawNoRenderHoldSegments.IsChecked = UserConfig.RenderConfig.DrawNoRenderHoldSegments;
+        QuickSettingsCheckBoxDrawNoRenderHoldSegments.IsChecked = UserConfig.RenderConfig.DrawNoRenderSegments;
         QuickSettingsCheckBoxShowJudgementWindowMarvelous.IsChecked = UserConfig.RenderConfig.ShowJudgementWindowMarvelous;
         QuickSettingsCheckBoxShowJudgementWindowGreat.IsChecked = UserConfig.RenderConfig.ShowJudgementWindowGreat;
         QuickSettingsCheckBoxShowJudgementWindowGood.IsChecked = UserConfig.RenderConfig.ShowJudgementWindowGood;
@@ -910,7 +925,7 @@ public partial class MainView : UserControl
         }
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorSelectHoldReferences"]))
         {
-            ChartEditor.SelectHoldReferences();
+            ChartEditor.SelectNoteCollectionReferences();
             e.Handled = true;
             return;
         }
@@ -1662,7 +1677,7 @@ public partial class MainView : UserControl
 
     private void MenuItemCheckerDeselect_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.CheckerDeselect();
 
-    private void MenuItemSelectHoldReferences_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.SelectHoldReferences();
+    private void MenuItemSelectHoldReferences_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.SelectNoteCollectionReferences();
 
     private void MenuItemSelectHighlightedNote_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.SelectHighlightedNote();
 
@@ -1817,7 +1832,7 @@ public partial class MainView : UserControl
     {
         if (!ChartEditor.SelectedNotes.Exists(x => x.IsNoteCollection))
         {
-            ShowWarningMessage(Assets.Lang.Resources.Editor_NoHoldsSelected, Assets.Lang.Resources.Editor_NoHoldsSelectedTip);
+            ShowWarningMessage(Assets.Lang.Resources.Editor_NoNoteCollectionSelected, Assets.Lang.Resources.Editor_NoNoteCollectionSelectedTip);
             return;
         }
 
@@ -1825,7 +1840,7 @@ public partial class MainView : UserControl
         ContentDialog dialog = new()
         {
             Content = generatorView,
-            Title = Assets.Lang.Resources.Menu_JaggedHolds,
+            Title = Assets.Lang.Resources.Menu_JaggedNoteCollections,
             CloseButtonText = Assets.Lang.Resources.Generic_Cancel,
             PrimaryButtonText = Assets.Lang.Resources.Generic_Generate,
         };
@@ -1855,7 +1870,7 @@ public partial class MainView : UserControl
     {
         if (!ChartEditor.SelectedNotes.Exists(x => x.IsNoteCollection))
         {
-            ShowWarningMessage(Assets.Lang.Resources.Editor_NoHoldsSelected, Assets.Lang.Resources.Editor_NoHoldsSelectedTip);
+            ShowWarningMessage(Assets.Lang.Resources.Editor_NoNoteCollectionSelected, Assets.Lang.Resources.Editor_NoNoteCollectionSelectedTip);
             return;
         }
 
@@ -1863,7 +1878,7 @@ public partial class MainView : UserControl
         ContentDialog dialog = new()
         {
             Content = reconstructView,
-            Title = Assets.Lang.Resources.Menu_ReconstructHolds,
+            Title = Assets.Lang.Resources.Menu_ReconstructNoteCollections,
             CloseButtonText = Assets.Lang.Resources.Generic_Cancel,
             PrimaryButtonText = Assets.Lang.Resources.Generic_Generate,
         };
@@ -2420,7 +2435,7 @@ public partial class MainView : UserControl
     
     private void QuickSettingsDrawNoRenderHoldSegments_OnIsCheckedChanged(object? sender, RoutedEventArgs e)
     {
-        UserConfig.RenderConfig.DrawNoRenderHoldSegments = QuickSettingsCheckBoxDrawNoRenderHoldSegments.IsChecked ?? true;
+        UserConfig.RenderConfig.DrawNoRenderSegments = QuickSettingsCheckBoxDrawNoRenderHoldSegments.IsChecked ?? true;
         ApplySettings();
     }
 
