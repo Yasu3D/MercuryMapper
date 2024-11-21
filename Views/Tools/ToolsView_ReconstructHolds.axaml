@@ -3,8 +3,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:lang="clr-namespace:MercuryMapper.Assets.Lang"
-             Width="320"
-             mc:Ignorable="d" d:DesignWidth="320" d:DesignHeight="500"
+             Width="420"
+             mc:Ignorable="d" d:DesignWidth="420" d:DesignHeight="500"
              x:Class="MercuryMapper.Views.Tools.ToolsView_ReconstructHolds">
     <ScrollViewer Margin="20">
         <UniformGrid Columns="2">
