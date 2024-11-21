@@ -976,7 +976,7 @@ internal static class SatHandler
                 _ => "",
             };
         
-        if (note.NoteType == NoteType.Hold && note.LinkType == NoteLinkType.Point && !note.RenderSegment) modifiers += ".NR";
+        if (note.IsNoteCollection && note.LinkType == NoteLinkType.Point && !note.RenderSegment) modifiers += ".NR";
 
         return modifiers;
     }

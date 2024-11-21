@@ -1778,7 +1778,7 @@ public partial class MainView : UserControl
 
     private void MenuItemGenerateJaggedHolds_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (!ChartEditor.SelectedNotes.Exists(x => x.NoteType == NoteType.Hold))
+        if (!ChartEditor.SelectedNotes.Exists(x => x.IsNoteCollection))
         {
             ShowWarningMessage(Assets.Lang.Resources.Editor_NoHoldsSelected, Assets.Lang.Resources.Editor_NoHoldsSelectedTip);
             return;

@@ -145,6 +145,7 @@ public class ColorConfig
         ["ColorNoteHoldSurfaceFar"] = "BEB2B2B2",
         ["ColorNoteHoldSurfaceNear"] = "BEFFFFFF",
         ["ColorNoteTrace"] = "FFEEEEEE",
+        ["ColorNoteTraceNoRender"] = "FFBBBBBB",
         ["ColorNoteDamage"] = "FF2638FF",
         ["ColorNoteDamageSpark"] = "FF26C2FF",
         ["ColorNoteMaskAdd"] = "FF9B9CD1",

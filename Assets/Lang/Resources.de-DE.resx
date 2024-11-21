@@ -1302,4 +1302,7 @@ Fortfahren?</value>
   <data name="Settings_Color_TraceYellow" xml:space="preserve">
     <value>Linie Yellow</value>
   </data>
+  <data name="Note_Trace_NoRender" xml:space="preserve">
+    <value>Linie [No-Render]</value>
+  </data>
 </root>

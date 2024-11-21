@@ -1302,4 +1302,7 @@ Continue?</value>
   <data name="Settings_Color_TracePink" xml:space="preserve">
     <value>Trace Pink</value>
   </data>
+  <data name="Note_Trace_NoRender" xml:space="preserve">
+    <value>Trace [No Render]</value>
+  </data>
 </root>

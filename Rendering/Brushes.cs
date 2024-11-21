@@ -42,6 +42,7 @@ public class Brushes(UserConfig userConfig)
     private SKColor colorNoteHoldSegment;
     private SKColor colorNoteHoldSegmentNoRender;
     private SKColor colorNoteTrace;
+    private SKColor colorNoteTraceNoRender;
     private SKColor colorNoteDamage;
     private SKColor colorNoteMaskAdd;
     private SKColor colorNoteMaskRemove;
@@ -419,9 +420,10 @@ public class Brushes(UserConfig userConfig)
         return traceFill;
     }
 
-    public SKPaint GetTracePen(float scale)
+    public SKPaint GetTracePen(bool render, float scale)
     {
         tracePen.StrokeWidth = TracePenStrokeWidth * scale;
+        tracePen.Color = render ? colorNoteTrace : colorNoteTraceNoRender;
         return tracePen;
     }
     
@@ -504,6 +506,7 @@ public class Brushes(UserConfig userConfig)
             colorNoteHoldSegment = SKColor.Parse(colors["ColorNoteHoldSegment"]);
             colorNoteHoldSegmentNoRender = SKColor.Parse(colors["ColorNoteHoldSegmentNoRender"]);
             colorNoteTrace = SKColor.Parse(colors["ColorNoteTrace"]);
+            colorNoteTraceNoRender = SKColor.Parse(colors["ColorNoteTraceNoRender"]);
             colorNoteDamage = SKColor.Parse(colors["ColorNoteDamage"]);
             colorNoteMaskAdd = SKColor.Parse(colors["ColorNoteMaskAdd"]);
             colorNoteMaskRemove = SKColor.Parse(colors["ColorNoteMaskRemove"]);
@@ -543,7 +546,6 @@ public class Brushes(UserConfig userConfig)
             bonusPen.Color = SKColor.Parse(colors["ColorBonus"]);
             selectionPen.Color = SKColor.Parse(colors["ColorSelection"]);
             highlightPen.Color = SKColor.Parse(colors["ColorHighlight"]);
-            tracePen.Color = SKColor.Parse(colors["ColorNoteTrace"]);
             
             MeasurePen.Color = SKColor.Parse(colors["ColorMeasureLine"]);
             BeatPen.Color = SKColor.Parse(colors["ColorBeatLine"]);

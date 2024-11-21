@@ -48,8 +48,10 @@
             <Separator/>
             
             <UniformGrid Columns="2">
-                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Note_TraceStart}"/>
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Note_Trace}"/>
                 <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorNoteTrace"/>
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Note_Trace_NoRender}"/>
+                <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorNoteTraceNoRender"/>
             </UniformGrid>
                         
             <Separator/>

@@ -1154,9 +1154,9 @@ public class ChartEditor
 
     public void SetSelectionRenderFlag(bool render)
     {
-        // This operation only works on hold segments. All other note types should have a flag of 1 by default.
+        // This operation only works on note collection segments. All other note types should have a flag of 1 by default.
         List<IOperation> operationList = [];
-        foreach (Note selected in SelectedNotes.Where(x => x.NoteType is NoteType.Hold))
+        foreach (Note selected in SelectedNotes.Where(x => x.IsNoteCollection))
         {
             addOperation(selected);
         }

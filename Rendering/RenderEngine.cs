@@ -990,7 +990,7 @@ public class RenderEngine(MainView mainView)
             path1.QuadTo(control2, arcEdge2);
             path1.Close();
 
-            canvas.DrawPath(path1, brushes.GetTracePen(data.Scale * canvasScale * 0.75f));
+            canvas.DrawPath(path1, brushes.GetTracePen(note.RenderSegment, data.Scale * canvasScale * 0.75f));
             if (mainView.ChartEditor.SelectedNotes.Contains(note)) DrawSelection(canvas, chart, note);
             if (note == mainView.ChartEditor.HighlightedElement) DrawHighlight(canvas, chart, note);
         }

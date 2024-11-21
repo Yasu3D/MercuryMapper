@@ -66,8 +66,6 @@ public class DeleteHoldNote(Chart chart, List<Note> selected, Note deletedNote, 
 
     public void Redo()
     {
-        Console.WriteLine(DeletedNote.FirstReference()?.NoteType);
-
         if (DeletedNote.LinkType is NoteLinkType.Start && NextNote != null)
         {
             NextNote.BonusType = DeletedNote.BonusType;

@@ -1996,6 +1996,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Linie [No-Render].
+        /// </summary>
+        public static string Note_Trace_NoRender {
+            get {
+                return ResourceManager.GetString("Note_Trace_NoRender", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Linien-Ende.
         /// </summary>
         public static string Note_TraceEnd {
