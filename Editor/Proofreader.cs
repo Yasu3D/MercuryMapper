@@ -258,7 +258,7 @@ public static class Proofreader
                 Note current = chart.Notes[i];
                 Note next = chart.Notes[i + 1];
                 
-                if (current.IsHold || current.IsMask || next.IsHold || next.IsMask) continue;
+                if (current.IsHold || current.IsMask || current.IsTrace || next.IsHold || next.IsMask || next.IsTrace) continue;
                 if (current.BeatData.FullTick != next.BeatData.FullTick) continue;
                 
                 if (MathExtensions.IsFullyOverlapping(current.Position, current.Position + current.Size, next.Position, next.Position + next.Size))

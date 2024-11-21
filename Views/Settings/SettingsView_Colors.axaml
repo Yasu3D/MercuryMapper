@@ -20,7 +20,6 @@
             <UniformGrid Columns="2">
                 <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Note_SnapForward}"/>
                 <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorNoteSnapForward"/>
-            
                 <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Note_SnapBackward}"/>
                 <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorNoteSnapBackward"/>
                 <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Note_SlideClockwise}"/>
@@ -50,9 +49,36 @@
             
             <UniformGrid Columns="2">
                 <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Note_TraceStart}"/>
-                <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorNoteTraceStart"/>
-                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Note_TraceSegment}"/>
-                <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorNoteTraceSegment"/>
+                <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorNoteTrace"/>
+            </UniformGrid>
+                        
+            <Separator/>
+            
+            <UniformGrid Columns="2">
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_Color_TraceCenter}"/>
+                <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorTraceCenter"/>
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_Color_TraceWhite}"/>
+                <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorTraceWhite"/>
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_Color_TraceBlack}"/>
+                <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorTraceBlack"/>
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_Color_TraceRed}"/>
+                <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorTraceRed"/>
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_Color_TraceOrange}"/>
+                <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorTraceOrange"/>
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_Color_TraceYellow}"/>
+                <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorTraceYellow"/>
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_Color_TraceLime}"/>
+                <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorTraceLime"/>
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_Color_TraceGreen}"/>
+                <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorTraceGreen"/>
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_Color_TraceSky}"/>
+                <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorTraceSky"/>
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_Color_TraceBlue}"/>
+                <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorTraceBlue"/>
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_Color_TraceViolet}"/>
+                <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorTraceViolet"/>
+                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_Color_TracePink}"/>
+                <ColorPicker ColorChanged="OnColorChanged" HorizontalAlignment="Right" Margin="5" Name="ColorTracePink"/>
             </UniformGrid>
             
             <Separator/>

@@ -2503,6 +2503,12 @@ public partial class MainView : UserControl
         if (sender is not ToggleButton button) return;
         ChartEditor.LayerGimmickActive = button.IsChecked ?? true;
     }
+
+    private void ToggleTraceLayer_IsCheckedChanged(object? sender, RoutedEventArgs e)
+    {
+        if (sender is not ToggleButton button) return;
+        ChartEditor.LayerTraceActive = button.IsChecked ?? true;
+    }
     
     // ________________ UI Dialogs & Misc
     

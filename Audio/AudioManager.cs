@@ -90,7 +90,10 @@ public class AudioManager(MainView mainView)
         bool mute = note.NoteType
             is NoteType.MaskAdd
             or NoteType.MaskRemove
-            or NoteType.HoldSegment;
+            or NoteType.HoldSegment
+            or NoteType.TraceStart
+            or NoteType.TraceSegment
+            or NoteType.TraceEnd;
         
         if (mute) return;
 

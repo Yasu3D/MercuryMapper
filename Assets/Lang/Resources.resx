@@ -1257,4 +1257,49 @@ Continue?</value>
   <data name="Note_TraceSegment" xml:space="preserve">
     <value>Trace Segment</value>
   </data>
+  <data name="Note_TraceEnd" xml:space="preserve">
+    <value>Trace End</value>
+  </data>
+  <data name="Editor_LayerTrace" xml:space="preserve">
+    <value>Layer: Trace</value>
+  </data>
+  <data name="ToolTip_LayerTrace" xml:space="preserve">
+    <value>Show/Hide Traces.</value>
+  </data>
+  <data name="Settings_Color_TraceCenter" xml:space="preserve">
+    <value>Trace Center</value>
+  </data>
+  <data name="Settings_Color_TraceWhite" xml:space="preserve">
+    <value>Trace White</value>
+  </data>
+  <data name="Settings_Color_TraceBlack" xml:space="preserve">
+    <value>Trace Black</value>
+  </data>
+  <data name="Settings_Color_TraceRed" xml:space="preserve">
+    <value>Trace Red</value>
+  </data>
+  <data name="Settings_Color_TraceOrange" xml:space="preserve">
+    <value>Trace Orange</value>
+  </data>
+  <data name="Settings_Color_TraceYellow" xml:space="preserve">
+    <value>Trace Yellow</value>
+  </data>
+  <data name="Settings_Color_TraceLime" xml:space="preserve">
+    <value>Trace Lime</value>
+  </data>
+  <data name="Settings_Color_TraceGreen" xml:space="preserve">
+    <value>Trace Green</value>
+  </data>
+  <data name="Settings_Color_TraceSky" xml:space="preserve">
+    <value>Trace Sky</value>
+  </data>
+  <data name="Settings_Color_TraceBlue" xml:space="preserve">
+    <value>Trace Blue</value>
+  </data>
+  <data name="Settings_Color_TraceViolet" xml:space="preserve">
+    <value>Trace Violet</value>
+  </data>
+  <data name="Settings_Color_TracePink" xml:space="preserve">
+    <value>Trace Pink</value>
+  </data>
 </root>

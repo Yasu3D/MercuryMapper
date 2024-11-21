@@ -337,6 +337,12 @@
                                 <ToggleButton Name="ToggleGimmickLayer" Classes="CompactButton" IsCheckedChanged="ToggleGimmickLayer_IsCheckedChanged"
                                               ToolTip.Tip="{x:Static lang:Resources.ToolTip_LayerGimmick}"
                                               Content="{x:Static lang:Resources.Editor_LayerGimmick}" IsChecked="True"/>
+                                
+                                <Separator Margin="0"/>
+                                
+                                <ToggleButton Name="ToggleTraceLayer" Classes="CompactButton" IsCheckedChanged="ToggleTraceLayer_IsCheckedChanged"
+                                              ToolTip.Tip="{x:Static lang:Resources.ToolTip_LayerTrace}"
+                                              Content="{x:Static lang:Resources.Editor_LayerTrace}" IsChecked="True"/>
                             </StackPanel>
                         </Border>
                     </StackPanel>

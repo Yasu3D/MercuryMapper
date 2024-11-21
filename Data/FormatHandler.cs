@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using FluentAvalonia.Core;
 using MercuryMapper.Enums;
+using SkiaSharp;
 
 namespace MercuryMapper.Data;
 
@@ -218,7 +219,7 @@ internal static class MerHandler
                     NoteType noteType = Note.NoteTypeFromMerId(noteTypeId);
                     BonusType bonusType = Note.BonusTypeFromMerId(noteTypeId);
                     
-                    Note newNote = new(measure, tick, noteType, bonusType, noteIndex, position, size, renderSegment);
+                    Note newNote = new(measure, tick, noteType, bonusType, noteIndex, position, size, renderSegment, TraceColor.White);
 
                     // hold start & segments
                     if (noteTypeId is 9 or 10 or 25 && split.Length >= 9)
@@ -533,9 +534,10 @@ internal static class SatHandler
             NoteType noteType = String2NoteType(modifiers);
             BonusType bonusType = String2BonusType(modifiers);
             MaskDirection maskDirection = String2MaskDirection(modifiers);
-            bool renderSegment = modifiers is not [_, "NR"];
-
-            Note note = new(measure, tick, noteType, bonusType, index, position, size, renderSegment);
+            TraceColor color = String2TraceColor(modifiers);
+            bool renderSegment = !modifiers.Contains("NR");
+            
+            Note note = new(measure, tick, noteType, bonusType, index, position, size, renderSegment, color);
 
             if (note.IsMask)
             {
@@ -543,7 +545,7 @@ internal static class SatHandler
                 note.BonusType = BonusType.None;
             }
 
-            if (noteType is NoteType.HoldSegment or NoteType.HoldEnd)
+            if (noteType is NoteType.HoldSegment or NoteType.HoldEnd or NoteType.TraceSegment or NoteType.TraceEnd)
             {
                 note.PrevReferencedNote = previousNote;
                 if (previousNote != null) previousNote.NextReferencedNote = note;
@@ -612,9 +614,10 @@ internal static class SatHandler
             NoteType noteType = String2NoteType(modifiers);
             BonusType bonusType = String2BonusType(modifiers);
             MaskDirection maskDirection = String2MaskDirection(modifiers);
-            bool renderSegment = modifiers is not [_, "NR"];
+            TraceColor color = String2TraceColor(modifiers);
+            bool renderSegment = !modifiers.Contains("NR");
 
-            Note note = new(measure, tick, noteType, bonusType, index, position, size, renderSegment, guid);
+            Note note = new(measure, tick, noteType, bonusType, index, position, size, renderSegment, color, guid);
 
             if (note.IsMask)
             {
@@ -793,7 +796,11 @@ internal static class SatHandler
                 "HOLD_END" => NoteType.HoldEnd,
                 "MASK_ADD" => NoteType.MaskAdd,
                 "MASK_SUB" => NoteType.MaskRemove,
-
+                "TRACE_START" => NoteType.TraceStart,
+                "TRACE_POINT" => NoteType.TraceSegment,
+                "TRACE_END" => NoteType.TraceEnd,
+                "DAMAGE" => NoteType.Damage,
+                
                 _ => NoteType.None,
             };
         }
@@ -824,6 +831,27 @@ internal static class SatHandler
             };
         }
 
+    private static TraceColor String2TraceColor(string[] attributes)
+    {
+        if (attributes.Length < 2) return TraceColor.White;
+
+        return attributes[1] switch
+        {
+            "RED" => TraceColor.Red,
+            "ORANGE" => TraceColor.Orange,
+            "YELLOW" => TraceColor.Yellow,
+            "LIME" => TraceColor.Lime,
+            "GREEN" => TraceColor.Green,
+            "SKY" => TraceColor.Sky,
+            "BLUE" => TraceColor.Blue,
+            "VIOLET" => TraceColor.Violet,
+            "PINK" => TraceColor.Pink,
+            "BLACK" => TraceColor.Black,
+            "WHITE" => TraceColor.White,
+            _ => TraceColor.White,
+        };
+    }
+    
     private static GimmickType String2GimmickType(string name)
         {
             return name switch
@@ -875,6 +903,11 @@ internal static class SatHandler
             NoteType.MaskAdd => "MASK_ADD",
             NoteType.MaskRemove => "MASK_SUB",
             NoteType.Chain => "CHAIN",
+            NoteType.TraceStart => "TRACE_START",
+            NoteType.TraceSegment => "TRACE_POINT",
+            NoteType.TraceEnd => "TRACE_END",
+            NoteType.Damage => "DAMAGE",
+            
             _ => "",
         };
     }
@@ -891,6 +924,25 @@ internal static class SatHandler
             _ => "",
         };
 
+        if (note.NoteType == NoteType.TraceStart)
+        {
+            modifiers += note.Color switch
+            {
+                TraceColor.Red => ".RED",
+                TraceColor.Orange => ".ORANGE",
+                TraceColor.Yellow => ".YELLOW",
+                TraceColor.Lime => ".LIME",
+                TraceColor.Green => ".GREEN",
+                TraceColor.Sky => ".SKY",
+                TraceColor.Blue => ".BLUE",
+                TraceColor.Violet => ".VIOLET",
+                TraceColor.Pink => ".PINK",
+                TraceColor.Black => ".BLACK",
+                TraceColor.White => ".WHITE",
+                _ => ".WHITE",
+            };
+        }
+        
         if (note.IsMask)
             modifiers += note.MaskDirection switch
             {
@@ -900,7 +952,7 @@ internal static class SatHandler
                 MaskDirection.None => "",
                 _ => "",
             };
-
+        
         if (!note.RenderSegment) modifiers += ".NR";
 
         return modifiers;

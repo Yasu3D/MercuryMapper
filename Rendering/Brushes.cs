@@ -25,6 +25,7 @@ public class Brushes(UserConfig userConfig)
     private const float RNotePenStrokeWidth = 17;
     private const float BoxSelectOutlinePenStrokeWidth = 4;
     private const float PeerPenStrokeWidth = 15;
+    private const float TracePenStrokeWidth = 4;
     
     public float NoteWidthMultiplier = 1;
     private float cursorWidthMultiplier = 1;
@@ -40,13 +41,24 @@ public class Brushes(UserConfig userConfig)
     private SKColor colorNoteHoldStart;
     private SKColor colorNoteHoldSegment;
     private SKColor colorNoteHoldSegmentNoRender;
-    private SKColor colorNoteTraceStart;
-    private SKColor colorNoteTraceSegment;
+    private SKColor colorNoteTrace;
     private SKColor colorNoteDamage;
     private SKColor colorNoteMaskAdd;
     private SKColor colorNoteMaskRemove;
     private SKColor colorNoteCaps;
-
+    
+    private SKColor colorTraceWhite;
+    private SKColor colorTraceBlack;
+    private SKColor colorTraceRed;
+    private SKColor colorTraceOrange;
+    private SKColor colorTraceYellow;
+    private SKColor colorTraceLime;
+    private SKColor colorTraceGreen;
+    private SKColor colorTraceSky;
+    private SKColor colorTraceBlue;
+    private SKColor colorTraceViolet;
+    private SKColor colorTracePink;
+    
     private SKColor colorGimmickBpmChange;
     private SKColor colorGimmickTimeSigChange;
     private SKColor colorGimmickHiSpeedChange;
@@ -156,6 +168,19 @@ public class Brushes(UserConfig userConfig)
         Style = SKPaintStyle.Stroke,
         IsAntialias = true,
     };
+
+    private readonly SKPaint traceFill = new()
+    {
+        Style = SKPaintStyle.Fill,
+        IsAntialias = false,
+    };
+
+    private readonly SKPaint tracePen = new()
+    {
+        StrokeWidth = SyncPenStrokeWidth,
+        Style = SKPaintStyle.Stroke,
+        IsAntialias = true,
+    };
     
     // ________ Public Brushes
     public SKColor BackgroundColor = new(0xFF1A1A1A);
@@ -228,6 +253,12 @@ public class Brushes(UserConfig userConfig)
     };
 
     public readonly SKPaint BonusFill = new()
+    {
+        Style = SKPaintStyle.Fill,
+        IsAntialias = false,
+    };
+    
+    public readonly SKPaint TraceCenterFill = new()
     {
         Style = SKPaintStyle.Fill,
         IsAntialias = false,
@@ -381,6 +412,18 @@ public class Brushes(UserConfig userConfig)
         peerPen.Color = color;
         return peerPen;
     }
+
+    public SKPaint GetTraceFill(TraceColor color)
+    {
+        traceFill.Color = TraceColor2Color(color);
+        return traceFill;
+    }
+
+    public SKPaint GetTracePen(float scale)
+    {
+        tracePen.StrokeWidth = TracePenStrokeWidth * scale;
+        return tracePen;
+    }
     
     // ________ Other
     private SKColor NoteType2Color(NoteType type, bool render = true)
@@ -396,9 +439,9 @@ public class Brushes(UserConfig userConfig)
             NoteType.HoldStart => colorNoteHoldStart,
             NoteType.HoldSegment => render ? colorNoteHoldSegment : colorNoteHoldSegmentNoRender,
             NoteType.HoldEnd => colorNoteHoldSegment,
-            NoteType.TraceStart => colorNoteTraceStart,
-            NoteType.TraceSegment => colorNoteTraceSegment,
-            NoteType.TraceEnd => colorNoteTraceSegment,
+            NoteType.TraceStart => colorNoteTrace,
+            NoteType.TraceSegment => colorNoteTrace,
+            NoteType.TraceEnd => colorNoteTrace,
             NoteType.Damage => colorNoteDamage,
             NoteType.MaskAdd => colorNoteMaskAdd,
             NoteType.MaskRemove => colorNoteMaskRemove,
@@ -423,6 +466,25 @@ public class Brushes(UserConfig userConfig)
             _ => throw new ArgumentOutOfRangeException(nameof(type), type, null),
         };
     }
+
+    private SKColor TraceColor2Color(TraceColor color)
+    {
+        return color switch
+        {
+            TraceColor.White => colorTraceWhite,
+            TraceColor.Black => colorTraceBlack,
+            TraceColor.Red => colorTraceRed,
+            TraceColor.Orange => colorTraceOrange,
+            TraceColor.Yellow => colorTraceYellow,
+            TraceColor.Lime => colorTraceLime,
+            TraceColor.Green => colorTraceGreen,
+            TraceColor.Sky => colorTraceSky,
+            TraceColor.Blue => colorTraceBlue,
+            TraceColor.Violet => colorTraceViolet,
+            TraceColor.Pink => colorTracePink,
+            _ => colorTraceWhite,
+        };
+    }
     
     public void SetBrushes(SKPoint center, float radius, float maxRadius, float scale)
     {
@@ -442,13 +504,25 @@ public class Brushes(UserConfig userConfig)
             colorNoteHoldStart = SKColor.Parse(colors["ColorNoteHoldStart"]);
             colorNoteHoldSegment = SKColor.Parse(colors["ColorNoteHoldSegment"]);
             colorNoteHoldSegmentNoRender = SKColor.Parse(colors["ColorNoteHoldSegmentNoRender"]);
-            colorNoteTraceStart = SKColor.Parse(colors["ColorNoteTraceStart"]);
-            colorNoteTraceSegment = SKColor.Parse(colors["ColorNoteTraceSegment"]);
+            colorNoteTrace = SKColor.Parse(colors["ColorNoteTrace"]);
             colorNoteDamage = SKColor.Parse(colors["ColorNoteDamage"]);
             colorNoteMaskAdd = SKColor.Parse(colors["ColorNoteMaskAdd"]);
             colorNoteMaskRemove = SKColor.Parse(colors["ColorNoteMaskRemove"]);
             colorGimmickEndOfChart = SKColor.Parse(colors["ColorNoteEndOfChart"]);
             colorNoteCaps = SKColor.Parse(colors["ColorNoteCaps"]);
+            
+            TraceCenterFill.Color = SKColor.Parse(colors["ColorTraceCenter"]);
+            colorTraceWhite = SKColor.Parse(colors["ColorTraceWhite"]);
+            colorTraceBlack = SKColor.Parse(colors["ColorTraceBlack"]);
+            colorTraceRed = SKColor.Parse(colors["ColorTraceRed"]);
+            colorTraceOrange = SKColor.Parse(colors["ColorTraceOrange"]);
+            colorTraceYellow = SKColor.Parse(colors["ColorTraceYellow"]);
+            colorTraceLime = SKColor.Parse(colors["ColorTraceLime"]);
+            colorTraceGreen = SKColor.Parse(colors["ColorTraceGreen"]);
+            colorTraceSky = SKColor.Parse(colors["ColorTraceSky"]);
+            colorTraceBlue = SKColor.Parse(colors["ColorTraceBlue"]);
+            colorTraceViolet = SKColor.Parse(colors["ColorTraceViolet"]);
+            colorTracePink = SKColor.Parse(colors["ColorTracePink"]);
             
             colorGimmickBpmChange = SKColor.Parse(colors["ColorGimmickBpmChange"]);
             colorGimmickTimeSigChange = SKColor.Parse(colors["ColorGimmickTimeSigChange"]);
@@ -470,6 +544,7 @@ public class Brushes(UserConfig userConfig)
             bonusPen.Color = SKColor.Parse(colors["ColorBonus"]);
             selectionPen.Color = SKColor.Parse(colors["ColorSelection"]);
             highlightPen.Color = SKColor.Parse(colors["ColorHighlight"]);
+            tracePen.Color = SKColor.Parse(colors["ColorNoteTrace"]);
             
             MeasurePen.Color = SKColor.Parse(colors["ColorMeasureLine"]);
             BeatPen.Color = SKColor.Parse(colors["ColorBeatLine"]);

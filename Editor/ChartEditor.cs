@@ -64,6 +64,7 @@ public class ChartEditor
     public bool LayerNoteActive = true;
     public bool LayerMaskActive = true;
     public bool LayerGimmickActive = true;
+    public bool LayerTraceActive = true;
 
     public bool BonusAvailable(NoteType type) => !mainView.UserConfig.EditorConfig.LimitToMercuryBonusTypes || type is NoteType.Touch or NoteType.SlideClockwise or NoteType.SlideCounterclockwise;
     
@@ -189,7 +190,7 @@ public class ChartEditor
         if (operation is InsertNote insertNoteOperation)
         {
             // Update CurrentHoldStart + End Hold
-            if (insertNoteOperation.Note.NoteType is NoteType.HoldStart && EditorState is ChartEditorState.InsertHold)
+            if (insertNoteOperation.Note.NoteType is NoteType.HoldStart or NoteType.TraceStart && EditorState is ChartEditorState.InsertHold)
             {
                 CurrentHoldStart = null;
                 EndHold(true);
@@ -200,8 +201,10 @@ public class ChartEditor
         {
             foreach (Note note in Chart.Notes)
             {
-                if (note is not { IsHold: true, NextReferencedNote: null, PrevReferencedNote: null } || !UndoRedoManager.CanUndo) continue; 
-                
+                if (!UndoRedoManager.CanUndo) break;
+                if (!note.IsHold && !note.IsTrace) continue;
+                if (note.NextReferencedNote != null || note.PrevReferencedNote != null) continue;
+
                 IOperation op = UndoRedoManager.PeekUndo;
                 if (op is not InsertHoldNote) UndoRedoManager.Undo();
                 return;
@@ -223,7 +226,7 @@ public class ChartEditor
         // Update CurrentHoldStart + Start Hold
         if (operation is InsertNote insertNoteOperation)
         {
-            if (insertNoteOperation.Note.NoteType is NoteType.HoldStart)
+            if (insertNoteOperation.Note.NoteType is NoteType.HoldStart or NoteType.TraceStart)
             {
                 StartHold(insertNoteOperation.Note);
             }
@@ -237,7 +240,9 @@ public class ChartEditor
         {
             foreach (Note note in Chart.Notes)
             {
-                if (note is not { IsHold: true, NextReferencedNote: null, PrevReferencedNote: null } || !UndoRedoManager.CanRedo) continue; 
+                if (!UndoRedoManager.CanRedo) break;
+                if (!note.IsHold && !note.IsTrace) continue;
+                if (note.NextReferencedNote != null || note.PrevReferencedNote != null) continue;
                 
                 IOperation op = UndoRedoManager.PeekRedo;
                 if (op is InsertHoldNote) return;
@@ -353,7 +358,7 @@ public class ChartEditor
             Note newNote = new(note);
             cloneDictionary.Add(note, newNote);
 
-            if (note.IsHold)
+            if (note.IsHold || note.IsTrace)
             {
                 if (note.PrevReferencedNote != null) newNote.PrevReferencedNote = deepClone(note.PrevReferencedNote, cloneDictionary);
                 if (note.NextReferencedNote != null) newNote.NextReferencedNote = deepClone(note.NextReferencedNote, cloneDictionary);
@@ -668,10 +673,11 @@ public class ChartEditor
                 Chart.IsSaved = false;
                 UndoRedoManager.InvokeAndPush(new InsertNote(Chart, SelectedNotes, note));
                 
-                if (note.NoteType is NoteType.HoldStart)
+                if (note.NoteType is NoteType.HoldStart or NoteType.TraceStart)
                 {
                     StartHold(note);
                 }
+                
                 if (mainView.UserConfig.EditorConfig.HighlightPlacedNote) HighlightElement(note);
                 break;
             }
@@ -686,12 +692,19 @@ public class ChartEditor
                 if (LastPlacedHold is null || CurrentHoldStart is null) return;
                 if (CurrentBeatData.FullTick <= CurrentHoldStart.BeatData.FullTick) return;
                 if (CurrentBeatData.FullTick <= LastPlacedHold.BeatData.FullTick) return;
-            
+
+                NoteType type = LastPlacedHold switch
+                {
+                    { IsHold: true } => NoteType.HoldEnd,
+                    { IsTrace: true } => NoteType.TraceEnd,
+                    _ => throw new ArgumentOutOfRangeException(),
+                };
+                
                 Note note = new()
                 {
                     BeatData = CurrentBeatData,
                     MaskDirection = CurrentMaskDirection,
-                    NoteType = NoteType.HoldEnd,
+                    NoteType = type,
                     BonusType = BonusType.None,
                     Position = Cursor.Position,
                     Size = Cursor.Size,
@@ -699,10 +712,13 @@ public class ChartEditor
                 };
 
                 LastPlacedHold.NextReferencedNote = note;
-                if (LastPlacedHold.NoteType is NoteType.HoldEnd)
+
+                LastPlacedHold.NoteType = LastPlacedHold.NoteType switch
                 {
-                    LastPlacedHold.NoteType = NoteType.HoldSegment;
-                }
+                    NoteType.HoldEnd => NoteType.HoldSegment,
+                    NoteType.TraceEnd => NoteType.TraceSegment,
+                    _ => throw new ArgumentOutOfRangeException(),
+                };
 
                 UndoRedoManager.InvokeAndPush(new InsertHoldNote(Chart, SelectedNotes, note, LastPlacedHold));
                 Chart.IsSaved = false;
@@ -1622,13 +1638,13 @@ public class ChartEditor
         if (HighlightedElement is not Note highlighted) return;
         if (!highlighted.IsHold) return;
 
-        Hold hold = new() { Segments = highlighted.References().ToList() };
+        NoteCollection noteCollection = new() { Notes = highlighted.References().ToList() };
 
-        if (CurrentBeatData.FullTick <= hold.Segments[0].BeatData.FullTick) return;
-        if (CurrentBeatData.FullTick >= hold.Segments[^1].BeatData.FullTick) return;
+        if (CurrentBeatData.FullTick <= noteCollection.Notes[0].BeatData.FullTick) return;
+        if (CurrentBeatData.FullTick >= noteCollection.Notes[^1].BeatData.FullTick) return;
 
-        Note? previous = hold.Segments.LastOrDefault(x => x.BeatData.FullTick <= CurrentBeatData.FullTick);
-        Note? next = hold.Segments.FirstOrDefault(x => x.BeatData.FullTick >= CurrentBeatData.FullTick);
+        Note? previous = noteCollection.Notes.LastOrDefault(x => x.BeatData.FullTick <= CurrentBeatData.FullTick);
+        Note? next = noteCollection.Notes.FirstOrDefault(x => x.BeatData.FullTick >= CurrentBeatData.FullTick);
 
         if (previous is null || next is null) return;
 
@@ -1900,31 +1916,31 @@ public class ChartEditor
         if (EditorState is ChartEditorState.InsertHold) return;
         
         HashSet<Note> checkedNotes = [];
-        List<Hold> holdNotes = [];
+        List<NoteCollection> holdNotes = [];
         List<IOperation> operationList = [];
         
         foreach (Note note in SelectedNotes)
         {
             if (checkedNotes.Contains(note)) continue;
 
-            Hold hold = new();
+            NoteCollection noteCollection = new();
 
             foreach (Note reference in note.References())
             {
-                hold.Segments.Add(reference);
+                noteCollection.Notes.Add(reference);
                 checkedNotes.Add(reference);
             }
             
-            holdNotes.Add(hold);
+            holdNotes.Add(noteCollection);
         }
 
-        foreach (Hold hold in holdNotes)
+        foreach (NoteCollection hold in holdNotes)
         {
-            for (int i = 0; i < hold.Segments.Count; i++)
+            for (int i = 0; i < hold.Notes.Count; i++)
             {
                 if (offsetEven ? i % 2 != 0 : i % 2 == 0) continue;
 
-                Note note = hold.Segments[i];
+                Note note = hold.Notes[i];
 
                 int position = MathExtensions.Modulo(note.Position - left, 60);
                 int size = int.Clamp(note.Size + left + right, Note.MinSize(note.NoteType, note.BonusType), Note.MaxSize(note.NoteType));
@@ -1949,7 +1965,7 @@ public class ChartEditor
         if (EditorState is ChartEditorState.InsertHold) return;
         
         HashSet<Note> checkedNotes = [];
-        List<Hold> holdNotes = [];
+        List<NoteCollection> holdNotes = [];
         List<IOperation> operationList = [];
         Random random = new();
         
@@ -1957,24 +1973,24 @@ public class ChartEditor
         {
             if (checkedNotes.Contains(note)) continue;
 
-            Hold hold = new();
+            NoteCollection noteCollection = new();
 
             foreach (Note reference in note.References())
             {
-                hold.Segments.Add(reference);
+                noteCollection.Notes.Add(reference);
                 checkedNotes.Add(reference);
             }
             
-            holdNotes.Add(hold);
+            holdNotes.Add(noteCollection);
         }
 
-        foreach (Hold hold in holdNotes)
+        foreach (NoteCollection hold in holdNotes)
         {
-            for (int i = 0; i < hold.Segments.Count; i++)
+            for (int i = 0; i < hold.Notes.Count; i++)
             {
                 if (offsetEven ? i % 2 != 0 : i % 2 == 0) continue;
 
-                Note note = hold.Segments[i];
+                Note note = hold.Notes[i];
 
                 // Can't trust the user to keep max >= min
                 int lMin = int.Min(leftMin, leftMax);
@@ -2009,7 +2025,7 @@ public class ChartEditor
         if (EditorState is ChartEditorState.InsertHold) return;
         
         HashSet<Note> checkedNotes = [];
-        List<Hold> holdNotes = [];
+        List<NoteCollection> holdNotes = [];
         List<IOperation> operationList = [];
         
         foreach (Note note in SelectedNotes)
@@ -2017,27 +2033,27 @@ public class ChartEditor
             if (checkedNotes.Contains(note)) continue;
             if (!note.IsHold) continue;
 
-            Hold hold = new();
+            NoteCollection noteCollection = new();
 
             foreach (Note reference in note.References())
             {
-                hold.Segments.Add(reference);
+                noteCollection.Notes.Add(reference);
                 checkedNotes.Add(reference);
             }
             
-            holdNotes.Add(hold);
+            holdNotes.Add(noteCollection);
         }
 
         int interval = 1920 / beatDivision;
         
-        foreach (Hold hold in holdNotes)
+        foreach (NoteCollection hold in holdNotes)
         {
-            int firstTick = hold.Segments[0].BeatData.FullTick;
-            int lastTick = hold.Segments[^1].BeatData.FullTick;
+            int firstTick = hold.Notes[0].BeatData.FullTick;
+            int lastTick = hold.Notes[^1].BeatData.FullTick;
 
             switch (generatorMethod)
             {
-                case 0: holdToHold(hold, hold.Segments[0].BonusType, firstTick, lastTick); break;
+                case 0: holdToHold(hold, hold.Notes[0].BonusType, firstTick, lastTick); break;
                 case 1: holdToChain(hold, firstTick, lastTick); break;
             }
             
@@ -2049,13 +2065,13 @@ public class ChartEditor
         Chart.IsSaved = false;
         return;
 
-        void holdToHold(Hold hold, BonusType bonusType, int firstTick, int lastTick)
+        void holdToHold(NoteCollection hold, BonusType bonusType, int firstTick, int lastTick)
         {
             Note? last = null;
             for (int i = firstTick; i <= lastTick; i += interval)
             {
-                int pos = hold.Segments.MinBy(x => int.Abs(i - x.BeatData.FullTick))!.Position;
-                int size = hold.Segments.MinBy(x => int.Abs(i - x.BeatData.FullTick))!.Size;
+                int pos = hold.Notes.MinBy(x => int.Abs(i - x.BeatData.FullTick))!.Position;
+                int size = hold.Notes.MinBy(x => int.Abs(i - x.BeatData.FullTick))!.Size;
                 
                 Note note = new()
                 {
@@ -2081,7 +2097,7 @@ public class ChartEditor
 
             if (last != null && last.BeatData.FullTick < lastTick)
             {
-                Note segment = hold.Segments[^1];
+                Note segment = hold.Notes[^1];
                 
                 Note note = new(segment)
                 {
@@ -2095,12 +2111,12 @@ public class ChartEditor
             }
         }
 
-        void holdToChain(Hold hold, int firstTick, int lastTick)
+        void holdToChain(NoteCollection hold, int firstTick, int lastTick)
         {
             for (int i = firstTick; i <= lastTick; i += interval)
             {
-                int pos = hold.Segments.MinBy(x => int.Abs(i - x.BeatData.FullTick))!.Position;
-                int size = hold.Segments.MinBy(x => int.Abs(i - x.BeatData.FullTick))!.Size;
+                int pos = hold.Notes.MinBy(x => int.Abs(i - x.BeatData.FullTick))!.Position;
+                int size = hold.Notes.MinBy(x => int.Abs(i - x.BeatData.FullTick))!.Size;
                 
                 Note note = new()
                 {
@@ -2115,13 +2131,13 @@ public class ChartEditor
             }
         }
         
-        void deleteHold(Hold hold)
+        void deleteHold(NoteCollection hold)
         {
             List<DeleteHoldNote> holdOperationList = [];
             
-            foreach (Note note in hold.Segments.OrderByDescending(x => x.BeatData.FullTick))
+            foreach (Note note in hold.Notes.OrderByDescending(x => x.BeatData.FullTick))
             {
-                DeleteHoldNote holdOp = new(Chart, SelectedNotes, note, hold.Segments[0].BonusType);
+                DeleteHoldNote holdOp = new(Chart, SelectedNotes, note, hold.Notes[0].BonusType);
                 holdOperationList.Add(holdOp);
                 
                 UndoRedoManager.InvokeAndPush(holdOp);

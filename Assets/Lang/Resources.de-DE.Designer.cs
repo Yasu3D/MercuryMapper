@@ -798,6 +798,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Layer: Linie.
+        /// </summary>
+        public static string Editor_LayerTrace {
+            get {
+                return ResourceManager.GetString("Editor_LayerTrace", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Schleife.
         /// </summary>
         public static string Editor_Loop {
@@ -1987,6 +1996,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Linien-Ende.
+        /// </summary>
+        public static string Note_TraceEnd {
+            get {
+                return ResourceManager.GetString("Note_TraceEnd", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Linien-Segment.
         /// </summary>
         public static string Note_TraceSegment {
@@ -2442,6 +2460,114 @@ namespace MercuryMapper.Assets.Lang {
         public static string Settings_Color_Sync {
             get {
                 return ResourceManager.GetString("Settings_Color_Sync", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Linie Schwarz.
+        /// </summary>
+        public static string Settings_Color_TraceBlack {
+            get {
+                return ResourceManager.GetString("Settings_Color_TraceBlack", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Linie Blau.
+        /// </summary>
+        public static string Settings_Color_TraceBlue {
+            get {
+                return ResourceManager.GetString("Settings_Color_TraceBlue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Linien-Mitte.
+        /// </summary>
+        public static string Settings_Color_TraceCenter {
+            get {
+                return ResourceManager.GetString("Settings_Color_TraceCenter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Linie Grün.
+        /// </summary>
+        public static string Settings_Color_TraceGreen {
+            get {
+                return ResourceManager.GetString("Settings_Color_TraceGreen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Linie Hellgrün.
+        /// </summary>
+        public static string Settings_Color_TraceLime {
+            get {
+                return ResourceManager.GetString("Settings_Color_TraceLime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Linie Orange.
+        /// </summary>
+        public static string Settings_Color_TraceOrange {
+            get {
+                return ResourceManager.GetString("Settings_Color_TraceOrange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Linie Pink.
+        /// </summary>
+        public static string Settings_Color_TracePink {
+            get {
+                return ResourceManager.GetString("Settings_Color_TracePink", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Linie Rot.
+        /// </summary>
+        public static string Settings_Color_TraceRed {
+            get {
+                return ResourceManager.GetString("Settings_Color_TraceRed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Linie Hellblau.
+        /// </summary>
+        public static string Settings_Color_TraceSky {
+            get {
+                return ResourceManager.GetString("Settings_Color_TraceSky", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Linie Violett.
+        /// </summary>
+        public static string Settings_Color_TraceViolet {
+            get {
+                return ResourceManager.GetString("Settings_Color_TraceViolet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Linie White.
+        /// </summary>
+        public static string Settings_Color_TraceWhite {
+            get {
+                return ResourceManager.GetString("Settings_Color_TraceWhite", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Linie Yellow.
+        /// </summary>
+        public static string Settings_Color_TraceYellow {
+            get {
+                return ResourceManager.GetString("Settings_Color_TraceYellow", resourceCulture);
             }
         }
         
@@ -3209,6 +3335,15 @@ namespace MercuryMapper.Assets.Lang {
         public static string ToolTip_LayerNote {
             get {
                 return ResourceManager.GetString("ToolTip_LayerNote", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zeige/Verstecke Linien..
+        /// </summary>
+        public static string ToolTip_LayerTrace {
+            get {
+                return ResourceManager.GetString("ToolTip_LayerTrace", resourceCulture);
             }
         }
         

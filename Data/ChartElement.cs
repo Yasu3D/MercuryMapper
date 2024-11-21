@@ -175,6 +175,7 @@ public class Note : ChartElement
     public MaskDirection MaskDirection { get; set; }
     public Note? NextReferencedNote { get; set; }
     public Note? PrevReferencedNote { get; set; }
+    public TraceColor Color { get; set; } = TraceColor.White;
 
     public int ParsedIndex { get; set; }
 
@@ -195,12 +196,13 @@ public class Note : ChartElement
         BonusType = note.BonusType;
         RenderSegment = note.RenderSegment;
         MaskDirection = note.MaskDirection;
+        Color = note.Color;
 
         NextReferencedNote = note.NextReferencedNote;
         PrevReferencedNote = note.PrevReferencedNote;
     }
 
-    public Note(int measure, int tick, NoteType noteType, BonusType bonusType, int noteIndex, int position, int size, bool renderSegment, Guid? guid = null)
+    public Note(int measure, int tick, NoteType noteType, BonusType bonusType, int noteIndex, int position, int size, bool renderSegment, TraceColor color, Guid? guid = null)
     {
         Guid = guid ?? Guid;
         BeatData = new(measure, tick);
@@ -209,6 +211,7 @@ public class Note : ChartElement
         Position = position;
         Size = size;
         RenderSegment = renderSegment;
+        Color = color;
 
         ParsedIndex = noteIndex;
     }
@@ -217,6 +220,11 @@ public class Note : ChartElement
         is NoteType.HoldStart 
         or NoteType.HoldSegment 
         or NoteType.HoldEnd;
+
+    public bool IsTrace => NoteType
+        is NoteType.TraceStart
+        or NoteType.TraceSegment
+        or NoteType.TraceEnd;
 
     public bool IsSegment => NoteType
         is NoteType.HoldSegment
@@ -304,7 +312,7 @@ public class Note : ChartElement
     public IEnumerable<Note> References()
     {
         List<Note> refs = [this];
-        if (!IsHold) return refs;
+        if (!IsHold && !IsTrace) return refs;
 
         Note? prev = PrevReferencedNote;
         Note? next = NextReferencedNote;
@@ -326,7 +334,7 @@ public class Note : ChartElement
 
     public Note? FirstReference()
     {
-        if (!IsHold) return null;
+        if (!IsHold && !IsTrace) return null;
         
         Note? first = this;
         Note? prev = PrevReferencedNote;
@@ -342,7 +350,7 @@ public class Note : ChartElement
 
     public Note? PrevVisibleReference(bool skip = false)
     {
-        if (!IsHold) return null;
+        if (!IsHold && !IsTrace) return null;
         if (skip) return PrevReferencedNote;
         
         Note? prev = PrevReferencedNote;
@@ -358,7 +366,7 @@ public class Note : ChartElement
     
     public Note? NextVisibleReference(bool skip = false)
     {
-        if (!IsHold) return null;
+        if (!IsHold && !IsTrace) return null;
         if (skip) return NextReferencedNote;
         
         Note? next = NextReferencedNote;
@@ -484,15 +492,9 @@ public class Note : ChartElement
     }
 }
 
-public struct Hold()
+public struct NoteCollection()
 {
-    public List<Note> Segments = [];
-}
-
-public struct Trace()
-{
-    public List<Note> Segments = [];
-    public SKColor Color;
+    public List<Note> Notes = [];
 }
 
 public class Comment(Guid guid, BeatData beatData, string text, Rectangle marker)

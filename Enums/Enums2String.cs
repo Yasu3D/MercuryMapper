@@ -62,6 +62,13 @@ public static class Enums2String
 
             (NoteType.MaskAdd, _) => Resources.Note_MaskAdd,
             (NoteType.MaskRemove, _) => Resources.Note_MaskRemove,
+            
+            (NoteType.TraceStart, _) => Resources.Note_TraceStart,
+            (NoteType.TraceSegment, _) => Resources.Note_TraceSegment,
+            (NoteType.TraceEnd, _) => Resources.Note_TraceEnd,
+            
+            (NoteType.Damage, _) => Resources.Note_Damage,
+            
             _ => "Unknown Note",
         };
     }
