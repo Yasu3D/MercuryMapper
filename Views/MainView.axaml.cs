@@ -926,7 +926,13 @@ public partial class MainView : UserControl
             e.Handled = true;
             return;
         }
-        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorPaintSelectedTraces"]))
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorFlipNoteDirection"]))
+        {
+            ChartEditor.FlipNoteDirection();
+            e.Handled = true;
+            return;
+        }
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorPaintTraces"]))
         {
             ChartEditor.PaintTraces((TraceColor)TraceColorComboBox.SelectedIndex);
             e.Handled = true;
@@ -2493,6 +2499,8 @@ public partial class MainView : UserControl
         ChartEditor.SetSelectionRenderFlag(false);
     }
 
+    private void ButtonFlipNoteDirection_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.FlipNoteDirection();
+    
     private void ButtonConvertToInstantMask_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.ConvertToInstantMask();
 
     private void ButtonPaintTraces_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.PaintTraces((TraceColor)TraceColorComboBox.SelectedIndex);

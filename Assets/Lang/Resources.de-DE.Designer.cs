@@ -618,6 +618,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Noten-Richtung Umkehren.
+        /// </summary>
+        public static string Editor_FlipNoteDirection {
+            get {
+                return ResourceManager.GetString("Editor_FlipNoteDirection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Gimmick-Art.
         /// </summary>
         public static string Editor_GimmickType {
@@ -1061,9 +1070,9 @@ namespace MercuryMapper.Assets.Lang {
         /// <summary>
         ///   Looks up a localized string similar to Ausgewählte Linien Färben.
         /// </summary>
-        public static string Editor_PaintSelectedTraces {
+        public static string Editor_PaintTraces {
             get {
-                return ResourceManager.GetString("Editor_PaintSelectedTraces", resourceCulture);
+                return ResourceManager.GetString("Editor_PaintTraces", resourceCulture);
             }
         }
         
@@ -3380,6 +3389,15 @@ namespace MercuryMapper.Assets.Lang {
         public static string ToolTip_EndOfChart {
             get {
                 return ResourceManager.GetString("ToolTip_EndOfChart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Spiegelt die Richtung einer Slide, Snap oder Masken-Note, ohne dessen Position zu spiegeln..
+        /// </summary>
+        public static string ToolTip_FlipNoteDirection {
+            get {
+                return ResourceManager.GetString("ToolTip_FlipNoteDirection", resourceCulture);
             }
         }
         

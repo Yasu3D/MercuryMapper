@@ -2252,6 +2252,55 @@ public class ChartEditor
             }
         }
     }
+
+    public void FlipNoteDirection()
+    {
+        List<IOperation> operationList = [];
+
+        foreach (Note note in SelectedNotes)
+        {
+            addOperation(note);
+        }
+        
+        if (SelectedNotes.Count == 0 && HighlightedElement is Note highlighted)
+        {
+            addOperation(highlighted);
+        }
+        
+        if (operationList.Count == 0) return;
+        UndoRedoManager.InvokeAndPush(new CompositeOperation(operationList));
+        Chart.IsSaved = false;
+        return;
+
+        void addOperation(Note note)
+        {
+            if (!note.IsSlide && !note.IsSnap && !note.IsMask) return;
+
+            Note newNote = new(note)
+            {
+                NoteType = note.NoteType switch
+                {
+                    NoteType.SlideClockwise => NoteType.SlideCounterclockwise,
+                    NoteType.SlideCounterclockwise => NoteType.SlideClockwise,
+                    
+                    NoteType.SnapForward => NoteType.SnapBackward,
+                    NoteType.SnapBackward => NoteType.SnapForward,
+                    
+                    _ => note.NoteType,
+                },
+                MaskDirection = note.MaskDirection switch
+                {
+                    MaskDirection.Counterclockwise => MaskDirection.Clockwise,
+                    MaskDirection.Clockwise => MaskDirection.Counterclockwise,
+                    MaskDirection.Center => MaskDirection.Center,
+                    
+                    _ => MaskDirection.Center,
+                },
+            };
+
+            operationList.Add(new EditNote(note, newNote));
+        }
+    }
     
     // ________________ Comments
     private readonly Color[] commentColors =

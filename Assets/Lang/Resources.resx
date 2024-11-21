@@ -1341,7 +1341,7 @@ Continue?</value>
   <data name="Editor_Color_TraceYellow" xml:space="preserve">
     <value>Yellow</value>
   </data>
-  <data name="Editor_PaintSelectedTraces" xml:space="preserve">
+  <data name="Editor_PaintTraces" xml:space="preserve">
     <value>Paint Selected Traces</value>
   </data>
   <data name="ToolTip_PaintTraces" xml:space="preserve">
@@ -1349,5 +1349,11 @@ Continue?</value>
   </data>
   <data name="Note_DamageOutline" xml:space="preserve">
     <value>Damage Outline</value>
+  </data>
+  <data name="Editor_FlipNoteDirection" xml:space="preserve">
+    <value>Flip Note Direction</value>
+  </data>
+  <data name="ToolTip_FlipNoteDirection" xml:space="preserve">
+    <value>Flips the Direction of a Slide, Snap or Mask Note without mirroring its position.</value>
   </data>
 </root>

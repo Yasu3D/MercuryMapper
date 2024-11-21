@@ -705,7 +705,8 @@
                         
                         <Separator/>
                         
-                        <Button HorizontalAlignment="Stretch" Margin="0,4,0,4" Click="ButtonConvertToInstantMask_OnClick" Content="{x:Static lang:Resources.Editor_ConvertToInstantMask}" ToolTip.Tip="{x:Static lang:Resources.ToolTip_ConvertToInstantMask}"/>
+                        <Button HorizontalAlignment="Stretch" Margin="0,4,0,4" Click="ButtonFlipNoteDirection_OnClick" Content="{x:Static lang:Resources.Editor_FlipNoteDirection}" ToolTip.Tip="{x:Static lang:Resources.ToolTip_FlipNoteDirection}"/>
+                        <Button HorizontalAlignment="Stretch" Margin="0,0,0,4" Click="ButtonConvertToInstantMask_OnClick" Content="{x:Static lang:Resources.Editor_ConvertToInstantMask}" ToolTip.Tip="{x:Static lang:Resources.ToolTip_ConvertToInstantMask}"/>
                         
                         <Separator/>
                         
@@ -781,7 +782,7 @@
                             </ComboBox>
                         </UniformGrid>
                         
-                        <Button Margin="0,0,0,4" HorizontalAlignment="Stretch" Click="ButtonPaintTraces_OnClick" Content="{x:Static lang:Resources.Editor_PaintSelectedTraces}" ToolTip.Tip="{x:Static lang:Resources.ToolTip_PaintTraces}"/>
+                        <Button Margin="0,0,0,4" HorizontalAlignment="Stretch" Click="ButtonPaintTraces_OnClick" Content="{x:Static lang:Resources.Editor_PaintTraces}" ToolTip.Tip="{x:Static lang:Resources.ToolTip_PaintTraces}"/>
                         
                         <Separator/>
                         

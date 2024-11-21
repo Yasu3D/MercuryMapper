@@ -78,8 +78,9 @@
                     <TreeViewItem Name="EditorQuickEditDecreaseTimestamp" Header="{x:Static lang:Resources.Editor_QuickEditDecreaseTimestamp}" />
                     <TreeViewItem Name="EditorSetRenderTrue" Header="{x:Static lang:Resources.Editor_SetRenderTrue}" />
                     <TreeViewItem Name="EditorSetRenderFalse" Header="{x:Static lang:Resources.Editor_SetRenderFalse}" />
+                    <TreeViewItem Name="EditorFlipNoteDirection" Header="{x:Static lang:Resources.Editor_FlipNoteDirection}" />
                     <TreeViewItem Name="EditorConvertToInstantMask" Header="{x:Static lang:Resources.Editor_ConvertToInstantMask}" />
-                    <TreeViewItem Name="EditorPaintSelectedTraces" Header="{x:Static lang:Resources.Editor_PaintSelectedTraces}" />
+                    <TreeViewItem Name="EditorPaintTraces" Header="{x:Static lang:Resources.Editor_PaintTraces}" />
                 </TreeViewItem>
 
                 <TreeViewItem Header="{x:Static lang:Resources.Settings_Header_NoteTypes}" Classes="HideKeybind">
