@@ -35,6 +35,7 @@ public class RenderEngine(MainView mainView)
     private float CurrentMeasureDecimal => mainView.ChartEditor.CurrentMeasureDecimal;
     private float ScaledCurrentMeasureDecimal => Chart.GetScaledMeasureDecimal(CurrentMeasureDecimal, RenderConfig.ShowHiSpeed);
     private RenderConfig RenderConfig => mainView.UserConfig.RenderConfig;
+    private readonly Random random = new();
 
     public bool IsHoveringOverMirrorAxis { get; set; }
     public int MirrorAxis { get; set; } = 30;
@@ -67,8 +68,8 @@ public class RenderEngine(MainView mainView)
         
         if (!IsPlaying || (IsPlaying && RenderConfig.ShowOtherUsersDuringPlayback)) DrawPeers(canvas, Chart);
         
-        if ((!IsPlaying || (IsPlaying && RenderConfig.ShowGimmickNotesDuringPlayback)) && mainView.ChartEditor.LayerGimmickActive) DrawGimmickNotes(canvas, Chart);
-        if ((!IsPlaying || (IsPlaying && RenderConfig.ShowMaskDuringPlayback)) && mainView.ChartEditor.LayerMaskActive) DrawMaskNotes(canvas, Chart);
+        if (mainView.ChartEditor.LayerGimmickActive && (!IsPlaying || (IsPlaying && RenderConfig.ShowGimmickNotesDuringPlayback))) DrawGimmickMarkers(canvas, Chart);
+        if (mainView.ChartEditor.LayerMaskActive && (!IsPlaying || (IsPlaying && RenderConfig.ShowMaskDuringPlayback))) DrawMaskNotes(canvas, Chart);
 
         if (mainView.ChartEditor.LayerTraceActive) DrawTraces(canvas, Chart);
         
@@ -78,15 +79,11 @@ public class RenderEngine(MainView mainView)
             {
                 DrawJudgementWindows(canvas, Chart);
             }
-            
-            DrawSyncs(canvas, Chart); // Hold Surfaces normally render under syncs but the syncs poke into the note a bit, and it looks shit.
-            
+
             if (RenderConfig.HoldRenderMethod == 0) DrawHolds(canvas, Chart);
             else DrawHoldsLegacy(canvas, Chart);
-            
+
             DrawNotes(canvas, Chart);
-            DrawArrows(canvas, Chart);
-            DrawDamageNotes(canvas, Chart);
         }
     }
 
@@ -282,7 +279,6 @@ public class RenderEngine(MainView mainView)
         data.SweepAngle *= -1;
     }
     
-    // ________________
     // ____ UI
     private void DrawBackground(SKCanvas canvas)
     {
@@ -556,55 +552,705 @@ public class RenderEngine(MainView mainView)
             SKRect rect = GetRect(scale);
             if (!InRange(scale)) continue;
 
-            bool isMeasure = Math.Abs(i - (int)i) < 0.001f;
+            bool isMeasure = Math.Abs(i - (int)i) < 0.01f;
             canvas.DrawOval(rect, isMeasure ? brushes.MeasurePen : brushes.BeatPen);
         }
     }
+    
+    private enum CollectionSurfaceDrawMode
+    {
+        Hold,
+        Trace,
+        TraceCenter,
+    }
+    
+    private void DrawGimmickMarkers(SKCanvas canvas, Chart chart)
+    {
+        IEnumerable<Gimmick> visibleGimmicks = chart.Gimmicks.Where(x =>
+            MathExtensions.GreaterAlmostEqual(x.BeatData.MeasureDecimal, CurrentMeasureDecimal)
+            && chart.GetScaledMeasureDecimal(x.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) <= ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal).Reverse();
 
-    private void DrawSyncs(SKCanvas canvas, Chart chart)
+        foreach (Gimmick gimmick in visibleGimmicks)
+        {
+            ArcData data = GetArc(chart, gimmick);
+            
+            if (!InRange(data.Scale)) continue;
+            
+            canvas.DrawOval(data.Rect, brushes.GetGimmickPen(gimmick, canvasScale * data.Scale));
+            if (gimmick == mainView.ChartEditor.HighlightedElement) DrawHighlight(canvas, data);
+        }
+    }
+    
+    private void DrawMaskNotes(SKCanvas canvas, Chart chart)
+    {
+        IEnumerable<Note> visibleNotes = chart.Notes.Where(x =>
+            x.IsMask
+            && MathExtensions.GreaterAlmostEqual(x.BeatData.MeasureDecimal, CurrentMeasureDecimal)
+            && chart.GetScaledMeasureDecimal(x.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) <= ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal).Reverse();
+        
+        foreach (Note note in visibleNotes)
+        {
+            ArcData data = GetArc(chart, note);
+
+            if (!InRange(data.Scale)) continue;
+            
+            canvas.DrawArc(data.Rect, data.StartAngle, data.SweepAngle, false, brushes.GetNotePen(note, canvasScale * data.Scale));
+
+            if (mainView.ChartEditor.SelectedNotes.Contains(note)) DrawSelection(canvas, chart, note);
+            if (note == mainView.ChartEditor.HighlightedElement) DrawHighlight(canvas, chart, note);
+        }
+    }
+    
+    private void DrawTraces(SKCanvas canvas, Chart chart)
     {
         List<Note> visibleNotes = chart.Notes.Where(x =>
         {
-            bool invalidType = x.IsSegment || 
-                               x.IsMask || 
-                               x.NoteType == NoteType.Trace || 
-                               x.NoteType == NoteType.Damage ||
-                               (x.NoteType == NoteType.Chain && x.BonusType != BonusType.RNote);
+            Note? next = x.NextVisibleReference(RenderConfig.DrawNoRenderHoldSegments);
+            
+            float scaledMeasureDecimal = chart.GetScaledMeasureDecimal(x.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed);
+            float visibleDistance = ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal;
 
+            bool inFrontOfCamera = MathExtensions.GreaterAlmostEqual(scaledMeasureDecimal, ScaledCurrentMeasureDecimal);
+            bool inVisibleDistance = MathExtensions.GreaterAlmostEqual(x.BeatData.MeasureDecimal, CurrentMeasureDecimal) && scaledMeasureDecimal <= visibleDistance;
+            bool nextOutsideVisibleDistance = next != null && chart.GetScaledMeasureDecimal(next.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) > visibleDistance;
+
+            bool inVisionRange = inFrontOfCamera && inVisibleDistance;
+            bool aroundVisionRange = !inFrontOfCamera && nextOutsideVisibleDistance;
+
+            return x.NoteType == NoteType.Trace && (inVisionRange || aroundVisionRange);
+        }).ToList();
+
+        HashSet<Note> checkedNotes = [];
+        List<NoteCollection> traces = [];
+
+        foreach (Note note in visibleNotes)
+        {
+            if (checkedNotes.Contains(note)) continue;
+
+            NoteCollection noteCollection = new();
+
+            foreach (Note reference in note.References())
+            {
+                if (visibleNotes.Contains(reference) && ((reference.RenderSegment && !RenderConfig.DrawNoRenderHoldSegments) || RenderConfig.DrawNoRenderHoldSegments))
+                {
+                    noteCollection.Notes.Add(reference);
+                }
+                checkedNotes.Add(reference);
+            }
+
+            traces.Add(noteCollection);
+        }
+
+        foreach (NoteCollection trace in traces)
+        {
+            DrawNoteCollectionSurface(canvas, chart, trace, TruncateMode.Trace, CollectionSurfaceDrawMode.Trace);
+            DrawNoteCollectionSurface(canvas, chart, trace, TruncateMode.TraceCenter, CollectionSurfaceDrawMode.TraceCenter);
+        }
+
+        if (IsPlaying) return;
+        
+        foreach (Note note in visibleNotes)
+        {
+            ArcData data = GetArc(chart, note);
+            
+            if (!InRange(data.Scale) || note.BeatData.MeasureDecimal < CurrentMeasureDecimal) continue;
+            
+            float outlineOffset = 10 * data.Scale * canvasScale;
+            const float controlOffset = 1;
+                
+            SKPath path1 = new();
+
+            SKRect rectOuter = new(data.Rect.Left, data.Rect.Top, data.Rect.Right, data.Rect.Bottom);
+            SKRect rectInner = new(data.Rect.Left, data.Rect.Top, data.Rect.Right, data.Rect.Bottom);
+            rectOuter.Inflate(outlineOffset, outlineOffset);
+            rectInner.Inflate(-outlineOffset, -outlineOffset);
+                
+            float currentPos = note.Position * -6 - 3.5f;
+            float currentSweep = note.Size * -6 + 7;
+
+            SKPoint control1 = GetPointOnArc(canvasCenter, data.Rect.Width * 0.5f, currentPos + currentSweep - controlOffset);
+            SKPoint arcEdge1 = GetPointOnArc(canvasCenter, data.Rect.Width * 0.5f - outlineOffset, currentPos + currentSweep);
+                
+            SKPoint control2 = GetPointOnArc(canvasCenter, data.Rect.Width * 0.5f, currentPos + controlOffset);
+            SKPoint arcEdge2 = GetPointOnArc(canvasCenter, data.Rect.Width * 0.5f + outlineOffset, currentPos);
+
+            path1.ArcTo(rectOuter, currentPos, currentSweep, true);
+            path1.QuadTo(control1, arcEdge1);
+            path1.ArcTo(rectInner, currentPos + currentSweep, -currentSweep, false);
+            path1.QuadTo(control2, arcEdge2);
+            path1.Close();
+
+            canvas.DrawPath(path1, brushes.GetTracePen(note.RenderSegment, data.Scale * canvasScale * 0.75f));
+            if (mainView.ChartEditor.SelectedNotes.Contains(note)) DrawSelection(canvas, chart, note);
+            if (note == mainView.ChartEditor.HighlightedElement) DrawHighlight(canvas, chart, note);
+        }
+    }
+    
+    /// <summary>
+    /// Performs better than the original by drawing hold-by-hold, not segment-by-segment. Saves dozens, if not hundreds of calls to SkiaSharp and fixes the tv-static-looking seams on dense holds. <br/>
+    /// This first batches notes into a "hold" struct, then draws each hold.
+    /// </summary>
+    private void DrawHolds(SKCanvas canvas, Chart chart)
+    {
+        List<Note> visibleNotes = chart.Notes.Where(x =>
+        {
+            Note? next = x.NextVisibleReference(RenderConfig.DrawNoRenderHoldSegments);
+            
+            float scaledMeasureDecimal = chart.GetScaledMeasureDecimal(x.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed);
+            float visibleDistance = ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal;
+
+            bool inFrontOfCamera = MathExtensions.GreaterAlmostEqual(scaledMeasureDecimal, ScaledCurrentMeasureDecimal);
+            bool inVisibleDistance = MathExtensions.GreaterAlmostEqual(x.BeatData.MeasureDecimal, CurrentMeasureDecimal) && scaledMeasureDecimal <= visibleDistance;
+            bool nextOutsideVisibleDistance = next != null && chart.GetScaledMeasureDecimal(next.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) > visibleDistance;
+
+            bool inVisionRange = inFrontOfCamera && inVisibleDistance;
+            bool aroundVisionRange = !inFrontOfCamera && nextOutsideVisibleDistance;
+
+            return x.NoteType == NoteType.Hold && (inVisionRange || aroundVisionRange);
+        }).ToList();
+
+        HashSet<Note> checkedNotes = [];
+        List<NoteCollection> holds = [];
+
+        foreach (Note note in visibleNotes)
+        {
+            if (checkedNotes.Contains(note)) continue;
+
+            NoteCollection noteCollection = new();
+
+            foreach (Note reference in note.References())
+            {
+                if (visibleNotes.Contains(reference) && ((reference.RenderSegment && !RenderConfig.DrawNoRenderHoldSegments) || RenderConfig.DrawNoRenderHoldSegments))
+                {
+                    noteCollection.Notes.Add(reference);
+                }
+                checkedNotes.Add(reference);
+            }
+
+            holds.Add(noteCollection);
+        }
+
+        foreach (NoteCollection hold in holds)
+        {
+            DrawNoteCollectionSurface(canvas, chart, hold, TruncateMode.Hold, CollectionSurfaceDrawMode.Hold);
+        }
+    }
+    
+    /// <summary>
+    /// Old Hold Rendering Method. See above for new method.
+    /// </summary>
+    private void DrawHoldsLegacy(SKCanvas canvas, Chart chart)
+    {
+        List<Note> visibleNotes = chart.Notes.Where(x =>
+        {
+            bool inVision = MathExtensions.GreaterAlmostEqual(x.BeatData.MeasureDecimal, CurrentMeasureDecimal) && chart.GetScaledMeasureDecimal(x.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) <= ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal;
+            bool nextOutsideVision = x.NextReferencedNote != null && x.BeatData.MeasureDecimal < CurrentMeasureDecimal && chart.GetScaledMeasureDecimal(x.NextReferencedNote.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) > ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal;
+
+            return x.NoteType == NoteType.Hold && (inVision || nextOutsideVision);
+        }).ToList();
+
+        foreach (Note note in visibleNotes)
+        {
+            ArcData currentData = GetArc(chart, note);
+            if (note.Size != 60) TruncateArc(ref currentData, TruncateMode.IncludeCaps);
+            else TrimCircleArc(ref currentData);
+
+            bool currentVisible = note.BeatData.MeasureDecimal >= CurrentMeasureDecimal;
+            bool nextVisible = note.NextReferencedNote != null && chart.GetScaledMeasureDecimal(note.NextReferencedNote.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) <= ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal;
+            bool prevVisible = note.PrevReferencedNote != null && note.PrevReferencedNote.BeatData.MeasureDecimal >= CurrentMeasureDecimal;
+
+            if (currentVisible && nextVisible)
+            {
+                Note nextNote = note.NextReferencedNote!;
+                ArcData nextData = GetArc(chart, nextNote);
+
+                if (nextNote.Size != 60) TruncateArc(ref nextData, TruncateMode.IncludeCaps);
+                else TrimCircleArc(ref nextData);
+
+                FlipArc(ref nextData);
+
+                SKPath path = new();
+                path.ArcTo(currentData.Rect, currentData.StartAngle, currentData.SweepAngle, true);
+                path.ArcTo(nextData.Rect, nextData.StartAngle, nextData.SweepAngle, false);
+
+                canvas.DrawPath(path, brushes.HoldFill);
+            }
+
+            if (currentVisible && !prevVisible && note.PrevReferencedNote != null)
+            {
+                Note prevNote = note.PrevReferencedNote;
+                ArcData prevData = GetArc(chart, prevNote);
+
+                if (prevNote.Size != 60) TruncateArc(ref prevData, TruncateMode.IncludeCaps);
+                else TrimCircleArc(ref prevData);
+
+                float ratio = MathExtensions.InverseLerp(CurrentMeasureDecimal, note.BeatData.MeasureDecimal, prevNote.BeatData.MeasureDecimal);
+
+                if (float.Abs(currentData.StartAngle - prevData.StartAngle) > 180)
+                {
+                    if (currentData.StartAngle > prevData.StartAngle) currentData.StartAngle -= 360;
+                    else prevData.StartAngle -= 360;
+                }
+
+                ArcData intermediateData = new(canvasRect, 1, MathExtensions.Lerp(currentData.StartAngle, prevData.StartAngle, ratio), MathExtensions.Lerp(currentData.SweepAngle, prevData.SweepAngle, ratio));
+                FlipArc(ref intermediateData);
+
+                SKPath path = new();
+                path.ArcTo(currentData.Rect, currentData.StartAngle, currentData.SweepAngle, true);
+                path.ArcTo(intermediateData.Rect, intermediateData.StartAngle, intermediateData.SweepAngle, false);
+
+                canvas.DrawPath(path, brushes.HoldFill);
+            }
+
+            if (currentVisible && !nextVisible && note.NextReferencedNote != null )
+            {
+                canvas.DrawArc(currentData.Rect, currentData.StartAngle, currentData.SweepAngle, true, brushes.HoldFill);
+            }
+
+            if (!currentVisible && !nextVisible && note.NextReferencedNote != null)
+            {
+                Note nextNote = note.NextReferencedNote;
+                ArcData nextData = GetArc(chart, nextNote);
+
+                if (nextNote.Size != 60) TruncateArc(ref nextData, TruncateMode.IncludeCaps);
+                else TrimCircleArc(ref nextData);
+
+                float ratio = MathExtensions.InverseLerp(CurrentMeasureDecimal, note.BeatData.MeasureDecimal, nextNote.BeatData.MeasureDecimal);
+
+                if (float.Abs(currentData.StartAngle - nextData.StartAngle) > 180)
+                {
+                    if (currentData.StartAngle > nextData.StartAngle) currentData.StartAngle -= 360;
+                    else nextData.StartAngle -= 360;
+                }
+
+                ArcData intermediateData = new(canvasRect, 1, MathExtensions.Lerp(currentData.StartAngle, nextData.StartAngle, ratio), MathExtensions.Lerp(currentData.SweepAngle, nextData.SweepAngle, ratio));
+
+                canvas.DrawArc(intermediateData.Rect, intermediateData.StartAngle, intermediateData.SweepAngle, true, brushes.HoldFill);
+            }
+        }
+    }
+    
+    private void DrawNotes(SKCanvas canvas, Chart chart)
+    {
+        List<Note> visibleNotes = chart.Notes.Where(x =>
+        {
+            bool invalidType = x.NoteType is NoteType.Trace || x.IsMask;
             bool behindCamera = !MathExtensions.GreaterAlmostEqual(x.BeatData.MeasureDecimal, CurrentMeasureDecimal);
             bool pastVisionLimit = chart.GetScaledMeasureDecimal(x.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) > ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal;
-            
-            return !invalidType && !behindCamera && !pastVisionLimit;
-        }).ToList();
-            
-        
-        // This code is from saturn, lol
-        for (int i = 1; i < visibleNotes.Count; i++)
-        {
-            Note current = visibleNotes[i];
-            Note previous = visibleNotes[i - 1];
-            
-            if (current.BeatData.FullTick != previous.BeatData.FullTick) continue;
 
-            bool currentIsHoldStart = current.NoteType == NoteType.Hold && current.LinkType == NoteLinkType.Start;
-            bool previousIsHoldStart = previous.NoteType == NoteType.Hold && previous.LinkType == NoteLinkType.Start;
-            bool fullOverlap = current.Position == previous.Position && current.Size == previous.Size;
+            return !invalidType && !behindCamera && !pastVisionLimit;
+        }).OrderBy(x => x.LinkType == NoteLinkType.End).ThenBy(x => x.NoteType == NoteType.Hold).ThenBy(x => x.BeatData.FullTick).Reverse().ToList();
+
+        for (int i = 0; i < visibleNotes.Count; i++)
+        {
+            Note note = visibleNotes[i];
             
-            if ((currentIsHoldStart || previousIsHoldStart) && fullOverlap) continue;
+            ArcData data = GetArc(chart, note);
+            if (!InRange(data.Scale)) continue;
+
+            // R-Note
+            if (note.IsRNote)
+            {
+                DrawRNote(canvas, note, data);
+            }
+
+            // Bonus
+            if (note.IsBonus)
+            {
+                DrawBonusGlow(canvas, note, data);
+            }
+
+            // Sync
+            if (i != 0)
+            {
+                Note previous = visibleNotes[i - 1];
+                DrawSync(canvas, note, previous, data.Rect, data.Scale);
+            }
             
-            float scale = GetNoteScale(chart, current.BeatData.MeasureDecimal);
+            // Note
+            switch (note.NoteType)
+            {
+                case NoteType.Damage:
+                { 
+                    canvas.DrawArc(data.Rect, data.StartAngle, data.SweepAngle, false, brushes.GetNotePen(note, canvasScale * data.Scale));
+
+                    float outlineOffset = RenderConfig.NoteSize * 4.5f * data.Scale * canvasScale;
+                    SKRect rectOuter = new(data.Rect.Left, data.Rect.Top, data.Rect.Right, data.Rect.Bottom);
+                    SKRect rectInner = new(data.Rect.Left, data.Rect.Top, data.Rect.Right, data.Rect.Bottom);
+                    rectOuter.Inflate(outlineOffset, outlineOffset);
+                    rectInner.Inflate(-outlineOffset, -outlineOffset);
+                    
+                    if (note.Size == 60)
+                    {
+                        canvas.DrawArc(rectOuter, 0, 360, false, brushes.GetDamageOutlinePen(data.Scale));
+                        canvas.DrawArc(rectInner, 0, 360, false, brushes.GetDamageOutlinePen(data.Scale));
+                    }
+                    else
+                    {
+                        SKPath outlinePath = new();
+                        outlinePath.ArcTo(rectOuter, data.StartAngle, data.SweepAngle, true);
+                        outlinePath.ArcTo(rectInner, data.StartAngle + data.SweepAngle, -data.SweepAngle, false);
+                        outlinePath.Close();
+                
+                        canvas.DrawPath(outlinePath, brushes.GetDamageOutlinePen(data.Scale * canvasScale));
+                    }
+                    
+                    break;
+                }
+
+                case NoteType.Hold:
+                {
+                    if (note.LinkType is NoteLinkType.Start or NoteLinkType.Unlinked)
+                    {
+                        if (note.Size != 60)
+                        {
+                            TruncateArc(ref data, TruncateMode.ExcludeCaps);
+                            DrawNoteCaps(canvas, data.Rect, data.StartAngle, data.SweepAngle, data.Scale);
+                        }
+
+                        canvas.DrawArc(data.Rect, data.StartAngle, data.SweepAngle, false, brushes.GetNotePen(note, canvasScale * data.Scale));
+                    }
+
+                    if (note.LinkType is NoteLinkType.Point && !IsPlaying)
+                    {
+                        if (note.Size != 60)
+                        {
+                            TruncateArc(ref data, TruncateMode.ExcludeCaps);
+                        }
+
+                        canvas.DrawArc(data.Rect, data.StartAngle + 2f, data.SweepAngle - 4f, false, brushes.GetNotePen(note, canvasScale * data.Scale * 0.5f));
+                    }
+
+                    if (note.LinkType is NoteLinkType.End)
+                    {
+                        if (note.Size != 60)
+                        {
+                            TruncateArc(ref data, TruncateMode.Hold);    
+                        }
+                        
+                        canvas.DrawArc(data.Rect, data.StartAngle, data.SweepAngle, false, brushes.GetHoldEndPen(canvasScale * data.Scale));
+                    }
+                    
+                    break;
+                }
+                
+                default:
+                { 
+                    if (note.Size != 60)
+                    {
+                        TruncateArc(ref data, TruncateMode.ExcludeCaps);
+                        DrawNoteCaps(canvas, data.Rect, data.StartAngle, data.SweepAngle, data.Scale);
+                    }
             
-            if (!InRange(scale)) continue;
+                    canvas.DrawArc(data.Rect, data.StartAngle, data.SweepAngle, false, brushes.GetNotePen(note, canvasScale * data.Scale));
+                    
+                    break;   
+                }
+            }
             
-            SKRect rect = GetRect(scale);
+            // Chain Stripes
+            if (note.NoteType is NoteType.Chain && RenderConfig.ShowChainStripes)
+            {
+                DrawChainStripes(canvas, note, data);
+            }
             
-            drawSyncConnector(current, previous, rect, scale);
-            drawSyncOutline(current, previous, rect, scale);
+            // Selection
+            if (mainView.ChartEditor.SelectedNotes.Contains(note))
+            {
+                DrawSelection(canvas, chart, note);
+            }
+            
+            // Highlight
+            if (note == mainView.ChartEditor.HighlightedElement)
+            {
+                DrawHighlight(canvas, chart, note);
+            }
+            
+            // Arrows
+            if (note.IsSlide || note.IsSnap)
+            {
+                DrawArrows(canvas, chart, note, data.Rect, data.Scale);
+            }
+            
+            // Damage
+            if (note.NoteType is NoteType.Damage)
+            {
+                SKPath sparkPath = new();
+                int steps = int.Min(note.Size + 1, 60);
+            
+                for (int j = 0; j < steps; j++)
+                {
+                    float offset = random.NextSingle() * 0.06f;
+                    SKPoint p = GetPointOnArc(canvasCenter, data.Rect.Width * (0.44f + offset), (note.Position + j) * -6);
+
+                    if (j == 0) sparkPath.MoveTo(p);
+                    sparkPath.LineTo(p);
+                }
+            
+                if (note.Size == 60) sparkPath.Close();
+
+                canvas.DrawPath(sparkPath, brushes.GetDamageSparkPen(data.Scale * canvasScale));
+            }
         }
+    }
+    
+    // ____ NOTE COMPONENTS
+    
+    private void DrawNoteCaps(SKCanvas canvas, SKRect rect, float startAngle, float sweepAngle, float scale)
+    {
+        const float sweep = 1.6f;
+        float start1 = startAngle - 0.1f;
+        float start2 = startAngle + sweepAngle - 1.5f;  
+            
+        canvas.DrawArc(rect, start1, sweep, false, brushes.GetNoteCapPen(canvasScale * scale));
+        canvas.DrawArc(rect, start2, sweep, false, brushes.GetNoteCapPen(canvasScale * scale));
+    }
+
+    private void DrawArrows(SKCanvas canvas, Chart chart, Note note, SKRect rect, float scale)
+    {
+        int arrowDirection = note.NoteType switch
+        {
+            NoteType.SlideClockwise => 1,
+            NoteType.SlideCounterclockwise => -1,
+            
+            NoteType.SnapForward => 1,
+            NoteType.SnapBackward => -1,
+            
+            _ => 0,
+        };
+
+        if (note.IsSnap) drawSnap();
+        else drawSlide();
+
+        return;
+        
+        void drawSnap()
+        {
+            int arrowCount = note.Size / 3;
+            float radius = rect.Width * 0.53f;
+            float snapRadiusOffset = arrowDirection > 0 ? 0.78f : 0.65f;
+            float snapRowOffset = rect.Width * 0.043f;
+            float snapArrowThickness = rect.Width * 0.028f;
+            
+            const float snapArrowLength = 0.12f;
+            const float snapArrowWidth = 4.0f;
+            
+            float startPoint = note.Position * -6 - 3;
+            float endPoint = startPoint + note.Size * -6 + 6;
+            float interval = (endPoint - startPoint) / arrowCount;
+            float offset = interval * 0.5f;
+
+            for (float i = startPoint + offset; i > endPoint; i += interval)
+            {
+                //       p2
+                //      /  \
+                //    /      \
+                //  p1   p5    p3
+                //  |  /    \  |
+                //  |/        \|
+                //  p6        p4
+                
+                SKPoint  p1 = GetPointOnArc(canvasCenter, radius * snapRadiusOffset, i + snapArrowWidth);
+                SKPoint  p2 = GetPointOnArc(canvasCenter, radius * (snapRadiusOffset - snapArrowLength * arrowDirection), i);
+                SKPoint  p3 = GetPointOnArc(canvasCenter, radius * snapRadiusOffset, i - snapArrowWidth);
+                SKPoint  p4 = GetPointOnArc(canvasCenter, snapArrowThickness + radius * snapRadiusOffset, i - snapArrowWidth);
+                SKPoint  p5 = GetPointOnArc(canvasCenter, snapArrowThickness + radius * (snapRadiusOffset - snapArrowLength * arrowDirection), i);
+                SKPoint  p6 = GetPointOnArc(canvasCenter, snapArrowThickness + radius * snapRadiusOffset, i + snapArrowWidth);
+                
+                SKPoint  p7 = GetPointOnArc(canvasCenter, snapRowOffset + radius * snapRadiusOffset, i + snapArrowWidth);
+                SKPoint  p8 = GetPointOnArc(canvasCenter, snapRowOffset + radius * (snapRadiusOffset - snapArrowLength * arrowDirection), i);
+                SKPoint  p9 = GetPointOnArc(canvasCenter, snapRowOffset + radius * snapRadiusOffset, i - snapArrowWidth);
+                SKPoint p10 = GetPointOnArc(canvasCenter, snapRowOffset + snapArrowThickness + radius * snapRadiusOffset, i - snapArrowWidth);
+                SKPoint p11 = GetPointOnArc(canvasCenter, snapRowOffset + snapArrowThickness + radius * (snapRadiusOffset - snapArrowLength * arrowDirection), i);
+                SKPoint p12 = GetPointOnArc(canvasCenter, snapRowOffset + snapArrowThickness + radius * snapRadiusOffset, i + snapArrowWidth);
+
+                SKPath path1 = new();
+                
+                path1.MoveTo(p1);
+                path1.LineTo(p2);
+                path1.LineTo(p3);
+                path1.LineTo(p4);
+                path1.LineTo(p5);
+                path1.LineTo(p6);
+                path1.Close();
+                
+                path1.MoveTo(p7);
+                path1.LineTo(p8);
+                path1.LineTo(p9);
+                path1.LineTo(p10);
+                path1.LineTo(p11);
+                path1.LineTo(p12);
+                path1.Close();
+                
+                canvas.DrawPath(path1, brushes.GetSnapFill(note.NoteType, note.LinkType));
+            }
+        }
+        
+        void drawSlide()
+        {
+            float scaledMeasureDecimal = chart.GetScaledMeasureDecimal(note.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed);
+            float spin = 1 - (scaledMeasureDecimal - ScaledCurrentMeasureDecimal) / visibleDistanceMeasureDecimal;
+
+            float radiusCenter = rect.Width * 0.42f;
+            float arrowCount = note.Size * 0.5f + 1;
+            int arrowCountCeiling = (int)float.Ceiling(arrowCount);
+
+            const float arrowTipOffset = 6;
+            const float arrowWidth = 35;
+            const float spinSpeed = 6;
+            const float arrowSpacing = 12;
+
+            float minAngle = note.Position * -6;
+            float maxAngle = (note.Position + note.Size) * -6;
+
+            for (int i = 0; i < arrowCountCeiling; i++)
+            {
+                // Inside
+                //
+                // p4____p3    ______
+                //  \     \    \     \ 
+                //  p5     \p2  \     \
+                //   /     /    /     /
+                // p6_____p1   /_____/
+                //
+                // Outside 
+
+                float loopedPosition = MathExtensions.Modulo(i + spin * spinSpeed, arrowCountCeiling);
+                float startAngle = minAngle + loopedPosition * -arrowSpacing + arrowSpacing;
+                float t0 = loopedPosition / arrowCount;
+                float t1 = (loopedPosition + 0.5f) / arrowCount;
+                
+                float radiusOutside0 = float.Max(radiusCenter + (arrowWidth * maskFunction(t0) * scale * canvasScale), radiusCenter);
+                float radiusOutside1 = float.Max(radiusCenter + (arrowWidth * maskFunction(t1) * scale * canvasScale), radiusCenter);
+                float radiusInside0 = float.Min(radiusCenter - (arrowWidth * maskFunction(t0) * scale * canvasScale), radiusCenter);
+                float radiusInside1 = float.Min(radiusCenter - (arrowWidth * maskFunction(t1) * scale * canvasScale), radiusCenter);
+
+                SKPoint p1;
+                SKPoint p2;
+                SKPoint p3;
+                SKPoint p4;
+                SKPoint p5;
+                SKPoint p6;
+                
+                if (arrowDirection < 0)
+                {
+                    // Counterclockwise
+                    p1 = GetPointOnArc(canvasCenter, radiusOutside1, float.Clamp(startAngle - arrowTipOffset,                            maxAngle, minAngle));
+                    p2 = GetPointOnArc(canvasCenter, radiusCenter,   float.Clamp(startAngle - arrowTipOffset * (1 + (t1 * 0.5f + 0.5f)), maxAngle, minAngle));
+                    p3 = GetPointOnArc(canvasCenter, radiusInside1,  float.Clamp(startAngle - arrowTipOffset,                            maxAngle, minAngle));
+                    p4 = GetPointOnArc(canvasCenter, radiusInside0,  float.Clamp(startAngle,                                             maxAngle, minAngle));
+                    p5 = GetPointOnArc(canvasCenter, radiusCenter,   float.Clamp(startAngle - arrowTipOffset * (t0 * 0.5f + 0.5f),       maxAngle, minAngle));
+                    p6 = GetPointOnArc(canvasCenter, radiusOutside0, float.Clamp(startAngle,                                             maxAngle, minAngle));
+                }
+                else
+                {
+                    // Clockwise
+                    p1 = GetPointOnArc(canvasCenter, radiusOutside1, maxAngle - float.Clamp(startAngle - arrowTipOffset,                            maxAngle, minAngle) + minAngle);
+                    p2 = GetPointOnArc(canvasCenter, radiusCenter,   maxAngle - float.Clamp(startAngle - arrowTipOffset * (1 + (t1 * 0.5f + 0.5f)), maxAngle, minAngle) + minAngle);
+                    p3 = GetPointOnArc(canvasCenter, radiusInside1,  maxAngle - float.Clamp(startAngle - arrowTipOffset,                            maxAngle, minAngle) + minAngle);
+                    p4 = GetPointOnArc(canvasCenter, radiusInside0,  maxAngle - float.Clamp(startAngle,                                             maxAngle, minAngle) + minAngle);
+                    p5 = GetPointOnArc(canvasCenter, radiusCenter,   maxAngle - float.Clamp(startAngle - arrowTipOffset * (t0 * 0.5f + 0.5f),       maxAngle, minAngle) + minAngle);
+                    p6 = GetPointOnArc(canvasCenter, radiusOutside0, maxAngle - float.Clamp(startAngle,                                             maxAngle, minAngle) + minAngle);
+                }
+                
+                SKPath path = new SKPath();   
+                path.MoveTo(p1);   
+                path.LineTo(p2);   
+                path.LineTo(p3);   
+                path.LineTo(p4);   
+                path.LineTo(p5);   
+                path.LineTo(p6);   
+                path.Close();
+                
+                canvas.DrawPath(path, brushes.GetSwipeFill(note.NoteType, note.LinkType));
+            }
+        }
+        
+        // I just traced the Slide Arrow Mask texture from Mercury with a graph.
+        // https://www.desmos.com/calculator/ylcsznpfra
+        float maskFunction(float t)
+        {
+            return t < 0.88f ? 0.653f * t + 0.175f : -6.25f * t + 6.25f;
+        }
+    }
+
+    private void DrawChainStripes(SKCanvas canvas, Note note, ArcData data)
+    {
+        int stripes = note.Size * 2;
+        float radiusInner = 0.5f * (data.Rect.Width - brushes.NoteWidthMultiplier * canvasScale * data.Scale);
+        float radiusOuter = 0.5f * (data.Rect.Width + brushes.NoteWidthMultiplier * canvasScale * data.Scale);
+                
+        SKPath path = new();
+                
+        for (int i = 0; i < stripes; i++)
+        {
+            if (i == 0 && note.Size != 60) continue;
+            if (i >= stripes - 3 && note.Size != 60) continue;
+
+            if (note.Size != 60 && i == 1)
+            {
+                SKPoint t0 = GetPointOnArc(canvasCenter, radiusInner, data.StartAngle + i * -3 + 3);
+                SKPoint t1 = GetPointOnArc(canvasCenter, radiusInner, data.StartAngle + i * -3 + 1.5f);
+                SKPoint t2 = GetPointOnArc(canvasCenter, radiusOuter, data.StartAngle + i * -3 + 3);
+                        
+                path.MoveTo(t0);
+                path.LineTo(t1);
+                path.LineTo(t2);
+            }
+
+            if (note.Size != 60 && i == stripes - 4)
+            {
+                SKPoint t1 = GetPointOnArc(canvasCenter, radiusInner, data.StartAngle + i * -3);
+                SKPoint t2 = GetPointOnArc(canvasCenter, radiusOuter, data.StartAngle + i * -3);
+                SKPoint t3 = GetPointOnArc(canvasCenter, radiusOuter, data.StartAngle + i * -3 + 1.5f);
+                        
+                path.MoveTo(t1);
+                path.LineTo(t2);
+                path.LineTo(t3);
+                        
+                continue;
+            }
+                    
+            SKPoint p0 = GetPointOnArc(canvasCenter, radiusInner, data.StartAngle + i * -3);
+            SKPoint p1 = GetPointOnArc(canvasCenter, radiusInner, data.StartAngle + i * -3 - 1.5f);
+            SKPoint p2 = GetPointOnArc(canvasCenter, radiusOuter, data.StartAngle + i * -3);
+            SKPoint p3 = GetPointOnArc(canvasCenter, radiusOuter, data.StartAngle + i * -3 + 1.5f);
+                    
+            path.MoveTo(p0);
+            path.LineTo(p1);
+            path.LineTo(p2);
+            path.LineTo(p3);
+        }
+                
+        canvas.DrawPath(path, brushes.ChainStripeFill);
+    }
+    
+    private void DrawSync(SKCanvas canvas, Note current, Note previous, SKRect rect, float scale)
+    {
+        if (invalidType(current)) return;
+        if (invalidType(previous)) return;
+        
+        bool currentIsHoldStart = current.NoteType == NoteType.Hold && current.LinkType == NoteLinkType.Start;
+        bool previousIsHoldStart = previous.NoteType == NoteType.Hold && previous.LinkType == NoteLinkType.Start;
+        bool fullOverlap = current.Position == previous.Position && current.Size == previous.Size;
+            
+        if (current.BeatData.FullTick != previous.BeatData.FullTick) return;
+        if ((currentIsHoldStart || previousIsHoldStart) && fullOverlap) return;
+        
+        drawSyncConnector();
+        drawSyncOutline();
 
         return;
 
-        void drawSyncConnector(Note current, Note previous, SKRect rect, float scale)
+        bool invalidType(Note note)
+        {
+            return note.IsSegment 
+                   || note.IsMask 
+                   || note.NoteType is NoteType.Trace or NoteType.Damage 
+                   || (note.NoteType == NoteType.Chain && note.BonusType != BonusType.RNote);
+        }
+        
+        void drawSyncConnector()
         {
             int position0 = MathExtensions.Modulo(current.Position + current.Size - 1, 60); // pos + 1 // size  - 2
             int size0 = MathExtensions.Modulo(previous.Position - position0, 60) + 1;  // pos + 1 // shift - 1
@@ -620,7 +1266,7 @@ public class RenderEngine(MainView mainView)
             canvas.DrawArc(rect, finalPosition * -6, finalSize * -6, false, brushes.GetSyncPen(scale));
         }
 
-        void drawSyncOutline(Note current, Note previous, SKRect rect, float scale)
+        void drawSyncOutline()
         {
             float outlineOffset = (RenderConfig.NoteSize * 4.5f + 4.5f) * scale * canvasScale;
             const float controlOffset = 2;
@@ -768,874 +1414,145 @@ public class RenderEngine(MainView mainView)
         canvas.DrawPath(path, brushes.BonusFill);
     }
 
-    private enum CollectionSurfaceDrawMode
+    private void DrawNoteCollectionSurface(SKCanvas canvas, Chart chart, NoteCollection collection, TruncateMode truncateMode, CollectionSurfaceDrawMode drawMode)
     {
-        Hold,
-        Trace,
-        TraceCenter,
-    }
-    
-    private void DrawNoteCollectionSurface(SKCanvas canvas, Chart chart, IEnumerable<NoteCollection> collections, TruncateMode truncateMode, CollectionSurfaceDrawMode drawMode)
-    {
-        // The brainfuck. If there's any questions, ask me, and I'll help you decipher it.
-        foreach (NoteCollection collection in collections)
+        if (collection.Notes.Count == 0) return;
+        SKPath path = new();
+
+        // This must be one of them darn damn dangit hold notes where the first segment is behind the camera
+        // and the second is outside of vision range. Aw shucks, we have to do some extra special work.
+        if (chart.GetScaledMeasureDecimal(collection.Notes[0].BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) < ScaledCurrentMeasureDecimal && collection.Notes.Count == 1)
         {
-            if (collection.Notes.Count == 0) continue;
-            SKPath path = new();
-
-            // This must be one of them darn damn dangit hold notes where the first segment is behind the camera
-            // and the second is outside of vision range. Aw shucks, we have to do some extra special work.
-            if (chart.GetScaledMeasureDecimal(collection.Notes[0].BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) < ScaledCurrentMeasureDecimal && collection.Notes.Count == 1)
-            {
-                Note prev = collection.Notes[0];
-                Note? next = prev.NextVisibleReference(RenderConfig.DrawNoRenderHoldSegments);
+            Note prev = collection.Notes[0];
+            Note? next = prev.NextVisibleReference(RenderConfig.DrawNoRenderHoldSegments);
                 
-                if (next == null) continue;
+            if (next == null) return;
 
-                // Aw, nevermind. It ain't one of them darn damn dangit hold notes where the first segment is behind the camera and the second is outside of vision range.
-                if (chart.GetScaledMeasureDecimal(next.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) <= ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal) continue;
+            // Aw, nevermind. It ain't one of them darn damn dangit hold notes where the first segment is behind the camera and the second is outside of vision range.
+            if (chart.GetScaledMeasureDecimal(next.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) <= ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal) return;
 
-                ArcData prevData = GetTruncatedArc(chart, prev, truncateMode);
-                ArcData nextData = GetTruncatedArc(chart, next, truncateMode);
+            ArcData prevData = GetTruncatedArc(chart, prev, truncateMode);
+            ArcData nextData = GetTruncatedArc(chart, next, truncateMode);
 
-                float ratio = MathExtensions.InverseLerp(CurrentMeasureDecimal, next.BeatData.MeasureDecimal, prev.BeatData.MeasureDecimal);
+            float ratio = MathExtensions.InverseLerp(CurrentMeasureDecimal, next.BeatData.MeasureDecimal, prev.BeatData.MeasureDecimal);
 
-                if (float.Abs(nextData.StartAngle - prevData.StartAngle) > 180)
-                {
-                    if (nextData.StartAngle > prevData.StartAngle) nextData.StartAngle -= 360;
-                    else prevData.StartAngle -= 360;
-                }
-
-                ArcData intermediateData = new(canvasRect, 1, MathExtensions.Lerp(nextData.StartAngle, prevData.StartAngle, ratio), MathExtensions.Lerp(nextData.SweepAngle, prevData.SweepAngle, ratio));
-                path.ArcTo(intermediateData.Rect, intermediateData.StartAngle, intermediateData.SweepAngle, false);
-                path.LineTo(canvasCenter);
-                canvas.DrawPath(path, brushes.HoldFill);
-
-                continue;
+            if (float.Abs(nextData.StartAngle - prevData.StartAngle) > 180)
+            {
+                if (nextData.StartAngle > prevData.StartAngle) nextData.StartAngle -= 360;
+                else prevData.StartAngle -= 360;
             }
 
-            for (int i = 0; i < collection.Notes.Count; i++)
-            {
-                Note note = collection.Notes[i];
-                if (note.LinkType == NoteLinkType.Unlinked) continue;
+            ArcData intermediateData = new(canvasRect, 1, MathExtensions.Lerp(nextData.StartAngle, prevData.StartAngle, ratio), MathExtensions.Lerp(nextData.SweepAngle, prevData.SweepAngle, ratio));
+            path.ArcTo(intermediateData.Rect, intermediateData.StartAngle, intermediateData.SweepAngle, false);
+            path.LineTo(canvasCenter);
+            canvas.DrawPath(path, brushes.HoldFill);
+
+            return;
+        }
+
+        for (int i = 0; i < collection.Notes.Count; i++)
+        {
+            Note note = collection.Notes[i];
+            if (note.LinkType == NoteLinkType.Unlinked) continue;
                 
-                ArcData currentData = GetTruncatedArc(chart, note, truncateMode);
+            ArcData currentData = GetTruncatedArc(chart, note, truncateMode);
 
-                // First part of the path. Must be an arc.
-                if (i == 0)
+            // First part of the path. Must be an arc.
+            if (i == 0)
+            {
+                // If the hold start is visible there's no need to interpolate.
+                if (note.LinkType == NoteLinkType.Start)
                 {
-                    // If the hold start is visible there's no need to interpolate.
-                    if (note.LinkType == NoteLinkType.Start)
-                    {
-                        path.ArcTo(currentData.Rect, currentData.StartAngle, currentData.SweepAngle, true);
-                    }
-
-                    // If it's a segment, there must be an earlier note off-screen.
-                    else if (note.PrevVisibleReference(RenderConfig.DrawNoRenderHoldSegments) != null)
-                    {
-                        Note prevNote = note.PrevVisibleReference(RenderConfig.DrawNoRenderHoldSegments)!;
-                        ArcData prevData = GetTruncatedArc(chart, prevNote, truncateMode);
-
-                        float ratio = MathExtensions.InverseLerp(ScaledCurrentMeasureDecimal, chart.GetScaledMeasureDecimal(note.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed), chart.GetScaledMeasureDecimal(prevNote.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed));
-
-                        if (float.Abs(currentData.StartAngle - prevData.StartAngle) > 180)
-                        {
-                            if (currentData.StartAngle > prevData.StartAngle) currentData.StartAngle -= 360;
-                            else prevData.StartAngle -= 360;
-                        }
-
-                        ArcData intermediateData = new(canvasRect, 1, MathExtensions.Lerp(currentData.StartAngle, prevData.StartAngle, ratio), MathExtensions.Lerp(currentData.SweepAngle, prevData.SweepAngle, ratio));
-                        path.ArcTo(intermediateData.Rect, intermediateData.StartAngle, intermediateData.SweepAngle, false);
-                    }
-
-                    // Hack to fix a very odd rendering bug where path.Points[0] is at (0,0).
-                    // It still happens, but this makes it less obvious by moving the spike to the center of the screen instead of the top left.
-                    if (path.Points.Length == 0)
-                    {
-                        path.MoveTo(canvasCenter);
-                    }
+                    path.ArcTo(currentData.Rect, currentData.StartAngle, currentData.SweepAngle, true);
                 }
 
-                if ((i == 0 && note.LinkType == NoteLinkType.Point || note.LinkType == NoteLinkType.End) || (i != 0 && i != collection.Notes.Count - 1))
+                // If it's a segment, there must be an earlier note off-screen.
+                else if (note.PrevVisibleReference(RenderConfig.DrawNoRenderHoldSegments) != null)
+                {
+                    Note prevNote = note.PrevVisibleReference(RenderConfig.DrawNoRenderHoldSegments)!;
+                    ArcData prevData = GetTruncatedArc(chart, prevNote, truncateMode);
+
+                    float ratio = MathExtensions.InverseLerp(ScaledCurrentMeasureDecimal, chart.GetScaledMeasureDecimal(note.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed), chart.GetScaledMeasureDecimal(prevNote.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed));
+
+                    if (float.Abs(currentData.StartAngle - prevData.StartAngle) > 180)
+                    {
+                        if (currentData.StartAngle > prevData.StartAngle) currentData.StartAngle -= 360;
+                        else prevData.StartAngle -= 360;
+                    }
+
+                    ArcData intermediateData = new(canvasRect, 1, MathExtensions.Lerp(currentData.StartAngle, prevData.StartAngle, ratio), MathExtensions.Lerp(currentData.SweepAngle, prevData.SweepAngle, ratio));
+                    path.ArcTo(intermediateData.Rect, intermediateData.StartAngle, intermediateData.SweepAngle, false);
+                }
+
+                // Hack to fix a very odd rendering bug where path.Points[0] is at (0,0).
+                // It still happens, but this makes it less obvious by moving the spike to the center of the screen instead of the top left.
+                if (path.Points.Length == 0)
+                {
+                    path.MoveTo(canvasCenter);
+                }
+            }
+
+            if ((i == 0 && note.LinkType == NoteLinkType.Point || note.LinkType == NoteLinkType.End) || (i != 0 && i != collection.Notes.Count - 1))
+            {
+                // Line to right edge
+                path.LineTo(GetPointOnArc(canvasCenter, currentData.Rect.Width * 0.5f, currentData.StartAngle + currentData.SweepAngle));
+            }
+
+            if (i == collection.Notes.Count - 1)
+            {
+                // If there's a next note there can't be a final arc.
+                if (note.NextVisibleReference(RenderConfig.DrawNoRenderHoldSegments) != null)
                 {
                     // Line to right edge
                     path.LineTo(GetPointOnArc(canvasCenter, currentData.Rect.Width * 0.5f, currentData.StartAngle + currentData.SweepAngle));
-                }
-
-                if (i == collection.Notes.Count - 1)
-                {
-                    // If there's a next note there can't be a final arc.
-                    if (note.NextVisibleReference(RenderConfig.DrawNoRenderHoldSegments) != null)
-                    {
-                        // Line to right edge
-                        path.LineTo(GetPointOnArc(canvasCenter, currentData.Rect.Width * 0.5f, currentData.StartAngle + currentData.SweepAngle));
-                        path.LineTo(canvasCenter);
-                    }
-                    else
-                    {
-                        FlipArc(ref currentData);
-                        path.ArcTo(currentData.Rect, currentData.StartAngle, currentData.SweepAngle, false);
-                    }
-                }
-            }
-
-            // >= 0 because last segment in the backwards sequence (so the first segment of the hold) is skipped*.
-            for (int i = collection.Notes.Count - 1; i >= 0; i--)
-            {
-                Note note = collection.Notes[i];
-                if (note.LinkType == NoteLinkType.Unlinked) continue;
-
-                // *technically unnecessary to skip, but doing it just for consistency.
-                if (i == 0 && note.LinkType == NoteLinkType.Start) continue;
-
-                ArcData currentData = GetTruncatedArc(chart, note, truncateMode);
-                path.LineTo(GetPointOnArc(canvasCenter, currentData.Rect.Width * 0.5f, currentData.StartAngle));
-            }
-
-            Note? firstNote = collection.Notes[0].FirstReference();
-            if (firstNote == null) return;
-            
-            switch (drawMode)
-            {
-                case CollectionSurfaceDrawMode.Hold:
-                {
-                    canvas.DrawPath(path, brushes.HoldFill);
-                    break;
-                }
-                
-                case CollectionSurfaceDrawMode.Trace:
-                {
-                    canvas.DrawPath(path, brushes.GetTraceFill(firstNote.Color));
-                    break;
-                }
-                
-                case CollectionSurfaceDrawMode.TraceCenter:
-                {
-                    canvas.DrawPath(path, brushes.TraceCenterFill);
-                    break;
-                }
-            }
-        }
-    }
-    
-    private void DrawTraces(SKCanvas canvas, Chart chart)
-    {
-        List<Note> visibleNotes = chart.Notes.Where(x =>
-        {
-            Note? next = x.NextVisibleReference(RenderConfig.DrawNoRenderHoldSegments);
-            
-            float scaledMeasureDecimal = chart.GetScaledMeasureDecimal(x.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed);
-            float visibleDistance = ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal;
-
-            bool inFrontOfCamera = MathExtensions.GreaterAlmostEqual(scaledMeasureDecimal, ScaledCurrentMeasureDecimal);
-            bool inVisibleDistance = MathExtensions.GreaterAlmostEqual(x.BeatData.MeasureDecimal, CurrentMeasureDecimal) && scaledMeasureDecimal <= visibleDistance;
-            bool nextOutsideVisibleDistance = next != null && chart.GetScaledMeasureDecimal(next.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) > visibleDistance;
-
-            bool inVisionRange = inFrontOfCamera && inVisibleDistance;
-            bool aroundVisionRange = !inFrontOfCamera && nextOutsideVisibleDistance;
-
-            return x.NoteType == NoteType.Trace && (inVisionRange || aroundVisionRange);
-        }).ToList();
-
-        HashSet<Note> checkedNotes = [];
-        List<NoteCollection> traces = [];
-
-        foreach (Note note in visibleNotes)
-        {
-            if (checkedNotes.Contains(note)) continue;
-
-            NoteCollection noteCollection = new();
-
-            foreach (Note reference in note.References())
-            {
-                if (visibleNotes.Contains(reference) && ((reference.RenderSegment && !RenderConfig.DrawNoRenderHoldSegments) || RenderConfig.DrawNoRenderHoldSegments))
-                {
-                    noteCollection.Notes.Add(reference);
-                }
-                checkedNotes.Add(reference);
-            }
-
-            traces.Add(noteCollection);
-        }
-
-        DrawNoteCollectionSurface(canvas, chart, traces, TruncateMode.Trace, CollectionSurfaceDrawMode.Trace);
-        DrawNoteCollectionSurface(canvas, chart, traces, TruncateMode.TraceCenter, CollectionSurfaceDrawMode.TraceCenter);
-
-        if (IsPlaying) return;
-        
-        foreach (Note note in visibleNotes)
-        {
-            ArcData data = GetArc(chart, note);
-            
-            if (!InRange(data.Scale) || note.BeatData.MeasureDecimal < CurrentMeasureDecimal) continue;
-            
-            float outlineOffset = 10 * data.Scale * canvasScale;
-            const float controlOffset = 1;
-                
-            SKPath path1 = new();
-
-            SKRect rectOuter = new(data.Rect.Left, data.Rect.Top, data.Rect.Right, data.Rect.Bottom);
-            SKRect rectInner = new(data.Rect.Left, data.Rect.Top, data.Rect.Right, data.Rect.Bottom);
-            rectOuter.Inflate(outlineOffset, outlineOffset);
-            rectInner.Inflate(-outlineOffset, -outlineOffset);
-                
-            float currentPos = note.Position * -6 - 3.5f;
-            float currentSweep = note.Size * -6 + 7;
-
-            SKPoint control1 = GetPointOnArc(canvasCenter, data.Rect.Width * 0.5f, currentPos + currentSweep - controlOffset);
-            SKPoint arcEdge1 = GetPointOnArc(canvasCenter, data.Rect.Width * 0.5f - outlineOffset, currentPos + currentSweep);
-                
-            SKPoint control2 = GetPointOnArc(canvasCenter, data.Rect.Width * 0.5f, currentPos + controlOffset);
-            SKPoint arcEdge2 = GetPointOnArc(canvasCenter, data.Rect.Width * 0.5f + outlineOffset, currentPos);
-
-            path1.ArcTo(rectOuter, currentPos, currentSweep, true);
-            path1.QuadTo(control1, arcEdge1);
-            path1.ArcTo(rectInner, currentPos + currentSweep, -currentSweep, false);
-            path1.QuadTo(control2, arcEdge2);
-            path1.Close();
-
-            canvas.DrawPath(path1, brushes.GetTracePen(note.RenderSegment, data.Scale * canvasScale * 0.75f));
-            if (mainView.ChartEditor.SelectedNotes.Contains(note)) DrawSelection(canvas, chart, note);
-            if (note == mainView.ChartEditor.HighlightedElement) DrawHighlight(canvas, chart, note);
-        }
-    }
-    
-    /// <summary>
-    /// Performs better than the original by drawing hold-by-hold, not segment-by-segment. Saves dozens, if not hundreds of calls to SkiaSharp and fixes the tv-static-looking seams on dense holds. <br/>
-    /// This first batches notes into a "hold" struct, then draws each hold.
-    /// </summary>
-    private void DrawHolds(SKCanvas canvas, Chart chart)
-    {
-        List<Note> visibleNotes = chart.Notes.Where(x =>
-        {
-            Note? next = x.NextVisibleReference(RenderConfig.DrawNoRenderHoldSegments);
-            
-            float scaledMeasureDecimal = chart.GetScaledMeasureDecimal(x.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed);
-            float visibleDistance = ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal;
-
-            bool inFrontOfCamera = MathExtensions.GreaterAlmostEqual(scaledMeasureDecimal, ScaledCurrentMeasureDecimal);
-            bool inVisibleDistance = MathExtensions.GreaterAlmostEqual(x.BeatData.MeasureDecimal, CurrentMeasureDecimal) && scaledMeasureDecimal <= visibleDistance;
-            bool nextOutsideVisibleDistance = next != null && chart.GetScaledMeasureDecimal(next.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) > visibleDistance;
-
-            bool inVisionRange = inFrontOfCamera && inVisibleDistance;
-            bool aroundVisionRange = !inFrontOfCamera && nextOutsideVisibleDistance;
-
-            return x.NoteType == NoteType.Hold && (inVisionRange || aroundVisionRange);
-        }).ToList();
-
-        HashSet<Note> checkedNotes = [];
-        List<NoteCollection> holds = [];
-
-        foreach (Note note in visibleNotes)
-        {
-            if (checkedNotes.Contains(note)) continue;
-
-            NoteCollection noteCollection = new();
-
-            foreach (Note reference in note.References())
-            {
-                if (visibleNotes.Contains(reference) && ((reference.RenderSegment && !RenderConfig.DrawNoRenderHoldSegments) || RenderConfig.DrawNoRenderHoldSegments))
-                {
-                    noteCollection.Notes.Add(reference);
-                }
-                checkedNotes.Add(reference);
-            }
-
-            holds.Add(noteCollection);
-        }
-
-        DrawNoteCollectionSurface(canvas, chart, holds, TruncateMode.Hold, CollectionSurfaceDrawMode.Hold);
-
-        // Second and Third foreach to ensure notes are rendered on top of surfaces.
-        // Reversed so notes further away are rendered first, then closer notes
-        // are rendered on top.
-        visibleNotes.Reverse();
-
-        // Hold Ends
-        foreach (Note note in visibleNotes)
-        {
-            if (note.LinkType is not NoteLinkType.End) continue;
-
-            ArcData currentData = GetTruncatedArc(chart, note, TruncateMode.Hold);
-
-            if (!InRange(currentData.Scale) || note.BeatData.MeasureDecimal < CurrentMeasureDecimal) continue;
-
-            canvas.DrawArc(currentData.Rect, currentData.StartAngle, currentData.SweepAngle, false, brushes.GetHoldEndPen(canvasScale * currentData.Scale));
-
-            if (mainView.ChartEditor.SelectedNotes.Contains(note)) DrawSelection(canvas, chart, note);
-            if (note == mainView.ChartEditor.HighlightedElement) DrawHighlight(canvas, chart, note);
-        }
-
-        // Hold Start/Segment
-        foreach (Note note in visibleNotes)
-        {
-            if (note.LinkType is NoteLinkType.End) continue;
-
-            ArcData data = GetArc(chart, note);
-
-            if (!InRange(data.Scale) || note.BeatData.MeasureDecimal < CurrentMeasureDecimal) continue;
-
-            if (note.IsRNote && note.LinkType is NoteLinkType.Start or NoteLinkType.Unlinked) DrawRNote(canvas, note, data);
-
-            if (note.IsBonus && note.LinkType is NoteLinkType.Start or NoteLinkType.Unlinked) DrawBonusGlow(canvas, note, data);
-
-            if (note.LinkType is NoteLinkType.Start or NoteLinkType.Unlinked)
-            {
-                if (note.Size != 60)
-                {
-                    TruncateArc(ref data, TruncateMode.ExcludeCaps);
-                    DrawNoteCaps(canvas, data.Rect, data.StartAngle, data.SweepAngle, data.Scale);
-                }
-
-                canvas.DrawArc(data.Rect, data.StartAngle, data.SweepAngle, false, brushes.GetNotePen(note, canvasScale * data.Scale));
-            }
-
-            if (note.LinkType == NoteLinkType.Point && !IsPlaying)
-            {
-                if (note.Size != 60) TruncateArc(ref data, TruncateMode.ExcludeCaps);
-
-                canvas.DrawArc(data.Rect, data.StartAngle + 2f, data.SweepAngle - 4f, false, brushes.GetNotePen(note, canvasScale * data.Scale * 0.5f));
-            }
-
-            if (note.IsBonus) DrawBonusFill(canvas, note, data);
-
-            if (mainView.ChartEditor.SelectedNotes.Contains(note)) DrawSelection(canvas, chart, note);
-            if (note == mainView.ChartEditor.HighlightedElement) DrawHighlight(canvas, chart, note);
-        }
-    }
-    
-    /// <summary>
-    /// Old Hold Rendering Method. See above for new method.
-    /// </summary>
-    private void DrawHoldsLegacy(SKCanvas canvas, Chart chart)
-    {
-        List<Note> visibleNotes = chart.Notes.Where(x =>
-        {
-            bool inVision = MathExtensions.GreaterAlmostEqual(x.BeatData.MeasureDecimal, CurrentMeasureDecimal) && chart.GetScaledMeasureDecimal(x.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) <= ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal;
-            bool nextOutsideVision = x.NextReferencedNote != null && x.BeatData.MeasureDecimal < CurrentMeasureDecimal && chart.GetScaledMeasureDecimal(x.NextReferencedNote.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) > ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal;
-
-            return x.NoteType == NoteType.Hold && (inVision || nextOutsideVision);
-        }).ToList();
-
-        foreach (Note note in visibleNotes)
-        {
-            ArcData currentData = getArcData(note);
-
-            bool currentVisible = note.BeatData.MeasureDecimal >= CurrentMeasureDecimal;
-            bool nextVisible = note.NextReferencedNote != null && chart.GetScaledMeasureDecimal(note.NextReferencedNote.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) <= ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal;
-            bool prevVisible = note.PrevReferencedNote != null && note.PrevReferencedNote.BeatData.MeasureDecimal >= CurrentMeasureDecimal;
-
-            if (currentVisible && nextVisible)
-            {
-                Note nextNote = note.NextReferencedNote!;
-                ArcData nextData = GetArc(chart, nextNote);
-
-                if (nextNote.Size != 60) TruncateArc(ref nextData, TruncateMode.IncludeCaps);
-                else TrimCircleArc(ref nextData);
-
-                FlipArc(ref nextData);
-
-                SKPath path = new();
-                path.ArcTo(currentData.Rect, currentData.StartAngle, currentData.SweepAngle, true);
-                path.ArcTo(nextData.Rect, nextData.StartAngle, nextData.SweepAngle, false);
-
-                canvas.DrawPath(path, brushes.HoldFill);
-            }
-
-            if (currentVisible && !prevVisible && note.PrevReferencedNote != null)
-            {
-                Note prevNote = note.PrevReferencedNote;
-                ArcData prevData = GetArc(chart, prevNote);
-
-                if (prevNote.Size != 60) TruncateArc(ref prevData, TruncateMode.IncludeCaps);
-                else TrimCircleArc(ref prevData);
-
-                float ratio = MathExtensions.InverseLerp(CurrentMeasureDecimal, note.BeatData.MeasureDecimal, prevNote.BeatData.MeasureDecimal);
-
-                if (float.Abs(currentData.StartAngle - prevData.StartAngle) > 180)
-                {
-                    if (currentData.StartAngle > prevData.StartAngle) currentData.StartAngle -= 360;
-                    else prevData.StartAngle -= 360;
-                }
-
-                ArcData intermediateData = new(canvasRect, 1, MathExtensions.Lerp(currentData.StartAngle, prevData.StartAngle, ratio), MathExtensions.Lerp(currentData.SweepAngle, prevData.SweepAngle, ratio));
-                FlipArc(ref intermediateData);
-
-                SKPath path = new();
-                path.ArcTo(currentData.Rect, currentData.StartAngle, currentData.SweepAngle, true);
-                path.ArcTo(intermediateData.Rect, intermediateData.StartAngle, intermediateData.SweepAngle, false);
-
-                canvas.DrawPath(path, brushes.HoldFill);
-            }
-
-            if (currentVisible && !nextVisible && note.NextReferencedNote != null )
-            {
-                canvas.DrawArc(currentData.Rect, currentData.StartAngle, currentData.SweepAngle, true, brushes.HoldFill);
-            }
-
-            if (!currentVisible && !nextVisible && note.NextReferencedNote != null)
-            {
-                Note nextNote = note.NextReferencedNote;
-                ArcData nextData = GetArc(chart, nextNote);
-
-                if (nextNote.Size != 60) TruncateArc(ref nextData, TruncateMode.IncludeCaps);
-                else TrimCircleArc(ref nextData);
-
-                float ratio = MathExtensions.InverseLerp(CurrentMeasureDecimal, note.BeatData.MeasureDecimal, nextNote.BeatData.MeasureDecimal);
-
-                if (float.Abs(currentData.StartAngle - nextData.StartAngle) > 180)
-                {
-                    if (currentData.StartAngle > nextData.StartAngle) currentData.StartAngle -= 360;
-                    else nextData.StartAngle -= 360;
-                }
-
-                ArcData intermediateData = new(canvasRect, 1, MathExtensions.Lerp(currentData.StartAngle, nextData.StartAngle, ratio), MathExtensions.Lerp(currentData.SweepAngle, nextData.SweepAngle, ratio));
-
-                canvas.DrawArc(intermediateData.Rect, intermediateData.StartAngle, intermediateData.SweepAngle, true, brushes.HoldFill);
-            }
-        }
-
-        // Second and Third foreach to ensure notes are rendered on top of surfaces.
-        // Reversed so notes further away are rendered first, then closer notes
-        // are rendered on top.
-        visibleNotes.Reverse();
-
-        // Hold Ends
-        foreach (Note note in visibleNotes)
-        {
-            if (note.LinkType is not NoteLinkType.End) continue;
-
-            ArcData currentData = getArcData(note);
-
-            if (!InRange(currentData.Scale) || note.BeatData.MeasureDecimal < CurrentMeasureDecimal) continue;
-
-            canvas.DrawArc(currentData.Rect, currentData.StartAngle, currentData.SweepAngle, false, brushes.GetHoldEndPen(canvasScale * currentData.Scale));
-
-            if (mainView.ChartEditor.SelectedNotes.Contains(note)) DrawSelection(canvas, chart, note);
-            if (note == mainView.ChartEditor.HighlightedElement) DrawHighlight(canvas, chart, note);
-        }
-
-        // Hold Start/Segment
-        foreach (Note note in visibleNotes)
-        {
-            if (note.LinkType is NoteLinkType.End) continue;
-
-            ArcData currentData = getArcData(note);
-
-            if (!InRange(currentData.Scale) || note.BeatData.MeasureDecimal < CurrentMeasureDecimal) continue;
-
-            if (note.IsRNote && note.LinkType is NoteLinkType.Start or NoteLinkType.Unlinked) DrawRNote(canvas, note, currentData);
-
-            if (note.LinkType is NoteLinkType.Start or NoteLinkType.Unlinked)
-            {
-                if (note.Size != 60) DrawNoteCaps(canvas, currentData.Rect, currentData.StartAngle, currentData.SweepAngle, currentData.Scale);
-                canvas.DrawArc(currentData.Rect, currentData.StartAngle, currentData.SweepAngle, false, brushes.GetNotePen(note, canvasScale * currentData.Scale));
-            }
-
-            if (note.LinkType is NoteLinkType.Point && !IsPlaying)
-            {
-                canvas.DrawArc(currentData.Rect, currentData.StartAngle, currentData.SweepAngle, false, brushes.GetNotePen(note, canvasScale * currentData.Scale * 0.5f));
-            }
-
-            if (mainView.ChartEditor.SelectedNotes.Contains(note)) DrawSelection(canvas, chart, note);
-            if (note == mainView.ChartEditor.HighlightedElement) DrawHighlight(canvas, chart, note);
-        }
-
-        return;
-
-        // Preventing a little bit of code reptition. Not sure if this is cleaner or not :^)
-        ArcData getArcData(Note note)
-        {
-            ArcData arc = GetArc(chart, note);
-            if (note.Size != 60) TruncateArc(ref arc, TruncateMode.IncludeCaps);
-            else TrimCircleArc(ref arc);
-
-            return arc;
-        }
-    }
-    
-    private void DrawNotes(SKCanvas canvas, Chart chart)
-    {
-        // Reverse to draw from middle out => preserves depth overlap
-        IEnumerable<Note> visibleNotes = chart.Notes.Where(x =>
-        {
-            bool invalidType = x.NoteType is NoteType.Hold or NoteType.Trace or NoteType.Damage || x.IsMask;
-            bool behindCamera = !MathExtensions.GreaterAlmostEqual(x.BeatData.MeasureDecimal, CurrentMeasureDecimal);
-            bool pastVisionLimit = chart.GetScaledMeasureDecimal(x.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) > ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal;
-
-            return !invalidType && !behindCamera && !pastVisionLimit;
-        }).Reverse();
-
-        foreach (Note note in visibleNotes)
-        {
-            ArcData data = GetArc(chart, note);
-
-            if (!InRange(data.Scale)) continue;
-
-            if (note.IsRNote) DrawRNote(canvas, note, data);
-
-            if (note.IsBonus) DrawBonusGlow(canvas, note, data);
-            
-            // Normal Note
-            if (note.Size != 60)
-            {
-                TruncateArc(ref data, TruncateMode.ExcludeCaps);
-                DrawNoteCaps(canvas, data.Rect, data.StartAngle, data.SweepAngle, data.Scale);
-            }
-            
-            canvas.DrawArc(data.Rect, data.StartAngle, data.SweepAngle, false, brushes.GetNotePen(note, canvasScale * data.Scale));
-
-            if (note.IsBonus) DrawBonusFill(canvas, note, data);
-            
-            if (RenderConfig.ShowChainStripes && note.NoteType is NoteType.Chain)
-            {
-                int stripes = note.Size * 2;
-                float radiusInner = 0.5f * (data.Rect.Width - brushes.NoteWidthMultiplier * canvasScale * data.Scale);
-                float radiusOuter = 0.5f * (data.Rect.Width + brushes.NoteWidthMultiplier * canvasScale * data.Scale);
-                
-                SKPath path = new();
-                
-                for (int i = 0; i < stripes; i++)
-                {
-                    if (i == 0 && note.Size != 60) continue;
-                    if (i >= stripes - 3 && note.Size != 60) continue;
-
-                    if (note.Size != 60 && i == 1)
-                    {
-                        SKPoint t0 = GetPointOnArc(canvasCenter, radiusInner, data.StartAngle + i * -3 + 3);
-                        SKPoint t1 = GetPointOnArc(canvasCenter, radiusInner, data.StartAngle + i * -3 + 1.5f);
-                        SKPoint t2 = GetPointOnArc(canvasCenter, radiusOuter, data.StartAngle + i * -3 + 3);
-                        
-                        path.MoveTo(t0);
-                        path.LineTo(t1);
-                        path.LineTo(t2);
-                    }
-
-                    if (note.Size != 60 && i == stripes - 4)
-                    {
-                        SKPoint t1 = GetPointOnArc(canvasCenter, radiusInner, data.StartAngle + i * -3);
-                        SKPoint t2 = GetPointOnArc(canvasCenter, radiusOuter, data.StartAngle + i * -3);
-                        SKPoint t3 = GetPointOnArc(canvasCenter, radiusOuter, data.StartAngle + i * -3 + 1.5f);
-                        
-                        path.MoveTo(t1);
-                        path.LineTo(t2);
-                        path.LineTo(t3);
-                        
-                        continue;
-                    }
-                    
-                    SKPoint p0 = GetPointOnArc(canvasCenter, radiusInner, data.StartAngle + i * -3);
-                    SKPoint p1 = GetPointOnArc(canvasCenter, radiusInner, data.StartAngle + i * -3 - 1.5f);
-                    SKPoint p2 = GetPointOnArc(canvasCenter, radiusOuter, data.StartAngle + i * -3);
-                    SKPoint p3 = GetPointOnArc(canvasCenter, radiusOuter, data.StartAngle + i * -3 + 1.5f);
-                    
-                    path.MoveTo(p0);
-                    path.LineTo(p1);
-                    path.LineTo(p2);
-                    path.LineTo(p3);
-                }
-                
-                canvas.DrawPath(path, brushes.ChainStripeFill);
-            }
-            
-            if (mainView.ChartEditor.SelectedNotes.Contains(note)) DrawSelection(canvas, chart, note);
-            if (note == mainView.ChartEditor.HighlightedElement) DrawHighlight(canvas, chart, note);
-        }
-    }
-
-    private void DrawDamageNotes(SKCanvas canvas, Chart chart)
-    {
-        // Reverse to draw from middle out => preserves depth overlap
-        IEnumerable<Note> visibleNotes = chart.Notes.Where(x =>
-        {
-            bool validType = x.NoteType is NoteType.Damage;
-            bool behindCamera = !MathExtensions.GreaterAlmostEqual(x.BeatData.MeasureDecimal, CurrentMeasureDecimal);
-            bool pastVisionLimit = chart.GetScaledMeasureDecimal(x.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) > ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal;
-
-            return validType && !behindCamera && !pastVisionLimit;
-        }).Reverse();
-
-        Random random = new();
-        
-        foreach (Note note in visibleNotes)
-        {
-            ArcData data = GetArc(chart, note);
-            
-            if (!InRange(data.Scale)) continue;
-            
-            canvas.DrawArc(data.Rect, data.StartAngle, data.SweepAngle, false, brushes.GetNotePen(note, canvasScale * data.Scale));
-
-            float outlineOffset = (RenderConfig.NoteSize * 4.5f) * data.Scale * canvasScale;
-            
-            SKPath outlinePath = new();
-
-            SKRect rectOuter = new(data.Rect.Left, data.Rect.Top, data.Rect.Right, data.Rect.Bottom);
-            SKRect rectInner = new(data.Rect.Left, data.Rect.Top, data.Rect.Right, data.Rect.Bottom);
-            rectOuter.Inflate(outlineOffset, outlineOffset);
-            rectInner.Inflate(-outlineOffset, -outlineOffset);
-            
-            if (note.Size == 60)
-            {
-                canvas.DrawArc(rectOuter, 0, 360, false, brushes.GetDamageOutlinePen(data.Scale));
-                canvas.DrawArc(rectInner, 0, 360, false, brushes.GetDamageOutlinePen(data.Scale));
-            }
-            else
-            {
-                outlinePath.ArcTo(rectOuter, data.StartAngle, data.SweepAngle, true);
-                outlinePath.ArcTo(rectInner, data.StartAngle + data.SweepAngle, -data.SweepAngle, false);
-                outlinePath.Close();
-                
-                canvas.DrawPath(outlinePath, brushes.GetDamageOutlinePen(data.Scale * canvasScale));
-            }
-
-            SKPath sparkPath = new();
-            int steps = int.Min(note.Size + 1, 60);
-            
-            for (int i = 0; i < steps; i++)
-            {
-                float offset = random.NextSingle() * 0.05f;
-                SKPoint p = GetPointOnArc(canvasCenter, data.Rect.Width * (0.44f + offset), (note.Position + i) * -6);
-
-                if (i == 0) sparkPath.MoveTo(p);
-                sparkPath.LineTo(p);
-            }
-            
-            if (note.Size == 60) sparkPath.Close();
-
-            canvas.DrawPath(sparkPath, brushes.GetDamageSparkPen(data.Scale * canvasScale));
-            
-            if (mainView.ChartEditor.SelectedNotes.Contains(note)) DrawSelection(canvas, chart, note);
-            if (note == mainView.ChartEditor.HighlightedElement) DrawHighlight(canvas, chart, note);
-        }
-    }
-    
-    private void DrawMaskNotes(SKCanvas canvas, Chart chart)
-    {
-        IEnumerable<Note> visibleNotes = chart.Notes.Where(x =>
-            x.IsMask
-            && MathExtensions.GreaterAlmostEqual(x.BeatData.MeasureDecimal, CurrentMeasureDecimal)
-            && chart.GetScaledMeasureDecimal(x.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) <= ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal).Reverse();
-        
-        foreach (Note note in visibleNotes)
-        {
-            ArcData data = GetArc(chart, note);
-
-            if (!InRange(data.Scale)) continue;
-            
-            canvas.DrawArc(data.Rect, data.StartAngle, data.SweepAngle, false, brushes.GetNotePen(note, canvasScale * data.Scale));
-
-            if (mainView.ChartEditor.SelectedNotes.Contains(note)) DrawSelection(canvas, chart, note);
-            if (note == mainView.ChartEditor.HighlightedElement) DrawHighlight(canvas, chart, note);
-        }
-    }
-
-    private void DrawGimmickNotes(SKCanvas canvas, Chart chart)
-    {
-        IEnumerable<Gimmick> visibleGimmicks = chart.Gimmicks.Where(x =>
-            MathExtensions.GreaterAlmostEqual(x.BeatData.MeasureDecimal, CurrentMeasureDecimal)
-            && chart.GetScaledMeasureDecimal(x.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) <= ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal).Reverse();
-
-        foreach (Gimmick gimmick in visibleGimmicks)
-        {
-            ArcData data = GetArc(chart, gimmick);
-            
-            if (!InRange(data.Scale)) continue;
-            
-            canvas.DrawOval(data.Rect, brushes.GetGimmickPen(gimmick, canvasScale * data.Scale));
-            if (gimmick == mainView.ChartEditor.HighlightedElement) DrawHighlight(canvas, data);
-        }
-    }
-    
-    private void DrawNoteCaps(SKCanvas canvas, SKRect rect, float startAngle, float sweepAngle, float scale)
-    {
-        const float sweep = 1.6f;
-        float start1 = startAngle - 0.1f;
-        float start2 = startAngle + sweepAngle - 1.5f;  
-            
-        canvas.DrawArc(rect, start1, sweep, false, brushes.GetNoteCapPen(canvasScale * scale));
-        canvas.DrawArc(rect, start2, sweep, false, brushes.GetNoteCapPen(canvasScale * scale));
-    }
-
-    private void DrawArrows(SKCanvas canvas, Chart chart)
-    {
-        // Reverse to draw from middle out => preserves depth overlap
-        IEnumerable<Note> visibleNotes = chart.Notes.Where(x => 
-            (x.IsSlide || x.IsSnap)
-            && MathExtensions.GreaterAlmostEqual(x.BeatData.MeasureDecimal, CurrentMeasureDecimal)
-            && chart.GetScaledMeasureDecimal(x.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) <= ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal).Reverse();
-
-        foreach (Note note in visibleNotes)
-        {
-            float scale = GetNoteScale(chart, note.BeatData.MeasureDecimal);
-            if (!InRange(scale)) continue;
-            
-            SKRect rect = GetRect(scale);
-
-            int arrowDirection = note.NoteType switch
-            {
-                NoteType.SlideClockwise => 1,
-                NoteType.SnapForward => 1,
-                NoteType.SlideCounterclockwise => -1,
-                NoteType.SnapBackward => -1,
-                _ => 0,
-            };
-
-            if (note.IsSnap) drawSnap(note, rect, arrowDirection);
-            else drawSlide(note, rect, scale, arrowDirection);
-        }
-
-        return;
-        
-        void drawSnap(Note note, SKRect rect, int arrowDirection)
-        {
-            int arrowCount = note.Size / 3;
-            float radius = rect.Width * 0.53f;
-            float snapRadiusOffset = arrowDirection > 0 ? 0.78f : 0.65f;
-            float snapRowOffset = rect.Width * 0.043f;
-            float snapArrowThickness = rect.Width * 0.028f;
-            
-            const float snapArrowLength = 0.12f;
-            const float snapArrowWidth = 4.0f;
-            
-            float startPoint = note.Position * -6 - 3;
-            float endPoint = startPoint + note.Size * -6 + 6;
-            float interval = (endPoint - startPoint) / arrowCount;
-            float offset = interval * 0.5f;
-
-            for (float i = startPoint + offset; i > endPoint; i += interval)
-            {
-                //       p2
-                //      /  \
-                //    /      \
-                //  p1   p5    p3
-                //  |  /    \  |
-                //  |/        \|
-                //  p6        p4
-                
-                SKPoint  p1 = GetPointOnArc(canvasCenter, radius * snapRadiusOffset, i + snapArrowWidth);
-                SKPoint  p2 = GetPointOnArc(canvasCenter, radius * (snapRadiusOffset - snapArrowLength * arrowDirection), i);
-                SKPoint  p3 = GetPointOnArc(canvasCenter, radius * snapRadiusOffset, i - snapArrowWidth);
-                SKPoint  p4 = GetPointOnArc(canvasCenter, snapArrowThickness + radius * snapRadiusOffset, i - snapArrowWidth);
-                SKPoint  p5 = GetPointOnArc(canvasCenter, snapArrowThickness + radius * (snapRadiusOffset - snapArrowLength * arrowDirection), i);
-                SKPoint  p6 = GetPointOnArc(canvasCenter, snapArrowThickness + radius * snapRadiusOffset, i + snapArrowWidth);
-                
-                SKPoint  p7 = GetPointOnArc(canvasCenter, snapRowOffset + radius * snapRadiusOffset, i + snapArrowWidth);
-                SKPoint  p8 = GetPointOnArc(canvasCenter, snapRowOffset + radius * (snapRadiusOffset - snapArrowLength * arrowDirection), i);
-                SKPoint  p9 = GetPointOnArc(canvasCenter, snapRowOffset + radius * snapRadiusOffset, i - snapArrowWidth);
-                SKPoint p10 = GetPointOnArc(canvasCenter, snapRowOffset + snapArrowThickness + radius * snapRadiusOffset, i - snapArrowWidth);
-                SKPoint p11 = GetPointOnArc(canvasCenter, snapRowOffset + snapArrowThickness + radius * (snapRadiusOffset - snapArrowLength * arrowDirection), i);
-                SKPoint p12 = GetPointOnArc(canvasCenter, snapRowOffset + snapArrowThickness + radius * snapRadiusOffset, i + snapArrowWidth);
-
-                SKPath path1 = new();
-                
-                path1.MoveTo(p1);
-                path1.LineTo(p2);
-                path1.LineTo(p3);
-                path1.LineTo(p4);
-                path1.LineTo(p5);
-                path1.LineTo(p6);
-                path1.Close();
-                
-                path1.MoveTo(p7);
-                path1.LineTo(p8);
-                path1.LineTo(p9);
-                path1.LineTo(p10);
-                path1.LineTo(p11);
-                path1.LineTo(p12);
-                path1.Close();
-                
-                canvas.DrawPath(path1, brushes.GetSnapFill(note.NoteType, note.LinkType));
-            }
-        }
-        
-        void drawSlide(Note note, SKRect rect, float scale, int arrowDirection)
-        {
-            float scaledMeasureDecimal = chart.GetScaledMeasureDecimal(note.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed);
-            float spin = 1 - (scaledMeasureDecimal - ScaledCurrentMeasureDecimal) / visibleDistanceMeasureDecimal;
-
-            float radiusCenter = rect.Width * 0.42f;
-            float arrowCount = note.Size * 0.5f + 1;
-            int arrowCountCeiling = (int)float.Ceiling(arrowCount);
-
-            const float arrowTipOffset = 6;
-            const float arrowWidth = 35;
-            const float spinSpeed = 6;
-            const float arrowSpacing = 12;
-
-            float minAngle = note.Position * -6;
-            float maxAngle = (note.Position + note.Size) * -6;
-
-            for (int i = 0; i < arrowCountCeiling; i++)
-            {
-                // Inside
-                //
-                // p4____p3    ______
-                //  \     \    \     \ 
-                //  p5     \p2  \     \
-                //   /     /    /     /
-                // p6_____p1   /_____/
-                //
-                // Outside 
-
-                float loopedPosition = MathExtensions.Modulo(i + spin * spinSpeed, arrowCountCeiling);
-                float startAngle = minAngle + loopedPosition * -arrowSpacing + arrowSpacing;
-                float t0 = loopedPosition / arrowCount;
-                float t1 = (loopedPosition + 0.5f) / arrowCount;
-                
-                float radiusOutside0 = float.Max(radiusCenter + (arrowWidth * maskFunction(t0) * scale * canvasScale), radiusCenter);
-                float radiusOutside1 = float.Max(radiusCenter + (arrowWidth * maskFunction(t1) * scale * canvasScale), radiusCenter);
-                float radiusInside0 = float.Min(radiusCenter - (arrowWidth * maskFunction(t0) * scale * canvasScale), radiusCenter);
-                float radiusInside1 = float.Min(radiusCenter - (arrowWidth * maskFunction(t1) * scale * canvasScale), radiusCenter);
-
-                SKPoint p1;
-                SKPoint p2;
-                SKPoint p3;
-                SKPoint p4;
-                SKPoint p5;
-                SKPoint p6;
-                
-                if (arrowDirection < 0)
-                {
-                    // Counterclockwise
-                    p1 = GetPointOnArc(canvasCenter, radiusOutside1, float.Clamp(startAngle - arrowTipOffset,                            maxAngle, minAngle));
-                    p2 = GetPointOnArc(canvasCenter, radiusCenter,   float.Clamp(startAngle - arrowTipOffset * (1 + (t1 * 0.5f + 0.5f)), maxAngle, minAngle));
-                    p3 = GetPointOnArc(canvasCenter, radiusInside1,  float.Clamp(startAngle - arrowTipOffset,                            maxAngle, minAngle));
-                    p4 = GetPointOnArc(canvasCenter, radiusInside0,  float.Clamp(startAngle,                                             maxAngle, minAngle));
-                    p5 = GetPointOnArc(canvasCenter, radiusCenter,   float.Clamp(startAngle - arrowTipOffset * (t0 * 0.5f + 0.5f),       maxAngle, minAngle));
-                    p6 = GetPointOnArc(canvasCenter, radiusOutside0, float.Clamp(startAngle,                                             maxAngle, minAngle));
+                    path.LineTo(canvasCenter);
                 }
                 else
                 {
-                    // Clockwise
-                    p1 = GetPointOnArc(canvasCenter, radiusOutside1, maxAngle - float.Clamp(startAngle - arrowTipOffset,                            maxAngle, minAngle) + minAngle);
-                    p2 = GetPointOnArc(canvasCenter, radiusCenter,   maxAngle - float.Clamp(startAngle - arrowTipOffset * (1 + (t1 * 0.5f + 0.5f)), maxAngle, minAngle) + minAngle);
-                    p3 = GetPointOnArc(canvasCenter, radiusInside1,  maxAngle - float.Clamp(startAngle - arrowTipOffset,                            maxAngle, minAngle) + minAngle);
-                    p4 = GetPointOnArc(canvasCenter, radiusInside0,  maxAngle - float.Clamp(startAngle,                                             maxAngle, minAngle) + minAngle);
-                    p5 = GetPointOnArc(canvasCenter, radiusCenter,   maxAngle - float.Clamp(startAngle - arrowTipOffset * (t0 * 0.5f + 0.5f),       maxAngle, minAngle) + minAngle);
-                    p6 = GetPointOnArc(canvasCenter, radiusOutside0, maxAngle - float.Clamp(startAngle,                                             maxAngle, minAngle) + minAngle);
+                    FlipArc(ref currentData);
+                    path.ArcTo(currentData.Rect, currentData.StartAngle, currentData.SweepAngle, false);
                 }
-                
-                SKPath path = new SKPath();   
-                path.MoveTo(p1);   
-                path.LineTo(p2);   
-                path.LineTo(p3);   
-                path.LineTo(p4);   
-                path.LineTo(p5);   
-                path.LineTo(p6);   
-                path.Close();
-                
-                canvas.DrawPath(path, brushes.GetSwipeFill(note.NoteType, note.LinkType));
             }
         }
-        
-        // I just traced the Slide Arrow Mask texture from Mercury with a graph.
-        // https://www.desmos.com/calculator/ylcsznpfra
-        float maskFunction(float t)
+
+        // >= 0 because last segment in the backwards sequence (so the first segment of the hold) is skipped*.
+        for (int i = collection.Notes.Count - 1; i >= 0; i--)
         {
-            return t < 0.88f ? 0.653f * t + 0.175f : -6.25f * t + 6.25f;
+            Note note = collection.Notes[i];
+            if (note.LinkType == NoteLinkType.Unlinked) continue;
+
+            // *technically unnecessary to skip, but doing it just for consistency.
+            if (i == 0 && note.LinkType == NoteLinkType.Start) continue;
+
+            ArcData currentData = GetTruncatedArc(chart, note, truncateMode);
+            path.LineTo(GetPointOnArc(canvasCenter, currentData.Rect.Width * 0.5f, currentData.StartAngle));
+        }
+
+        Note? firstNote = collection.Notes[0].FirstReference();
+        if (firstNote == null) return;
+            
+        switch (drawMode)
+        {
+            case CollectionSurfaceDrawMode.Hold:
+            {
+                canvas.DrawPath(path, brushes.HoldFill);
+                break;
+            }
+                
+            case CollectionSurfaceDrawMode.Trace:
+            {
+                canvas.DrawPath(path, brushes.GetTraceFill(firstNote.Color));
+                break;
+            }
+                
+            case CollectionSurfaceDrawMode.TraceCenter:
+            {
+                canvas.DrawPath(path, brushes.TraceCenterFill);
+                break;
+            }
         }
     }
-
+    
     private void DrawJudgementWindows(SKCanvas canvas, Chart chart)
     {
         // Iterate backwards
