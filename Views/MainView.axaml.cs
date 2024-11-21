@@ -181,13 +181,23 @@ public partial class MainView : UserControl
         MaskDirectionPanel.IsVisible = isMask;
     }
 
-    private void ToggleBonusTypeRadios(bool bonus)
+    private void ToggleBonusTypeRadios(bool bonus, bool rnote)
     {
         if (RadioNoBonus == null || RadioBonus == null || RadioRNote == null) return;
+
+        RadioRNote.IsEnabled = rnote;
+
+        if (!rnote && RadioRNote.IsChecked == true)
+        {
+            RadioBonus.IsChecked = true;
+        }
+
         RadioBonus.IsEnabled = bonus;
 
-        if (RadioBonus.IsChecked == true && !bonus)
+        if (!bonus && RadioBonus.IsChecked == true)
+        {
             RadioNoBonus.IsChecked = true;
+        }
     }
 
     private void SetMenuItemInputGestureText()
@@ -1900,7 +1910,7 @@ public partial class MainView : UserControl
         ChartEditor.UpdateCursorNoteType();
         
         ToggleTypeRadio(noteType is NoteType.MaskAdd or NoteType.MaskRemove);
-        ToggleBonusTypeRadios(ChartEditor.BonusAvailable(noteType));
+        ToggleBonusTypeRadios(ChartEditor.RNoteAvailable(noteType), ChartEditor.BonusAvailable(noteType));
     }
 
     private void RadioBonusType_IsCheckedChanged(object? sender, RoutedEventArgs e)
@@ -2563,7 +2573,7 @@ public partial class MainView : UserControl
         RenderEngine.UpdateVisibleTime();
         AudioManager.LoadHitsoundSamples();
         AudioManager.UpdateVolume();
-        ToggleBonusTypeRadios(ChartEditor.BonusAvailable(ChartEditor.CurrentNoteType));
+        ToggleBonusTypeRadios(ChartEditor.RNoteAvailable(ChartEditor.CurrentNoteType), ChartEditor.BonusAvailable(ChartEditor.CurrentNoteType));
         
         // I know some maniac is going to change their refresh rate while playing a song.
         updateInterval = TimeSpan.FromSeconds(1.0 / UserConfig.RenderConfig.RefreshRate);

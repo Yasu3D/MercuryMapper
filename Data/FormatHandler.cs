@@ -945,7 +945,7 @@ internal static class SatHandler
     {
         string modifiers = "";
 
-        if (!note.IsSegment)
+        if (!note.IsSegment && !note.IsMask && note.NoteType is not (NoteType.Trace or NoteType.Damage))
         {
             modifiers += note.BonusType switch
             {

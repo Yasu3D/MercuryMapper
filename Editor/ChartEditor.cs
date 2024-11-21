@@ -67,7 +67,22 @@ public class ChartEditor
     public bool LayerGimmickActive = true;
     public bool LayerTraceActive = true;
 
-    public bool BonusAvailable(NoteType type) => !mainView.UserConfig.EditorConfig.LimitToMercuryBonusTypes || type is NoteType.Touch or NoteType.SlideClockwise or NoteType.SlideCounterclockwise;
+    public bool BonusAvailable(NoteType type)
+    {
+        if (type is NoteType.Trace or NoteType.Damage) return false;
+
+        if (mainView.UserConfig.EditorConfig.LimitToMercuryBonusTypes)
+        {
+            return type is NoteType.Touch or NoteType.SlideClockwise or NoteType.SlideCounterclockwise;
+        }
+
+        return true;
+    }
+
+    public bool RNoteAvailable(NoteType type)
+    {
+        return type is not (NoteType.Trace or NoteType.Damage);
+    }
     
     public List<Note> SelectedNotes { get; } = [];
     public Note? LastSelectedNote;
