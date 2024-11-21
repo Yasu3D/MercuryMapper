@@ -71,7 +71,7 @@ public partial class MainView : UserControl
     }
 
     public bool CanShutdown;
-    public const string AppVersion = "v3.2.4";
+    public const string AppVersion = "v4.0.0";
     public const string ServerVersion = "1.0.0";
     private const string ConfigPath = "UserConfig.toml";
 
@@ -285,8 +285,6 @@ public partial class MainView : UserControl
 
         string filepath = Path.GetTempFileName().Replace(".tmp", ".autosave.mer");
         FormatHandler.WriteFile(ChartEditor.Chart, filepath, ChartFormatType.Saturn);
-
-        Console.WriteLine(filepath);
     }
 
     private async Task CheckAutosaves()
@@ -321,8 +319,6 @@ public partial class MainView : UserControl
 
     private static void ClearAutosaves()
     {
-        Console.WriteLine("Clearing Autosaves");
-
         string[] autosaves = Directory.GetFiles(Path.GetTempPath(), "*.autosave.mer");
         foreach (string file in autosaves) File.Delete(file);
     }
@@ -2540,7 +2536,6 @@ public partial class MainView : UserControl
     
     private void ApplySettings()
     {
-        Console.WriteLine("Applying settings");
         KeybindEditor.StopRebinding(); // Stop rebinding in case it was active.
         SetButtonColors(); // Update button colors if they were changed
         SetMenuItemInputGestureText(); // Update InputGesture text in case stuff was rebound

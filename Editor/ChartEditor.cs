@@ -1732,7 +1732,6 @@ public class ChartEditor
     
     public void EditHold()
     {
-        Console.WriteLine("EditHold");
         if (HighlightedElement is null or Gimmick) return;
 
         Note note = (Note)HighlightedElement;
@@ -1746,9 +1745,6 @@ public class ChartEditor
     
     public void StartHold(Note lastPlacedHold)
     {
-        Console.WriteLine("StartHold");
-        Console.WriteLine($"{EditorState}");
-        
         EditorState = ChartEditorState.InsertHold;
         mainView.SetHoldContextButton(EditorState);
         mainView.ToggleInsertButton();
@@ -1778,8 +1774,6 @@ public class ChartEditor
     
     public void EndHold()
     {
-        Console.WriteLine("EndHold");
-        
         if (EditorState is not ChartEditorState.InsertHold) return;
         
         EditorState = ChartEditorState.InsertNote;

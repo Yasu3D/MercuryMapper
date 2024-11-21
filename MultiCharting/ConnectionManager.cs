@@ -308,11 +308,7 @@ public class ConnectionManager(MainView main)
         
     public void SendMessage(MessageSerializer messageObject)
     {
-        if (webSocketClient == null) return;
-
-        webSocketClient.Send(JsonSerializer.Serialize(messageObject));
-        
-        Console.WriteLine($"Sending {messageObject.MessageType}");
+        webSocketClient?.Send(JsonSerializer.Serialize(messageObject));
     }
 
     public void SendOperationMessage(IOperation operation, OperationDirection operationDirection)
@@ -448,8 +444,6 @@ public class ConnectionManager(MainView main)
 
             return;
         }
-
-        Console.WriteLine($"Receiving {messageData.MessageType}");
         
         switch (messageData.MessageType)
         {
