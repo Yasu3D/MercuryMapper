@@ -43,7 +43,6 @@ public partial class MainView : UserControl
 
         InitializeComponent();
         LoadUserConfig();
-        MigrateOldSettings();
 
         KeybindEditor = new(UserConfig);
         AudioManager = new(this);
@@ -62,6 +61,7 @@ public partial class MainView : UserControl
         KeyUpEvent.AddClassHandler<TopLevel>(OnKeyUp, RoutingStrategies.Tunnel, handledEventsToo: true);
 
         VersionText.Text = AppVersion;
+        MigrateOldSettings();
         ApplySettings();
         ToggleTypeRadio(false);
         ToggleInsertButton();
@@ -154,8 +154,6 @@ public partial class MainView : UserControl
         if (UserConfig.KeymapConfig.Keybinds.TryGetValue("EditorSplitHold", out k)) UserConfig.KeymapConfig.Keybinds["EditorSplitNoteCollection"] = k;
         if (UserConfig.KeymapConfig.Keybinds.TryGetValue("EditorInsertHoldSegtment", out k)) UserConfig.KeymapConfig.Keybinds["EditorInsertSegtment"] = k;
         if (UserConfig.KeymapConfig.Keybinds.TryGetValue("EditorSelectHoldReferences", out k)) UserConfig.KeymapConfig.Keybinds["EditorSelectNoteCollectionReferences"] = k;
-        
-        ApplySettings();
     }
     
     private void SetButtonColors()
@@ -232,7 +230,7 @@ public partial class MainView : UserControl
         MenuItemCheckerDeselect.InputGesture = UserConfig.KeymapConfig.Keybinds["EditorCheckerDeselect"].ToGesture();
         MenuItemBoxSelect.InputGesture = UserConfig.KeymapConfig.Keybinds["EditorBoxSelect"].ToGesture();
         MenuItemSelectHighlightedNote.InputGesture = UserConfig.KeymapConfig.Keybinds["EditorSelectHighlightedNote"].ToGesture();
-        MenuItemSelectHoldReferences.InputGesture = UserConfig.KeymapConfig.Keybinds["EditorSelectHoldReferences"].ToGesture();
+        MenuItemSelectNoteCollectionReferences.InputGesture = UserConfig.KeymapConfig.Keybinds["EditorSelectNoteCollectionReferences"].ToGesture();
     }
 
     public void SetHoldContextButton(ChartEditorState state)
@@ -851,37 +849,37 @@ public partial class MainView : UserControl
             e.Handled = true;
             return;
         }
-        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorEndHold"]))
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorEndNoteCollection"]))
         {
             ChartEditor.EndHold();
             e.Handled = true;
             return;
         }
-        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorEditHold"]))
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorEditNoteCollection"]))
         {
             ChartEditor.EditHold();
             e.Handled = true;
             return;
         }
-        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorBakeHold"]))
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorBakeNoteCollection"]))
         {
             ChartEditor.BakeHold((MathExtensions.HoldEaseType)HoldEaseComboBox.SelectedIndex, false);
             e.Handled = true;
             return;
         }
-        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorBakeHoldNoRender"]))
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorBakeNoteCollectionNoRender"]))
         {
             ChartEditor.BakeHold((MathExtensions.HoldEaseType)HoldEaseComboBox.SelectedIndex, true);
             e.Handled = true;
             return;
         }
-        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorStitchHold"]))
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorStitchNoteCollection"]))
         {
             ChartEditor.StitchHold();
             e.Handled = true;
             return;
         }
-        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorSplitHold"]))
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorSplitNoteCollection"]))
         {
             ChartEditor.SplitHold();
             e.Handled = true;
@@ -893,7 +891,7 @@ public partial class MainView : UserControl
             e.Handled = true;
             return;
         }
-        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorInsertHoldSegment"]))
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorInsertSegment"]))
         {
             ChartEditor.InsertHoldSegment();
             e.Handled = true;
@@ -923,7 +921,7 @@ public partial class MainView : UserControl
             e.Handled = true;
             return;
         }
-        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorSelectHoldReferences"]))
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorSelectNoteCollectionReferences"]))
         {
             ChartEditor.SelectNoteCollectionReferences();
             e.Handled = true;
@@ -1022,6 +1020,18 @@ public partial class MainView : UserControl
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorNoteTypeMaskRemove"]))
         {
             RadioNoteMaskRemove.IsChecked = true;
+            e.Handled = true;
+            return;
+        }
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorNoteTypeTrace"]))
+        {
+            RadioNoteTrace.IsChecked = true;
+            e.Handled = true;
+            return;
+        }
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorNoteTypeDamage"]))
+        {
+            RadioNoteDamage.IsChecked = true;
             e.Handled = true;
             return;
         }
@@ -1677,7 +1687,7 @@ public partial class MainView : UserControl
 
     private void MenuItemCheckerDeselect_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.CheckerDeselect();
 
-    private void MenuItemSelectHoldReferences_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.SelectNoteCollectionReferences();
+    private void MenuItemSelectNoteCollectionReferences_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.SelectNoteCollectionReferences();
 
     private void MenuItemSelectHighlightedNote_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.SelectHighlightedNote();
 

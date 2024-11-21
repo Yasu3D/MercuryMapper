@@ -101,6 +101,8 @@ public class KeymapConfig
         ["EditorNoteTypeHold"] = new(Key.D7),
         ["EditorNoteTypeMaskAdd"] = new(Key.D8),
         ["EditorNoteTypeMaskRemove"] = new(Key.D9),
+        ["EditorNoteTypeTrace"] = new(Key.D0),
+        ["EditorNoteTypeDamage"] = new(Key.Oem4),
         ["EditorTypeRadio1"] = new(Key.D1, false, true, false),
         ["EditorTypeRadio2"] = new(Key.D2, false, true, false),
         ["EditorTypeRadio3"] = new(Key.D3, false, true, false),

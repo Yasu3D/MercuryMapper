@@ -100,8 +100,8 @@
                     <MenuItem Header="{x:Static lang:Resources.Editor_BoxSelect}" Name="MenuItemBoxSelect" 
                               Click="MenuItemBoxSelect_OnClick"/>
                     <Separator/>
-                    <MenuItem Header="{x:Static lang:Resources.Editor_SelectNoteCollectionReferences}" Name="MenuItemSelectHoldReferences"
-                              Click="MenuItemSelectHoldReferences_OnClick"/>
+                    <MenuItem Header="{x:Static lang:Resources.Editor_SelectNoteCollectionReferences}" Name="MenuItemSelectNoteCollectionReferences"
+                              Click="MenuItemSelectNoteCollectionReferences_OnClick"/>
                     <MenuItem Header="{x:Static lang:Resources.Editor_SelectHighlightedNote}" Name="MenuItemSelectHighlightedNote" 
                               Click="MenuItemSelectHighlightedNote_OnClick"/>
                     
