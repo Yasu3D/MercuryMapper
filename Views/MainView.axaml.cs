@@ -926,6 +926,12 @@ public partial class MainView : UserControl
             e.Handled = true;
             return;
         }
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorPaintSelectedTraces"]))
+        {
+            ChartEditor.PaintTraces((TraceColor)TraceColorComboBox.SelectedIndex);
+            e.Handled = true;
+            return;
+        }
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorIncreasePlaybackSpeed"]))
         {
             SliderPlaybackSpeed.Value += 10;

@@ -87,6 +87,7 @@ public class KeymapConfig
         ["EditorSelectHoldReferences"] = new(Key.R, false, true, false),
         ["EditorBoxSelect"] = new(Key.B, true, false, false),
         ["EditorConvertToInstantMask"] = new(Key.N, true, false, false),
+        ["EditorPaintSelectedTraces"] = new(Key.P, false, true, false),
         ["EditorIncreasePlaybackSpeed"] = new(Key.Add),
         ["EditorDecreasePlaybackSpeed"] = new(Key.Subtract),
         ["EditorAddComment"] = new(Key.K, true, false, false),

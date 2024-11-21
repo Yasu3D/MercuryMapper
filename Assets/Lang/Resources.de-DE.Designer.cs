@@ -1061,9 +1061,9 @@ namespace MercuryMapper.Assets.Lang {
         /// <summary>
         ///   Looks up a localized string similar to Ausgewählte Linien Färben.
         /// </summary>
-        public static string Editor_PaintTraces {
+        public static string Editor_PaintSelectedTraces {
             get {
-                return ResourceManager.GetString("Editor_PaintTraces", resourceCulture);
+                return ResourceManager.GetString("Editor_PaintSelectedTraces", resourceCulture);
             }
         }
         

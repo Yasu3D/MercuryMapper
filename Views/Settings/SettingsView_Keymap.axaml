@@ -79,6 +79,7 @@
                     <TreeViewItem Name="EditorSetRenderTrue" Header="{x:Static lang:Resources.Editor_SetRenderTrue}" />
                     <TreeViewItem Name="EditorSetRenderFalse" Header="{x:Static lang:Resources.Editor_SetRenderFalse}" />
                     <TreeViewItem Name="EditorConvertToInstantMask" Header="{x:Static lang:Resources.Editor_ConvertToInstantMask}" />
+                    <TreeViewItem Name="EditorPaintSelectedTraces" Header="{x:Static lang:Resources.Editor_PaintSelectedTraces}" />
                 </TreeViewItem>
 
                 <TreeViewItem Header="{x:Static lang:Resources.Settings_Header_NoteTypes}" Classes="HideKeybind">

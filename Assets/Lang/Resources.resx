@@ -1341,7 +1341,7 @@ Continue?</value>
   <data name="Editor_Color_TraceYellow" xml:space="preserve">
     <value>Yellow</value>
   </data>
-  <data name="Editor_PaintTraces" xml:space="preserve">
+  <data name="Editor_PaintSelectedTraces" xml:space="preserve">
     <value>Paint Selected Traces</value>
   </data>
   <data name="ToolTip_PaintTraces" xml:space="preserve">

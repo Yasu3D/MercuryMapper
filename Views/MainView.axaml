@@ -781,7 +781,7 @@
                             </ComboBox>
                         </UniformGrid>
                         
-                        <Button Margin="0,0,0,4" HorizontalAlignment="Stretch" Click="ButtonPaintTraces_OnClick" Content="{x:Static lang:Resources.Editor_PaintTraces}" ToolTip.Tip="{x:Static lang:Resources.ToolTip_PaintTraces}"/>
+                        <Button Margin="0,0,0,4" HorizontalAlignment="Stretch" Click="ButtonPaintTraces_OnClick" Content="{x:Static lang:Resources.Editor_PaintSelectedTraces}" ToolTip.Tip="{x:Static lang:Resources.ToolTip_PaintTraces}"/>
                         
                         <Separator/>
                         
