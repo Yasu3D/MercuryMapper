@@ -150,7 +150,7 @@ public class ColorConfig
         ["ColorNoteChain"] = "FFCCBE2D",
         ["ColorNoteSlideClockwise"] = "FFFF8000",
         ["ColorNoteSlideCounterclockwise"] = "FF32CD32",
-        ["ColorNoteSnapForward"] = "FFFF0000",
+        ["ColorNoteSnapForward"] = "FFFF002D",
         ["ColorNoteSnapBackward"] = "FF1D96F1",
         ["ColorNoteHoldStart"] = "FF666666",
         ["ColorNoteHoldSegment"] = "FFE3E3E3",
