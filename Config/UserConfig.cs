@@ -57,6 +57,17 @@ public class KeymapConfig
     
     public Dictionary<string, Keybind> Keybinds { get; set; } = new()
     {
+        // DEPRECATED KEYBINDS
+        ["EditorEndHold"] = new(Key.Enter, false, false, false),
+        ["EditorEditHold"] = new(Key.Enter, false, true, false),
+        ["EditorBakeHold"] = new(Key.B, false, true, false),
+        ["EditorBakeHoldNoRender"] = new(Key.B, true, true, false),
+        ["EditorStitchHold"] = new(Key.H, true, false, false),
+        ["EditorSplitHold"] = new(Key.H, false, false, true),
+        ["EditorInsertHoldSegment"] = new(Key.H, false, true, false),
+        ["EditorSelectHoldReferences"] = new(Key.R, false, true, false),
+        // END DEPRECATED KEYBINDS
+        
         ["FileNew"] = new(Key.N, true, false, false),
         ["FileOpen"] = new(Key.O, true, false, false),
         ["FileSave"] = new(Key.S, true, false, false),
