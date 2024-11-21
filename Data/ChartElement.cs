@@ -243,6 +243,16 @@ public class Note : ChartElement
         is NoteType.MaskAdd
         or NoteType.MaskRemove;
 
+    public bool IsNote => NoteType
+        is NoteType.Touch
+        or NoteType.Chain
+        or NoteType.SlideClockwise
+        or NoteType.SlideCounterclockwise
+        or NoteType.SnapForward
+        or NoteType.SnapBackward
+        or NoteType.Hold
+        or NoteType.Damage;
+    
     public bool IsNoteCollection => NoteType
         is NoteType.Hold
         or NoteType.Trace;

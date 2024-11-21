@@ -512,7 +512,7 @@ public class ChartEditor
                 bool inTimeRange = x.BeatData.FullTick >= BoxSelect.SelectionStart.FullTick &&
                                    x.BeatData.FullTick <= BoxSelect.SelectionEnd.FullTick;
 
-                bool isLayerActive = x.IsMask && LayerMaskActive || !x.IsMask && LayerNoteActive;
+                bool isLayerActive = x.IsMask && LayerMaskActive || x.IsNote && LayerNoteActive || x.NoteType == NoteType.Trace && LayerTraceActive;
 
                 return inTimeRange && isLayerActive && MathExtensions.IsPartiallyOverlapping(x.Position, x.Position + x.Size, BoxSelect.Position, BoxSelect.Position + BoxSelect.Size);
             });
