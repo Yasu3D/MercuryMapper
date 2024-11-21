@@ -834,13 +834,12 @@ public class RenderEngine(MainView mainView)
             return !invalidType && !behindCamera && !pastVisionLimit;
         }).OrderBy(x => x.LinkType == NoteLinkType.End).ThenBy(x => x.NoteType == NoteType.Hold).ThenBy(x => x.BeatData.FullTick).Reverse().ToList();
 
-        for (int i = 0; i < visibleNotes.Count; i++)
+        // Layer 1 // Bonus & R-Note Glow
+        foreach (Note note in visibleNotes)
         {
-            Note note = visibleNotes[i];
-            
             ArcData data = GetArc(chart, note);
             if (!InRange(data.Scale)) continue;
-
+            
             // R-Note Glow
             if (note.IsRNote)
             {
@@ -852,13 +851,29 @@ public class RenderEngine(MainView mainView)
             {
                 DrawBonusGlow(canvas, note, data);
             }
-
+        }
+        
+        // Layer 2 // Sync
+        for (int i = 0; i < visibleNotes.Count; i++)
+        {
+            Note note = visibleNotes[i];
+            
+            ArcData data = GetArc(chart, note);
+            if (!InRange(data.Scale)) continue;
+            
             // Sync
             if (i != 0)
             {
                 Note previous = visibleNotes[i - 1];
                 DrawSync(canvas, note, previous, data.Rect, data.Scale);
             }
+        }
+
+        // Layer 3 // Notes
+        foreach (Note note in visibleNotes)
+        {
+            ArcData data = GetArc(chart, note);
+            if (!InRange(data.Scale)) continue;
             
             // Note
             switch (note.NoteType)
