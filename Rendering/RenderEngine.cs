@@ -848,13 +848,13 @@ public class RenderEngine(MainView mainView)
             ArcData data = GetArc(chart, note);
             if (!InRange(data.Scale)) continue;
 
-            // R-Note
+            // R-Note Glow
             if (note.IsRNote)
             {
                 DrawRNote(canvas, note, data);
             }
 
-            // Bonus
+            // Bonus Glow
             if (note.IsBonus)
             {
                 DrawBonusGlow(canvas, note, data);
@@ -952,6 +952,12 @@ public class RenderEngine(MainView mainView)
             if (note.NoteType is NoteType.Chain && RenderConfig.ShowChainStripes)
             {
                 DrawChainStripes(canvas, note, data);
+            }
+            
+            // Bonus Triangles
+            if (note.IsBonus)
+            {
+                DrawBonusFill(canvas, note, data);
             }
             
             // Selection
