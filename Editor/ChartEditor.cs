@@ -2027,7 +2027,7 @@ public class ChartEditor
         foreach (Note note in SelectedNotes)
         {
             if (checkedNotes.Contains(note)) continue;
-            if (note.NoteType != NoteType.Hold) continue;
+            if (!note.IsNoteCollection) continue;
 
             NoteCollection noteCollection = new();
 
@@ -2049,7 +2049,7 @@ public class ChartEditor
 
             switch (generatorMethod)
             {
-                case 0: holdToHold(hold, hold.Notes[0].BonusType, firstTick, lastTick); break;
+                case 0: holdToHold(hold, hold.Notes[0].NoteType, hold.Notes[0].BonusType, hold.Notes[0].Color, firstTick, lastTick); break;
                 case 1: holdToChain(hold, firstTick, lastTick); break;
             }
             
@@ -2061,7 +2061,7 @@ public class ChartEditor
         Chart.IsSaved = false;
         return;
 
-        void holdToHold(NoteCollection hold, BonusType bonusType, int firstTick, int lastTick)
+        void holdToHold(NoteCollection hold, NoteType noteType, BonusType bonusType, TraceColor traceColor, int firstTick, int lastTick)
         {
             Note? last = null;
             for (int i = firstTick; i <= lastTick; i += interval)
@@ -2073,11 +2073,12 @@ public class ChartEditor
                 {
                     BeatData = new(i),
                     MaskDirection = MaskDirection.Center,
-                    NoteType = NoteType.Hold,
+                    NoteType = noteType,
                     BonusType = last != null ? BonusType.None : bonusType,
                     Position = pos % 60,
                     Size = size,
                     PrevReferencedNote = last,
+                    Color = traceColor,
                 };
                 
                 note.Size = int.Clamp(note.Size, Note.MinSize(note.NoteType, note.BonusType, note.LinkType), Note.MaxSize(note.NoteType));

@@ -6,7 +6,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using FluentAvalonia.Core;
 using MercuryMapper.Enums;
-using SkiaSharp;
 
 namespace MercuryMapper.Data;
 
@@ -551,8 +550,13 @@ internal static class SatHandler
             if (tempLinkType is NoteLinkType.Point or NoteLinkType.End)
             {
                 note.PrevReferencedNote = previousNote;
-                if (previousNote != null) previousNote.NextReferencedNote = note;
                 note.BonusType = BonusType.None;
+                
+                if (previousNote != null)
+                {
+                    previousNote.NextReferencedNote = note;
+                    note.Color = previousNote.Color;
+                }
             }
 
             notes.Add(note);
@@ -632,8 +636,13 @@ internal static class SatHandler
             if (tempLinkType is NoteLinkType.Point or NoteLinkType.End)
             {
                 note.PrevReferencedNote = previousNote;
-                if (previousNote != null) previousNote.NextReferencedNote = note;
                 note.BonusType = BonusType.None;
+                
+                if (previousNote != null)
+                {
+                    previousNote.NextReferencedNote = note;
+                    note.Color = previousNote.Color;
+                }
             }
 
             notes.Add(note);

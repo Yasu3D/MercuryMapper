@@ -1801,22 +1801,22 @@ public partial class MainView : UserControl
             switch (generatorView.GeneratorMethod.SelectedIndex)
             {
                 case 0:
-                    {
-                        ChartEditor.GenerateSpikeHolds(generatorView.OffsetEven.IsChecked ?? true, (int?)generatorView.LeftEdge.Value ?? 0, (int?)generatorView.RightEdge.Value ?? 0);
-                        break;
-                    }
+                {
+                    ChartEditor.GenerateSpikeHolds(generatorView.OffsetEven.IsChecked ?? true, (int?)generatorView.LeftEdge.Value ?? 0, (int?)generatorView.RightEdge.Value ?? 0);
+                    break;
+                }
                 case 1:
-                    {
-                        ChartEditor.GenerateNoiseHolds(generatorView.OffsetEven.IsChecked ?? true, (int?)generatorView.LeftEdgeMin.Value ?? 0, (int?)generatorView.LeftEdgeMax.Value ?? 0, (int?)generatorView.RightEdgeMin.Value ?? 0, (int?)generatorView.RightEdgeMax.Value ?? 0);
-                        break;
-                    }
+                {
+                    ChartEditor.GenerateNoiseHolds(generatorView.OffsetEven.IsChecked ?? true, (int?)generatorView.LeftEdgeMin.Value ?? 0, (int?)generatorView.LeftEdgeMax.Value ?? 0, (int?)generatorView.RightEdgeMin.Value ?? 0, (int?)generatorView.RightEdgeMax.Value ?? 0);
+                    break;
+                }
             }
         });
     }
 
     private void MenuItemReconstructHolds_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (!ChartEditor.SelectedNotes.Exists(x => x.NoteType == NoteType.Hold))
+        if (!ChartEditor.SelectedNotes.Exists(x => x.IsNoteCollection))
         {
             ShowWarningMessage(Assets.Lang.Resources.Editor_NoHoldsSelected, Assets.Lang.Resources.Editor_NoHoldsSelectedTip);
             return;
