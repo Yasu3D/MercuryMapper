@@ -1070,7 +1070,7 @@ public class ChartEditor
                     }
                 }
 
-                DeleteHoldNote holdOp = new(Chart, SelectedNotes, note, note.References().FirstOrDefault()?.BonusType ?? BonusType.None);
+                DeleteHoldNote holdOp = new(Chart, SelectedNotes, note, note.NextReferencedNote?.BonusType ?? BonusType.None);
                 holdOperationList.Add(holdOp);
                 
                 UndoRedoManager.InvokeAndPush(holdOp);
@@ -1724,7 +1724,7 @@ public class ChartEditor
 
         void addOperation(Note note)
         {
-            DeleteHoldNote holdOp = new(Chart, SelectedNotes, note, note.References().FirstOrDefault()?.BonusType ?? BonusType.None);
+            DeleteHoldNote holdOp = new(Chart, SelectedNotes, note, note.NextReferencedNote?.BonusType ?? BonusType.None);
             holdOperationList.Add(holdOp);
             UndoRedoManager.InvokeAndPush(holdOp);
         }
@@ -2140,7 +2140,7 @@ public class ChartEditor
             
             foreach (Note note in hold.Notes.OrderByDescending(x => x.BeatData.FullTick))
             {
-                DeleteHoldNote holdOp = new(Chart, SelectedNotes, note, hold.Notes[0].BonusType);
+                DeleteHoldNote holdOp = new(Chart, SelectedNotes, note, note.NextReferencedNote?.BonusType ?? BonusType.None);
                 holdOperationList.Add(holdOp);
                 
                 UndoRedoManager.InvokeAndPush(holdOp);

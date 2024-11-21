@@ -361,7 +361,7 @@ public class ConnectionManager(MainView main)
                 
             case DeleteHoldNote deleteHoldNote:
             {
-                string opData = $"{deleteHoldNote.DeletedNote.ToNetworkString()}\n{(int)deleteHoldNote.BonusType}";
+                string opData = $"{deleteHoldNote.DeletedNote.ToNetworkString()}\n{(int)deleteHoldNote.NextNoteOriginalBonusType}";
                 SendMessage(new(MessageTypes.DeleteHoldNote, [ opData ], [ (int)operationDirection ]));
                 break;
             }

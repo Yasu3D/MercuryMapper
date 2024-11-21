@@ -30,14 +30,14 @@ public class DeleteNote(Chart chart, List<Note> selected, Note note) : IOperatio
     }
 }
 
-public class DeleteHoldNote(Chart chart, List<Note> selected, Note deletedNote, BonusType bonusType) : IOperation
+public class DeleteHoldNote(Chart chart, List<Note> selected, Note deletedNote, BonusType nextNoteOriginalBonusType) : IOperation
 {
     public Chart Chart { get; } = chart;
     public Note DeletedNote { get; } = deletedNote;
     public Note? NextNote => DeletedNote.NextReferencedNote;
     public Note? PrevNote => DeletedNote.PrevReferencedNote;
     public List<Note> Selected { get; } = selected;
-    public BonusType BonusType { get; } = bonusType;
+    public BonusType NextNoteOriginalBonusType { get; } = nextNoteOriginalBonusType;
 
     public void Undo()
     {
@@ -51,6 +51,11 @@ public class DeleteHoldNote(Chart chart, List<Note> selected, Note deletedNote, 
         // Re-added note maintained it's original references from when it was deleted.
         if (NextNote != null) NextNote.PrevReferencedNote = DeletedNote;
         if (PrevNote != null) PrevNote.NextReferencedNote = DeletedNote;
+
+        if (DeletedNote.LinkType is NoteLinkType.Start && NextNote != null)
+        {
+            NextNote.BonusType = NextNoteOriginalBonusType;
+        }
         
         // Safety Check that's relevant to Multi-Charting only:
         // Make sure the re-added note's neighbors are still in the Note list. If they are not, unlink them.
@@ -62,6 +67,11 @@ public class DeleteHoldNote(Chart chart, List<Note> selected, Note deletedNote, 
     public void Redo()
     {
         Console.WriteLine(DeletedNote.FirstReference()?.NoteType);
+
+        if (DeletedNote.LinkType is NoteLinkType.Start && NextNote != null)
+        {
+            NextNote.BonusType = DeletedNote.BonusType;
+        }
         
         // Make references "pass through" deleted note, effectively unlinking it.
         // Deleted note itself keeps its original references!
