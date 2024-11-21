@@ -557,13 +557,6 @@ public class RenderEngine(MainView mainView)
         }
     }
     
-    private enum CollectionSurfaceDrawMode
-    {
-        Hold,
-        Trace,
-        TraceCenter,
-    }
-    
     private void DrawGimmickMarkers(SKCanvas canvas, Chart chart)
     {
         IEnumerable<Gimmick> visibleGimmicks = chart.Gimmicks.Where(x =>
@@ -1406,6 +1399,13 @@ public class RenderEngine(MainView mainView)
         canvas.DrawPath(path, brushes.BonusFill);
     }
 
+    private enum CollectionSurfaceDrawMode
+    {
+        Hold,
+        Trace,
+        TraceCenter,
+    }
+
     private void DrawNoteCollectionSurface(SKCanvas canvas, Chart chart, NoteCollection collection, TruncateMode truncateMode, CollectionSurfaceDrawMode drawMode)
     {
         if (collection.Notes.Count == 0) return;
@@ -1437,7 +1437,27 @@ public class RenderEngine(MainView mainView)
             ArcData intermediateData = new(canvasRect, 1, MathExtensions.Lerp(nextData.StartAngle, prevData.StartAngle, ratio), MathExtensions.Lerp(nextData.SweepAngle, prevData.SweepAngle, ratio));
             path.ArcTo(intermediateData.Rect, intermediateData.StartAngle, intermediateData.SweepAngle, false);
             path.LineTo(canvasCenter);
-            canvas.DrawPath(path, brushes.HoldFill);
+            
+            switch (drawMode)
+            {
+                case CollectionSurfaceDrawMode.Hold:
+                {
+                    canvas.DrawPath(path, brushes.HoldFill);
+                    break;
+                }
+                
+                case CollectionSurfaceDrawMode.Trace:
+                {
+                    canvas.DrawPath(path, brushes.GetTraceFill(prev.FirstReference()?.Color ?? TraceColor.White));
+                    break;
+                }
+                
+                case CollectionSurfaceDrawMode.TraceCenter:
+                {
+                    canvas.DrawPath(path, brushes.TraceCenterFill);
+                    break;
+                }
+            }
 
             return;
         }

@@ -942,8 +942,8 @@ Fortfahren?</value>
   <data name="Editor_Loop" xml:space="preserve">
     <value>Schleife</value>
   </data>
-  <data name="Editor_ExpanderHeader_LoopOptions" xml:space="preserve">
-    <value>Schleifen-Optionen</value>
+  <data name="Editor_ExpanderHeader_Miscellaneous" xml:space="preserve">
+    <value>Sonstiges</value>
   </data>
   <data name="Editor_ToggleLoop" xml:space="preserve">
     <value>Schleife umschalten</value>

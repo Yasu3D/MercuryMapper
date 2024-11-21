@@ -942,8 +942,8 @@ Continue?</value>
   <data name="Editor_SetLoopEnd" xml:space="preserve">
     <value>Set Loop End</value>
   </data>
-  <data name="Editor_ExpanderHeader_LoopOptions" xml:space="preserve">
-    <value>Loop Options</value>
+  <data name="Editor_ExpanderHeader_Miscellaneous" xml:space="preserve">
+    <value>Miscellaneous</value>
   </data>
   <data name="Editor_ToggleLoop" xml:space="preserve">
     <value>Toggle Loop</value>

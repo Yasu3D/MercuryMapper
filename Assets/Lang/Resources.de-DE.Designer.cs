@@ -681,11 +681,11 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Schleifen-Optionen.
+        ///   Looks up a localized string similar to Sonstiges.
         /// </summary>
-        public static string Editor_ExpanderHeader_LoopOptions {
+        public static string Editor_ExpanderHeader_Miscellaneous {
             get {
-                return ResourceManager.GetString("Editor_ExpanderHeader_LoopOptions", resourceCulture);
+                return ResourceManager.GetString("Editor_ExpanderHeader_Miscellaneous", resourceCulture);
             }
         }
         

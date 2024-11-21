@@ -2538,6 +2538,8 @@ public partial class MainView : UserControl
 
     private void ButtonSetLoopEnd_OnClick(object? sender, RoutedEventArgs e) => SetLoopMarkerEnd();
 
+    private void ButtonAddComment_OnClick(object? sender, RoutedEventArgs e) => AddComment();
+    
     private void ToggleButtonLoop_IsCheckedChanged(object? sender, RoutedEventArgs e)
     {
         if (sender is not ToggleButton button) return;
