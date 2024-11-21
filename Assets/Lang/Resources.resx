@@ -1347,4 +1347,7 @@ Continue?</value>
   <data name="ToolTip_PaintTraces" xml:space="preserve">
     <value>Applies specified color to all selected Traces.</value>
   </data>
+  <data name="Note_DamageOutline" xml:space="preserve">
+    <value>Damage Outline</value>
+  </data>
 </root>

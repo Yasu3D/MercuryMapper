@@ -86,6 +86,7 @@ public class RenderEngine(MainView mainView)
             
             DrawNotes(canvas, Chart);
             DrawArrows(canvas, Chart);
+            DrawDamageNotes(canvas, Chart);
         }
     }
 
@@ -203,7 +204,7 @@ public class RenderEngine(MainView mainView)
         Hold,
         OutlineNote,
         OutlineHoldSegment,
-        OutlineMask,
+        OutlineFull,
         Trace,
         TraceCenter,
     }
@@ -247,7 +248,7 @@ public class RenderEngine(MainView mainView)
                 break;
             }
 
-            case TruncateMode.OutlineMask:
+            case TruncateMode.OutlineFull:
             {
                 data.StartAngle += 1f;
                 data.SweepAngle -= 2f;
@@ -567,6 +568,7 @@ public class RenderEngine(MainView mainView)
             bool invalidType = x.IsSegment || 
                                x.IsMask || 
                                x.NoteType == NoteType.Trace || 
+                               x.NoteType == NoteType.Damage ||
                                (x.NoteType == NoteType.Chain && x.BonusType != BonusType.RNote);
 
             bool behindCamera = !MathExtensions.GreaterAlmostEqual(x.BeatData.MeasureDecimal, CurrentMeasureDecimal);
@@ -687,8 +689,9 @@ public class RenderEngine(MainView mainView)
         TruncateMode truncateMode = (note.NoteType, note.LinkType) switch
         {
             (NoteType.Hold, _) => TruncateMode.OutlineHoldSegment,
-            (NoteType.MaskAdd, _) => TruncateMode.OutlineMask,
-            (NoteType.MaskRemove, _) => TruncateMode.OutlineMask,
+            (NoteType.MaskAdd, _) => TruncateMode.OutlineFull,
+            (NoteType.MaskRemove, _) => TruncateMode.OutlineFull,
+            (NoteType.Damage, _) => TruncateMode.OutlineFull,
             _ => TruncateMode.OutlineNote,
         };
 
@@ -706,8 +709,9 @@ public class RenderEngine(MainView mainView)
         TruncateMode truncateMode = (note.NoteType, note.LinkType) switch
         {
             (NoteType.Hold, NoteLinkType.Point) => TruncateMode.OutlineHoldSegment,
-            (NoteType.MaskAdd, _) => TruncateMode.OutlineMask,
-            (NoteType.MaskRemove, _) => TruncateMode.OutlineMask,
+            (NoteType.MaskAdd, _) => TruncateMode.OutlineFull,
+            (NoteType.MaskRemove, _) => TruncateMode.OutlineFull,
+            (NoteType.Damage, _) => TruncateMode.OutlineFull,
             _ => TruncateMode.OutlineNote,
         };
 
@@ -1255,7 +1259,7 @@ public class RenderEngine(MainView mainView)
         // Reverse to draw from middle out => preserves depth overlap
         IEnumerable<Note> visibleNotes = chart.Notes.Where(x =>
         {
-            bool invalidType = x.NoteType is NoteType.Hold or NoteType.Trace || x.IsMask;
+            bool invalidType = x.NoteType is NoteType.Hold or NoteType.Trace or NoteType.Damage || x.IsMask;
             bool behindCamera = !MathExtensions.GreaterAlmostEqual(x.BeatData.MeasureDecimal, CurrentMeasureDecimal);
             bool pastVisionLimit = chart.GetScaledMeasureDecimal(x.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) > ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal;
 
@@ -1339,6 +1343,72 @@ public class RenderEngine(MainView mainView)
         }
     }
 
+    private void DrawDamageNotes(SKCanvas canvas, Chart chart)
+    {
+        // Reverse to draw from middle out => preserves depth overlap
+        IEnumerable<Note> visibleNotes = chart.Notes.Where(x =>
+        {
+            bool validType = x.NoteType is NoteType.Damage;
+            bool behindCamera = !MathExtensions.GreaterAlmostEqual(x.BeatData.MeasureDecimal, CurrentMeasureDecimal);
+            bool pastVisionLimit = chart.GetScaledMeasureDecimal(x.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) > ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal;
+
+            return validType && !behindCamera && !pastVisionLimit;
+        }).Reverse();
+
+        Random random = new();
+        
+        foreach (Note note in visibleNotes)
+        {
+            ArcData data = GetArc(chart, note);
+            
+            if (!InRange(data.Scale)) continue;
+            
+            canvas.DrawArc(data.Rect, data.StartAngle, data.SweepAngle, false, brushes.GetNotePen(note, canvasScale * data.Scale));
+
+            float outlineOffset = (RenderConfig.NoteSize * 4.5f) * data.Scale * canvasScale;
+            
+            SKPath outlinePath = new();
+
+            SKRect rectOuter = new(data.Rect.Left, data.Rect.Top, data.Rect.Right, data.Rect.Bottom);
+            SKRect rectInner = new(data.Rect.Left, data.Rect.Top, data.Rect.Right, data.Rect.Bottom);
+            rectOuter.Inflate(outlineOffset, outlineOffset);
+            rectInner.Inflate(-outlineOffset, -outlineOffset);
+            
+            if (note.Size == 60)
+            {
+                canvas.DrawArc(rectOuter, 0, 360, false, brushes.GetDamageOutlinePen(data.Scale));
+                canvas.DrawArc(rectInner, 0, 360, false, brushes.GetDamageOutlinePen(data.Scale));
+            }
+            else
+            {
+                outlinePath.ArcTo(rectOuter, data.StartAngle, data.SweepAngle, true);
+                outlinePath.ArcTo(rectInner, data.StartAngle + data.SweepAngle, -data.SweepAngle, false);
+                outlinePath.Close();
+                
+                canvas.DrawPath(outlinePath, brushes.GetDamageOutlinePen(data.Scale * canvasScale));
+            }
+
+            SKPath sparkPath = new();
+            int steps = int.Min(note.Size + 1, 60);
+            
+            for (int i = 0; i < steps; i++)
+            {
+                float offset = random.NextSingle() * 0.05f;
+                SKPoint p = GetPointOnArc(canvasCenter, data.Rect.Width * (0.44f + offset), (note.Position + i) * -6);
+
+                if (i == 0) sparkPath.MoveTo(p);
+                sparkPath.LineTo(p);
+            }
+            
+            if (note.Size == 60) sparkPath.Close();
+
+            canvas.DrawPath(sparkPath, brushes.GetDamageSparkPen(data.Scale * canvasScale));
+            
+            if (mainView.ChartEditor.SelectedNotes.Contains(note)) DrawSelection(canvas, chart, note);
+            if (note == mainView.ChartEditor.HighlightedElement) DrawHighlight(canvas, chart, note);
+        }
+    }
+    
     private void DrawMaskNotes(SKCanvas canvas, Chart chart)
     {
         IEnumerable<Note> visibleNotes = chart.Notes.Where(x =>

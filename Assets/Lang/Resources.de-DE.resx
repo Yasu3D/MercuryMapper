@@ -1347,4 +1347,7 @@ Fortfahren?</value>
   <data name="ToolTip_PaintTraces" xml:space="preserve">
     <value>Färbt alle ausgewählten Linien mit der angegebenen Farbe.</value>
   </data>
+  <data name="Note_DamageOutline" xml:space="preserve">
+    <value>Schaden Umriss</value>
+  </data>
 </root>

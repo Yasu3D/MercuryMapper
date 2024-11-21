@@ -26,6 +26,8 @@ public class Brushes(UserConfig userConfig)
     private const float BoxSelectOutlinePenStrokeWidth = 4;
     private const float PeerPenStrokeWidth = 15;
     private const float TracePenStrokeWidth = 4;
+    private const float DamageSparkStrokeWidth = 7;
+    private const float DamageOutlineStrokeWidth = 4;
     
     public float NoteWidthMultiplier = 1;
     private float cursorWidthMultiplier = 1;
@@ -177,6 +179,20 @@ public class Brushes(UserConfig userConfig)
     };
 
     private readonly SKPaint tracePen = new()
+    {
+        StrokeWidth = SyncPenStrokeWidth,
+        Style = SKPaintStyle.Stroke,
+        IsAntialias = true,
+    };
+
+    private readonly SKPaint damageSparkPen = new()
+    {
+        StrokeWidth = SyncPenStrokeWidth,
+        Style = SKPaintStyle.Stroke,
+        IsAntialias = true,
+    };
+
+    private readonly SKPaint damageOutlinePen = new()
     {
         StrokeWidth = SyncPenStrokeWidth,
         Style = SKPaintStyle.Stroke,
@@ -426,6 +442,18 @@ public class Brushes(UserConfig userConfig)
         tracePen.Color = render ? colorNoteTrace : colorNoteTraceNoRender;
         return tracePen;
     }
+
+    public SKPaint GetDamageSparkPen(float scale)
+    {
+        damageSparkPen.StrokeWidth = DamageSparkStrokeWidth * scale;
+        return damageSparkPen;
+    }
+
+    public SKPaint GetDamageOutlinePen(float scale)
+    {
+        damageOutlinePen.StrokeWidth = DamageOutlineStrokeWidth * scale;
+        return damageOutlinePen;
+    }
     
     // ________ Other
     private SKColor NoteType2Color(NoteType noteType, NoteLinkType linkType, bool render = true)
@@ -546,6 +574,8 @@ public class Brushes(UserConfig userConfig)
             bonusPen.Color = SKColor.Parse(colors["ColorBonus"]);
             selectionPen.Color = SKColor.Parse(colors["ColorSelection"]);
             highlightPen.Color = SKColor.Parse(colors["ColorHighlight"]);
+            damageSparkPen.Color = SKColor.Parse(colors["ColorNoteDamageSpark"]);
+            damageOutlinePen.Color = SKColor.Parse(colors["ColorNoteDamageOutline"]);
             
             MeasurePen.Color = SKColor.Parse(colors["ColorMeasureLine"]);
             BeatPen.Color = SKColor.Parse(colors["ColorBeatLine"]);

@@ -1951,6 +1951,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Schaden Umriss.
+        /// </summary>
+        public static string Note_DamageOutline {
+            get {
+                return ResourceManager.GetString("Note_DamageOutline", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Schaden Blitz.
         /// </summary>
         public static string Note_DamageSpark {
