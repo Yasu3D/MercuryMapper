@@ -87,13 +87,7 @@ public class AudioManager(MainView mainView)
     {
         HitsoundNoteIndex++;
         
-        bool mute = note.NoteType
-            is NoteType.MaskAdd
-            or NoteType.MaskRemove
-            or NoteType.HoldSegment
-            or NoteType.TraceStart
-            or NoteType.TraceSegment
-            or NoteType.TraceEnd;
+        bool mute = note.IsSegment || note.IsMask || note.NoteType == NoteType.Trace;
         
         if (mute) return;
 

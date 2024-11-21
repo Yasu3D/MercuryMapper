@@ -319,7 +319,7 @@ public class Brushes(UserConfig userConfig)
     public SKPaint GetNotePen(Note note, float scale)
     {
         notePen.StrokeWidth = NoteWidthMultiplier * scale;
-        notePen.Color = NoteType2Color(note.NoteType, note.RenderSegment);
+        notePen.Color = NoteType2Color(note.NoteType, note.LinkType, note.RenderSegment);
         return notePen;
     }
 
@@ -345,10 +345,10 @@ public class Brushes(UserConfig userConfig)
         return syncPen;
     }
 
-    public SKPaint GetCursorPen(NoteType type, float scale)
+    public SKPaint GetCursorPen(NoteType noteType, NoteLinkType linkType, float scale)
     {
         cursorPen.StrokeWidth = cursorWidthMultiplier * scale;
-        cursorPen.Color = NoteType2Color(type).WithAlpha(0x80);
+        cursorPen.Color = NoteType2Color(noteType, linkType).WithAlpha(0x80);
         return cursorPen;
     }
 
@@ -376,15 +376,15 @@ public class Brushes(UserConfig userConfig)
         return highlightPen;
     }
 
-    public SKPaint GetSnapFill(NoteType type)
+    public SKPaint GetSnapFill(NoteType noteType, NoteLinkType linkType)
     {
-        snapFill.Color = NoteType2Color(type);
+        snapFill.Color = NoteType2Color(noteType, linkType);
         return snapFill;
     }
 
-    public SKPaint GetSwipeFill(NoteType type)
+    public SKPaint GetSwipeFill(NoteType noteType, NoteLinkType linkType)
     {
-        swipeFill.Color = NoteType2Color(type);
+        swipeFill.Color = NoteType2Color(noteType, linkType);
         return swipeFill;
     }
 
@@ -426,25 +426,24 @@ public class Brushes(UserConfig userConfig)
     }
     
     // ________ Other
-    private SKColor NoteType2Color(NoteType type, bool render = true)
+    private SKColor NoteType2Color(NoteType noteType, NoteLinkType linkType, bool render = true)
     {
-        return type switch
+        return (noteType, linkType) switch
         {
-            NoteType.Touch => colorNoteTouch,
-            NoteType.SnapForward => colorNoteSnapForward,
-            NoteType.SnapBackward => colorNoteSnapBackward,
-            NoteType.SlideClockwise => colorNoteSlideClockwise,
-            NoteType.SlideCounterclockwise => colorNoteSlideCounterclockwise,
-            NoteType.Chain => colorNoteChain,
-            NoteType.HoldStart => colorNoteHoldStart,
-            NoteType.HoldSegment => render ? colorNoteHoldSegment : colorNoteHoldSegmentNoRender,
-            NoteType.HoldEnd => colorNoteHoldSegment,
-            NoteType.TraceStart => colorNoteTrace,
-            NoteType.TraceSegment => colorNoteTrace,
-            NoteType.TraceEnd => colorNoteTrace,
-            NoteType.Damage => colorNoteDamage,
-            NoteType.MaskAdd => colorNoteMaskAdd,
-            NoteType.MaskRemove => colorNoteMaskRemove,
+            (NoteType.Touch, _) => colorNoteTouch,
+            (NoteType.SnapForward, _) => colorNoteSnapForward,
+            (NoteType.SnapBackward, _) => colorNoteSnapBackward,
+            (NoteType.SlideClockwise, _) => colorNoteSlideClockwise,
+            (NoteType.SlideCounterclockwise, _) => colorNoteSlideCounterclockwise,
+            (NoteType.Chain, _) => colorNoteChain,
+            (NoteType.Hold, NoteLinkType.Start) => colorNoteHoldStart,
+            (NoteType.Hold, NoteLinkType.Point) => render ? colorNoteHoldSegment : colorNoteHoldSegmentNoRender,
+            (NoteType.Hold, NoteLinkType.End) => colorNoteHoldSegment,
+            (NoteType.Hold, _) => colorNoteHoldStart,
+            (NoteType.Trace, _) => colorNoteTrace,
+            (NoteType.Damage, _) => colorNoteDamage,
+            (NoteType.MaskAdd, _) => colorNoteMaskAdd,
+            (NoteType.MaskRemove, _) => colorNoteMaskRemove,
             _ => throw new ArgumentOutOfRangeException(),
         };
     }

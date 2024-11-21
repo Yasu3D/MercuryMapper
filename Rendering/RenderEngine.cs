@@ -141,7 +141,7 @@ public class RenderEngine(MainView mainView)
                 return new { Note = note, Distance = distance };
             })
             .Where(item => item.Distance <= item.Note.Size * 0.5f)
-            .OrderBy(item => item.Note.IsHold)
+            .OrderBy(item => item.Note.NoteType is NoteType.Hold or NoteType.Trace)
             .ThenBy(item => item.Distance)
             .Select(item => item.Note)
             .ToList();
@@ -469,7 +469,7 @@ public class RenderEngine(MainView mainView)
 
     private void DrawCursor(SKCanvas canvas, NoteType noteType, int position, int size)
     {
-        canvas.DrawArc(canvasRect, position * -6, size * -6, false, brushes.GetCursorPen(noteType, canvasScale));
+        canvas.DrawArc(canvasRect, position * -6, size * -6, false, brushes.GetCursorPen(noteType, NoteLinkType.Unlinked, canvasScale));
     }
 
     private void DrawBoxSelectCursor(SKCanvas canvas, int position, int size)
@@ -563,9 +563,18 @@ public class RenderEngine(MainView mainView)
     private void DrawSyncs(SKCanvas canvas, Chart chart)
     {
         List<Note> visibleNotes = chart.Notes.Where(x =>
-            x is { IsSegment: false, IsMask: false, IsTrace: false } && (!x.IsChain || x is { IsChain: true, IsRNote: true }) // because apparently R Note chains have syncs. Just being accurate to the game (:
-            && MathExtensions.GreaterAlmostEqual(x.BeatData.MeasureDecimal, CurrentMeasureDecimal)
-            && chart.GetScaledMeasureDecimal(x.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) <= ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal).ToList();
+        {
+            bool invalidType = x.IsSegment || 
+                               x.IsMask || 
+                               x.NoteType == NoteType.Trace || 
+                               (x.NoteType == NoteType.Chain && x.BonusType != BonusType.RNote);
+
+            bool behindCamera = !MathExtensions.GreaterAlmostEqual(x.BeatData.MeasureDecimal, CurrentMeasureDecimal);
+            bool pastVisionLimit = chart.GetScaledMeasureDecimal(x.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) > ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal;
+            
+            return !invalidType && !behindCamera && !pastVisionLimit;
+        }).ToList();
+            
         
         // This code is from saturn, lol
         for (int i = 1; i < visibleNotes.Count; i++)
@@ -574,7 +583,12 @@ public class RenderEngine(MainView mainView)
             Note previous = visibleNotes[i - 1];
             
             if (current.BeatData.FullTick != previous.BeatData.FullTick) continue;
-            if ((current.NoteType is NoteType.HoldStart || previous.NoteType is NoteType.HoldStart) && current.Position == previous.Position && current.Size == previous.Size) continue;
+
+            bool currentIsHoldStart = current.NoteType == NoteType.Hold && current.LinkType == NoteLinkType.Start;
+            bool previousIsHoldStart = previous.NoteType == NoteType.Hold && previous.LinkType == NoteLinkType.Start;
+            bool fullOverlap = current.Position == previous.Position && current.Size == previous.Size;
+            
+            if ((currentIsHoldStart || previousIsHoldStart) && fullOverlap) continue;
             
             float scale = GetNoteScale(chart, current.BeatData.MeasureDecimal);
             
@@ -670,18 +684,18 @@ public class RenderEngine(MainView mainView)
     {
         ArcData selectedData = GetArc(chart, note);
 
-        TruncateMode truncateMode = note.NoteType switch
+        TruncateMode truncateMode = (note.NoteType, note.LinkType) switch
         {
-            NoteType.HoldSegment => TruncateMode.OutlineHoldSegment,
-            NoteType.MaskAdd => TruncateMode.OutlineMask,
-            NoteType.MaskRemove => TruncateMode.OutlineMask,
+            (NoteType.Hold, _) => TruncateMode.OutlineHoldSegment,
+            (NoteType.MaskAdd, _) => TruncateMode.OutlineMask,
+            (NoteType.MaskRemove, _) => TruncateMode.OutlineMask,
             _ => TruncateMode.OutlineNote,
         };
 
         if (note.Size != 60) TruncateArc(ref selectedData, truncateMode);
         else TrimCircleArc(ref selectedData);
 
-        float widthMultiplier = note.NoteType is NoteType.HoldSegment ? 0.75f : 1;
+        float widthMultiplier = note.NoteType == NoteType.Hold && note.LinkType == NoteLinkType.Point ? 0.75f : 1;
         canvas.DrawArc(selectedData.Rect, selectedData.StartAngle, selectedData.SweepAngle, false, brushes.GetSelectionPen(canvasScale * selectedData.Scale * widthMultiplier));
     }
 
@@ -689,18 +703,18 @@ public class RenderEngine(MainView mainView)
     {
         ArcData selectedData = GetArc(chart, note);
 
-        TruncateMode truncateMode = note.NoteType switch
+        TruncateMode truncateMode = (note.NoteType, note.LinkType) switch
         {
-            NoteType.HoldSegment => TruncateMode.OutlineHoldSegment,
-            NoteType.MaskAdd => TruncateMode.OutlineMask,
-            NoteType.MaskRemove => TruncateMode.OutlineMask,
+            (NoteType.Hold, NoteLinkType.Point) => TruncateMode.OutlineHoldSegment,
+            (NoteType.MaskAdd, _) => TruncateMode.OutlineMask,
+            (NoteType.MaskRemove, _) => TruncateMode.OutlineMask,
             _ => TruncateMode.OutlineNote,
         };
 
         if (note.Size != 60) TruncateArc(ref selectedData, truncateMode);
         else TrimCircleArc(ref selectedData);
 
-        float widthMultiplier = note.NoteType is NoteType.HoldSegment ? 0.75f : 1;
+        float widthMultiplier = note.NoteType is NoteType.Hold && note.LinkType is NoteLinkType.Point ? 0.75f : 1;
         canvas.DrawArc(selectedData.Rect, selectedData.StartAngle, selectedData.SweepAngle, false, brushes.GetHighlightPen(canvasScale * selectedData.Scale * widthMultiplier));
     }
 
@@ -757,7 +771,7 @@ public class RenderEngine(MainView mainView)
         TraceCenter,
     }
     
-    private void DrawNoteCollectionSurface(SKCanvas canvas, Chart chart, IEnumerable<NoteCollection> collections, NoteType start, NoteType segment, NoteType end, TruncateMode truncateMode, CollectionSurfaceDrawMode drawMode)
+    private void DrawNoteCollectionSurface(SKCanvas canvas, Chart chart, IEnumerable<NoteCollection> collections, TruncateMode truncateMode, CollectionSurfaceDrawMode drawMode)
     {
         // The brainfuck. If there's any questions, ask me, and I'll help you decipher it.
         foreach (NoteCollection collection in collections)
@@ -771,7 +785,7 @@ public class RenderEngine(MainView mainView)
             {
                 Note prev = collection.Notes[0];
                 Note? next = prev.NextVisibleReference(RenderConfig.DrawNoRenderHoldSegments);
-
+                
                 if (next == null) continue;
 
                 // Aw, nevermind. It ain't one of them darn damn dangit hold notes where the first segment is behind the camera and the second is outside of vision range.
@@ -799,13 +813,15 @@ public class RenderEngine(MainView mainView)
             for (int i = 0; i < collection.Notes.Count; i++)
             {
                 Note note = collection.Notes[i];
+                if (note.LinkType == NoteLinkType.Unlinked) continue;
+                
                 ArcData currentData = GetTruncatedArc(chart, note, truncateMode);
 
                 // First part of the path. Must be an arc.
                 if (i == 0)
                 {
                     // If the hold start is visible there's no need to interpolate.
-                    if (note.NoteType == start)
+                    if (note.LinkType == NoteLinkType.Start)
                     {
                         path.ArcTo(currentData.Rect, currentData.StartAngle, currentData.SweepAngle, true);
                     }
@@ -836,7 +852,7 @@ public class RenderEngine(MainView mainView)
                     }
                 }
 
-                if ((i == 0 && note.NoteType == segment || note.NoteType == end) || (i != 0 && i != collection.Notes.Count - 1))
+                if ((i == 0 && note.LinkType == NoteLinkType.Point || note.LinkType == NoteLinkType.End) || (i != 0 && i != collection.Notes.Count - 1))
                 {
                     // Line to right edge
                     path.LineTo(GetPointOnArc(canvasCenter, currentData.Rect.Width * 0.5f, currentData.StartAngle + currentData.SweepAngle));
@@ -863,9 +879,10 @@ public class RenderEngine(MainView mainView)
             for (int i = collection.Notes.Count - 1; i >= 0; i--)
             {
                 Note note = collection.Notes[i];
+                if (note.LinkType == NoteLinkType.Unlinked) continue;
 
                 // *technically unnecessary to skip, but doing it just for consistency.
-                if (i == 0 && note.NoteType == start) continue;
+                if (i == 0 && note.LinkType == NoteLinkType.Start) continue;
 
                 ArcData currentData = GetTruncatedArc(chart, note, truncateMode);
                 path.LineTo(GetPointOnArc(canvasCenter, currentData.Rect.Width * 0.5f, currentData.StartAngle));
@@ -913,7 +930,7 @@ public class RenderEngine(MainView mainView)
             bool inVisionRange = inFrontOfCamera && inVisibleDistance;
             bool aroundVisionRange = !inFrontOfCamera && nextOutsideVisibleDistance;
 
-            return x.IsTrace && (inVisionRange || aroundVisionRange);
+            return x.NoteType == NoteType.Trace && (inVisionRange || aroundVisionRange);
         }).ToList();
 
         HashSet<Note> checkedNotes = [];
@@ -937,8 +954,8 @@ public class RenderEngine(MainView mainView)
             traces.Add(noteCollection);
         }
 
-        DrawNoteCollectionSurface(canvas, chart, traces, NoteType.TraceStart, NoteType.TraceSegment, NoteType.TraceEnd, TruncateMode.Trace, CollectionSurfaceDrawMode.Trace);
-        DrawNoteCollectionSurface(canvas, chart, traces, NoteType.TraceStart, NoteType.TraceSegment, NoteType.TraceEnd, TruncateMode.TraceCenter, CollectionSurfaceDrawMode.TraceCenter);
+        DrawNoteCollectionSurface(canvas, chart, traces, TruncateMode.Trace, CollectionSurfaceDrawMode.Trace);
+        DrawNoteCollectionSurface(canvas, chart, traces, TruncateMode.TraceCenter, CollectionSurfaceDrawMode.TraceCenter);
 
         if (IsPlaying) return;
         
@@ -999,7 +1016,7 @@ public class RenderEngine(MainView mainView)
             bool inVisionRange = inFrontOfCamera && inVisibleDistance;
             bool aroundVisionRange = !inFrontOfCamera && nextOutsideVisibleDistance;
 
-            return x.IsHold && (inVisionRange || aroundVisionRange);
+            return x.NoteType == NoteType.Hold && (inVisionRange || aroundVisionRange);
         }).ToList();
 
         HashSet<Note> checkedNotes = [];
@@ -1023,7 +1040,7 @@ public class RenderEngine(MainView mainView)
             holds.Add(noteCollection);
         }
 
-        DrawNoteCollectionSurface(canvas, chart, holds, NoteType.HoldStart, NoteType.HoldSegment, NoteType.HoldEnd, TruncateMode.Hold, CollectionSurfaceDrawMode.Hold);
+        DrawNoteCollectionSurface(canvas, chart, holds, TruncateMode.Hold, CollectionSurfaceDrawMode.Hold);
 
         // Second and Third foreach to ensure notes are rendered on top of surfaces.
         // Reversed so notes further away are rendered first, then closer notes
@@ -1033,7 +1050,7 @@ public class RenderEngine(MainView mainView)
         // Hold Ends
         foreach (Note note in visibleNotes)
         {
-            if (note.NoteType is not NoteType.HoldEnd) continue;
+            if (note.LinkType is not NoteLinkType.End) continue;
 
             ArcData currentData = GetTruncatedArc(chart, note, TruncateMode.Hold);
 
@@ -1048,7 +1065,7 @@ public class RenderEngine(MainView mainView)
         // Hold Start/Segment
         foreach (Note note in visibleNotes)
         {
-            if (note.NoteType is NoteType.HoldEnd) continue;
+            if (note.LinkType is NoteLinkType.End) continue;
 
             ArcData data = GetArc(chart, note);
 
@@ -1058,7 +1075,7 @@ public class RenderEngine(MainView mainView)
 
             if (note.IsBonus) DrawBonusGlow(canvas, note, data);
 
-            if (note.NoteType is NoteType.HoldStart)
+            if (note.LinkType is NoteLinkType.Start or NoteLinkType.Unlinked)
             {
                 if (note.Size != 60)
                 {
@@ -1069,7 +1086,7 @@ public class RenderEngine(MainView mainView)
                 canvas.DrawArc(data.Rect, data.StartAngle, data.SweepAngle, false, brushes.GetNotePen(note, canvasScale * data.Scale));
             }
 
-            if (note.NoteType is NoteType.HoldSegment && !IsPlaying)
+            if (note.LinkType == NoteLinkType.Point && !IsPlaying)
             {
                 if (note.Size != 60) TruncateArc(ref data, TruncateMode.ExcludeCaps);
 
@@ -1088,18 +1105,13 @@ public class RenderEngine(MainView mainView)
     /// </summary>
     private void DrawHoldsLegacy(SKCanvas canvas, Chart chart)
     {
-        // Long-ass line of code. Not a fan but idk how else to write this where it still makes sense. TL;DR:
-        //
-        // IsHold &&
-        // (Note is in vision range || Next note it's referencing is in front of vision range)
         List<Note> visibleNotes = chart.Notes.Where(x =>
-            x.IsHold &&
-            (
-                (MathExtensions.GreaterAlmostEqual(x.BeatData.MeasureDecimal, CurrentMeasureDecimal) && chart.GetScaledMeasureDecimal(x.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) <= ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal)
-                ||
-                (x.NextReferencedNote != null && x.BeatData.MeasureDecimal < CurrentMeasureDecimal && chart.GetScaledMeasureDecimal(x.NextReferencedNote.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) > ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal)
-            )
-        ).ToList();
+        {
+            bool inVision = MathExtensions.GreaterAlmostEqual(x.BeatData.MeasureDecimal, CurrentMeasureDecimal) && chart.GetScaledMeasureDecimal(x.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) <= ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal;
+            bool nextOutsideVision = x.NextReferencedNote != null && x.BeatData.MeasureDecimal < CurrentMeasureDecimal && chart.GetScaledMeasureDecimal(x.NextReferencedNote.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) > ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal;
+
+            return x.NoteType == NoteType.Hold && (inVision || nextOutsideVision);
+        }).ToList();
 
         foreach (Note note in visibleNotes)
         {
@@ -1187,7 +1199,7 @@ public class RenderEngine(MainView mainView)
         // Hold Ends
         foreach (Note note in visibleNotes)
         {
-            if (note.NoteType is not NoteType.HoldEnd) continue;
+            if (note.LinkType is not NoteLinkType.End) continue;
 
             ArcData currentData = getArcData(note);
 
@@ -1202,7 +1214,7 @@ public class RenderEngine(MainView mainView)
         // Hold Start/Segment
         foreach (Note note in visibleNotes)
         {
-            if (note.NoteType is NoteType.HoldEnd) continue;
+            if (note.LinkType is NoteLinkType.End) continue;
 
             ArcData currentData = getArcData(note);
 
@@ -1210,13 +1222,13 @@ public class RenderEngine(MainView mainView)
 
             if (note.IsRNote) DrawRNote(canvas, note, currentData);
 
-            if (note.NoteType is NoteType.HoldStart)
+            if (note.LinkType is NoteLinkType.Start)
             {
                 if (note.Size != 60) DrawNoteCaps(canvas, currentData.Rect, currentData.StartAngle, currentData.SweepAngle, currentData.Scale);
                 canvas.DrawArc(currentData.Rect, currentData.StartAngle, currentData.SweepAngle, false, brushes.GetNotePen(note, canvasScale * currentData.Scale));
             }
 
-            if (note.NoteType is NoteType.HoldSegment && !IsPlaying)
+            if (note.LinkType is NoteLinkType.Point && !IsPlaying)
             {
                 canvas.DrawArc(currentData.Rect, currentData.StartAngle, currentData.SweepAngle, false, brushes.GetNotePen(note, canvasScale * currentData.Scale * 0.5f));
             }
@@ -1242,9 +1254,13 @@ public class RenderEngine(MainView mainView)
     {
         // Reverse to draw from middle out => preserves depth overlap
         IEnumerable<Note> visibleNotes = chart.Notes.Where(x =>
-            x is { IsHold: false, IsMask: false, IsTrace: false }
-            && MathExtensions.GreaterAlmostEqual(x.BeatData.MeasureDecimal, CurrentMeasureDecimal)
-            && chart.GetScaledMeasureDecimal(x.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) <= ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal).Reverse();
+        {
+            bool invalidType = x.NoteType is NoteType.Hold or NoteType.Trace || x.IsMask;
+            bool behindCamera = !MathExtensions.GreaterAlmostEqual(x.BeatData.MeasureDecimal, CurrentMeasureDecimal);
+            bool pastVisionLimit = chart.GetScaledMeasureDecimal(x.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) > ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal;
+
+            return !invalidType && !behindCamera && !pastVisionLimit;
+        }).Reverse();
 
         foreach (Note note in visibleNotes)
         {
@@ -1441,7 +1457,6 @@ public class RenderEngine(MainView mainView)
                 SKPoint p12 = GetPointOnArc(canvasCenter, snapRowOffset + snapArrowThickness + radius * snapRadiusOffset, i + snapArrowWidth);
 
                 SKPath path1 = new();
-                SKPath path2 = new();
                 
                 path1.MoveTo(p1);
                 path1.LineTo(p2);
@@ -1449,16 +1464,17 @@ public class RenderEngine(MainView mainView)
                 path1.LineTo(p4);
                 path1.LineTo(p5);
                 path1.LineTo(p6);
+                path1.Close();
                 
-                path2.MoveTo(p7);
-                path2.LineTo(p8);
-                path2.LineTo(p9);
-                path2.LineTo(p10);
-                path2.LineTo(p11);
-                path2.LineTo(p12);
+                path1.MoveTo(p7);
+                path1.LineTo(p8);
+                path1.LineTo(p9);
+                path1.LineTo(p10);
+                path1.LineTo(p11);
+                path1.LineTo(p12);
+                path1.Close();
                 
-                canvas.DrawPath(path1, brushes.GetSnapFill(note.NoteType));
-                canvas.DrawPath(path2, brushes.GetSnapFill(note.NoteType));
+                canvas.DrawPath(path1, brushes.GetSnapFill(note.NoteType, note.LinkType));
             }
         }
         
@@ -1538,7 +1554,7 @@ public class RenderEngine(MainView mainView)
                 path.LineTo(p6);   
                 path.Close();
                 
-                canvas.DrawPath(path, brushes.GetSwipeFill(note.NoteType));
+                canvas.DrawPath(path, brushes.GetSwipeFill(note.NoteType, note.LinkType));
             }
         }
         
@@ -1558,7 +1574,8 @@ public class RenderEngine(MainView mainView)
             Note note = chart.Notes[i];
             
             if (note.IsMask) continue;
-            if (note.NoteType is NoteType.HoldSegment or NoteType.HoldEnd) continue;
+            if (note.IsSegment) continue;
+            if (note.NoteType == NoteType.Trace) continue;
 
             TimingWindow window = GetTimingWindow(note.NoteType);
 
@@ -1574,7 +1591,7 @@ public class RenderEngine(MainView mainView)
                     next = chart.Notes[j];
                     
                     if (next.BeatData.FullTick > note.BeatData.FullTick) break;
-                    if (next.NoteType == NoteType.HoldEnd && MathExtensions.IsPartiallyOverlapping(note.Position, note.Position + note.Size, next!.Position, next.Position + next.Size))
+                    if (next.NoteType == NoteType.Hold && next.LinkType == NoteLinkType.End && MathExtensions.IsPartiallyOverlapping(note.Position, note.Position + note.Size, next!.Position, next.Position + next.Size))
                     {
                         holdEndFound = true;
                         break;
@@ -1589,7 +1606,7 @@ public class RenderEngine(MainView mainView)
                         next = chart.Notes[j];
                         
                         if (next.BeatData.FullTick < note.BeatData.FullTick) break;
-                        if (next.NoteType == NoteType.HoldEnd && MathExtensions.IsPartiallyOverlapping(note.Position, note.Position + note.Size, next!.Position, next.Position + next.Size))
+                        if (next.NoteType == NoteType.Hold && next.LinkType == NoteLinkType.End && MathExtensions.IsPartiallyOverlapping(note.Position, note.Position + note.Size, next!.Position, next.Position + next.Size))
                         {
                             holdEndFound = true;
                             break;
@@ -1635,7 +1652,7 @@ public class RenderEngine(MainView mainView)
                 {
                     Note next = chart.Notes[j];
                     
-                    if (next.NoteType is NoteType.None or NoteType.HoldSegment or NoteType.HoldEnd or NoteType.MaskAdd or NoteType.MaskRemove) continue;
+                    if (next.IsMask || next.IsSegment || next.NoteType == NoteType.Trace) continue;
                     if (next.BeatData.FullTick == note.BeatData.FullTick) continue;
                     if (!MathExtensions.IsPartiallyOverlapping(note.Position, note.Position + note.Size, next.Position, next.Position + next.Size)) continue;
                     
@@ -1667,7 +1684,7 @@ public class RenderEngine(MainView mainView)
                 {
                     Note prev = chart.Notes[j];
                     
-                    if (prev.NoteType is NoteType.None or NoteType.HoldSegment or NoteType.HoldEnd or NoteType.MaskAdd or NoteType.MaskRemove) continue;
+                    if (prev.IsMask || prev.IsSegment || prev.NoteType == NoteType.Trace) continue;
                     if (prev.BeatData.FullTick == note.BeatData.FullTick) continue;
                     if (!MathExtensions.IsPartiallyOverlapping(note.Position, note.Position + note.Size, prev.Position, prev.Position + prev.Size)) continue;
                     
@@ -1817,12 +1834,12 @@ internal static class RenderMath
             NoteType.SnapBackward => new(-7, 5, -10, 8, -10, 10),
             NoteType.SlideClockwise => new(-5, 5, -8, 10, -10, 10),
             NoteType.SlideCounterclockwise => new(-5, 5, -8, 10, -10, 10),
-            NoteType.HoldStart => new(-3, 3, -5, 5, -6, 6),
-            NoteType.HoldSegment => new(0, 0, 0, 0, 0, 0),
-            NoteType.HoldEnd => new(0, 0, 0, 0, 0, 0),
+            NoteType.Hold => new(-3, 3, -5, 5, -6, 6),
             NoteType.MaskAdd => new(0, 0, 0, 0, 0, 0),
             NoteType.MaskRemove => new(0, 0, 0, 0, 0, 0),
             NoteType.Chain => new(-4, 4, 0, 0, 0, 0),
+            NoteType.Trace => new(0, 0, 0, 0, 0, 0),
+            NoteType.Damage => new(0, 0, 0, 0, 0, 0),
             _ => throw new ArgumentOutOfRangeException(nameof(noteType), noteType, null),
         };
     }

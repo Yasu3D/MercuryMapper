@@ -8,7 +8,6 @@ using Avalonia.Threading;
 using MercuryMapper.Data;
 using MercuryMapper.Enums;
 using MercuryMapper.Utils;
-using MercuryMapper.Views;
 
 namespace MercuryMapper.Editor;
 
@@ -125,7 +124,7 @@ public static class Proofreader
             
             foreach (Note note in chart.Notes)
             {
-                if (note.NoteType is NoteType.HoldSegment or NoteType.HoldEnd or NoteType.MaskAdd or NoteType.MaskRemove) continue;
+                if (note.IsMask || note.IsSegment || note.NoteType == NoteType.Trace) continue;
 
                 if (note.Size < 10)
                 {
@@ -146,9 +145,9 @@ public static class Proofreader
             
             foreach (Note note in chart.Notes)
             {
-                if (note.Size < Note.MinSize(note.NoteType, note.BonusType))
+                if (note.Size < Note.MinSize(note.NoteType, note.BonusType, note.LinkType))
                 {
-                    AddMessage(textBlock, MessageType.Warning, $"{note.NoteType} @ {note.BeatData.Measure} {note.BeatData.Tick} is smaller than it's legal minimum size [< {Note.MinSize(note.NoteType, note.BonusType)}.\n");
+                    AddMessage(textBlock, MessageType.Warning, $"{note.NoteType} @ {note.BeatData.Measure} {note.BeatData.Tick} is smaller than it's legal minimum size [< {Note.MinSize(note.NoteType, note.BonusType, note.LinkType)}.\n");
                     error = true;
                 }
             }
@@ -218,27 +217,9 @@ public static class Proofreader
 
             foreach (Note note in chart.Notes)
             {
-                if (note is { NoteType: NoteType.HoldStart, NextReferencedNote: null })
+                if (note.IsNoteCollection && note.LinkType == NoteLinkType.Unlinked)
                 {
-                    AddMessage(textBlock, MessageType.Error, $"{note.NoteType} @ {note.BeatData.Measure} {note.BeatData.Tick} has no next referenced Note.\n");
-                    error = true;
-                }
-
-                if (note is { NoteType: NoteType.HoldSegment, NextReferencedNote: null })
-                {
-                    AddMessage(textBlock, MessageType.Error, $"{note.NoteType} @ {note.BeatData.Measure} {note.BeatData.Tick} has no next referenced Note.\n");
-                    error = true;
-                }
-
-                if (note is { NoteType: NoteType.HoldSegment, PrevReferencedNote: null })
-                {
-                    AddMessage(textBlock, MessageType.Error, $"{note.NoteType} @ {note.BeatData.Measure} {note.BeatData.Tick} has no previous referenced Note.\n");
-                    error = true;
-                }
-
-                if (note is { NoteType: NoteType.HoldEnd, PrevReferencedNote: null })
-                {
-                    AddMessage(textBlock, MessageType.Error, $"{note.NoteType} @ {note.BeatData.Measure} {note.BeatData.Tick} has no previous referenced Note.\n");
+                    AddMessage(textBlock, MessageType.Error, $"{note.NoteType} @ {note.BeatData.Measure} {note.BeatData.Tick} has no references to other Notes.\n");
                     error = true;
                 }
             }
@@ -258,7 +239,8 @@ public static class Proofreader
                 Note current = chart.Notes[i];
                 Note next = chart.Notes[i + 1];
                 
-                if (current.IsHold || current.IsMask || current.IsTrace || next.IsHold || next.IsMask || next.IsTrace) continue;
+                if (current.IsMask || current.NoteType is NoteType.Hold or NoteType.Trace) continue;
+                if (next.IsMask || next.NoteType is NoteType.Hold or NoteType.Trace) continue;
                 if (current.BeatData.FullTick != next.BeatData.FullTick) continue;
                 
                 if (MathExtensions.IsFullyOverlapping(current.Position, current.Position + current.Size, next.Position, next.Position + next.Size))
@@ -280,7 +262,7 @@ public static class Proofreader
             
             foreach (Note note in chart.Notes)
             {
-                if (note.NoteType is not (NoteType.HoldStart or NoteType.HoldSegment)) continue;
+                if (note.NoteType is not NoteType.Hold) continue;
                 if (note.NextReferencedNote == null) continue;
 
                 int a = note.Position;

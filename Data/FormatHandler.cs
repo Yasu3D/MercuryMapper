@@ -314,6 +314,8 @@ internal static class MerHandler
         
         foreach (Note note in chart.Notes)
         {
+            if (note.NoteType is NoteType.Trace or NoteType.Damage) continue;
+            
             result += $"{note.BeatData.Measure,4:F0} " +
                       $"{note.BeatData.Tick,4:F0} " +
                       $"   1 " +
@@ -529,13 +531,13 @@ internal static class SatHandler
             int position = Convert.ToInt32(split[3], CultureInfo.InvariantCulture);
             int size = Convert.ToInt32(split[4], CultureInfo.InvariantCulture);
 
-            string[] modifiers = split[5].Split('.', StringSplitOptions.RemoveEmptyEntries);
+            string[] attributes = split[5].Split('.', StringSplitOptions.RemoveEmptyEntries);
 
-            NoteType noteType = String2NoteType(modifiers);
-            BonusType bonusType = String2BonusType(modifiers);
-            MaskDirection maskDirection = String2MaskDirection(modifiers);
-            TraceColor color = String2TraceColor(modifiers);
-            bool renderSegment = !modifiers.Contains("NR");
+            NoteType noteType = String2NoteType(attributes);
+            BonusType bonusType = String2BonusType(attributes);
+            MaskDirection maskDirection = String2MaskDirection(attributes);
+            TraceColor color = String2TraceColor(attributes);
+            bool renderSegment = !attributes.Contains("NR");
             
             Note note = new(measure, tick, noteType, bonusType, index, position, size, renderSegment, color);
 
@@ -545,7 +547,8 @@ internal static class SatHandler
                 note.BonusType = BonusType.None;
             }
 
-            if (noteType is NoteType.HoldSegment or NoteType.HoldEnd or NoteType.TraceSegment or NoteType.TraceEnd)
+            NoteLinkType tempLinkType = String2NoteLinkType(attributes);
+            if (tempLinkType is NoteLinkType.Point or NoteLinkType.End)
             {
                 note.PrevReferencedNote = previousNote;
                 if (previousNote != null) previousNote.NextReferencedNote = note;
@@ -609,13 +612,13 @@ internal static class SatHandler
             int position = Convert.ToInt32(split[4], CultureInfo.InvariantCulture);
             int size = Convert.ToInt32(split[5], CultureInfo.InvariantCulture);
 
-            string[] modifiers = split[6].Split('.', StringSplitOptions.RemoveEmptyEntries);
+            string[] attributes = split[6].Split('.', StringSplitOptions.RemoveEmptyEntries);
 
-            NoteType noteType = String2NoteType(modifiers);
-            BonusType bonusType = String2BonusType(modifiers);
-            MaskDirection maskDirection = String2MaskDirection(modifiers);
-            TraceColor color = String2TraceColor(modifiers);
-            bool renderSegment = !modifiers.Contains("NR");
+            NoteType noteType = String2NoteType(attributes);
+            BonusType bonusType = String2BonusType(attributes);
+            MaskDirection maskDirection = String2MaskDirection(attributes);
+            TraceColor color = String2TraceColor(attributes);
+            bool renderSegment = !attributes.Contains("NR");
 
             Note note = new(measure, tick, noteType, bonusType, index, position, size, renderSegment, color, guid);
 
@@ -625,7 +628,8 @@ internal static class SatHandler
                 note.BonusType = BonusType.None;
             }
 
-            if (noteType is NoteType.HoldSegment or NoteType.HoldEnd)
+            NoteLinkType tempLinkType = String2NoteLinkType(attributes);
+            if (tempLinkType is NoteLinkType.Point or NoteLinkType.End)
             {
                 note.PrevReferencedNote = previousNote;
                 if (previousNote != null) previousNote.NextReferencedNote = note;
@@ -706,20 +710,20 @@ internal static class SatHandler
         input += "@OBJECTS\n";
         foreach (Note note in notes)
         {
-            if (note.NoteType is NoteType.HoldSegment or NoteType.HoldEnd) continue;
+            if (note.LinkType is NoteLinkType.Point or NoteLinkType.End) continue;
 
-            if (note.NoteType is NoteType.HoldStart)
+            if (note.LinkType is NoteLinkType.Start)
             {
                 IEnumerable<Note> references = note.References();
                 foreach (Note reference in references)
                 {
-                    input += $"{reference.BeatData.Measure,4:F0} {reference.BeatData.Tick,4:F0} {index,4:F0} {reference.Position,4:F0} {reference.Size,4:F0} {NoteType2String(reference.NoteType)}{Modifiers2String(reference)}\n";
+                    input += $"{reference.BeatData.Measure,4:F0} {reference.BeatData.Tick,4:F0} {index,4:F0} {reference.Position,4:F0} {reference.Size,4:F0} {NoteType2String(reference.NoteType, reference.LinkType)}{Modifiers2String(reference)}\n";
                     index++;
                 }
             }
             else
             {
-                input += $"{note.BeatData.Measure,4:F0} {note.BeatData.Tick,4:F0} {index,4:F0} {note.Position,4:F0} {note.Size,4:F0} {NoteType2String(note.NoteType)}{Modifiers2String(note)}\n";
+                input += $"{note.BeatData.Measure,4:F0} {note.BeatData.Tick,4:F0} {index,4:F0} {note.Position,4:F0} {note.Size,4:F0} {NoteType2String(note.NoteType, note.LinkType)}{Modifiers2String(note)}\n";
                 index++;
             }
         }
@@ -758,20 +762,20 @@ internal static class SatHandler
         input += "@OBJECTS\n";
         foreach (Note note in notes)
         {
-            if (note.NoteType is NoteType.HoldSegment or NoteType.HoldEnd) continue;
+            if (note.LinkType is NoteLinkType.Point or NoteLinkType.End) continue;
 
-            if (note.NoteType is NoteType.HoldStart)
+            if (note.LinkType is NoteLinkType.Start)
             {
                 IEnumerable<Note> references = note.References();
                 foreach (Note reference in references)
                 {
-                    input += $"{reference.Guid} {reference.BeatData.Measure,4:F0} {reference.BeatData.Tick,4:F0} {index,4:F0} {reference.Position,4:F0} {reference.Size,4:F0} {NoteType2String(reference.NoteType)}{Modifiers2String(reference)}\n";
+                    input += $"{reference.Guid} {reference.BeatData.Measure,4:F0} {reference.BeatData.Tick,4:F0} {index,4:F0} {reference.Position,4:F0} {reference.Size,4:F0} {NoteType2String(reference.NoteType, reference.LinkType)}{Modifiers2String(reference)}\n";
                     index++;
                 }
             }
             else
             {
-                input += $"{note.Guid} {note.BeatData.Measure,4:F0} {note.BeatData.Tick,4:F0} {index,4:F0} {note.Position,4:F0} {note.Size,4:F0} {NoteType2String(note.NoteType)}{Modifiers2String(note)}\n";
+                input += $"{note.Guid} {note.BeatData.Measure,4:F0} {note.BeatData.Tick,4:F0} {index,4:F0} {note.Position,4:F0} {note.Size,4:F0} {NoteType2String(note.NoteType, note.LinkType)}{Modifiers2String(note)}\n";
                 index++;
             }
         }
@@ -779,57 +783,73 @@ internal static class SatHandler
     
     // Helpers
     private static NoteType String2NoteType(string[] attributes)
-        {
-            if (attributes.Length == 0) return NoteType.None;
+    {
+        if (attributes.Length == 0) return NoteType.None;
 
-            return attributes[0] switch
-            {
-                "TOUCH" => NoteType.Touch,
-                "SNAP_FW" => NoteType.SnapForward,
-                "SNAP_BW" => NoteType.SnapBackward,
-                "SLIDE_CW" => NoteType.SlideClockwise,
-                "SLIDE_CCW" => NoteType.SlideCounterclockwise,
-                "CHAIN" => NoteType.Chain,
-                "HOLD_START" => NoteType.HoldStart,
-                "HOLD_POINT" => NoteType.HoldSegment,
-                "HOLD_POINT.NR" => NoteType.HoldSegment,
-                "HOLD_END" => NoteType.HoldEnd,
-                "MASK_ADD" => NoteType.MaskAdd,
-                "MASK_SUB" => NoteType.MaskRemove,
-                "TRACE_START" => NoteType.TraceStart,
-                "TRACE_POINT" => NoteType.TraceSegment,
-                "TRACE_END" => NoteType.TraceEnd,
-                "DAMAGE" => NoteType.Damage,
+        return attributes[0] switch
+        {
+            "TOUCH" => NoteType.Touch,
+            "SNAP_FW" => NoteType.SnapForward,
+            "SNAP_BW" => NoteType.SnapBackward,
+            "SLIDE_CW" => NoteType.SlideClockwise,
+            "SLIDE_CCW" => NoteType.SlideCounterclockwise,
+            "CHAIN" => NoteType.Chain,
+            "HOLD_START" => NoteType.Hold,
+            "HOLD_POINT" => NoteType.Hold,
+            "HOLD_END" => NoteType.Hold,
+            "MASK_ADD" => NoteType.MaskAdd,
+            "MASK_SUB" => NoteType.MaskRemove,
+            "TRACE_START" => NoteType.Trace,
+            "TRACE_POINT" => NoteType.Trace,
+            "TRACE_END" => NoteType.Trace,
+            "DAMAGE" => NoteType.Damage,
                 
-                _ => NoteType.None,
-            };
-        }
+            _ => NoteType.None,
+        };
+    }
 
     private static BonusType String2BonusType(string[] attributes)
+    {
+        if (attributes.Length < 2) return BonusType.None;
+
+        return attributes[1] switch
         {
-            if (attributes.Length < 2) return BonusType.None;
+            "NORMAL" => BonusType.None,
+            "BONUS" => BonusType.Bonus,
+            "RNOTE" => BonusType.RNote,
+            _ => BonusType.None,
+        };
+    }
 
-            return attributes[1] switch
-            {
-                "NORMAL" => BonusType.None,
-                "BONUS" => BonusType.Bonus,
-                "RNOTE" => BonusType.RNote,
-                _ => BonusType.None,
-            };
-        }
+    private static NoteLinkType String2NoteLinkType(string[] attributes)
+    {
+        if (attributes.Length == 0) return NoteLinkType.Unlinked;
 
+        return attributes[0] switch
+        {
+            "HOLD_START" => NoteLinkType.Start,
+            "HOLD_POINT" => NoteLinkType.Point,
+            "HOLD_END" => NoteLinkType.End,
+            "TRACE_START" => NoteLinkType.Start,
+            "TRACE_POINT" => NoteLinkType.Point,
+            "TRACE_END" => NoteLinkType.End,
+
+            _ => NoteLinkType.Unlinked,
+        };
+    }
+    
     private static MaskDirection String2MaskDirection(string[] attributes)
-        {
-            if (attributes.Length < 2) return MaskDirection.None;
+    {
+        if (attributes.Length < 2) return MaskDirection.None;
 
-            return attributes[1] switch
-            {
-                "CW" => MaskDirection.Clockwise,
-                "CCW" => MaskDirection.Counterclockwise,
-                "CENTER" => MaskDirection.Center,
-                _ => MaskDirection.None,
-            };
-        }
+        return attributes[1] switch
+        {
+            "CW" => MaskDirection.Clockwise,
+            "CCW" => MaskDirection.Counterclockwise,
+            "CENTER" => MaskDirection.Center,
+            _ => MaskDirection.None,
+        };
+    }
 
     private static TraceColor String2TraceColor(string[] attributes)
     {
@@ -853,21 +873,21 @@ internal static class SatHandler
     }
     
     private static GimmickType String2GimmickType(string name)
+    {
+        return name switch
         {
-            return name switch
-            {
-                "BPM" => GimmickType.BpmChange,
-                "TIMESIG" => GimmickType.TimeSigChange,
-                "HISPEED" => GimmickType.HiSpeedChange,
-                "REV_START" => GimmickType.ReverseEffectStart,
-                "REV_END" => GimmickType.ReverseEffectEnd,
-                "REV_ZONE_END" => GimmickType.ReverseNoteEnd,
-                "STOP_START" => GimmickType.StopStart,
-                "STOP_END" => GimmickType.StopEnd,
-                "CHART_END" => GimmickType.EndOfChart,
-                _ => GimmickType.None,
-            };
-        }
+            "BPM" => GimmickType.BpmChange,
+            "TIMESIG" => GimmickType.TimeSigChange,
+            "HISPEED" => GimmickType.HiSpeedChange,
+            "REV_START" => GimmickType.ReverseEffectStart,
+            "REV_END" => GimmickType.ReverseEffectEnd,
+            "REV_ZONE_END" => GimmickType.ReverseNoteEnd,
+            "STOP_START" => GimmickType.StopStart,
+            "STOP_END" => GimmickType.StopEnd,
+            "CHART_END" => GimmickType.EndOfChart,
+            _ => GimmickType.None,
+        };
+    }
     
     private static string GimmickType2String(GimmickType gimmickType)
     {
@@ -887,26 +907,26 @@ internal static class SatHandler
         };
     }
     
-    private static string NoteType2String(NoteType noteType)
+    private static string NoteType2String(NoteType noteType, NoteLinkType linkType)
     {
-        return noteType switch
+        return (noteType, linkType) switch
         {
-            NoteType.None => "",
-            NoteType.Touch => "TOUCH",
-            NoteType.SnapForward => "SNAP_FW",
-            NoteType.SnapBackward => "SNAP_BW",
-            NoteType.SlideClockwise => "SLIDE_CW",
-            NoteType.SlideCounterclockwise => "SLIDE_CCW",
-            NoteType.HoldStart => "HOLD_START",
-            NoteType.HoldSegment => "HOLD_POINT",
-            NoteType.HoldEnd => "HOLD_END",
-            NoteType.MaskAdd => "MASK_ADD",
-            NoteType.MaskRemove => "MASK_SUB",
-            NoteType.Chain => "CHAIN",
-            NoteType.TraceStart => "TRACE_START",
-            NoteType.TraceSegment => "TRACE_POINT",
-            NoteType.TraceEnd => "TRACE_END",
-            NoteType.Damage => "DAMAGE",
+            (NoteType.None, _) => "",
+            (NoteType.Touch, _) => "TOUCH",
+            (NoteType.SnapForward, _) => "SNAP_FW",
+            (NoteType.SnapBackward, _) => "SNAP_BW",
+            (NoteType.SlideClockwise, _) => "SLIDE_CW",
+            (NoteType.SlideCounterclockwise, _) => "SLIDE_CCW",
+            (NoteType.Hold, NoteLinkType.Start) => "HOLD_START",
+            (NoteType.Hold, NoteLinkType.Point) => "HOLD_POINT",
+            (NoteType.Hold, NoteLinkType.End) => "HOLD_END",
+            (NoteType.MaskAdd, _) => "MASK_ADD",
+            (NoteType.MaskRemove, _) => "MASK_SUB",
+            (NoteType.Chain, _) => "CHAIN",
+            (NoteType.Trace, NoteLinkType.Start) => "TRACE_START",
+            (NoteType.Trace, NoteLinkType.Point) => "TRACE_POINT",
+            (NoteType.Trace, NoteLinkType.End) => "TRACE_END",
+            (NoteType.Damage, _) => "DAMAGE",
             
             _ => "",
         };
@@ -916,15 +936,18 @@ internal static class SatHandler
     {
         string modifiers = "";
 
-        modifiers += note.BonusType switch
+        if (!note.IsSegment)
         {
-            BonusType.None => "",
-            BonusType.Bonus => ".BONUS",
-            BonusType.RNote => ".RNOTE",
-            _ => "",
-        };
+            modifiers += note.BonusType switch
+            {
+                BonusType.None => "",
+                BonusType.Bonus => ".BONUS",
+                BonusType.RNote => ".RNOTE",
+                _ => "",
+            };
+        }
 
-        if (note.NoteType == NoteType.TraceStart)
+        if (note.NoteType == NoteType.Trace && note.LinkType == NoteLinkType.Start)
         {
             modifiers += note.Color switch
             {
@@ -953,7 +976,7 @@ internal static class SatHandler
                 _ => "",
             };
         
-        if (!note.RenderSegment) modifiers += ".NR";
+        if (note.NoteType == NoteType.Hold && note.LinkType == NoteLinkType.Point && !note.RenderSegment) modifiers += ".NR";
 
         return modifiers;
     }

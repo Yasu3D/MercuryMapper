@@ -57,32 +57,6 @@ public class DeleteHoldNote(Chart chart, List<Note> selected, Note deletedNote, 
         // This persists throughout the rest of the code, so further checks if any of them are null will reflect this change.
         if (NextNote != null && !Chart.Notes.Contains(NextNote)) DeletedNote.NextReferencedNote = null;
         if (PrevNote != null && !Chart.Notes.Contains(PrevNote)) DeletedNote.PrevReferencedNote = null;
-        
-        // Repair Hold Types by brute force.
-        foreach (Note reference in DeletedNote.References())
-        {
-            if (reference is { PrevReferencedNote: null, NextReferencedNote: null })
-            {
-                reference.NoteType = NoteType.HoldStart;
-                reference.BonusType = BonusType;
-            }
-
-            if (reference is { PrevReferencedNote: not null, NextReferencedNote: null })
-            {
-                reference.NoteType = NoteType.HoldEnd;
-            }
-
-            if (reference is { PrevReferencedNote: null, NextReferencedNote: not null })
-            {
-                reference.NoteType = NoteType.HoldStart;
-                reference.BonusType = BonusType;
-            }
-
-            if (reference is { PrevReferencedNote: not null, NextReferencedNote: not null })
-            {
-                reference.NoteType = NoteType.HoldSegment;
-            }
-        }
     }
 
     public void Redo()
@@ -93,19 +67,6 @@ public class DeleteHoldNote(Chart chart, List<Note> selected, Note deletedNote, 
         // Deleted note itself keeps its original references!
         if (NextNote != null) NextNote.PrevReferencedNote = DeletedNote.PrevReferencedNote;
         if (PrevNote != null) PrevNote.NextReferencedNote = DeletedNote.NextReferencedNote;
-        
-        // Three cases.
-        // One: Deleted note is a Segment. Do nothing.
-        
-        // Two: Deleted note is a HoldStart. Convert Next to HoldStart.
-        if (NextNote is { PrevReferencedNote: null })
-        {
-            NextNote.NoteType = NoteType.HoldStart;
-            NextNote.BonusType = BonusType;
-        }
-        
-        // Three: Deleted note is a HoldEnd. Convert Prev to HoldEnd.
-        if (PrevNote is { NextReferencedNote: null }) PrevNote.NoteType = NoteType.HoldEnd;
         
         // Remove note.
         lock (Chart)

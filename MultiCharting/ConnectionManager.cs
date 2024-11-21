@@ -184,7 +184,7 @@ public class ConnectionManager(MainView main)
             return;
         }
 
-        SendMessage(new MessageSerializer(MessageTypes.CreateSession, [ username, color ]));
+        SendMessage(new(MessageTypes.CreateSession, [ username, color ]));
     }
 
     public void JoinSession(string address, string username, string color, string sessionCode)
@@ -198,7 +198,7 @@ public class ConnectionManager(MainView main)
 
         SessionCode = sessionCode.ToUpperInvariant();
 
-        SendMessage(new MessageSerializer(MessageTypes.JoinSession, [ SessionCode, username, color ]));
+        SendMessage(new(MessageTypes.JoinSession, [ SessionCode, username, color ]));
     }
 
     public void LeaveSession()
@@ -274,7 +274,7 @@ public class ConnectionManager(MainView main)
         {
             webSocketClient.Start().Wait();
 
-            SendMessage(new MessageSerializer(MessageTypes.InitConnection, [ "Hello MercuryMultiMapperServer!", MainView.ServerVersion ]));
+            SendMessage(new(MessageTypes.InitConnection, [ "Hello MercuryMultiMapperServer!", MainView.ServerVersion ]));
 
             return "connected";
         }
@@ -289,21 +289,21 @@ public class ConnectionManager(MainView main)
         byte[] bytes = File.ReadAllBytes(ChartEditor.Chart.BgmFilepath);
         string fileData = Convert.ToBase64String(bytes);
 
-        SendMessage(new MessageSerializer(MessageTypes.File, [ Path.GetFileName(ChartEditor.Chart.BgmFilepath), fileData ], [ receivingClientId ]));
+        SendMessage(new(MessageTypes.File, [ Path.GetFileName(ChartEditor.Chart.BgmFilepath), fileData ], [ receivingClientId ]));
     }
 
     private void SendChartData(int receivingClientId)
     {
         string chartData = FormatHandler.WriteFileToNetwork(mainView.ChartEditor.Chart);
 
-        SendMessage(new MessageSerializer(MessageTypes.ChartData, [ chartData ], [ receivingClientId ]));
+        SendMessage(new(MessageTypes.ChartData, [ chartData ], [ receivingClientId ]));
     }
 
     private void LoadChartAndAudio()
     {
         Dispatcher.UIThread.Post(() => mainView.OpenChartFromNetwork(receivedChartData, audioFilePath));
         
-        SendMessage(new MessageSerializer(MessageTypes.SyncEnd));
+        SendMessage(new(MessageTypes.SyncEnd));
     }
         
     public void SendMessage(MessageSerializer messageObject)
@@ -331,7 +331,7 @@ public class ConnectionManager(MainView main)
             case InsertNote insertNote:
             {
                 string opData = insertNote.Note.ToNetworkString();
-                SendMessage(new MessageSerializer(MessageTypes.InsertNote, [ opData ], [ (int)operationDirection ]));
+                SendMessage(new(MessageTypes.InsertNote, [ opData ], [ (int)operationDirection ]));
                 break;
             }
 
@@ -339,7 +339,7 @@ public class ConnectionManager(MainView main)
             {
                 string opData = $"{insertHoldNote.Note.ToNetworkString()}\n" +
                                 $"{insertHoldNote.LastPlacedNote.ToNetworkString()}";
-                SendMessage(new MessageSerializer(MessageTypes.InsertHoldNote, [ opData ], [ (int)operationDirection ]));
+                SendMessage(new(MessageTypes.InsertHoldNote, [ opData ], [ (int)operationDirection ]));
                 break;
             }
                 
@@ -348,21 +348,21 @@ public class ConnectionManager(MainView main)
                 string opData = $"{insertHoldSegment.NewNote.ToNetworkString()}\n" +
                                 $"{insertHoldSegment.Previous.ToNetworkString()}\n" +
                                 $"{insertHoldSegment.Next.ToNetworkString()}";
-                SendMessage(new MessageSerializer(MessageTypes.InsertHoldSegment, [ opData ], [ (int)operationDirection ]));
+                SendMessage(new(MessageTypes.InsertHoldSegment, [ opData ], [ (int)operationDirection ]));
                 break;
             }
                 
             case DeleteNote deleteNote:
             {
                 string opData = deleteNote.Note.ToNetworkString();
-                SendMessage(new MessageSerializer(MessageTypes.DeleteNote, [ opData ], [ (int)operationDirection ]));
+                SendMessage(new(MessageTypes.DeleteNote, [ opData ], [ (int)operationDirection ]));
                 break;
             }
                 
             case DeleteHoldNote deleteHoldNote:
             {
                 string opData = $"{deleteHoldNote.DeletedNote.ToNetworkString()}\n{(int)deleteHoldNote.BonusType}";
-                SendMessage(new MessageSerializer(MessageTypes.DeleteHoldNote, [ opData ], [ (int)operationDirection ]));
+                SendMessage(new(MessageTypes.DeleteHoldNote, [ opData ], [ (int)operationDirection ]));
                 break;
             }
                 
@@ -371,7 +371,7 @@ public class ConnectionManager(MainView main)
                 string opData = $"{editNote.BaseNote.ToNetworkString()}\n" +
                                 $"{editNote.OldNote.ToNetworkString()}\n" + 
                                 $"{editNote.NewNote.ToNetworkString()}";
-                SendMessage(new MessageSerializer(MessageTypes.EditNote, [ opData ], [ (int)operationDirection ]));
+                SendMessage(new(MessageTypes.EditNote, [ opData ], [ (int)operationDirection ]));
                 break;
             }
                 
@@ -388,7 +388,7 @@ public class ConnectionManager(MainView main)
                     opData.Add($"{note.ToNetworkString()}");
                 }
                     
-                SendMessage(new MessageSerializer(MessageTypes.BakeHold, opData.ToArray(), [ (int)operationDirection ]));
+                SendMessage(new(MessageTypes.BakeHold, opData.ToArray(), [ (int)operationDirection ]));
                 break;
             }
                 
@@ -397,31 +397,29 @@ public class ConnectionManager(MainView main)
                 string opData = $"{splitHold.Segment.ToNetworkString()}\n" +
                                 $"{splitHold.NewStart.ToNetworkString()}\n" + 
                                 $"{splitHold.NewEnd.ToNetworkString()}";
-                SendMessage(new MessageSerializer(MessageTypes.SplitHold, [ opData ], [ (int)operationDirection ]));
+                SendMessage(new(MessageTypes.SplitHold, [ opData ], [ (int)operationDirection ]));
                 break;
             }
 
             case StitchHold stitchHold:
             {
                 string opData = $"{stitchHold.First.ToNetworkString()}\n" +
-                                $"{stitchHold.Second.ToNetworkString()}\n" + 
-                                $"{(int)stitchHold.SecondNoteType}\n" +
-                                $"{(int)stitchHold.SecondBonusType}";
-                SendMessage(new MessageSerializer(MessageTypes.StitchHold, [ opData ], [ (int)operationDirection ]));
+                                $"{stitchHold.Second.ToNetworkString()}\n";
+                SendMessage(new(MessageTypes.StitchHold, [ opData ], [ (int)operationDirection ]));
                 break;
             }
 
             case InsertGimmick insertGimmick:
             {
                 string opData = $"{insertGimmick.Gimmick.ToNetworkString()}";
-                SendMessage(new MessageSerializer(MessageTypes.InsertGimmick, [ opData ], [ (int)operationDirection ]));
+                SendMessage(new(MessageTypes.InsertGimmick, [ opData ], [ (int)operationDirection ]));
                 break;
             }
                 
             case DeleteGimmick deleteGimmick:
             {
                 string opData = $"{deleteGimmick.Gimmick.ToNetworkString()}";
-                SendMessage(new MessageSerializer(MessageTypes.DeleteGimmick, [ opData ], [ (int)operationDirection ]));
+                SendMessage(new(MessageTypes.DeleteGimmick, [ opData ], [ (int)operationDirection ]));
                 break;
             }
 
@@ -430,7 +428,7 @@ public class ConnectionManager(MainView main)
                 string opData = $"{editGimmick.BaseGimmick.ToNetworkString()}\n" +
                                 $"{editGimmick.OldGimmick.ToNetworkString()}\n" + 
                                 $"{editGimmick.NewGimmick.ToNetworkString()}";
-                SendMessage(new MessageSerializer(MessageTypes.EditGimmick, [ opData ], [ (int)operationDirection ]));
+                SendMessage(new(MessageTypes.EditGimmick, [ opData ], [ (int)operationDirection ]));
                 break;
             }
         }
@@ -497,7 +495,7 @@ public class ConnectionManager(MainView main)
             case MessageTypes.GoodSessionCode:
             {
                 SetNetworkConnectionState(NetworkConnectionState.Client);
-                SendMessage(new MessageSerializer(MessageTypes.SyncRequest));
+                SendMessage(new(MessageTypes.SyncRequest));
                 break;
             }
                 
@@ -1031,11 +1029,8 @@ public class ConnectionManager(MainView main)
                         Note? first = Chart.FindNoteByGuid(firstData[0]);
                         Note? second = Chart.FindNoteByGuid(secondData[0]);
                         if (first == null || second == null) return;
-
-                        NoteType secondNoteType = (NoteType)Convert.ToInt32(operationData[2], CultureInfo.InvariantCulture);
-                        BonusType secondBonusType = operationData.Length == 4 ? (BonusType)Convert.ToInt32(operationData[3], CultureInfo.InvariantCulture) : BonusType.None;
-
-                        StitchHold operation = new(Chart, first, second, secondNoteType, secondBonusType);
+                        
+                        StitchHold operation = new(Chart, first, second);
                         operation.Undo();
                         ChartEditor.UndoRedoManager.Invoke();
                     }
@@ -1045,11 +1040,8 @@ public class ConnectionManager(MainView main)
                         Note? first = Chart.FindNoteByGuid(firstData[0]);
                         Note? second = Chart.FindNoteByGuid(secondData[0]);
                         if (first == null || second == null) return;
-
-                        NoteType secondNoteType = (NoteType)Convert.ToInt32(operationData[2], CultureInfo.InvariantCulture);
-                        BonusType secondBonusType = operationData.Length == 4 ? (BonusType)Convert.ToInt32(operationData[3], CultureInfo.InvariantCulture) : BonusType.None;
-
-                        StitchHold operation = new(Chart, first, second, secondNoteType, secondBonusType);
+                        
+                        StitchHold operation = new(Chart, first, second);
 
                         operation.Redo();
                         ChartEditor.UndoRedoManager.Invoke();

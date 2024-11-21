@@ -401,8 +401,8 @@ public partial class MainView : UserControl
     public void ToggleInsertButton()
     {
         bool behindEndOfChart = ChartEditor.Chart.EndOfChart != null && ChartEditor.CurrentBeatData.FullTick >= ChartEditor.Chart.EndOfChart.BeatData.FullTick;
-        bool beforeHoldStart = ChartEditor is { CurrentHoldStart: not null, EditorState: ChartEditorState.InsertHold } && ChartEditor.CurrentMeasureDecimal <= ChartEditor.CurrentHoldStart.BeatData.MeasureDecimal;
-        bool beforeLastHold = ChartEditor is { LastPlacedHold: not null, EditorState: ChartEditorState.InsertHold } && ChartEditor.CurrentMeasureDecimal <= ChartEditor.LastPlacedHold.BeatData.MeasureDecimal;
+        bool beforeHoldStart = ChartEditor is { CurrentCollectionStart: not null, EditorState: ChartEditorState.InsertHold } && ChartEditor.CurrentMeasureDecimal <= ChartEditor.CurrentCollectionStart.BeatData.MeasureDecimal;
+        bool beforeLastHold = ChartEditor is { LastPlacedNote: not null, EditorState: ChartEditorState.InsertHold } && ChartEditor.CurrentMeasureDecimal <= ChartEditor.LastPlacedNote.BeatData.MeasureDecimal;
 
         ButtonInsert.IsEnabled = !(behindEndOfChart || beforeHoldStart || beforeLastHold);
     }
@@ -480,7 +480,7 @@ public partial class MainView : UserControl
         {
             SelectionInfoPositionValue.Text = note.Position.ToString();
             SelectionInfoSizeValue.Text = note.Size.ToString();
-            SelectionInfoNoteTypeValue.Text = Enums2String.NoteType2String(note.NoteType, note.BonusType);
+            SelectionInfoNoteTypeValue.Text = Enums2String.NoteType2String(note.NoteType, note.BonusType, note.LinkType);
             SelectionInfoMaskDirectionValue.Text = Enums2String.MaskDirection2String(note.MaskDirection);
 
             SelectionInfoNoteType.IsVisible = true;
@@ -559,9 +559,9 @@ public partial class MainView : UserControl
         QuickSettingsCheckBoxCutOverlappingJudgementWindows.IsChecked = UserConfig.RenderConfig.CutOverlappingJudgementWindows;
     }
 
-    public void SetNoteSizeBounds(NoteType noteType, BonusType bonusType)
+    public void SetNoteSizeBounds(NoteType noteType, BonusType bonusType, NoteLinkType linkType)
     {
-        int minimum = Note.MinSize(noteType, bonusType);
+        int minimum = Note.MinSize(noteType, bonusType, linkType);
         int maximum = Note.MaxSize(noteType);
         SliderNoteSize.Minimum = minimum;
         NumericNoteSize.Minimum = minimum;
@@ -701,7 +701,7 @@ public partial class MainView : UserControl
 
                 case ChartEditorState.InsertHold:
                     {
-                        ChartEditor.EndHold(true);
+                        ChartEditor.EndHold();
                         break;
                     }
 
@@ -817,7 +817,7 @@ public partial class MainView : UserControl
         }
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorEndHold"]))
         {
-            ChartEditor.EndHold(true);
+            ChartEditor.EndHold();
             e.Handled = true;
             return;
         }
@@ -1782,7 +1782,7 @@ public partial class MainView : UserControl
 
     private void MenuItemGenerateJaggedHolds_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (!ChartEditor.SelectedNotes.Exists(x => x.IsHold))
+        if (!ChartEditor.SelectedNotes.Exists(x => x.NoteType == NoteType.Hold))
         {
             ShowWarningMessage(Assets.Lang.Resources.Editor_NoHoldsSelected, Assets.Lang.Resources.Editor_NoHoldsSelectedTip);
             return;
@@ -1820,7 +1820,7 @@ public partial class MainView : UserControl
 
     private void MenuItemReconstructHolds_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (!ChartEditor.SelectedNotes.Exists(x => x.IsHold))
+        if (!ChartEditor.SelectedNotes.Exists(x => x.NoteType == NoteType.Hold))
         {
             ShowWarningMessage(Assets.Lang.Resources.Editor_NoHoldsSelected, Assets.Lang.Resources.Editor_NoHoldsSelectedTip);
             return;
@@ -1877,8 +1877,8 @@ public partial class MainView : UserControl
             "RadioNoteSnapForward" => NoteType.SnapForward,
             "RadioNoteSnapBackward" => NoteType.SnapBackward,
             "RadioNoteChain" => NoteType.Chain,
-            "RadioNoteHold" => NoteType.HoldStart,
-            "RadioNoteTrace" => NoteType.TraceStart,
+            "RadioNoteHold" => NoteType.Hold,
+            "RadioNoteTrace" => NoteType.Trace,
             "RadioNoteDamage" => NoteType.Damage,
             "RadioNoteMaskAdd" => NoteType.MaskAdd,
             "RadioNoteMaskRemove" => NoteType.MaskRemove,
@@ -2061,7 +2061,7 @@ public partial class MainView : UserControl
         ChartEditor.EditHold();
     }
 
-    private void ButtonEndHold_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.EndHold(true);
+    private void ButtonEndHold_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.EndHold();
 
     private void SliderPosition_OnValueChanged(object? sender, RangeBaseValueChangedEventArgs e) => Position_OnValueChanged(true);
     private void SliderNotePosition_OnPointerWheelChanged(object? sender, PointerWheelEventArgs e)

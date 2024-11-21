@@ -37,11 +37,6 @@ public class InsertHoldNote(Chart chart, List<Note> selected, Note note, Note la
     
     public void Undo()
     {
-        if (LastPlacedNote.NoteType is NoteType.HoldSegment)
-        {
-            LastPlacedNote.NoteType = NoteType.HoldEnd;
-        }
-
         LastPlacedNote.NextReferencedNote = null;
         Note.PrevReferencedNote = null;
         
@@ -61,11 +56,6 @@ public class InsertHoldNote(Chart chart, List<Note> selected, Note note, Note la
 
         Note.PrevReferencedNote = LastPlacedNote;
         LastPlacedNote.NextReferencedNote = Note;
-        
-        if (LastPlacedNote.NoteType is NoteType.HoldEnd)
-        {
-            LastPlacedNote.NoteType = NoteType.HoldSegment;
-        }
     }
 }
 

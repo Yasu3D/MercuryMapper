@@ -5,7 +5,6 @@ using System.Linq;
 using Avalonia.Controls.Shapes;
 using MercuryMapper.Enums;
 using MercuryMapper.Utils;
-using SkiaSharp;
 
 namespace MercuryMapper.Data;
 
@@ -215,23 +214,18 @@ public class Note : ChartElement
 
         ParsedIndex = noteIndex;
     }
-    
-    public bool IsHold => NoteType
-        is NoteType.HoldStart 
-        or NoteType.HoldSegment 
-        or NoteType.HoldEnd;
 
-    public bool IsTrace => NoteType
-        is NoteType.TraceStart
-        or NoteType.TraceSegment
-        or NoteType.TraceEnd;
+    public NoteLinkType LinkType => this switch
+    {
+        { PrevReferencedNote:     null, NextReferencedNote:     null } => NoteLinkType.Unlinked,
+        { PrevReferencedNote:     null, NextReferencedNote: not null } => NoteLinkType.Start,
+        { PrevReferencedNote: not null, NextReferencedNote: not null } => NoteLinkType.Point,
+        { PrevReferencedNote: not null, NextReferencedNote:     null } => NoteLinkType.End,
+    };
 
-    public bool IsSegment => NoteType
-        is NoteType.HoldSegment
-        or NoteType.HoldEnd;
-
-    public bool IsChain => NoteType
-        is NoteType.Chain;
+    public bool IsSegment => LinkType
+        is NoteLinkType.Point
+        or NoteLinkType.End;
     
     public bool IsSlide => NoteType 
         is NoteType.SlideClockwise 
@@ -249,50 +243,52 @@ public class Note : ChartElement
         is NoteType.MaskAdd
         or NoteType.MaskRemove;
 
-    public static int MinSize(NoteType noteType, BonusType bonusType)
+    public bool IsNoteCollection => NoteType
+        is NoteType.Hold
+        or NoteType.Trace;
+    
+    public static int MinSize(NoteType noteType, BonusType bonusType, NoteLinkType linkType)
     {
-        return (noteType, bonusType) switch
+        return (noteType, bonusType, linkType) switch
         {
-            (NoteType.Touch, BonusType.None) => 4,
-            (NoteType.Touch, BonusType.Bonus) => 5,
-            (NoteType.Touch, BonusType.RNote) => 6,
+            (NoteType.Touch, BonusType.None, _) => 4,
+            (NoteType.Touch, BonusType.Bonus, _) => 5,
+            (NoteType.Touch, BonusType.RNote, _) => 6,
             
-            (NoteType.SnapForward, BonusType.None) => 6,
-            (NoteType.SnapBackward, BonusType.None) => 6,
+            (NoteType.SnapForward, BonusType.None, _) => 6,
+            (NoteType.SnapBackward, BonusType.None, _) => 6,
             
-            (NoteType.SnapForward, BonusType.Bonus) => 6,
-            (NoteType.SnapBackward, BonusType.Bonus) => 6,
+            (NoteType.SnapForward, BonusType.Bonus, _) => 6,
+            (NoteType.SnapBackward, BonusType.Bonus, _) => 6,
             
-            (NoteType.SnapForward, BonusType.RNote) => 8,
-            (NoteType.SnapBackward, BonusType.RNote) => 8,
+            (NoteType.SnapForward, BonusType.RNote, _) => 8,
+            (NoteType.SnapBackward, BonusType.RNote, _) => 8,
             
-            (NoteType.SlideClockwise, BonusType.None) => 5,
-            (NoteType.SlideCounterclockwise, BonusType.None) => 5,
+            (NoteType.SlideClockwise, BonusType.None, _) => 5,
+            (NoteType.SlideCounterclockwise, BonusType.None, _) => 5,
             
-            (NoteType.SlideClockwise, BonusType.Bonus) => 7,
-            (NoteType.SlideCounterclockwise, BonusType.Bonus) => 7,
+            (NoteType.SlideClockwise, BonusType.Bonus, _) => 7,
+            (NoteType.SlideCounterclockwise, BonusType.Bonus, _) => 7,
             
-            (NoteType.SlideClockwise, BonusType.RNote) => 10,
-            (NoteType.SlideCounterclockwise, BonusType.RNote) => 10,
+            (NoteType.SlideClockwise, BonusType.RNote, _) => 10,
+            (NoteType.SlideCounterclockwise, BonusType.RNote, _) => 10,
             
-            (NoteType.Chain, BonusType.None) => 4,
-            (NoteType.Chain, BonusType.Bonus) => 4,
-            (NoteType.Chain, BonusType.RNote) => 10,
+            (NoteType.Chain, BonusType.None, _) => 4,
+            (NoteType.Chain, BonusType.Bonus, _) => 4,
+            (NoteType.Chain, BonusType.RNote, _) => 10,
             
-            (NoteType.HoldStart, BonusType.None) => 2,
-            (NoteType.HoldStart, BonusType.Bonus) => 2,
-            (NoteType.HoldStart, BonusType.RNote) => 8,
+            (NoteType.Hold, BonusType.None, NoteLinkType.Start) => 2,
+            (NoteType.Hold, BonusType.Bonus, NoteLinkType.Start) => 2,
+            (NoteType.Hold, BonusType.RNote, NoteLinkType.Start) => 8,
+            (NoteType.Hold, _, NoteLinkType.Point) => 1,
+            (NoteType.Hold, _, NoteLinkType.End) => 1,
+            (NoteType.Hold, _, _) => 2,
             
-            (NoteType.HoldSegment, _) => 1,
-            (NoteType.HoldEnd, _) => 1,
+            (NoteType.MaskAdd, _, _) => 1,
+            (NoteType.MaskRemove, _, _) => 1,
             
-            (NoteType.MaskAdd, _) => 1,
-            (NoteType.MaskRemove, _) => 1,
-            
-            (NoteType.Damage, _) => 3,
-            (NoteType.TraceStart, _) => 2,
-            (NoteType.TraceSegment, _) => 2,
-            (NoteType.TraceEnd, _) => 2,
+            (NoteType.Damage, _, _) => 3,
+            (NoteType.Trace, _, _) => 2,
             
             _ => 5,
         };
@@ -302,9 +298,7 @@ public class Note : ChartElement
     {
         return noteType switch
         {
-            NoteType.TraceStart => 2,
-            NoteType.TraceSegment => 2,
-            NoteType.TraceEnd => 2,
+            NoteType.Trace => 2,
             _ => 60,
         };
     }
@@ -312,7 +306,7 @@ public class Note : ChartElement
     public IEnumerable<Note> References()
     {
         List<Note> refs = [this];
-        if (!IsHold && !IsTrace) return refs;
+        if (NoteType is not (NoteType.Hold or NoteType.Trace)) return refs;
 
         Note? prev = PrevReferencedNote;
         Note? next = NextReferencedNote;
@@ -334,9 +328,9 @@ public class Note : ChartElement
 
     public Note? FirstReference()
     {
-        if (!IsHold && !IsTrace) return null;
+        if (NoteType is not (NoteType.Hold or NoteType.Trace)) return null;
         
-        Note? first = this;
+        Note first = this;
         Note? prev = PrevReferencedNote;
         
         while (prev is not null)
@@ -350,7 +344,7 @@ public class Note : ChartElement
 
     public Note? PrevVisibleReference(bool skip = false)
     {
-        if (!IsHold && !IsTrace) return null;
+        if (NoteType is not (NoteType.Hold or NoteType.Trace)) return null;
         if (skip) return PrevReferencedNote;
         
         Note? prev = PrevReferencedNote;
@@ -366,7 +360,7 @@ public class Note : ChartElement
     
     public Note? NextVisibleReference(bool skip = false)
     {
-        if (!IsHold && !IsTrace) return null;
+        if (NoteType is not (NoteType.Hold or NoteType.Trace)) return null;
         if (skip) return NextReferencedNote;
         
         Note? next = NextReferencedNote;
@@ -387,10 +381,16 @@ public class Note : ChartElement
         {
             result += $" {(int)MaskDirection:F0}";
         }
-        else
+        
+        if (NoteType is NoteType.Hold or NoteType.Trace)
         {
             result += $" {(NextReferencedNote != null ? NextReferencedNote.Guid : "null")}";
             result += $" {(PrevReferencedNote != null ? PrevReferencedNote.Guid : "null")}";
+        }
+
+        if (NoteType is NoteType.Trace)
+        {
+            result += $" {(int)Color}";
         }
         
         return result;
@@ -411,10 +411,15 @@ public class Note : ChartElement
 
         if (note.IsMask && data.Length == 9) note.MaskDirection = (MaskDirection)Convert.ToInt32(data[8]);
 
-        if (data.Length == 10)
+        if (data.Length >= 10)
         {
             if (data[8] != "null") note.NextReferencedNote = chart.FindNoteByGuid(data[8]);
             if (data[9] != "null") note.PrevReferencedNote = chart.FindNoteByGuid(data[9]);
+        }
+
+        if (data.Length >= 11)
+        {
+            note.Color = (TraceColor)Convert.ToInt32(data[10]);
         }
 
         return note;
@@ -422,41 +427,41 @@ public class Note : ChartElement
 
     public int NoteToMerId()
     {
-        return (NoteType, BonusType) switch
+        return (NoteType, BonusType, LinkType) switch
         {
-            (NoteType.Touch, BonusType.None) => 1,
-            (NoteType.Touch, BonusType.Bonus) => 2,
-            (NoteType.Touch, BonusType.RNote) => 20,
+            (NoteType.Touch, BonusType.None, _) => 1,
+            (NoteType.Touch, BonusType.Bonus, _) => 2,
+            (NoteType.Touch, BonusType.RNote, _) => 20,
 
-            (NoteType.SnapForward, BonusType.None) => 3,
-            (NoteType.SnapForward, BonusType.Bonus) => 3,
-            (NoteType.SnapForward, BonusType.RNote) => 21,
+            (NoteType.SnapForward, BonusType.None, _) => 3,
+            (NoteType.SnapForward, BonusType.Bonus, _) => 3,
+            (NoteType.SnapForward, BonusType.RNote, _) => 21,
 
-            (NoteType.SnapBackward, BonusType.None) => 4,
-            (NoteType.SnapBackward, BonusType.Bonus) => 4,
-            (NoteType.SnapBackward, BonusType.RNote) => 22,
+            (NoteType.SnapBackward, BonusType.None, _) => 4,
+            (NoteType.SnapBackward, BonusType.Bonus, _) => 4,
+            (NoteType.SnapBackward, BonusType.RNote, _) => 22,
 
-            (NoteType.SlideClockwise, BonusType.None) => 5,
-            (NoteType.SlideClockwise, BonusType.Bonus) => 6,
-            (NoteType.SlideClockwise, BonusType.RNote) => 23,
+            (NoteType.SlideClockwise, BonusType.None, _) => 5,
+            (NoteType.SlideClockwise, BonusType.Bonus, _) => 6,
+            (NoteType.SlideClockwise, BonusType.RNote, _) => 23,
 
-            (NoteType.SlideCounterclockwise, BonusType.None) => 7,
-            (NoteType.SlideCounterclockwise, BonusType.Bonus) => 8,
-            (NoteType.SlideCounterclockwise, BonusType.RNote) => 24,
+            (NoteType.SlideCounterclockwise, BonusType.None, _) => 7,
+            (NoteType.SlideCounterclockwise, BonusType.Bonus, _) => 8,
+            (NoteType.SlideCounterclockwise, BonusType.RNote, _) => 24,
 
-            (NoteType.HoldStart, BonusType.None) => 9,
-            (NoteType.HoldStart, BonusType.Bonus) => 9,
-            (NoteType.HoldStart, BonusType.RNote) => 25,
+            (NoteType.Hold, BonusType.None, NoteLinkType.Start) => 9,
+            (NoteType.Hold, BonusType.Bonus, NoteLinkType.Start) => 9,
+            (NoteType.Hold, BonusType.RNote, NoteLinkType.Start) => 25,
 
-            (NoteType.HoldSegment, _) => 10,
-            (NoteType.HoldEnd, _) => 11,
+            (NoteType.Hold, _, NoteLinkType.Point) => 10,
+            (NoteType.Hold, _, NoteLinkType.End) => 11,
 
-            (NoteType.MaskAdd, _) => 12,
-            (NoteType.MaskRemove, _) => 13,
+            (NoteType.MaskAdd, _, _) => 12,
+            (NoteType.MaskRemove, _, _) => 13,
 
-            (NoteType.Chain, BonusType.None) => 16,
-            (NoteType.Chain, BonusType.Bonus) => 16,
-            (NoteType.Chain, BonusType.RNote) => 26,
+            (NoteType.Chain, BonusType.None, _) => 16,
+            (NoteType.Chain, BonusType.Bonus, _) => 16,
+            (NoteType.Chain, BonusType.RNote, _) => 26,
             _ => 1,
         };
     }
@@ -470,9 +475,7 @@ public class Note : ChartElement
             4 or 22 => NoteType.SnapBackward,
             5 or 6 or 23 => NoteType.SlideClockwise,
             7 or 8 or 24 => NoteType.SlideCounterclockwise,
-            9 or 25 => NoteType.HoldStart,
-            10 => NoteType.HoldSegment,
-            11 => NoteType.HoldEnd,
+            9 or 25 or 10 or 11 => NoteType.Hold,
             12 => NoteType.MaskAdd,
             13 => NoteType.MaskRemove,
             16 or 26 => NoteType.Chain,

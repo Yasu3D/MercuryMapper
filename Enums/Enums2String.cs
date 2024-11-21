@@ -23,51 +23,51 @@ public static class Enums2String
         };
     }
 
-    public static string NoteType2String(NoteType noteType, BonusType bonusType)
+    public static string NoteType2String(NoteType noteType, BonusType bonusType, NoteLinkType linkType)
     {
-        return (noteType, bonusType) switch
+        return (noteType, bonusType, linkType) switch
         {
-            (NoteType.Touch, BonusType.None) => Resources.Note_Touch,
-            (NoteType.Touch, BonusType.Bonus) => $"{Resources.Note_Touch} [{Resources.BonusType_Bonus}]",
-            (NoteType.Touch, BonusType.RNote) => $"{Resources.Note_Touch} [{Resources.BonusType_RNote}]",
+            (NoteType.Touch, BonusType.None, _) => Resources.Note_Touch,
+            (NoteType.Touch, BonusType.Bonus, _) => $"{Resources.Note_Touch} [{Resources.BonusType_Bonus}]",
+            (NoteType.Touch, BonusType.RNote, _) => $"{Resources.Note_Touch} [{Resources.BonusType_RNote}]",
 
-            (NoteType.SnapForward, BonusType.None) => Resources.Note_SnapForward,
-            (NoteType.SnapBackward, BonusType.None) => Resources.Note_SnapBackward,
+            (NoteType.SnapForward, BonusType.None, _) => Resources.Note_SnapForward,
+            (NoteType.SnapBackward, BonusType.None, _) => Resources.Note_SnapBackward,
 
-            (NoteType.SnapForward, BonusType.Bonus) => $"{Resources.Note_SnapForward} [{Resources.BonusType_Bonus}]",
-            (NoteType.SnapBackward, BonusType.Bonus) => $"{Resources.Note_SnapBackward} [{Resources.BonusType_Bonus}]",
+            (NoteType.SnapForward, BonusType.Bonus, _) => $"{Resources.Note_SnapForward} [{Resources.BonusType_Bonus}]",
+            (NoteType.SnapBackward, BonusType.Bonus, _) => $"{Resources.Note_SnapBackward} [{Resources.BonusType_Bonus}]",
 
-            (NoteType.SnapForward, BonusType.RNote) => $"{Resources.Note_SnapForward} [{Resources.BonusType_RNote}]",
-            (NoteType.SnapBackward, BonusType.RNote) => $"{Resources.Note_SnapBackward} [{Resources.BonusType_RNote}]",
+            (NoteType.SnapForward, BonusType.RNote, _) => $"{Resources.Note_SnapForward} [{Resources.BonusType_RNote}]",
+            (NoteType.SnapBackward, BonusType.RNote, _) => $"{Resources.Note_SnapBackward} [{Resources.BonusType_RNote}]",
 
-            (NoteType.SlideClockwise, BonusType.None) => Resources.Note_SlideClockwise,
-            (NoteType.SlideCounterclockwise, BonusType.None) => Resources.Note_SlideCounterclockwise,
+            (NoteType.SlideClockwise, BonusType.None, _) => Resources.Note_SlideClockwise,
+            (NoteType.SlideCounterclockwise, BonusType.None, _) => Resources.Note_SlideCounterclockwise,
 
-            (NoteType.SlideClockwise, BonusType.Bonus) => $"{Resources.Note_SlideClockwise} [{Resources.BonusType_Bonus}]",
-            (NoteType.SlideCounterclockwise, BonusType.Bonus) => $"{Resources.Note_SlideCounterclockwise} [{Resources.BonusType_Bonus}]",
+            (NoteType.SlideClockwise, BonusType.Bonus, _) => $"{Resources.Note_SlideClockwise} [{Resources.BonusType_Bonus}]",
+            (NoteType.SlideCounterclockwise, BonusType.Bonus, _) => $"{Resources.Note_SlideCounterclockwise} [{Resources.BonusType_Bonus}]",
 
-            (NoteType.SlideClockwise, BonusType.RNote) => $"{Resources.Note_SlideClockwise} [{Resources.BonusType_RNote}]",
-            (NoteType.SlideCounterclockwise, BonusType.RNote) => $"{Resources.Note_SlideCounterclockwise} [{Resources.BonusType_RNote}]",
+            (NoteType.SlideClockwise, BonusType.RNote, _) => $"{Resources.Note_SlideClockwise} [{Resources.BonusType_RNote}]",
+            (NoteType.SlideCounterclockwise, BonusType.RNote, _) => $"{Resources.Note_SlideCounterclockwise} [{Resources.BonusType_RNote}]",
 
-            (NoteType.Chain, BonusType.None) => Resources.Note_Chain,
-            (NoteType.Chain, BonusType.Bonus) => $"{Resources.Note_Chain} [{Resources.BonusType_Bonus}]",
-            (NoteType.Chain, BonusType.RNote) => $"{Resources.Note_Chain} [{Resources.BonusType_RNote}]",
+            (NoteType.Chain, BonusType.None, _) => Resources.Note_Chain,
+            (NoteType.Chain, BonusType.Bonus, _) => $"{Resources.Note_Chain} [{Resources.BonusType_Bonus}]",
+            (NoteType.Chain, BonusType.RNote, _) => $"{Resources.Note_Chain} [{Resources.BonusType_RNote}]",
 
-            (NoteType.HoldStart, BonusType.None) => Resources.Note_HoldStart,
-            (NoteType.HoldStart, BonusType.Bonus) => $"{Resources.Note_HoldStart} [{Resources.BonusType_Bonus}]",
-            (NoteType.HoldStart, BonusType.RNote) => $"{Resources.Note_HoldStart} [{Resources.BonusType_RNote}]",
+            (NoteType.Hold, BonusType.None, NoteLinkType.Start) => Resources.Note_HoldStart,
+            (NoteType.Hold, BonusType.Bonus, NoteLinkType.Start) => $"{Resources.Note_HoldStart} [{Resources.BonusType_Bonus}]",
+            (NoteType.Hold, BonusType.RNote, NoteLinkType.Start) => $"{Resources.Note_HoldStart} [{Resources.BonusType_RNote}]",
 
-            (NoteType.HoldSegment, _) => Resources.Note_HoldSegment,
-            (NoteType.HoldEnd, _) => Resources.Note_HoldEnd,
+            (NoteType.Hold, _, NoteLinkType.Point) => Resources.Note_HoldSegment,
+            (NoteType.Hold, _, NoteLinkType.End) => Resources.Note_HoldEnd,
 
-            (NoteType.MaskAdd, _) => Resources.Note_MaskAdd,
-            (NoteType.MaskRemove, _) => Resources.Note_MaskRemove,
+            (NoteType.MaskAdd, _, _) => Resources.Note_MaskAdd,
+            (NoteType.MaskRemove, _, _) => Resources.Note_MaskRemove,
             
-            (NoteType.TraceStart, _) => Resources.Note_TraceStart,
-            (NoteType.TraceSegment, _) => Resources.Note_TraceSegment,
-            (NoteType.TraceEnd, _) => Resources.Note_TraceEnd,
+            (NoteType.Trace, _, NoteLinkType.Start) => Resources.Note_TraceStart,
+            (NoteType.Trace, _, NoteLinkType.Point) => Resources.Note_TraceSegment,
+            (NoteType.Trace, _, NoteLinkType.End) => Resources.Note_TraceEnd,
             
-            (NoteType.Damage, _) => Resources.Note_Damage,
+            (NoteType.Damage, _, _) => Resources.Note_Damage,
             
             _ => "Unknown Note",
         };
