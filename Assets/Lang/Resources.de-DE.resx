@@ -1213,7 +1213,7 @@ Fortfahren?</value>
     <value>Zeichne No-Render Holds</value>
   </data>
   <data name="Editor_DeleteSegments" xml:space="preserve">
-    <value>Segmente Löschen</value>
+    <value>No-Render Segmente Löschen</value>
   </data>
   <data name="ToolTip_DeleteSegments" xml:space="preserve">
     <value>Löscht alle ausgewählten No-Render Haltesegmente</value>
@@ -1297,12 +1297,54 @@ Fortfahren?</value>
     <value>Linie Violett</value>
   </data>
   <data name="Settings_Color_TraceWhite" xml:space="preserve">
-    <value>Linie White</value>
+    <value>Linie Weiß</value>
   </data>
   <data name="Settings_Color_TraceYellow" xml:space="preserve">
-    <value>Linie Yellow</value>
+    <value>Linie Gelb</value>
   </data>
   <data name="Note_Trace_NoRender" xml:space="preserve">
     <value>Linie [No-Render]</value>
+  </data>
+  <data name="Editor_TraceColor" xml:space="preserve">
+    <value>Linien-Farbe</value>
+  </data>
+  <data name="Editor_Color_TraceBlack" xml:space="preserve">
+    <value>Schwarz</value>
+  </data>
+  <data name="Editor_Color_TraceBlue" xml:space="preserve">
+    <value>Blau</value>
+  </data>
+  <data name="Editor_Color_TraceGreen" xml:space="preserve">
+    <value>Grün</value>
+  </data>
+  <data name="Editor_Color_TraceLime" xml:space="preserve">
+    <value>Hellgrün</value>
+  </data>
+  <data name="Editor_Color_TraceOrange" xml:space="preserve">
+    <value>Orange</value>
+  </data>
+  <data name="Editor_Color_TracePink" xml:space="preserve">
+    <value>Pink</value>
+  </data>
+  <data name="Editor_Color_TraceRed" xml:space="preserve">
+    <value>Rot</value>
+  </data>
+  <data name="Editor_Color_TraceSky" xml:space="preserve">
+    <value>Hellblau</value>
+  </data>
+  <data name="Editor_Color_TraceViolet" xml:space="preserve">
+    <value>Violett</value>
+  </data>
+  <data name="Editor_Color_TraceWhite" xml:space="preserve">
+    <value>Weiß</value>
+  </data>
+  <data name="Editor_Color_TraceYellow" xml:space="preserve">
+    <value>Gelb</value>
+  </data>
+  <data name="Editor_PaintTraces" xml:space="preserve">
+    <value>Ausgewählte Linien Färben</value>
+  </data>
+  <data name="ToolTip_PaintTraces" xml:space="preserve">
+    <value>Färbt alle ausgewählten Linien mit der angegebenen Farbe.</value>
   </data>
 </root>

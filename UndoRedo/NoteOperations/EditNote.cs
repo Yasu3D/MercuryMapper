@@ -17,6 +17,7 @@ public class EditNote(Note note, Note newNote) : IOperation
         BaseNote.MaskDirection = OldNote.MaskDirection;
         BaseNote.BeatData = OldNote.BeatData;
         BaseNote.RenderSegment = OldNote.RenderSegment;
+        BaseNote.Color = OldNote.Color;
     }
     
     public void Redo()
@@ -28,5 +29,6 @@ public class EditNote(Note note, Note newNote) : IOperation
         BaseNote.MaskDirection = NewNote.MaskDirection;
         BaseNote.BeatData = NewNote.BeatData;
         BaseNote.RenderSegment = NewNote.RenderSegment;
+        BaseNote.Color = NewNote.Color;
     }
 }

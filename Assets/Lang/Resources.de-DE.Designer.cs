@@ -330,6 +330,105 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Schwarz.
+        /// </summary>
+        public static string Editor_Color_TraceBlack {
+            get {
+                return ResourceManager.GetString("Editor_Color_TraceBlack", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Blau.
+        /// </summary>
+        public static string Editor_Color_TraceBlue {
+            get {
+                return ResourceManager.GetString("Editor_Color_TraceBlue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Grün.
+        /// </summary>
+        public static string Editor_Color_TraceGreen {
+            get {
+                return ResourceManager.GetString("Editor_Color_TraceGreen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hellgrün.
+        /// </summary>
+        public static string Editor_Color_TraceLime {
+            get {
+                return ResourceManager.GetString("Editor_Color_TraceLime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Orange.
+        /// </summary>
+        public static string Editor_Color_TraceOrange {
+            get {
+                return ResourceManager.GetString("Editor_Color_TraceOrange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pink.
+        /// </summary>
+        public static string Editor_Color_TracePink {
+            get {
+                return ResourceManager.GetString("Editor_Color_TracePink", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rot.
+        /// </summary>
+        public static string Editor_Color_TraceRed {
+            get {
+                return ResourceManager.GetString("Editor_Color_TraceRed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hellblau.
+        /// </summary>
+        public static string Editor_Color_TraceSky {
+            get {
+                return ResourceManager.GetString("Editor_Color_TraceSky", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Violett.
+        /// </summary>
+        public static string Editor_Color_TraceViolet {
+            get {
+                return ResourceManager.GetString("Editor_Color_TraceViolet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Weiß.
+        /// </summary>
+        public static string Editor_Color_TraceWhite {
+            get {
+                return ResourceManager.GetString("Editor_Color_TraceWhite", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Gelb.
+        /// </summary>
+        public static string Editor_Color_TraceYellow {
+            get {
+                return ResourceManager.GetString("Editor_Color_TraceYellow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Kommentar.
         /// </summary>
         public static string Editor_Comment {
@@ -384,7 +483,7 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Segmente Löschen.
+        ///   Looks up a localized string similar to No-Render Segmente Löschen.
         /// </summary>
         public static string Editor_DeleteSegments {
             get {
@@ -960,6 +1059,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ausgewählte Linien Färben.
+        /// </summary>
+        public static string Editor_PaintTraces {
+            get {
+                return ResourceManager.GetString("Editor_PaintTraces", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Pause.
         /// </summary>
         public static string Editor_Pause {
@@ -1181,6 +1289,15 @@ namespace MercuryMapper.Assets.Lang {
         public static string Editor_ToggleLoop {
             get {
                 return ResourceManager.GetString("Editor_ToggleLoop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Linien-Farbe.
+        /// </summary>
+        public static string Editor_TraceColor {
+            get {
+                return ResourceManager.GetString("Editor_TraceColor", resourceCulture);
             }
         }
         
@@ -2563,7 +2680,7 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Linie White.
+        ///   Looks up a localized string similar to Linie Weiß.
         /// </summary>
         public static string Settings_Color_TraceWhite {
             get {
@@ -2572,7 +2689,7 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Linie Yellow.
+        ///   Looks up a localized string similar to Linie Gelb.
         /// </summary>
         public static string Settings_Color_TraceYellow {
             get {
@@ -3443,6 +3560,15 @@ namespace MercuryMapper.Assets.Lang {
         public static string ToolTip_NoteTypes {
             get {
                 return ResourceManager.GetString("ToolTip_NoteTypes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Färbt alle ausgewählten Linien mit der angegebenen Farbe..
+        /// </summary>
+        public static string ToolTip_PaintTraces {
+            get {
+                return ResourceManager.GetString("ToolTip_PaintTraces", resourceCulture);
             }
         }
         

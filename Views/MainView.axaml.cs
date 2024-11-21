@@ -158,6 +158,21 @@ public partial class MainView : UserControl
         RadioNoteMaskRemove.BorderBrush = new SolidColorBrush(Convert.ToUInt32(UserConfig.ColorConfig.Colors["ColorNoteMaskRemove"], 16));
     }
 
+    private void SetTraceComboBoxItemColors()
+    {
+        TraceColorWhite.Background = new SolidColorBrush(Convert.ToUInt32(UserConfig.ColorConfig.Colors["ColorTraceWhite"], 16));
+        TraceColorBlack.Background = new SolidColorBrush(Convert.ToUInt32(UserConfig.ColorConfig.Colors["ColorTraceBlack"], 16));
+        TraceColorRed.Background = new SolidColorBrush(Convert.ToUInt32(UserConfig.ColorConfig.Colors["ColorTraceRed"], 16));
+        TraceColorOrange.Background = new SolidColorBrush(Convert.ToUInt32(UserConfig.ColorConfig.Colors["ColorTraceOrange"], 16));
+        TraceColorYellow.Background = new SolidColorBrush(Convert.ToUInt32(UserConfig.ColorConfig.Colors["ColorTraceYellow"], 16));
+        TraceColorLime.Background = new SolidColorBrush(Convert.ToUInt32(UserConfig.ColorConfig.Colors["ColorTraceLime"], 16));
+        TraceColorGreen.Background = new SolidColorBrush(Convert.ToUInt32(UserConfig.ColorConfig.Colors["ColorTraceGreen"], 16));
+        TraceColorSky.Background = new SolidColorBrush(Convert.ToUInt32(UserConfig.ColorConfig.Colors["ColorTraceSky"], 16));
+        TraceColorBlue.Background = new SolidColorBrush(Convert.ToUInt32(UserConfig.ColorConfig.Colors["ColorTraceBlue"], 16));
+        TraceColorViolet.Background = new SolidColorBrush(Convert.ToUInt32(UserConfig.ColorConfig.Colors["ColorTraceViolet"], 16));
+        TraceColorPink.Background = new SolidColorBrush(Convert.ToUInt32(UserConfig.ColorConfig.Colors["ColorTracePink"], 16));
+    }
+    
     private void ToggleTypeRadio(bool isMask)
     {
         if (BonusTypePanel == null || MaskDirectionPanel == null) return;
@@ -2463,6 +2478,8 @@ public partial class MainView : UserControl
     }
 
     private void ButtonConvertToInstantMask_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.ConvertToInstantMask();
+
+    private void ButtonPaintTraces_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.PaintTraces((TraceColor)TraceColorComboBox.SelectedIndex);
     
     private void ButtonEditGimmick_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.EditGimmick();
 
@@ -2538,6 +2555,7 @@ public partial class MainView : UserControl
     {
         KeybindEditor.StopRebinding(); // Stop rebinding in case it was active.
         SetButtonColors(); // Update button colors if they were changed
+        SetTraceComboBoxItemColors(); // Update trace comboboxitem colors if they were changed
         SetMenuItemInputGestureText(); // Update InputGesture text in case stuff was rebound
         SetQuickSettings();
         UpdateCurrentTimeScaleInfo();

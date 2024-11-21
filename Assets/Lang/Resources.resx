@@ -1213,7 +1213,7 @@ Continue?</value>
     <value>Draw No-Render Holds</value>
   </data>
   <data name="Editor_DeleteSegments" xml:space="preserve">
-    <value>Delete Segments</value>
+    <value>Delete No-Render Segments</value>
   </data>
   <data name="ToolTip_DeleteSegments" xml:space="preserve">
     <value>Deletes all selected No-Render Hold Segments</value>
@@ -1304,5 +1304,47 @@ Continue?</value>
   </data>
   <data name="Note_Trace_NoRender" xml:space="preserve">
     <value>Trace [No Render]</value>
+  </data>
+  <data name="Editor_TraceColor" xml:space="preserve">
+    <value>Trace Color</value>
+  </data>
+  <data name="Editor_Color_TraceBlack" xml:space="preserve">
+    <value>Black</value>
+  </data>
+  <data name="Editor_Color_TraceBlue" xml:space="preserve">
+    <value>Blue</value>
+  </data>
+  <data name="Editor_Color_TraceGreen" xml:space="preserve">
+    <value>Green</value>
+  </data>
+  <data name="Editor_Color_TraceLime" xml:space="preserve">
+    <value>Lime</value>
+  </data>
+  <data name="Editor_Color_TraceOrange" xml:space="preserve">
+    <value>Orange</value>
+  </data>
+  <data name="Editor_Color_TracePink" xml:space="preserve">
+    <value>Pink</value>
+  </data>
+  <data name="Editor_Color_TraceRed" xml:space="preserve">
+    <value>Red</value>
+  </data>
+  <data name="Editor_Color_TraceSky" xml:space="preserve">
+    <value>Sky</value>
+  </data>
+  <data name="Editor_Color_TraceViolet" xml:space="preserve">
+    <value>Violet</value>
+  </data>
+  <data name="Editor_Color_TraceWhite" xml:space="preserve">
+    <value>White</value>
+  </data>
+  <data name="Editor_Color_TraceYellow" xml:space="preserve">
+    <value>Yellow</value>
+  </data>
+  <data name="Editor_PaintTraces" xml:space="preserve">
+    <value>Paint Selected Traces</value>
+  </data>
+  <data name="ToolTip_PaintTraces" xml:space="preserve">
+    <value>Applies specified color to all selected Traces.</value>
   </data>
 </root>

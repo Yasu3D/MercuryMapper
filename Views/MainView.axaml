@@ -476,6 +476,7 @@
         <!-- Action Drawer -->
         <ScrollViewer Grid.Column="2" Grid.Row="1" Grid.RowSpan="2" Name="RightPanel" Width="300" Background="{DynamicResource LightBrush}">
             <StackPanel>
+                <!-- Chart Info -->
                 <Expander IsExpanded="True" Header="{x:Static lang:Resources.Editor_ExpanderHeader_ChartInfo}">
                     <StackPanel>
                         <TextBlock Name="ChartInfoChartFilepath" Text=""/>
@@ -577,6 +578,7 @@
                     </StackPanel>
                 </Expander>
                 
+                <!-- Selection Info -->
                 <Expander Header="{x:Static lang:Resources.Editor_ExpanderHeader_SelectionInfo}">
                     <StackPanel>
                         <Grid RowDefinitions="*,Auto,*,Auto,*,Auto,*,Auto,*,*" ColumnDefinitions="*,*,*,1.2*">
@@ -628,6 +630,7 @@
                     </StackPanel>
                 </Expander>
                 
+                <!-- Quick Settings -->
                 <Expander Header="{x:Static lang:Resources.Editor_ExpanderHeader_QuickSettings}">
                     <StackPanel>
                         <UniformGrid Columns="2">
@@ -683,28 +686,108 @@
                     </StackPanel>
                 </Expander>
             
+                <!-- Modify Notes -->
                 <Expander Header="{x:Static lang:Resources.Editor_ExpanderHeader_ModifyNotes}">
                     <StackPanel>
-                        <Grid RowDefinitions="*,*" ColumnDefinitions="*,*">
-                            <Button Grid.Row="0" Grid.Column="0" HorizontalAlignment="Stretch" Margin="0,0,2,2" Click="ButtonEditSelectionShape_OnClick" Content="{x:Static lang:Resources.Editor_EditNoteShape}" ToolTip.Tip="{x:Static lang:Resources.ToolTip_EditShape}"/>
-                            <Button Grid.Row="0" Grid.Column="1" HorizontalAlignment="Stretch" Margin="2,0,0,2" Click="ButtonEditSelectionProperties_OnClick" Content="{x:Static lang:Resources.Editor_EditNoteProperties}" ToolTip.Tip="{x:Static lang:Resources.ToolTip_EditType}"/>
-                            <Button Grid.Row="1" Grid.Column="0" HorizontalAlignment="Stretch" Margin="0,2,2,0" Click="ButtonEditSelectionFull_OnClick" Content="{x:Static lang:Resources.Editor_EditNoteShapeProperties}" ToolTip.Tip="{x:Static lang:Resources.ToolTip_EditBoth}"/>
-                            <Button Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Margin="2,2,0,0" Click="ButtonDeleteSelection_OnClick" Content="{x:Static lang:Resources.Editor_DeleteSelection}" Foreground="Red"/>
-                        </Grid>
+                        <Button HorizontalAlignment="Stretch" Margin="0,0,0,4" Click="ButtonEditSelectionShape_OnClick" Content="{x:Static lang:Resources.Editor_EditNoteShape}" ToolTip.Tip="{x:Static lang:Resources.ToolTip_EditShape}"/>
+                        <Button HorizontalAlignment="Stretch" Margin="0,0,0,4" Click="ButtonEditSelectionProperties_OnClick" Content="{x:Static lang:Resources.Editor_EditNoteProperties}" ToolTip.Tip="{x:Static lang:Resources.ToolTip_EditType}"/>
+                        <Button HorizontalAlignment="Stretch" Margin="0,0,0,4" Click="ButtonEditSelectionFull_OnClick" Content="{x:Static lang:Resources.Editor_EditNoteShapeProperties}" ToolTip.Tip="{x:Static lang:Resources.ToolTip_EditBoth}"/>
+                        <Button HorizontalAlignment="Stretch" Margin="0,0,0,4" Click="ButtonDeleteSelection_OnClick" Content="{x:Static lang:Resources.Editor_DeleteSelection}" Foreground="Red"/>
                         
                         <Separator/>
                         
-                        <Grid RowDefinitions="*,*" ColumnDefinitions="*,*">
-                            <TextBlock Grid.Row="0" Grid.Column="0" Text="{x:Static lang:Resources.Editor_MirrorAxis}"/>
-                            <NumericUpDown Grid.Row="1" Grid.Column="0" Name="NumericMirrorAxis" Margin="0,0,2,0" Maximum="60" Minimum="-1" Increment="1" Value="30" ValueChanged="NumericMirrorAxis_OnValueChanged" PointerEntered="NumericMirrorAxis_OnPointerEntered" PointerExited="NumericMirrorAxis_OnPointerExited"/>
-                            <Button Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Margin="2,0,0,0" Click="ButtonMirrorSelection_OnClick" Content="{x:Static lang:Resources.Editor_MirrorNote}" ToolTip.Tip="{x:Static lang:Resources.ToolTip_Mirror}"/>
-                        </Grid>
+                        <UniformGrid Columns="2" Margin="0,4,0,4">
+                            <TextBlock Text="{x:Static lang:Resources.Editor_MirrorAxis}" VerticalAlignment="Center" Margin="4,0,0,0"/>
+                            <NumericUpDown Name="NumericMirrorAxis" Maximum="60" Minimum="-1" Increment="1" Value="30" ValueChanged="NumericMirrorAxis_OnValueChanged" PointerEntered="NumericMirrorAxis_OnPointerEntered" PointerExited="NumericMirrorAxis_OnPointerExited"/>
+                        </UniformGrid>
+                        
+                        <Button Margin="0,0,0,4" HorizontalAlignment="Stretch" Click="ButtonMirrorSelection_OnClick" Content="{x:Static lang:Resources.Editor_MirrorNote}" ToolTip.Tip="{x:Static lang:Resources.ToolTip_Mirror}"/>
                         
                         <Separator/>
                         
-                        <Grid RowDefinitions="*,*,*,*" ColumnDefinitions="*,*">
-                            <TextBlock Grid.Row="0" Grid.Column="0" Text="{x:Static lang:Resources.Editor_HoldEaseHeader}"/>
-                            <ComboBox Grid.Row="1" Grid.Column="0" Name="HoldEaseComboBox" HorizontalAlignment="Stretch" Margin="0,0,2,0" SelectedIndex="0">
+                        <Button HorizontalAlignment="Stretch" Margin="0,4,0,4" Click="ButtonConvertToInstantMask_OnClick" Content="{x:Static lang:Resources.Editor_ConvertToInstantMask}" ToolTip.Tip="{x:Static lang:Resources.ToolTip_ConvertToInstantMask}"/>
+                        
+                        <Separator/>
+                        
+                        <UniformGrid Columns="2" Margin="0,4,0,4">
+                            <TextBlock Text="{x:Static lang:Resources.Editor_TraceColor}" VerticalAlignment="Center" Margin="4,0,0,0"/>
+                            <ComboBox Name="TraceColorComboBox" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Margin="0,0,2,0" Padding="2,5,5,5" SelectedIndex="0">
+                                <ComboBoxItem>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Border Width="20" Height="20" CornerRadius="3" Background="White" Name="TraceColorWhite"/>
+                                        <TextBlock Margin="4,0,0,0" VerticalAlignment="Center" Text="{x:Static lang:Resources.Editor_Color_TraceWhite}"/>
+                                    </StackPanel>
+                                </ComboBoxItem>
+                                <ComboBoxItem>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Border Width="20" Height="20" CornerRadius="3" Background="White" Name="TraceColorBlack"/>
+                                        <TextBlock Margin="4,0,0,0" VerticalAlignment="Center" Text="{x:Static lang:Resources.Editor_Color_TraceBlack}"/>
+                                    </StackPanel>
+                                </ComboBoxItem>
+                                <ComboBoxItem>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Border Width="20" Height="20" CornerRadius="3" Background="White" Name="TraceColorRed"/>
+                                        <TextBlock Margin="4,0,0,0" VerticalAlignment="Center" Text="{x:Static lang:Resources.Editor_Color_TraceRed}"/>
+                                    </StackPanel>
+                                </ComboBoxItem>
+                                <ComboBoxItem>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Border Width="20" Height="20" CornerRadius="3" Background="White" Name="TraceColorOrange"/>
+                                        <TextBlock Margin="4,0,0,0" VerticalAlignment="Center" Text="{x:Static lang:Resources.Editor_Color_TraceOrange}"/>
+                                    </StackPanel>
+                                </ComboBoxItem>
+                                <ComboBoxItem>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Border Width="20" Height="20" CornerRadius="3" Background="White" Name="TraceColorYellow"/>
+                                        <TextBlock Margin="4,0,0,0" VerticalAlignment="Center" Text="{x:Static lang:Resources.Editor_Color_TraceYellow}"/>
+                                    </StackPanel>
+                                </ComboBoxItem>
+                                <ComboBoxItem>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Border Width="20" Height="20" CornerRadius="3" Background="White" Name="TraceColorLime"/>
+                                        <TextBlock Margin="4,0,0,0" VerticalAlignment="Center" Text="{x:Static lang:Resources.Editor_Color_TraceLime}"/>
+                                    </StackPanel>
+                                </ComboBoxItem>
+                                <ComboBoxItem>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Border Width="20" Height="20" CornerRadius="3" Background="White" Name="TraceColorGreen"/>
+                                        <TextBlock Margin="4,0,0,0" VerticalAlignment="Center" Text="{x:Static lang:Resources.Editor_Color_TraceGreen}"/>
+                                    </StackPanel>
+                                </ComboBoxItem>
+                                <ComboBoxItem>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Border Width="20" Height="20" CornerRadius="3" Background="White" Name="TraceColorSky"/>
+                                        <TextBlock Margin="4,0,0,0" VerticalAlignment="Center" Text="{x:Static lang:Resources.Editor_Color_TraceSky}"/>
+                                    </StackPanel>
+                                </ComboBoxItem>
+                                <ComboBoxItem>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Border Width="20" Height="20" CornerRadius="3" Background="White" Name="TraceColorBlue"/>
+                                        <TextBlock Margin="4,0,0,0" VerticalAlignment="Center" Text="{x:Static lang:Resources.Editor_Color_TraceBlue}"/>
+                                    </StackPanel>
+                                </ComboBoxItem>
+                                <ComboBoxItem>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Border Width="20" Height="20" CornerRadius="3" Background="White" Name="TraceColorViolet"/>
+                                        <TextBlock Margin="4,0,0,0" VerticalAlignment="Center" Text="{x:Static lang:Resources.Editor_Color_TraceViolet}"/>
+                                    </StackPanel>
+                                </ComboBoxItem>
+                                <ComboBoxItem>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Border Width="20" Height="20" CornerRadius="3" Background="White" Name="TraceColorPink"/>
+                                        <TextBlock Margin="4,0,0,0" VerticalAlignment="Center" Text="{x:Static lang:Resources.Editor_Color_TracePink}"/>
+                                    </StackPanel>
+                                </ComboBoxItem>
+                            </ComboBox>
+                        </UniformGrid>
+                        
+                        <Button Margin="0,0,0,4" HorizontalAlignment="Stretch" Click="ButtonPaintTraces_OnClick" Content="{x:Static lang:Resources.Editor_PaintTraces}" ToolTip.Tip="{x:Static lang:Resources.ToolTip_PaintTraces}"/>
+                        
+                        <Separator/>
+                        
+                        <UniformGrid Columns="2" Margin="0,4,0,4">
+                            <TextBlock Text="{x:Static lang:Resources.Editor_HoldEaseHeader}" VerticalAlignment="Center" Margin="4,0,0,0"/>
+                            <ComboBox Name="HoldEaseComboBox" HorizontalAlignment="Stretch" Margin="0,0,2,0" SelectedIndex="0">
                                 <ComboBoxItem Content="{x:Static lang:Resources.Editor_HoldEase_Linear}"/>
                                 <ComboBoxItem Content="{x:Static lang:Resources.Editor_HoldEase_LinearPlusIn}"/>
                                 <ComboBoxItem Content="{x:Static lang:Resources.Editor_HoldEase_LinearPlusOut}"/>
@@ -717,33 +800,36 @@
                                 <ComboBoxItem Content="{x:Static lang:Resources.Editor_HoldEase_QuadIn}"/>
                                 <ComboBoxItem Content="{x:Static lang:Resources.Editor_HoldEase_QuadOut}"/>
                             </ComboBox>
-                            <Button Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Margin="2,0,0,2" Click="ButtonBakeHold_OnClick" Content="{x:Static lang:Resources.Editor_BakeHoldNote}" ToolTip.Tip="{x:Static lang:Resources.ToolTip_BakeHold}"/>
-                            <Button Grid.Row="2" Grid.Column="0" HorizontalAlignment="Stretch" Margin="0,2,2,0" Click="ButtonStitchHold_OnClick" Content="{x:Static lang:Resources.Editor_StitchHold}" ToolTip.Tip="{x:Static lang:Resources.ToolTip_StitchHold}"/>
-                            <Button Grid.Row="2" Grid.Column="1" HorizontalAlignment="Stretch" Margin="2,2,0,0" Click="ButtonInsertHoldSegment_OnClick" Content="{x:Static lang:Resources.Editor_InsertHoldSegment}" ToolTip.Tip="{x:Static lang:Resources.ToolTip_InsertHold}"/>
-                            <Button Grid.Row="3" Grid.Column="0" HorizontalAlignment="Stretch" Margin="0,2,2,0" Click="ButtonSplitHold_OnClick" Content="{x:Static lang:Resources.Editor_SplitHold}" ToolTip.Tip="{x:Static lang:Resources.ToolTip_SplitHold}"/>
-                            <Button Grid.Row="3" Grid.Column="1" HorizontalAlignment="Stretch" Margin="2,2,0,0" Click="ButtonDeleteSegments_OnClick" Content="{x:Static lang:Resources.Editor_DeleteSegments}" ToolTip.Tip="{x:Static lang:Resources.ToolTip_DeleteSegments}" Foreground="Red"/>
-                        </Grid>
+                        </UniformGrid>
+                        
+                        <Button HorizontalAlignment="Stretch" Margin="0,0,0,4" Click="ButtonBakeHold_OnClick" Content="{x:Static lang:Resources.Editor_BakeHoldNote}" ToolTip.Tip="{x:Static lang:Resources.ToolTip_BakeHold}"/>
+                        <Button HorizontalAlignment="Stretch" Margin="0,0,0,4" Click="ButtonInsertHoldSegment_OnClick" Content="{x:Static lang:Resources.Editor_InsertHoldSegment}" ToolTip.Tip="{x:Static lang:Resources.ToolTip_InsertHold}"/>
                         
                         <Separator/>
                         
-                        <Grid RowDefinitions="*" ColumnDefinitions="*,*">
-                            <Button Grid.Row="0" Grid.Column="0" HorizontalAlignment="Stretch" Margin="0,0,2,0" Click="ButtonSetRenderTrue_OnClick" Content="{x:Static lang:Resources.Editor_SetRenderTrue}" ToolTip.Tip="{x:Static lang:Resources.ToolTip_SetRenderTrue}"/>
-                            <Button Grid.Row="0" Grid.Column="1" HorizontalAlignment="Stretch" Margin="2,0,0,0" Click="ButtonSetRenderFalse_OnClick" Content="{x:Static lang:Resources.Editor_SetRenderFalse}" ToolTip.Tip="{x:Static lang:Resources.ToolTip_SetRenderFalse}"/>
-                        </Grid>
-                        
+                        <Button HorizontalAlignment="Stretch" Margin="0,4,0,4" Click="ButtonStitchHold_OnClick" Content="{x:Static lang:Resources.Editor_StitchHold}" ToolTip.Tip="{x:Static lang:Resources.ToolTip_StitchHold}"/>
+                        <Button HorizontalAlignment="Stretch" Margin="0,0,0,4" Click="ButtonSplitHold_OnClick" Content="{x:Static lang:Resources.Editor_SplitHold}" ToolTip.Tip="{x:Static lang:Resources.ToolTip_SplitHold}"/>
+
                         <Separator/>
                         
-                        <Button HorizontalAlignment="Stretch" Margin="0,2,0,2" Click="ButtonConvertToInstantMask_OnClick" Content="{x:Static lang:Resources.Editor_ConvertToInstantMask}" ToolTip.Tip="{x:Static lang:Resources.ToolTip_ConvertToInstantMask}"/>
+                        <Button HorizontalAlignment="Stretch" Margin="0,4,0,4" Click="ButtonSetRenderTrue_OnClick" Content="{x:Static lang:Resources.Editor_SetRenderTrue}" ToolTip.Tip="{x:Static lang:Resources.ToolTip_SetRenderTrue}"/>
+                        <Button HorizontalAlignment="Stretch" Margin="0,0,0,4" Click="ButtonSetRenderFalse_OnClick" Content="{x:Static lang:Resources.Editor_SetRenderFalse}" ToolTip.Tip="{x:Static lang:Resources.ToolTip_SetRenderFalse}"/>
+                        
+                        <Separator/>
+
+                        <Button HorizontalAlignment="Stretch" Margin="0,4,0,4" Click="ButtonDeleteSegments_OnClick" Content="{x:Static lang:Resources.Editor_DeleteSegments}" ToolTip.Tip="{x:Static lang:Resources.ToolTip_DeleteSegments}" Foreground="Red"/>
                     </StackPanel>
                 </Expander>
                 
+                <!-- Modify Gimmicks -->
                 <Expander Header="{x:Static lang:Resources.Editor_ExpanderHeader_ModifyGimmicks}">
-                    <Grid RowDefinitions="*" ColumnDefinitions="*,*">
-                        <Button Grid.Column="0" HorizontalAlignment="Stretch" Margin="0,0,2,0" Click="ButtonEditGimmick_OnClick" Content="{x:Static lang:Resources.Editor_EditGimmick}"/>
-                        <Button Grid.Column="1" HorizontalAlignment="Stretch" Margin="2,0,0,0" Click="ButtonDeleteGimmick_OnClick" Content="{x:Static lang:Resources.Editor_DeleteGimmick}" Foreground="Red"/>
-                    </Grid>
+                    <StackPanel>
+                        <Button HorizontalAlignment="Stretch" Margin="0,0,0,4" Click="ButtonEditGimmick_OnClick" Content="{x:Static lang:Resources.Editor_EditGimmick}"/>
+                        <Button HorizontalAlignment="Stretch" Margin="0,0,0,0" Click="ButtonDeleteGimmick_OnClick" Content="{x:Static lang:Resources.Editor_DeleteGimmick}" Foreground="Red"/>
+                    </StackPanel>
                 </Expander>
                 
+                <!-- Loop Options -->
                 <Expander Header="{x:Static lang:Resources.Editor_ExpanderHeader_LoopOptions}">
                     <Grid RowDefinitions="*" ColumnDefinitions="*,*">
                         <Button Grid.Column="0" HorizontalAlignment="Stretch" Margin="0,0,2,0" Click="ButtonSetLoopStart_OnClick" Content="{x:Static lang:Resources.Editor_SetLoopStart}"/>

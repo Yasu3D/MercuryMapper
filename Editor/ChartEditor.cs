@@ -60,6 +60,7 @@ public class ChartEditor
     public NoteType CurrentNoteType { get; set; } = NoteType.Touch;
     public BonusType CurrentBonusType { get; set; } = BonusType.None;
     public MaskDirection CurrentMaskDirection { get; set; } = MaskDirection.Clockwise;
+    public TraceColor CurrentTraceColor => (TraceColor)mainView.TraceColorComboBox.SelectedIndex;
 
     public bool LayerNoteActive = true;
     public bool LayerMaskActive = true;
@@ -423,7 +424,7 @@ public class ChartEditor
     
     public void SelectHoldReferences()
     {
-        List<Note> tempSelected = SelectedNotes.Where(x => x.IsNoteCollection).ToList(); // c# 8 syntax is.. a thing that exists. Looks cool I guess?
+        List<Note> tempSelected = SelectedNotes.Where(x => x.IsNoteCollection).ToList();
         foreach (Note note in tempSelected)
         {
             foreach (Note reference in note.References())
@@ -657,6 +658,7 @@ public class ChartEditor
                     BonusType = CurrentBonusType,
                     Position = Cursor.Position,
                     Size = Cursor.Size,
+                    Color = CurrentTraceColor,
                 };
                 
                 // Force bonusType to none for masks
@@ -694,6 +696,7 @@ public class ChartEditor
                     Position = Cursor.Position,
                     Size = Cursor.Size,
                     PrevReferencedNote = LastPlacedNote,
+                    Color = LastPlacedNote.Color,
                 };
 
                 LastPlacedNote.NextReferencedNote = note;
@@ -2194,6 +2197,44 @@ public class ChartEditor
             }
             
             operationList.Add(new DeleteNote(Chart, SelectedNotes, note));
+        }
+    }
+
+    public void PaintTraces(TraceColor color)
+    {
+        List<IOperation> operationList = [];
+        HashSet<Note> paintedNotes = [];
+        
+        foreach (Note selected in SelectedNotes)
+        {
+            addOperation(selected);
+        }
+
+        if (SelectedNotes.Count == 0 && HighlightedElement is Note highlighted)
+        {
+            addOperation(highlighted);
+        }
+        
+        if (operationList.Count == 0) return;
+        UndoRedoManager.InvokeAndPush(new CompositeOperation(operationList));
+        Chart.IsSaved = false;
+        return;
+
+        void addOperation(Note note)
+        {
+            if (note.NoteType != NoteType.Trace) return;
+            
+            foreach (Note reference in note.References())
+            {
+                if (!paintedNotes.Add(reference)) continue;
+
+                Note newNote = new(reference)
+                {
+                    Color = color,
+                };
+
+                operationList.Add(new EditNote(reference, newNote));
+            }
         }
     }
     
