@@ -161,7 +161,7 @@ public partial class MainView : UserControl
         }
         catch (Exception _)
         {
-            // ignored
+            // ignored, most likely a BitConverter exception because of a corrupt/invalid file.
         }
     }
     
@@ -350,8 +350,7 @@ public partial class MainView : UserControl
     {
         usageTime++;
         sessionTime++;
-        File.WriteAllBytes(TimeTrackerPath, BitConverter.GetBytes(usageTime));
-        
+
         Dispatcher.UIThread.Post(() =>
         {
             TimeSpan u = TimeSpan.FromSeconds(usageTime);
@@ -360,6 +359,15 @@ public partial class MainView : UserControl
             TimeSpan s = TimeSpan.FromSeconds(sessionTime);
             SessionTimeText.Text = $"{Assets.Lang.Resources.Menu_SessionTime} {s:hh\\:mm\\:ss}";
         });
+        
+        try
+        {
+            File.WriteAllBytes(TimeTrackerPath, BitConverter.GetBytes(usageTime));
+        }
+        catch (Exception _)
+        {
+            // ignored, most likely an exception caused by two instances running at the same time.
+        }
     }
     
     private async Task CheckAutosaves()
