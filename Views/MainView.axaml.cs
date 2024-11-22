@@ -74,7 +74,7 @@ public partial class MainView : UserControl
     }
 
     public bool CanShutdown;
-    public const string AppVersion = "v4.0.0";
+    public const string AppVersion = "v4.0.0 DEV BUILD";
     public const string ServerVersion = "1.0.0";
     private const string ConfigPath = "UserConfig.toml";
     private const string TimeTrackerPath = "TimeTracker";
@@ -354,10 +354,10 @@ public partial class MainView : UserControl
         Dispatcher.UIThread.Post(() =>
         {
             TimeSpan u = TimeSpan.FromSeconds(usageTime);
-            UsageTimeText.Text = $"{Assets.Lang.Resources.Menu_UsageTime} {u:hh\\:mm\\:ss}";
+            UsageTimeText.Text = $"{Assets.Lang.Resources.Menu_UsageTime} {(int)u.TotalHours}:{u.Minutes}:{u.Seconds}";
             
             TimeSpan s = TimeSpan.FromSeconds(sessionTime);
-            SessionTimeText.Text = $"{Assets.Lang.Resources.Menu_SessionTime} {s:hh\\:mm\\:ss}";
+            SessionTimeText.Text = $"{Assets.Lang.Resources.Menu_SessionTime} {(int)s.TotalHours}:{s.Minutes}:{s.Seconds}";
         });
         
         try
@@ -2223,15 +2223,31 @@ public partial class MainView : UserControl
     private void NumericSize_OnValueChanged(object? sender, NumericUpDownValueChangedEventArgs e) => Size_OnValueChanged(false);
     private void Size_OnValueChanged(bool fromSlider)
     {
-        if (fromSlider) NumericNoteSize.Value = (decimal?)SliderNoteSize.Value;
-        else SliderNoteSize.Value = (double)(NumericNoteSize.Value ?? 15); // default to a typical note size if null
+        if (NumericNoteSize == null) return;
+        if (SliderNoteSize == null) return;
+        
+        if (fromSlider)
+        {
+            NumericNoteSize.Value = (decimal?)SliderNoteSize.Value;
+        }
+        else
+        {
+            NumericNoteSize.Value ??= Note.MinSize(ChartEditor.CurrentNoteType, ChartEditor.CurrentBonusType, NoteLinkType.Unlinked);
+            SliderNoteSize.Value = (double)NumericNoteSize.Value;
+        }
 
-        ChartEditor.Cursor.Size = (int)(NumericNoteSize.Value ?? 15);
+        ChartEditor.Cursor.Size = (int)NumericNoteSize.Value;
     }
 
     private void NumericMeasure_OnValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
     {
-        if (e.NewValue == null || NumericMeasure?.Value == null) return;
+        if (NumericMeasure == null) return;
+        if (e.NewValue == null || NumericMeasure.Value == null)
+        {
+            NumericMeasure.Value = 0;
+            return;
+        }
+        
         NumericMeasure.Value = Math.Clamp((decimal)e.NewValue, NumericMeasure.Minimum, NumericMeasure.Maximum);
 
         if (UpdateSource is TimeUpdateSource.None)
@@ -2240,7 +2256,15 @@ public partial class MainView : UserControl
 
     private void NumericBeatValue_OnValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
     {
-        if (e.NewValue == null || NumericMeasure?.Value == null || NumericBeatDivisor?.Value == null) return;
+        if (NumericBeatValue == null) return;
+        if (NumericBeatDivisor == null) return;
+        if (e.NewValue == null || NumericBeatValue.Value == null)
+        {
+            NumericBeatValue.Value = 0;
+            return;
+        }
+
+        if (NumericBeatDivisor.Value == null) return;
         if (AudioManager.CurrentSong is { IsPlaying: true }) return;
 
         decimal? value = e.NewValue;
@@ -2271,7 +2295,15 @@ public partial class MainView : UserControl
 
     private void NumericBeatDivisor_OnValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
     {
-        if (e.NewValue == null || NumericMeasure?.Value == null || NumericBeatValue?.Value == null) return;
+        if (NumericBeatDivisor == null) return;
+        if (NumericBeatValue == null) return;
+        if (e.NewValue == null || NumericBeatDivisor.Value == null)
+        {
+            NumericBeatDivisor.Value = 1;
+            return;
+        }
+
+        if (NumericBeatValue.Value == null) return;
         if (AudioManager.CurrentSong is { IsPlaying: true }) return;
 
         decimal oldValue = e.OldValue ?? 16;

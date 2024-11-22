@@ -60,6 +60,7 @@ public static class Proofreader
         checkBrokenNotes();
         checkUnbakedHolds();
         checkFullyOverlappingNotes();
+        checkPartiallyOverlappingNotes();
         watchYourProfanity();
         
         return;
@@ -147,7 +148,7 @@ public static class Proofreader
             {
                 if (note.Size < Note.MinSize(note.NoteType, note.BonusType, note.LinkType))
                 {
-                    AddMessage(textBlock, MessageType.Warning, $"{note.NoteType} @ {note.BeatData.Measure} {note.BeatData.Tick} is smaller than it's legal minimum size [< {Note.MinSize(note.NoteType, note.BonusType, note.LinkType)}.\n");
+                    AddMessage(textBlock, MessageType.Warning, $"{note.NoteType} @ {note.BeatData.Measure} {note.BeatData.Tick} is smaller than min size [{note.Size} < {Note.MinSize(note.NoteType, note.BonusType, note.LinkType)}.\n");
                     error = true;
                 }
             }
@@ -164,9 +165,9 @@ public static class Proofreader
             
             foreach (Note note in chart.Notes)
             {
-                if (note.Size < Note.MaxSize(note.NoteType))
+                if (note.Size > Note.MaxSize(note.NoteType))
                 {
-                    AddMessage(textBlock, MessageType.Error, $"{note.NoteType} @ {note.BeatData.Measure} {note.BeatData.Tick} is larger than it's legal maximum size [< {Note.MaxSize(note.NoteType)}.\n");
+                    AddMessage(textBlock, MessageType.Error, $"{note.NoteType} @ {note.BeatData.Measure} {note.BeatData.Tick} is larger than max size [{note.Size} > {Note.MaxSize(note.NoteType)}.\n");
                     error = true;
                 }
             }
@@ -245,7 +246,7 @@ public static class Proofreader
                 
                 if (MathExtensions.IsFullyOverlapping(current.Position, current.Position + current.Size, next.Position, next.Position + next.Size))
                 {
-                    AddMessage(textBlock, MessageType.Error, $"{current.NoteType} @ {current.BeatData.Measure} {current.BeatData.Tick} is overlapping with {next.NoteType}.\n");
+                    AddMessage(textBlock, MessageType.Error, $"{current.NoteType} @ {current.BeatData.Measure} {current.BeatData.Tick} is fully overlapping with {next.NoteType}.\n");
                     error = true;
                 }
             }
@@ -253,6 +254,32 @@ public static class Proofreader
             if (error)
             {
                 AddMessage(textBlock, MessageType.None, "Fully overlapping Notes may break the judgement engine, and are generally unfair to players.\n\n");
+            }
+        }
+
+        void checkPartiallyOverlappingNotes()
+        {
+            bool error = false;
+            
+            for (int i = 0; i < chart.Notes.Count - 1; i++)
+            {
+                Note current = chart.Notes[i];
+                Note next = chart.Notes[i + 1];
+                
+                if (current.IsMask || current.NoteType is NoteType.Hold or NoteType.Trace) continue;
+                if (next.IsMask || next.NoteType is NoteType.Hold or NoteType.Trace) continue;
+                if (current.BeatData.FullTick != next.BeatData.FullTick) continue;
+                
+                if (MathExtensions.IsPartiallyOverlapping(current.Position, current.Position + current.Size, next.Position, next.Position + next.Size))
+                {
+                    AddMessage(textBlock, MessageType.Warning, $"{current.NoteType} @ {current.BeatData.Measure} {current.BeatData.Tick} is partially overlapping with {next.NoteType}.\n");
+                    error = true;
+                }
+            }
+            
+            if (error)
+            {
+                AddMessage(textBlock, MessageType.None, "Partially overlapping Notes may break the judgement engine, and may be unfair to players.\n\n");
             }
         }
 
