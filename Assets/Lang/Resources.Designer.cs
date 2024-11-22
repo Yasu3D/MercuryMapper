@@ -195,6 +195,87 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to # of Notes:.
+        /// </summary>
+        public static string ChartInfo_NoteCount {
+            get {
+                return ResourceManager.GetString("ChartInfo_NoteCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to # of Chain Notes:.
+        /// </summary>
+        public static string ChartInfo_NoteCount_Chain {
+            get {
+                return ResourceManager.GetString("ChartInfo_NoteCount_Chain", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to # of Damage Notes:.
+        /// </summary>
+        public static string ChartInfo_NoteCount_Damage {
+            get {
+                return ResourceManager.GetString("ChartInfo_NoteCount_Damage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to # of Hold Notes:.
+        /// </summary>
+        public static string ChartInfo_NoteCount_Hold {
+            get {
+                return ResourceManager.GetString("ChartInfo_NoteCount_Hold", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to # of Mask Notes:.
+        /// </summary>
+        public static string ChartInfo_NoteCount_Mask {
+            get {
+                return ResourceManager.GetString("ChartInfo_NoteCount_Mask", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to # of Slide Notes:.
+        /// </summary>
+        public static string ChartInfo_NoteCount_Slide {
+            get {
+                return ResourceManager.GetString("ChartInfo_NoteCount_Slide", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to # of Snap Notes:.
+        /// </summary>
+        public static string ChartInfo_NoteCount_Snap {
+            get {
+                return ResourceManager.GetString("ChartInfo_NoteCount_Snap", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to # of Touch Notes:.
+        /// </summary>
+        public static string ChartInfo_NoteCount_Touch {
+            get {
+                return ResourceManager.GetString("ChartInfo_NoteCount_Touch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to # of Trace Notes:.
+        /// </summary>
+        public static string ChartInfo_NoteCount_Trace {
+            get {
+                return ResourceManager.GetString("ChartInfo_NoteCount_Trace", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Play Preview.
         /// </summary>
         public static string ChartInfo_PlayPreview {
@@ -218,6 +299,15 @@ namespace MercuryMapper.Assets.Lang {
         public static string ChartInfo_PreviewTime {
             get {
                 return ResourceManager.GetString("ChartInfo_PreviewTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to # of R-Notes:.
+        /// </summary>
+        public static string ChartInfo_RNoteCount {
+            get {
+                return ResourceManager.GetString("ChartInfo_RNoteCount", resourceCulture);
             }
         }
         
@@ -2761,7 +2851,7 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Draw No-Render Segments.
+        ///   Looks up a localized string similar to Draw No-Render.
         /// </summary>
         public static string Settings_DrawNoRenderSegments {
             get {

@@ -485,6 +485,56 @@
                         
                         <Separator/>
                         
+                        <UniformGrid Columns="2" Margin="0,8,0,0">
+                            <TextBlock Text="{x:Static lang:Resources.ChartInfo_NoteCount}"/>
+                            <TextBlock HorizontalAlignment="Right" Name="ChartInfoNoteCountText" Text="#" FontFamily="Consolas"/>
+                            
+                            <TextBlock Text="{x:Static lang:Resources.ChartInfo_RNoteCount}"/>
+                            <TextBlock HorizontalAlignment="Right" Name="ChartInfoRNoteCountText" Text="#" FontFamily="Consolas"/>
+                        </UniformGrid>
+                            
+                        <Separator/>
+                        
+                        <UniformGrid Columns="2" Margin="0,8,0,0">
+                            <TextBlock Text="{x:Static lang:Resources.ChartInfo_NoteCount_Touch}"/>
+                            <TextBlock HorizontalAlignment="Right" Name="ChartInfoNoteCountTouchText" Text="#" FontFamily="Consolas"/>
+                            
+                            <TextBlock Text="{x:Static lang:Resources.ChartInfo_NoteCount_Chain}"/>
+                            <TextBlock HorizontalAlignment="Right" Name="ChartInfoNoteCountChainText" Text="#" FontFamily="Consolas"/>
+                            
+                            <TextBlock Text="{x:Static lang:Resources.ChartInfo_NoteCount_Hold}"/>
+                            <TextBlock HorizontalAlignment="Right" Name="ChartInfoNoteCountHoldText" Text="#" FontFamily="Consolas"/>
+                        </UniformGrid>
+                        
+                        <Separator/>
+                            
+                        <UniformGrid Columns="2" Margin="0,8,0,0">
+                            <TextBlock Text="{x:Static lang:Resources.ChartInfo_NoteCount_Slide}"/>
+                            <TextBlock HorizontalAlignment="Right" Name="ChartInfoNoteCountSlideText" Text="#" FontFamily="Consolas"/>
+                            
+                            <TextBlock Text="{x:Static lang:Resources.ChartInfo_NoteCount_Snap}"/>
+                            <TextBlock HorizontalAlignment="Right" Name="ChartInfoNoteCountSnapText" Text="#" FontFamily="Consolas"/>
+                        </UniformGrid>
+                        
+                        <Separator/>
+                            
+                        <UniformGrid Columns="2" Margin="0,8,0,0">
+                            <TextBlock Text="{x:Static lang:Resources.ChartInfo_NoteCount_Damage}"/>
+                            <TextBlock HorizontalAlignment="Right" Name="ChartInfoNoteCountDamageText" Text="#" FontFamily="Consolas"/>
+                        </UniformGrid>
+                        
+                        <Separator/>
+                            
+                        <UniformGrid Columns="2" Margin="0,8,0,0">
+                            <TextBlock Text="{x:Static lang:Resources.ChartInfo_NoteCount_Mask}"/>
+                            <TextBlock HorizontalAlignment="Right" Name="ChartInfoNoteCountMaskText" Text="#" FontFamily="Consolas"/>
+                            
+                            <TextBlock Text="{x:Static lang:Resources.ChartInfo_NoteCount_Trace}"/>
+                            <TextBlock HorizontalAlignment="Right" Name="ChartInfoNoteCountTraceText" Text="#" FontFamily="Consolas"/>
+                        </UniformGrid>
+                        
+                        <Separator/>
+                        
                         <UniformGrid Columns="2">
                             <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.ChartInfo_Version}" Margin="0,2,0,2"/>
                             <TextBox Text="" Name="ChartInfoVersion" TextChanged="ChartInfoVersion_OnTextChanged" LostFocus="ChartInfoVersion_LostFocus" HorizontalAlignment="Right" Margin="0,2,0,2" Width="130"/>

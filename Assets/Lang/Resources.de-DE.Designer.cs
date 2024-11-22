@@ -195,6 +195,87 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Anzahl Noten:.
+        /// </summary>
+        public static string ChartInfo_NoteCount {
+            get {
+                return ResourceManager.GetString("ChartInfo_NoteCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Anzahl Ketten-Noten:.
+        /// </summary>
+        public static string ChartInfo_NoteCount_Chain {
+            get {
+                return ResourceManager.GetString("ChartInfo_NoteCount_Chain", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Anzahl Schaden-Noten:.
+        /// </summary>
+        public static string ChartInfo_NoteCount_Damage {
+            get {
+                return ResourceManager.GetString("ChartInfo_NoteCount_Damage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Anzahl Halte-Noten:.
+        /// </summary>
+        public static string ChartInfo_NoteCount_Hold {
+            get {
+                return ResourceManager.GetString("ChartInfo_NoteCount_Hold", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Anzahl Masken-Noten:.
+        /// </summary>
+        public static string ChartInfo_NoteCount_Mask {
+            get {
+                return ResourceManager.GetString("ChartInfo_NoteCount_Mask", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Anzahl Wisch-Noten:.
+        /// </summary>
+        public static string ChartInfo_NoteCount_Slide {
+            get {
+                return ResourceManager.GetString("ChartInfo_NoteCount_Slide", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Anzahl Schiebe-Noten:.
+        /// </summary>
+        public static string ChartInfo_NoteCount_Snap {
+            get {
+                return ResourceManager.GetString("ChartInfo_NoteCount_Snap", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Anzahl Tipp-Noten:.
+        /// </summary>
+        public static string ChartInfo_NoteCount_Touch {
+            get {
+                return ResourceManager.GetString("ChartInfo_NoteCount_Touch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Anzahl Linien:.
+        /// </summary>
+        public static string ChartInfo_NoteCount_Trace {
+            get {
+                return ResourceManager.GetString("ChartInfo_NoteCount_Trace", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Vorschau Abspielen.
         /// </summary>
         public static string ChartInfo_PlayPreview {
@@ -218,6 +299,15 @@ namespace MercuryMapper.Assets.Lang {
         public static string ChartInfo_PreviewTime {
             get {
                 return ResourceManager.GetString("ChartInfo_PreviewTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Anzahl R-Noten:.
+        /// </summary>
+        public static string ChartInfo_RNoteCount {
+            get {
+                return ResourceManager.GetString("ChartInfo_RNoteCount", resourceCulture);
             }
         }
         
@@ -2761,7 +2851,7 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Zeichne No-Render Segmente.
+        ///   Looks up a localized string similar to Zeichne No-Render.
         /// </summary>
         public static string Settings_DrawNoRenderSegments {
             get {

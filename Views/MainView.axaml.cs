@@ -623,6 +623,24 @@ public partial class MainView : UserControl
         }
     }
 
+    public void SetChartNoteInfo()
+    {
+        ChartInfoNoteCountText.Text = $"{ChartEditor.Chart.Notes.Count(x => x.LinkType is not (NoteLinkType.Point or NoteLinkType.End) && x.IsNote)}";
+        ChartInfoRNoteCountText.Text = $"{ChartEditor.Chart.Notes.Count(x => x.BonusType is BonusType.RNote)}";
+
+        ChartInfoNoteCountTouchText.Text = $"{ChartEditor.Chart.Notes.Count(x => x.NoteType is NoteType.Touch)}";
+        ChartInfoNoteCountChainText.Text = $"{ChartEditor.Chart.Notes.Count(x => x.NoteType is NoteType.Chain)}";
+        ChartInfoNoteCountHoldText.Text = $"{ChartEditor.Chart.Notes.Count(x => x.NoteType is NoteType.Hold && x.LinkType is not (NoteLinkType.Point or NoteLinkType.End))}";
+        
+        ChartInfoNoteCountSlideText.Text = $"{ChartEditor.Chart.Notes.Count(x => x.IsSlide)}";
+        ChartInfoNoteCountSnapText.Text = $"{ChartEditor.Chart.Notes.Count(x => x.IsSnap)}";
+        
+        ChartInfoNoteCountDamageText.Text = $"{ChartEditor.Chart.Notes.Count(x => x.NoteType is NoteType.Damage)}";
+        
+        ChartInfoNoteCountMaskText.Text = $"{ChartEditor.Chart.Notes.Count(x => x.IsMask)}";
+        ChartInfoNoteCountTraceText.Text = $"{ChartEditor.Chart.Notes.Count(x => x.NoteType is NoteType.Trace && x.LinkType is not (NoteLinkType.Point or NoteLinkType.End))}";
+    }
+    
     public void SetQuickSettings()
     {
         QuickSettingsSliderHitsound.Value = UserConfig.AudioConfig.HitsoundVolume;

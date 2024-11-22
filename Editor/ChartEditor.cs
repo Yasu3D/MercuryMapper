@@ -38,6 +38,7 @@ public class ChartEditor
             mainView.ToggleInsertButton();
             mainView.SetSelectionInfo();
             mainView.UpdateCurrentTimeScaleInfo();
+            mainView.SetChartNoteInfo();
             
             UpdateLastPlacedHold();
             
@@ -149,6 +150,7 @@ public class ChartEditor
 
         mainView.SetChartInfo();
         mainView.SetSelectionInfo();
+        mainView.SetChartNoteInfo();
     }
 
     public void LoadChart(string path)
@@ -165,6 +167,7 @@ public class ChartEditor
         
         mainView.SetChartInfo();
         mainView.SetSelectionInfo();
+        mainView.SetChartNoteInfo();
     }
 
     public void LoadChartNetwork(string chartData)
@@ -180,6 +183,7 @@ public class ChartEditor
         FormatHandler.LoadFileFromNetwork(Chart, chartData);
         mainView.SetChartInfo();
         mainView.SetSelectionInfo();
+        mainView.SetChartNoteInfo();
     }
 
     public void UpdateCursorNoteType()

@@ -1210,7 +1210,7 @@ Fortfahren?</value>
     <value>Zu erweiterten Bonus-Arten wechseln</value>
   </data>
   <data name="Settings_DrawNoRenderSegments" xml:space="preserve">
-    <value>Zeichne No-Render Segmente</value>
+    <value>Zeichne No-Render</value>
   </data>
   <data name="Editor_DeleteSegments" xml:space="preserve">
     <value>No-Render Segmente Löschen</value>
@@ -1364,5 +1364,35 @@ Fortfahren?</value>
   </data>
   <data name="Generic_PickFile" xml:space="preserve">
     <value>Datei Auswählen</value>
+  </data>
+  <data name="ChartInfo_NoteCount" xml:space="preserve">
+    <value>Anzahl Noten:</value>
+  </data>
+  <data name="ChartInfo_RNoteCount" xml:space="preserve">
+    <value>Anzahl R-Noten:</value>
+  </data>
+  <data name="ChartInfo_NoteCount_Chain" xml:space="preserve">
+    <value>Anzahl Ketten-Noten:</value>
+  </data>
+  <data name="ChartInfo_NoteCount_Damage" xml:space="preserve">
+    <value>Anzahl Schaden-Noten:</value>
+  </data>
+  <data name="ChartInfo_NoteCount_Hold" xml:space="preserve">
+    <value>Anzahl Halte-Noten:</value>
+  </data>
+  <data name="ChartInfo_NoteCount_Mask" xml:space="preserve">
+    <value>Anzahl Masken-Noten:</value>
+  </data>
+  <data name="ChartInfo_NoteCount_Slide" xml:space="preserve">
+    <value>Anzahl Wisch-Noten:</value>
+  </data>
+  <data name="ChartInfo_NoteCount_Snap" xml:space="preserve">
+    <value>Anzahl Schiebe-Noten:</value>
+  </data>
+  <data name="ChartInfo_NoteCount_Touch" xml:space="preserve">
+    <value>Anzahl Tipp-Noten:</value>
+  </data>
+  <data name="ChartInfo_NoteCount_Trace" xml:space="preserve">
+    <value>Anzahl Linien:</value>
   </data>
 </root>

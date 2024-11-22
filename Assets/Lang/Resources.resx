@@ -1210,7 +1210,7 @@ Continue?</value>
     <value>Switch to expanded Bonus Types</value>
   </data>
   <data name="Settings_DrawNoRenderSegments" xml:space="preserve">
-    <value>Draw No-Render Segments</value>
+    <value>Draw No-Render</value>
   </data>
   <data name="Editor_DeleteSegments" xml:space="preserve">
     <value>Delete No-Render Segments</value>
@@ -1364,5 +1364,35 @@ Continue?</value>
   </data>
   <data name="Generic_PickFile" xml:space="preserve">
     <value>Pick File</value>
+  </data>
+  <data name="ChartInfo_NoteCount" xml:space="preserve">
+    <value># of Notes:</value>
+  </data>
+  <data name="ChartInfo_RNoteCount" xml:space="preserve">
+    <value># of R-Notes:</value>
+  </data>
+  <data name="ChartInfo_NoteCount_Touch" xml:space="preserve">
+    <value># of Touch Notes:</value>
+  </data>
+  <data name="ChartInfo_NoteCount_Slide" xml:space="preserve">
+    <value># of Slide Notes:</value>
+  </data>
+  <data name="ChartInfo_NoteCount_Snap" xml:space="preserve">
+    <value># of Snap Notes:</value>
+  </data>
+  <data name="ChartInfo_NoteCount_Chain" xml:space="preserve">
+    <value># of Chain Notes:</value>
+  </data>
+  <data name="ChartInfo_NoteCount_Hold" xml:space="preserve">
+    <value># of Hold Notes:</value>
+  </data>
+  <data name="ChartInfo_NoteCount_Trace" xml:space="preserve">
+    <value># of Trace Notes:</value>
+  </data>
+  <data name="ChartInfo_NoteCount_Damage" xml:space="preserve">
+    <value># of Damage Notes:</value>
+  </data>
+  <data name="ChartInfo_NoteCount_Mask" xml:space="preserve">
+    <value># of Mask Notes:</value>
   </data>
 </root>
