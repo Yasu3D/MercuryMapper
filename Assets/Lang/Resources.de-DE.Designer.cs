@@ -1879,6 +1879,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Sitzungszeit:.
+        /// </summary>
+        public static string Menu_SessionTime {
+            get {
+                return ResourceManager.GetString("Menu_SessionTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Einstellungen.
         /// </summary>
         public static string Menu_Settings {
@@ -1902,6 +1911,15 @@ namespace MercuryMapper.Assets.Lang {
         public static string Menu_Undo {
             get {
                 return ResourceManager.GetString("Menu_Undo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nutzungszeit:.
+        /// </summary>
+        public static string Menu_UsageTime {
+            get {
+                return ResourceManager.GetString("Menu_UsageTime", resourceCulture);
             }
         }
         

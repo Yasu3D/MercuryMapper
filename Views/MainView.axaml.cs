@@ -43,6 +43,7 @@ public partial class MainView : UserControl
 
         InitializeComponent();
         LoadUserConfig();
+        LoadUsageTime();
 
         KeybindEditor = new(UserConfig);
         AudioManager = new(this);
@@ -51,7 +52,8 @@ public partial class MainView : UserControl
         PeerManager = new(this);
         PeerBroadcaster = new(this);
         ConnectionManager = new(this);
-
+        
+        usageTimer = new(UsageTimer_Tick, null, 0, 1000);
         updateInterval = TimeSpan.FromSeconds(1.0 / UserConfig.RenderConfig.RefreshRate);
         UpdateTimer = new(UpdateTimer_Tick, null, Timeout.Infinite, Timeout.Infinite);
         HitsoundTimer = new(TimeSpan.FromMilliseconds(1), DispatcherPriority.Background, HitsoundTimer_Tick) { IsEnabled = false };
@@ -75,6 +77,7 @@ public partial class MainView : UserControl
     public const string AppVersion = "v4.0.0";
     public const string ServerVersion = "1.0.0";
     private const string ConfigPath = "UserConfig.toml";
+    private const string TimeTrackerPath = "TimeTracker";
 
     public UserConfig UserConfig = new();
     public readonly KeybindEditor KeybindEditor;
@@ -90,6 +93,10 @@ public partial class MainView : UserControl
     public readonly Timer UpdateTimer;
     public readonly DispatcherTimer HitsoundTimer;
     public readonly DispatcherTimer AutosaveTimer;
+
+    private long usageTime;
+    private long sessionTime;
+    private Timer usageTimer;
 
     public TimeUpdateSource UpdateSource = TimeUpdateSource.None;
     public enum TimeUpdateSource
@@ -144,6 +151,20 @@ public partial class MainView : UserControl
         }
     }
 
+    private void LoadUsageTime()
+    {
+        if (!File.Exists(TimeTrackerPath)) return;
+
+        try
+        {
+            usageTime = BitConverter.ToInt64(File.ReadAllBytes(TimeTrackerPath));
+        }
+        catch (Exception _)
+        {
+            // ignored
+        }
+    }
+    
     private void MigrateOldSettings()
     {
         if (UserConfig.KeymapConfig.Keybinds.TryGetValue("EditorEndHold", out Keybind? k)) UserConfig.KeymapConfig.Keybinds["EditorEndNoteCollection"] = k;
@@ -325,6 +346,22 @@ public partial class MainView : UserControl
         FormatHandler.WriteFile(ChartEditor.Chart, filepath, ChartFormatType.Saturn);
     }
 
+    private void UsageTimer_Tick(object? sender)
+    {
+        usageTime++;
+        sessionTime++;
+        File.WriteAllBytes(TimeTrackerPath, BitConverter.GetBytes(usageTime));
+        
+        Dispatcher.UIThread.Post(() =>
+        {
+            TimeSpan u = TimeSpan.FromSeconds(usageTime);
+            UsageTimeText.Text = $"{Assets.Lang.Resources.Menu_UsageTime} {u:hh\\:mm\\:ss}";
+            
+            TimeSpan s = TimeSpan.FromSeconds(sessionTime);
+            SessionTimeText.Text = $"{Assets.Lang.Resources.Menu_SessionTime} {s:hh\\:mm\\:ss}";
+        });
+    }
+    
     private async Task CheckAutosaves()
     {
         string[] autosaves = Directory.GetFiles(Path.GetTempPath(), "*.autosave.mer").OrderByDescending(File.GetCreationTime).ToArray();

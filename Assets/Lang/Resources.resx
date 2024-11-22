@@ -1356,4 +1356,10 @@ Continue?</value>
   <data name="ToolTip_FlipNoteDirection" xml:space="preserve">
     <value>Flips the Direction of a Slide, Snap or Mask Note without mirroring its position.</value>
   </data>
+  <data name="Menu_SessionTime" xml:space="preserve">
+    <value>Session Time:</value>
+  </data>
+  <data name="Menu_UsageTime" xml:space="preserve">
+    <value>Usage Time:</value>
+  </data>
 </root>
