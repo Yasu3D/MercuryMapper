@@ -1482,6 +1482,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Datei Auswählen.
+        /// </summary>
+        public static string Generic_PickFile {
+            get {
+                return ResourceManager.GetString("Generic_PickFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Speichern und Schließen.
         /// </summary>
         public static string Generic_SaveAndClose {

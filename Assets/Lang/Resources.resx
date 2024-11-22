@@ -1362,4 +1362,7 @@ Continue?</value>
   <data name="Menu_UsageTime" xml:space="preserve">
     <value>Usage Time:</value>
   </data>
+  <data name="Generic_PickFile" xml:space="preserve">
+    <value>Pick File</value>
+  </data>
 </root>
