@@ -149,7 +149,7 @@ After the Timestamp and Index, an Object's Position, Size and Type is declared.
 
 ##### Position
 The Position is an Integer ranging from 0 to 59. It loops back to 0 once it reaches 60.
-When comparing to a clock, Position 0 is at 3 o' clock. It then goes counterclockwise in 6° steps. It defines the "Left", or most-clockwise edge of an Object.
+When comparing to a clock, Position 0 is at 3 o'clock. It then goes counterclockwise in 6° steps. It defines the "Left", or most-clockwise edge of an Object.
 
 ##### Size
 The Size is an Integer ranging from 1 to 60. It defines how big the arc of an Object is.
@@ -204,6 +204,19 @@ All valid Object Types and their Modifiers are listed below.
 `MASK_SUB.CCW`
 `MASK_SUB.CENTER`
 	Mask Add Objects do not have a valid `.NORMAL` variant.
-##### Chroma
-`.SAT` allows Notes to be re-colored by adding a hex code after the Type declaration.
-Alpha is ignored, so the only valid hex code format is `#RRGGBB`.
+ 
+`DAMAGE`
+
+`TRACE_START.WHITE`
+`TRACE_START.BLACK`
+`TRACE_START.RED`
+`TRACE_START.ORANGE`
+`TRACE_START.YELLOW`
+`TRACE_START.LIME`
+`TRACE_START.GREEN`
+`TRACE_START.SKY`
+`TRACE_START.BLUE`
+`TRACE_START.VIOLET`
+`TRACE_START.PINK`
+`TRACE_SEGMENT`
+`TRACE_END`
