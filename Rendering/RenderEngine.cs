@@ -829,7 +829,7 @@ public class RenderEngine(MainView mainView)
         {
             bool behindCamera = !MathExtensions.GreaterAlmostEqual(x.BeatData.MeasureDecimal, CurrentMeasureDecimal);
             bool pastVisionLimit = chart.GetScaledMeasureDecimal(x.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) > ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal;
-
+            
             return x.IsNote && !behindCamera && !pastVisionLimit;
         }).ToArray();
         
@@ -1894,7 +1894,7 @@ internal static class RenderMath
 
     internal static bool InRange(float scale)
     {
-        return scale is > 0 and < 1.001f;
+        return scale is > 0 and < 1.01f;
     }
 }
 

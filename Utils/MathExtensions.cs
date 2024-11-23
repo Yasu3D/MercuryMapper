@@ -85,10 +85,12 @@ public static class MathExtensions
         return x | y;
     }
     
-    public static bool GreaterAlmostEqual(float input, float comparison)
+    public static bool GreaterAlmostEqual(float input, float comparison, float threshold = 0.01f)
     {
-        if (input > comparison) return true;
-        return float.Abs(input - comparison) < 0.001f;
+        bool greater = input > comparison;
+        bool almostEqual = float.Abs(input - comparison) < threshold;
+
+        return greater || almostEqual;
     }
 
     public static bool LessAlmostEqual(float input, float comparison)
