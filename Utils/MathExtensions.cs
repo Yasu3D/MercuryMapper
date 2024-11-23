@@ -85,7 +85,7 @@ public static class MathExtensions
         return x | y;
     }
     
-    public static bool GreaterAlmostEqual(float input, float comparison, float threshold = 0.01f)
+    public static bool GreaterAlmostEqual(float input, float comparison, float threshold = 0.001f)
     {
         bool greater = input > comparison;
         bool almostEqual = float.Abs(input - comparison) < threshold;

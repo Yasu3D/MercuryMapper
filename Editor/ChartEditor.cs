@@ -1170,6 +1170,11 @@ public class ChartEditor
                 return BonusType.None;
             }
 
+            if (currentBonusType is BonusType.RNote && !RNoteAvailable(note.NoteType))
+            {
+                return BonusType.None;
+            }
+
             return currentBonusType;
         }
     }
