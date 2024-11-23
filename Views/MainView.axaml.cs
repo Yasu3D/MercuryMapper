@@ -74,7 +74,7 @@ public partial class MainView : UserControl
     }
 
     public bool CanShutdown;
-    public const string AppVersion = "v4.0.0 DEV BUILD";
+    public const string AppVersion = "v4.0.0 DEV BUILD 2";
     public const string ServerVersion = "1.0.0";
     private const string ConfigPath = "UserConfig.toml";
     private const string TimeTrackerPath = "TimeTracker";

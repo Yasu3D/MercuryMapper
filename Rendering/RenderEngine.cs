@@ -825,17 +825,19 @@ public class RenderEngine(MainView mainView)
     
     private void DrawNotes(SKCanvas canvas, Chart chart)
     {
-        List<Note> visibleNotes = chart.Notes.Where(x =>
+        Note[] visibleNotes = chart.Notes.Where(x =>
         {
-            bool invalidType = x.NoteType is NoteType.Trace || x.IsMask;
             bool behindCamera = !MathExtensions.GreaterAlmostEqual(x.BeatData.MeasureDecimal, CurrentMeasureDecimal);
             bool pastVisionLimit = chart.GetScaledMeasureDecimal(x.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) > ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal;
 
-            return !invalidType && !behindCamera && !pastVisionLimit;
-        }).OrderBy(x => x.LinkType == NoteLinkType.End).ThenBy(x => x.NoteType == NoteType.Hold).ThenBy(x => x.BeatData.FullTick).Reverse().ToList();
+            return x.IsNote && !behindCamera && !pastVisionLimit;
+        }).ToArray();
+        
+        Note[] syncNotes = visibleNotes.Where(x => !x.IsSegment).Reverse().ToArray();
+        Note[] renderedNotes = visibleNotes.OrderBy(x => x.LinkType == NoteLinkType.End).ThenBy(x => x.NoteType == NoteType.Hold).ThenBy(x => x.BeatData.FullTick).Reverse().ToArray();
 
         // Layer 1 // Bonus & R-Note Glow
-        foreach (Note note in visibleNotes)
+        foreach (Note note in renderedNotes)
         {
             ArcData data = GetArc(chart, note);
             if (!InRange(data.Scale)) continue;
@@ -854,9 +856,9 @@ public class RenderEngine(MainView mainView)
         }
         
         // Layer 2 // Sync
-        for (int i = 0; i < visibleNotes.Count; i++)
+        for (int i = 0; i < syncNotes.Length; i++)
         {
-            Note note = visibleNotes[i];
+            Note note = syncNotes[i];
             
             ArcData data = GetArc(chart, note);
             if (!InRange(data.Scale)) continue;
@@ -864,13 +866,13 @@ public class RenderEngine(MainView mainView)
             // Sync
             if (i != 0)
             {
-                Note previous = visibleNotes[i - 1];
+                Note previous = syncNotes[i - 1];
                 DrawSync(canvas, note, previous, data.Rect, data.Scale);
             }
         }
 
         // Layer 3 // Notes
-        foreach (Note note in visibleNotes)
+        foreach (Note note in renderedNotes)
         {
             ArcData data = GetArc(chart, note);
             if (!InRange(data.Scale)) continue;
@@ -908,7 +910,7 @@ public class RenderEngine(MainView mainView)
 
                 case NoteType.Hold:
                 {
-                    if (note.LinkType is NoteLinkType.Start or NoteLinkType.Unlinked)
+                    if (!note.IsSegment)
                     {
                         if (note.Size != 60)
                         {

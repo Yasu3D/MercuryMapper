@@ -210,7 +210,7 @@ public class ChartEditor
         if (operation is InsertNote insertNoteOperation)
         {
             // Update CurrentHoldStart + End Hold
-            if (insertNoteOperation.Note.IsNoteCollection && insertNoteOperation.Note.LinkType is NoteLinkType.Start or NoteLinkType.Unlinked && EditorState is ChartEditorState.InsertHold)
+            if (insertNoteOperation.Note.IsNoteCollection && !insertNoteOperation.Note.IsSegment && EditorState is ChartEditorState.InsertHold)
             {
                 CurrentCollectionStart = null;
                 EndHold();
@@ -1801,8 +1801,8 @@ public class ChartEditor
         EditorState = ChartEditorState.InsertNote;
         mainView.SetHoldContextButton(EditorState);
         mainView.ToggleInsertButton();
-
-        if (LastPlacedNote?.LinkType is NoteLinkType.Start or NoteLinkType.Unlinked)
+        
+        if (LastPlacedNote != null && !LastPlacedNote.IsSegment)
         {
             lock (Chart) Chart.Notes.Remove(LastPlacedNote);
             mainView.ConnectionManager.SendOperationMessage(new DeleteNote(Chart, SelectedNotes, LastPlacedNote), ConnectionManager.OperationDirection.Redo);
