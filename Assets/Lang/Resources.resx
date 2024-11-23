@@ -491,22 +491,22 @@ Would you like to manually select a file?</value>
     <value>Edit Gimmick</value>
   </data>
   <data name="Editor_QuickEditDecreaseSize" xml:space="preserve">
-    <value>Size - [Quick Edit]</value>
+    <value>Size-- [Quick Edit]</value>
   </data>
   <data name="Editor_QuickEditIncreasePosition" xml:space="preserve">
-    <value>Position + [Quick Edit]</value>
+    <value>Position++ [Quick Edit]</value>
   </data>
   <data name="Editor_QuickEditIncreaseSize" xml:space="preserve">
-    <value>Size + [Quick Edit]</value>
+    <value>Size++ [Quick Edit]</value>
   </data>
   <data name="Editor_QuickEditDecreasePosition" xml:space="preserve">
-    <value>Position - [Quick Edit]</value>
+    <value>Position-- [Quick Edit]</value>
   </data>
   <data name="Editor_QuickEditDecreaseTimestamp" xml:space="preserve">
-    <value>Timestamp - [Quick Edit]</value>
+    <value>Timestamp-- [Quick Edit]</value>
   </data>
   <data name="Editor_QuickEditIncreaseTimestamp" xml:space="preserve">
-    <value>Timestamp + [Quick Edit]</value>
+    <value>Timestamp++ [Quick Edit]</value>
   </data>
   <data name="Editor_ExpanderHeader_SelectionInfo" xml:space="preserve">
     <value>Selection Info</value>
@@ -1394,5 +1394,17 @@ Continue?</value>
   </data>
   <data name="ChartInfo_NoteCount_Mask" xml:space="preserve">
     <value># of Mask Notes:</value>
+  </data>
+  <data name="Editor_QuickEditDecreasePositionIterative" xml:space="preserve">
+    <value>Position-- [Iterative]</value>
+  </data>
+  <data name="Editor_QuickEditDecreaseSizeIterative" xml:space="preserve">
+    <value>Size-- [Iterative]</value>
+  </data>
+  <data name="Editor_QuickEditIncreasePositionIterative" xml:space="preserve">
+    <value>Position++ [Iterative]</value>
+  </data>
+  <data name="Editor_QuickEditIncreaseSizeIterative" xml:space="preserve">
+    <value>Size++ [Iterative]</value>
   </data>
 </root>

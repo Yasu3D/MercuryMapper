@@ -491,22 +491,22 @@ Möchten Sie eine Datei manuell auswählen?</value>
     <value>Gimmick Bearbeiten</value>
   </data>
   <data name="Editor_QuickEditDecreasePosition" xml:space="preserve">
-    <value>Position - [Quick Edit]</value>
+    <value>Position-- [Quick Edit]</value>
   </data>
   <data name="Editor_QuickEditDecreaseSize" xml:space="preserve">
-    <value>Size - [Quick Edit]</value>
+    <value>Größe-- [Quick Edit]</value>
   </data>
   <data name="Editor_QuickEditDecreaseTimestamp" xml:space="preserve">
-    <value>Timestamp - [Quick Edit]</value>
+    <value>Zeitstempel-- [Quick Edit]</value>
   </data>
   <data name="Editor_QuickEditIncreasePosition" xml:space="preserve">
-    <value>Position + [Quick Edit]</value>
+    <value>Position++ [Quick Edit]</value>
   </data>
   <data name="Editor_QuickEditIncreaseSize" xml:space="preserve">
-    <value>Size + [Quick Edit]</value>
+    <value>Größe++ [Quick Edit]</value>
   </data>
   <data name="Editor_QuickEditIncreaseTimestamp" xml:space="preserve">
-    <value>Timestamp + [Quick Edit]</value>
+    <value>Zeitstempel++ [Quick Edit]</value>
   </data>
   <data name="Editor_ExpanderHeader_SelectionInfo" xml:space="preserve">
     <value>Auswahl-Info</value>
@@ -1394,5 +1394,17 @@ Fortfahren?</value>
   </data>
   <data name="ChartInfo_NoteCount_Trace" xml:space="preserve">
     <value>Anzahl Linien:</value>
+  </data>
+  <data name="Editor_QuickEditDecreasePositionIterative" xml:space="preserve">
+    <value>Position-- [Iterativ]</value>
+  </data>
+  <data name="Editor_QuickEditDecreaseSizeIterative" xml:space="preserve">
+    <value>Größe-- [Iterativ]</value>
+  </data>
+  <data name="Editor_QuickEditIncreasePositionIterative" xml:space="preserve">
+    <value>Position++ [Iterativ]</value>
+  </data>
+  <data name="Editor_QuickEditIncreaseSizeIterative" xml:space="preserve">
+    <value>Größe++ [Iterativ]</value>
   </data>
 </root>

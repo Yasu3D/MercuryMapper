@@ -1177,6 +1177,30 @@ public partial class MainView : UserControl
             e.Handled = true;
             return;
         }
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorQuickEditIncreaseSizeIterative"]))
+        {
+            ChartEditor.QuickEditSizeIterative(1);
+            e.Handled = true;
+            return;
+        }
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorQuickEditDecreaseSizeIterative"]))
+        {
+            ChartEditor.QuickEditSizeIterative(-1);
+            e.Handled = true;
+            return;
+        }
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorQuickEditIncreasePositionIterative"]))
+        {
+            ChartEditor.QuickEditPositionIterative(1);
+            e.Handled = true;
+            return;
+        }
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorQuickEditDecreasePositionIterative"]))
+        {
+            ChartEditor.QuickEditPositionIterative(-1);
+            e.Handled = true;
+            return;
+        }
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorQuickEditIncreaseTimestamp"]))
         {
             ChartEditor.QuickEditTimestamp(1);

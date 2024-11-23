@@ -74,6 +74,10 @@
                     <TreeViewItem Name="EditorQuickEditDecreaseSize" Header="{x:Static lang:Resources.Editor_QuickEditDecreaseSize}" />
                     <TreeViewItem Name="EditorQuickEditIncreasePosition" Header="{x:Static lang:Resources.Editor_QuickEditIncreasePosition}" />
                     <TreeViewItem Name="EditorQuickEditDecreasePosition" Header="{x:Static lang:Resources.Editor_QuickEditDecreasePosition}" />
+                    <TreeViewItem Name="EditorQuickEditIncreaseSizeIterative" Header="{x:Static lang:Resources.Editor_QuickEditIncreaseSizeIterative}" />
+                    <TreeViewItem Name="EditorQuickEditDecreaseSizeIterative" Header="{x:Static lang:Resources.Editor_QuickEditDecreaseSizeIterative}" />
+                    <TreeViewItem Name="EditorQuickEditIncreasePositionIterative" Header="{x:Static lang:Resources.Editor_QuickEditIncreasePositionIterative}" />
+                    <TreeViewItem Name="EditorQuickEditDecreasePositionIterative" Header="{x:Static lang:Resources.Editor_QuickEditDecreasePositionIterative}" />
                     <TreeViewItem Name="EditorQuickEditIncreaseTimestamp" Header="{x:Static lang:Resources.Editor_QuickEditIncreaseTimestamp}" />
                     <TreeViewItem Name="EditorQuickEditDecreaseTimestamp" Header="{x:Static lang:Resources.Editor_QuickEditDecreaseTimestamp}" />
                     <TreeViewItem Name="EditorSetRenderTrue" Header="{x:Static lang:Resources.Editor_SetRenderTrue}" />

@@ -1194,7 +1194,7 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Position - [Quick Edit].
+        ///   Looks up a localized string similar to Position-- [Quick Edit].
         /// </summary>
         public static string Editor_QuickEditDecreasePosition {
             get {
@@ -1203,7 +1203,16 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Size - [Quick Edit].
+        ///   Looks up a localized string similar to Position-- [Iterativ].
+        /// </summary>
+        public static string Editor_QuickEditDecreasePositionIterative {
+            get {
+                return ResourceManager.GetString("Editor_QuickEditDecreasePositionIterative", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Größe-- [Quick Edit].
         /// </summary>
         public static string Editor_QuickEditDecreaseSize {
             get {
@@ -1212,7 +1221,16 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Timestamp - [Quick Edit].
+        ///   Looks up a localized string similar to Größe-- [Iterativ].
+        /// </summary>
+        public static string Editor_QuickEditDecreaseSizeIterative {
+            get {
+                return ResourceManager.GetString("Editor_QuickEditDecreaseSizeIterative", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zeitstempel-- [Quick Edit].
         /// </summary>
         public static string Editor_QuickEditDecreaseTimestamp {
             get {
@@ -1221,7 +1239,7 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Position + [Quick Edit].
+        ///   Looks up a localized string similar to Position++ [Quick Edit].
         /// </summary>
         public static string Editor_QuickEditIncreasePosition {
             get {
@@ -1230,7 +1248,16 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Size + [Quick Edit].
+        ///   Looks up a localized string similar to Position++ [Iterativ].
+        /// </summary>
+        public static string Editor_QuickEditIncreasePositionIterative {
+            get {
+                return ResourceManager.GetString("Editor_QuickEditIncreasePositionIterative", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Größe++ [Quick Edit].
         /// </summary>
         public static string Editor_QuickEditIncreaseSize {
             get {
@@ -1239,7 +1266,16 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Timestamp + [Quick Edit].
+        ///   Looks up a localized string similar to Größe++ [Iterativ].
+        /// </summary>
+        public static string Editor_QuickEditIncreaseSizeIterative {
+            get {
+                return ResourceManager.GetString("Editor_QuickEditIncreaseSizeIterative", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zeitstempel++ [Quick Edit].
         /// </summary>
         public static string Editor_QuickEditIncreaseTimestamp {
             get {

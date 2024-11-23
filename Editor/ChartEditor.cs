@@ -1268,6 +1268,90 @@ public class ChartEditor
             operationList.Add(new EditNote(note, newNote));
         }
     }
+
+    public void QuickEditSizeIterative(int delta)
+    {
+        List<IOperation> operationList = [];
+
+        Note[] sorted = SelectedNotes.OrderBy(x => x.BeatData.FullTick).ToArray();
+        
+        int iteration = 1;
+        for (int i = 0; i < sorted.Length; i++)
+        {
+            Note note = sorted[i];
+
+            if (i != 0)
+            {
+                Note prev = sorted[i - 1];
+                if (prev.BeatData.FullTick != note.BeatData.FullTick) iteration++;
+            }
+            
+            addOperation(note, iteration);
+        }
+
+        if (SelectedNotes.Count == 0 && HighlightedElement is Note highlighted)
+        {
+            addOperation(highlighted, 1);
+        }
+        
+        if (operationList.Count == 0) return;
+        UndoRedoManager.InvokeAndPush(new CompositeOperation(operationList));
+        Chart.IsSaved = false;
+        return;
+
+        void addOperation(Note note, int multiplier)
+        {
+            Note newNote = new(note, note.Guid)
+            {
+                Position = note.Position,
+                Size = int.Clamp(note.Size + delta * multiplier, Note.MinSize(note.NoteType, note.BonusType, note.LinkType), Note.MaxSize(note.NoteType)),
+            };
+
+            operationList.Add(new EditNote(note, newNote));
+        }
+    }
+
+    public void QuickEditPositionIterative(int delta)
+    {
+        List<IOperation> operationList = [];
+        
+        Note[] sorted = SelectedNotes.OrderBy(x => x.BeatData.FullTick).ToArray();
+        
+        int iteration = 1;
+        for (int i = 0; i < sorted.Length; i++)
+        {
+            Note note = sorted[i];
+
+            if (i != 0)
+            {
+                Note prev = sorted[i - 1];
+                if (prev.BeatData.FullTick != note.BeatData.FullTick) iteration++;
+            }
+            
+            addOperation(note, iteration);
+        }
+
+        if (SelectedNotes.Count == 0 && HighlightedElement is Note highlighted)
+        {
+            addOperation(highlighted, 1);
+        }
+
+        if (operationList.Count == 0) return;
+        UndoRedoManager.InvokeAndPush(new CompositeOperation(operationList));
+        Chart.IsSaved = false;
+        return;
+
+        void addOperation(Note note, int multiplier)
+        {
+            Note newNote = new(note, note.Guid)
+            {
+                Position = MathExtensions.Modulo(note.Position + delta * multiplier, 60),
+                Size = note.Size,
+            };
+
+            operationList.Add(new EditNote(note, newNote));
+        }
+    }
     
     public void QuickEditTimestamp(int delta)
     {
