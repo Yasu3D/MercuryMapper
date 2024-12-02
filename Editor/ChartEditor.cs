@@ -1129,7 +1129,7 @@ public class ChartEditor
             int newPosition = shape ? Cursor.Position : note.Position;
             int newSize = shape ? Cursor.Size : note.Size;
             NoteType newNoteType = properties ? editNoteType(note, CurrentNoteType) : note.NoteType;
-            BonusType newBonusType = properties ? editBonusType(newNoteType, CurrentBonusType) : note.BonusType;
+            BonusType newBonusType = properties ? editBonusType(newNoteType, note.LinkType, CurrentBonusType) : note.BonusType;
             MaskDirection newDirection = properties ? CurrentMaskDirection : note.MaskDirection;
 
             Note newNote = new(note, note.Guid)
@@ -1156,10 +1156,16 @@ public class ChartEditor
             return currentNoteType;
         }
 
-        BonusType editBonusType(NoteType noteType, BonusType currentBonusType)
+        BonusType editBonusType(NoteType noteType, NoteLinkType linkType, BonusType currentBonusType)
         {
             // Always default to none for MaskAdd, MaskRemove, Trace.
             if (noteType is NoteType.MaskAdd or NoteType.MaskRemove or NoteType.Trace)
+            {
+                return BonusType.None;
+            }
+
+            // Always default to none for points and ends.
+            if (linkType is NoteLinkType.Point or NoteLinkType.End)
             {
                 return BonusType.None;
             }
