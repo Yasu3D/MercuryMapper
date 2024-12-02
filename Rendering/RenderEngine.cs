@@ -70,21 +70,21 @@ public class RenderEngine(MainView mainView)
         
         if (mainView.ChartEditor.LayerGimmickActive && (!IsPlaying || (IsPlaying && RenderConfig.ShowGimmickNotesDuringPlayback))) DrawGimmickMarkers(canvas, Chart);
         if (mainView.ChartEditor.LayerMaskActive && (!IsPlaying || (IsPlaying && RenderConfig.ShowMaskDuringPlayback))) DrawMaskNotes(canvas, Chart);
-
-        if (mainView.ChartEditor.LayerTraceActive) DrawTraces(canvas, Chart);
         
+        if (mainView.ChartEditor.LayerNoteActive && (RenderConfig.ShowJudgementWindowMarvelous || RenderConfig.ShowJudgementWindowGreat || RenderConfig.ShowJudgementWindowGood))
+        {
+            DrawJudgementWindows(canvas, Chart);
+        }
+
         if (mainView.ChartEditor.LayerNoteActive)
         {
-            if (RenderConfig.ShowJudgementWindowMarvelous || RenderConfig.ShowJudgementWindowGreat || RenderConfig.ShowJudgementWindowGood)
-            {
-                DrawJudgementWindows(canvas, Chart);
-            }
-
             if (RenderConfig.HoldRenderMethod == 0) DrawHolds(canvas, Chart);
             else DrawHoldsLegacy(canvas, Chart);
-
-            DrawNotes(canvas, Chart);
         }
+
+        if (mainView.ChartEditor.LayerTraceActive) DrawTraces(canvas, Chart);
+            
+        if (mainView.ChartEditor.LayerNoteActive) DrawNotes(canvas, Chart);
     }
 
     // ________________

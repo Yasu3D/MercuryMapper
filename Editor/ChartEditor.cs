@@ -1129,7 +1129,7 @@ public class ChartEditor
             int newPosition = shape ? Cursor.Position : note.Position;
             int newSize = shape ? Cursor.Size : note.Size;
             NoteType newNoteType = properties ? editNoteType(note, CurrentNoteType) : note.NoteType;
-            BonusType newBonusType = properties ? editBonusType(note, CurrentBonusType) : note.BonusType;
+            BonusType newBonusType = properties ? editBonusType(newNoteType, CurrentBonusType) : note.BonusType;
             MaskDirection newDirection = properties ? CurrentMaskDirection : note.MaskDirection;
 
             Note newNote = new(note, note.Guid)
@@ -1156,21 +1156,21 @@ public class ChartEditor
             return currentNoteType;
         }
 
-        BonusType editBonusType(Note note, BonusType currentBonusType)
+        BonusType editBonusType(NoteType noteType, BonusType currentBonusType)
         {
             // Always default to none for MaskAdd, MaskRemove, Trace.
-            if (note.IsMask || note.NoteType == NoteType.Trace)
+            if (noteType is NoteType.MaskAdd or NoteType.MaskRemove or NoteType.Trace)
             {
                 return BonusType.None;
             }
             
             // Set BonusType to None if NoteType cannot be Bonus in Mercury.
-            if (currentBonusType is BonusType.Bonus && !BonusAvailable(note.NoteType))
+            if (currentBonusType is BonusType.Bonus && !BonusAvailable(noteType))
             {
                 return BonusType.None;
             }
 
-            if (currentBonusType is BonusType.RNote && !RNoteAvailable(note.NoteType))
+            if (currentBonusType is BonusType.RNote && !RNoteAvailable(noteType))
             {
                 return BonusType.None;
             }
@@ -2134,6 +2134,8 @@ public class ChartEditor
         HashSet<Note> checkedNotes = [];
         List<NoteCollection> holdNotes = [];
         List<IOperation> operationList = [];
+
+        List<Note> notesToSelectAfterOperation = [];
         
         foreach (Note note in SelectedNotes)
         {
@@ -2170,6 +2172,12 @@ public class ChartEditor
         if (operationList.Count == 0) return;
         UndoRedoManager.InvokeAndPush(new CompositeOperation(operationList));
         Chart.IsSaved = false;
+
+        DeselectAllNotes();
+        foreach (Note note in notesToSelectAfterOperation)
+        {
+            SelectNote(note);
+        }
         return;
 
         void holdToHold(NoteCollection hold, NoteType noteType, BonusType bonusType, TraceColor traceColor, int firstTick, int lastTick)
@@ -2237,6 +2245,7 @@ public class ChartEditor
                 };
 
                 operationList.Add(new InsertNote(Chart, SelectedNotes, note));
+                notesToSelectAfterOperation.Add(note);
             }
         }
         
