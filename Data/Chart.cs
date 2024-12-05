@@ -11,7 +11,7 @@ public class Chart(ChartEditor editor)
 {
     public readonly ChartEditor ChartEditor = editor;
 
-    public Guid Guid { get; set; }
+    public string Guid { get; set; }
 
     public bool IsSaved { get; set; } = true;
     public bool IsNew { get; set; } = true;

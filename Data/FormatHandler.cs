@@ -26,7 +26,7 @@ public static class FormatHandler
             if (data.Length == 0) return;
 
             // Naively detect .SAT format
-            if (data[0].Contains("@SAT_VERSION"))
+            if (data[0].Contains("@SAT_VERSION") || data[1].Contains("@SAT_VERSION"))
             {
                 SatHandler.LoadFile(chart, filepath, data);
             }
@@ -437,7 +437,7 @@ internal static class SatHandler
             if (string.IsNullOrWhiteSpace(line)) continue;
             if (line.StartsWith('#')) continue;
 
-            if (FormatHandler.ContainsTag(line, "@GUID ", out string result)) chart.Guid = Guid.Parse(result);
+            if (FormatHandler.ContainsTag(line, "@GUID ", out string result)) chart.Guid = result;
             if (FormatHandler.ContainsTag(line, "@VERSION ", out result)) chart.Version = result;
             if (FormatHandler.ContainsTag(line, "@TITLE ", out result)) chart.Title = result;
             if (FormatHandler.ContainsTag(line, "@RUBI ", out result)) chart.Rubi = result;
