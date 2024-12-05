@@ -1,5 +1,5 @@
+using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using MercuryMapper.Editor;
 using MercuryMapper.Enums;
@@ -10,7 +10,9 @@ namespace MercuryMapper.Data;
 public class Chart(ChartEditor editor)
 {
     public readonly ChartEditor ChartEditor = editor;
-    
+
+    public Guid Guid { get; set; }
+
     public bool IsSaved { get; set; } = true;
     public bool IsNew { get; set; } = true;
 

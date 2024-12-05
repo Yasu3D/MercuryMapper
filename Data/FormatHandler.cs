@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using FluentAvalonia.Core;
 using MercuryMapper.Enums;
+using MercuryMapper.Views;
 
 namespace MercuryMapper.Data;
 
@@ -412,7 +413,7 @@ internal static class SatHandler
         if (filepath == "" && includeGuid == false) return "";
 
         string result = "";
-
+        
         WriteMetadata(chart, ref result);
         
         if (includeGuid) WriteCommentsWithGuid(chart, ref result);
@@ -434,8 +435,10 @@ internal static class SatHandler
         foreach (string line in metadata)
         {
             if (string.IsNullOrWhiteSpace(line)) continue;
+            if (line.StartsWith('#')) continue;
 
-            if (FormatHandler.ContainsTag(line, "@VERSION ", out string result)) chart.Version = result;
+            if (FormatHandler.ContainsTag(line, "@GUID ", out string result)) chart.Guid = Guid.Parse(result);
+            if (FormatHandler.ContainsTag(line, "@VERSION ", out result)) chart.Version = result;
             if (FormatHandler.ContainsTag(line, "@TITLE ", out result)) chart.Title = result;
             if (FormatHandler.ContainsTag(line, "@RUBI ", out result)) chart.Rubi = result;
             if (FormatHandler.ContainsTag(line, "@ARTIST ", out result)) chart.Artist = result;
@@ -653,8 +656,10 @@ internal static class SatHandler
     // Writing
     private static void WriteMetadata(Chart chart, ref string input)
     {
-        input += $"{"@SAT_VERSION",-16}{SatFormatVersion}\n" + 
+        input += $"# Created with MercuryMapper {MainView.AppVersion}\n" +
+                 $"{"@SAT_VERSION",-16}{SatFormatVersion}\n" + 
                  $"\n" + $"{"@VERSION",-16}{chart.Version}\n" + 
+                 $"{"@GUID", -16}MM{Guid.NewGuid()}\n" +
                  $"{"@TITLE",-16}{chart.Title}\n" + 
                  $"{"@RUBI",-16}{chart.Rubi}\n" + 
                  $"{"@ARTIST",-16}{chart.Artist}\n" + 
