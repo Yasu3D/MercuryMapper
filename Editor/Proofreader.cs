@@ -235,20 +235,29 @@ public static class Proofreader
         void checkFullyOverlappingNotes()
         {
             bool error = false;
-            
-            for (int i = 0; i < chart.Notes.Count - 1; i++)
+
+            HashSet<int> checkedTicks = [];
+
+            foreach (Note note in chart.Notes)
             {
-                Note current = chart.Notes[i];
-                Note next = chart.Notes[i + 1];
+                if (!checkedTicks.Add(note.BeatData.FullTick)) continue;
+                Note[] notesOnTick = chart.Notes.Where(x => x.BeatData.FullTick == note.BeatData.FullTick).ToArray();
                 
-                if (current.IsMask || current.NoteType is NoteType.Hold or NoteType.Trace) continue;
-                if (next.IsMask || next.NoteType is NoteType.Hold or NoteType.Trace) continue;
-                if (current.BeatData.FullTick != next.BeatData.FullTick) continue;
-                
-                if (MathExtensions.IsFullyOverlapping(current.Position, current.Position + current.Size, next.Position, next.Position + next.Size))
+                for (int i = 0; i < notesOnTick.Length - 1; i++)
+                for (int j = i + 1; j < notesOnTick.Length; j++)
                 {
-                    AddMessage(textBlock, MessageType.Error, $"{current.NoteType} @ {current.BeatData.Measure} {current.BeatData.Tick} is fully overlapping with {next.NoteType}.\n");
-                    error = true;
+                    Note current = chart.Notes[i];
+                    Note next = chart.Notes[j];
+                
+                    if (current.IsMask || current.NoteType is NoteType.Hold or NoteType.Trace) continue;
+                    if (next.IsMask || next.NoteType is NoteType.Hold or NoteType.Trace) continue;
+                    if (current.BeatData.FullTick != next.BeatData.FullTick) continue;
+                
+                    if (MathExtensions.IsFullyOverlapping(current.Position, current.Position + current.Size, next.Position, next.Position + next.Size))
+                    {
+                        AddMessage(textBlock, MessageType.Error, $"{current.NoteType} @ {current.BeatData.Measure} {current.BeatData.Tick} is fully overlapping with {next.NoteType}.\n");
+                        error = true;
+                    }
                 }
             }
             
@@ -262,19 +271,30 @@ public static class Proofreader
         {
             bool error = false;
             
-            for (int i = 0; i < chart.Notes.Count - 1; i++)
+            HashSet<int> checkedTicks = [];
+
+            foreach (Note note in chart.Notes)
             {
-                Note current = chart.Notes[i];
-                Note next = chart.Notes[i + 1];
+                if (!checkedTicks.Add(note.BeatData.FullTick)) continue;
+                Note[] notesOnTick = chart.Notes.Where(x => x.BeatData.FullTick == note.BeatData.FullTick).ToArray();
                 
-                if (current.IsMask || current.NoteType is NoteType.Hold or NoteType.Trace) continue;
-                if (next.IsMask || next.NoteType is NoteType.Hold or NoteType.Trace) continue;
-                if (current.BeatData.FullTick != next.BeatData.FullTick) continue;
-                
-                if (MathExtensions.IsPartiallyOverlapping(current.Position, current.Position + current.Size, next.Position, next.Position + next.Size))
+                for (int i = 0; i < notesOnTick.Length - 1; i++)
+                for (int j = i + 1; j < notesOnTick.Length; j++)
                 {
-                    AddMessage(textBlock, MessageType.Warning, $"{current.NoteType} @ {current.BeatData.Measure} {current.BeatData.Tick} is partially overlapping with {next.NoteType}.\n");
-                    error = true;
+                    Note current = notesOnTick[i];
+                    Note next = notesOnTick[j];
+                    
+                    Console.WriteLine($"{current.Position} {current.Size} | {next.Position} {next.Size}");
+                
+                    if (current.IsMask || current.NoteType is NoteType.Hold or NoteType.Trace) continue;
+                    if (next.IsMask || next.NoteType is NoteType.Hold or NoteType.Trace) continue;
+                    if (current.BeatData.FullTick != next.BeatData.FullTick) continue;
+                
+                    if (MathExtensions.IsPartiallyOverlapping(current.Position, current.Position + current.Size, next.Position, next.Position + next.Size))
+                    {
+                        AddMessage(textBlock, MessageType.Warning, $"{current.NoteType} @ {current.BeatData.Measure} {current.BeatData.Tick} is partially overlapping with {next.NoteType}.\n");
+                        error = true;
+                    }
                 }
             }
             
