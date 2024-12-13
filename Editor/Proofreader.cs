@@ -61,6 +61,7 @@ public static class Proofreader
         checkUnbakedHolds();
         checkFullyOverlappingNotes();
         checkPartiallyOverlappingNotes();
+        checkGimmicksOnLowers();
         watchYourProfanity();
         
         return;
@@ -313,6 +314,26 @@ public static class Proofreader
             if (error)
             {
                 AddMessage(textBlock, MessageType.None, "Unbaked Holds have broken judgement zones that may result in the player dropping a Hold even though they were following visuals properly.\n\n");
+            }
+        }
+
+        void checkGimmicksOnLowers()
+        {
+            if (chart.Diff > 1) return;
+            
+            bool error = false;
+            
+            foreach (Gimmick gimmick in chart.Gimmicks)
+            {
+                if (gimmick.GimmickType is GimmickType.BpmChange or GimmickType.TimeSigChange) continue;
+
+                AddMessage(textBlock, MessageType.Warning, $"{gimmick.GimmickType} @ {gimmick.BeatData.Measure} {gimmick.BeatData.Tick} is likely inappropriate for lowers.\n");
+                error = true;
+            }
+            
+            if (error)
+            {
+                AddMessage(textBlock, MessageType.None, "Lowers tend to be for absolute beginners at the game. It's already hard enough for them to get the timing right on notes that are scrolling at their normal speed. Playing with scroll speeds and reverses SIGNIFICANTLY increases difficulty.\n\n");
             }
         }
 
