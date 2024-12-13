@@ -246,7 +246,7 @@ public class ChartEditor
         // Update CurrentHoldStart + Start Hold
         if (operation is InsertNote insertNoteOperation)
         {
-            if (insertNoteOperation.Note.IsNoteCollection && insertNoteOperation.Note.LinkType is NoteLinkType.Start)
+            if (insertNoteOperation.Note.IsNoteCollection && insertNoteOperation.Note.LinkType is NoteLinkType.Start or NoteLinkType.Unlinked)
             {
                 StartHold(insertNoteOperation.Note);
             }
