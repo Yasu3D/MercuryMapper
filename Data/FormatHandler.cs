@@ -25,8 +25,18 @@ public static class FormatHandler
             string[] data = File.ReadLines(filepath).ToArray();
             if (data.Length == 0) return;
 
+            bool isSat = false;
+
+            foreach (string s in data)
+            {
+                if (!ContainsTag(s, "@SAT_VERSION ", out _)) continue;
+
+                isSat = true;
+                break;
+            }
+            
             // Naively detect .SAT format
-            if (data[0].Contains("@SAT_VERSION") || data[1].Contains("@SAT_VERSION"))
+            if (isSat)
             {
                 SatHandler.LoadFile(chart, filepath, data);
             }
