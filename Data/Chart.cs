@@ -36,11 +36,13 @@ public class Chart(ChartEditor editor)
     public string Rubi = "";
     public string Artist = "";
     public string Author = "";
+    public string BpmText = "";
 
+    public int Background;
+    
     public int Diff;
     public decimal Level;
     public decimal ClearThreshold;
-    public string BpmText = "";
 
     public decimal PreviewStart;
     public decimal PreviewTime;

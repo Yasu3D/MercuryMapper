@@ -2385,6 +2385,23 @@ public partial class MainView : UserControl
     }
     private void ChartInfoAuthor_LostFocus(object? sender, RoutedEventArgs e) => ConnectionManager.SendMessage(new ConnectionManager.MessageSerializer(ConnectionManager.MessageTypes.AuthorChange, [ChartEditor.Chart.Author]));
 
+    private void ChartInfoBpmText_OnTextChanged(object? sender, TextChangedEventArgs e)
+    {
+        ChartEditor.Chart.BpmText = ChartInfoBpmText.Text ?? "";
+    }
+    private void ChartInfoBpmText_LostFocus(object? sender, RoutedEventArgs e) => ConnectionManager.SendMessage(new ConnectionManager.MessageSerializer(ConnectionManager.MessageTypes.BpmTextChange, [ ChartEditor.Chart.BpmText ]));
+
+    private void ChartInfoBackground_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        if (ChartInfoBackground is null) return;
+        ChartEditor.Chart.Background = ChartInfoBackground.SelectedIndex;
+    }
+    private void ChartInfoBackground_LostFocus(object? sender, RoutedEventArgs e)
+    {
+        if (ChartInfoBackground is null) return;
+        ConnectionManager.SendMessage(new ConnectionManager.MessageSerializer(ConnectionManager.MessageTypes.BackgroundChange, null, [ ChartEditor.Chart.Background ]));
+    }
+    
     private void ChartInfoDiff_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
         if (ChartInfoDiff is null) return;
@@ -2407,13 +2424,7 @@ public partial class MainView : UserControl
         ChartEditor.Chart.ClearThreshold = double.IsNaN(ChartInfoLevel.Value) ? 0 : (decimal)ChartInfoClearThreshold.Value;
     }
     private void ChartInfoClearThreshold_LostFocus(object? sender, RoutedEventArgs e) => ConnectionManager.SendMessage(new ConnectionManager.MessageSerializer(ConnectionManager.MessageTypes.ClearThresholdChange, null, null, [ ChartEditor.Chart.ClearThreshold ]));
-
-    private void ChartInfoBpmText_OnTextChanged(object? sender, TextChangedEventArgs e)
-    {
-        ChartEditor.Chart.BpmText = ChartInfoBpmText.Text ?? "";
-    }
-    private void ChartInfoBpmText_LostFocus(object? sender, RoutedEventArgs e) => ConnectionManager.SendMessage(new ConnectionManager.MessageSerializer(ConnectionManager.MessageTypes.BpmTextChange, [ ChartEditor.Chart.BpmText ]));
-
+    
     private void ChartInfoPreviewStart_OnValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
     {
         ChartEditor.Chart.PreviewStart = (decimal)ChartInfoPreviewStart.Value;

@@ -114,6 +114,87 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Chart Hintergrund.
+        /// </summary>
+        public static string ChartInfo_Background {
+            get {
+                return ResourceManager.GetString("ChartInfo_Background", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Automatisch.
+        /// </summary>
+        public static string ChartInfo_Background_Auto {
+            get {
+                return ResourceManager.GetString("ChartInfo_Background_Auto", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Boss.
+        /// </summary>
+        public static string ChartInfo_Background_Boss {
+            get {
+                return ResourceManager.GetString("ChartInfo_Background_Boss", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Titelbild.
+        /// </summary>
+        public static string ChartInfo_Background_Jacket {
+            get {
+                return ResourceManager.GetString("ChartInfo_Background_Jacket", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lily.
+        /// </summary>
+        public static string ChartInfo_Background_Lily {
+            get {
+                return ResourceManager.GetString("ChartInfo_Background_Lily", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Origin.
+        /// </summary>
+        public static string ChartInfo_Background_Origin {
+            get {
+                return ResourceManager.GetString("ChartInfo_Background_Origin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reverse.
+        /// </summary>
+        public static string ChartInfo_Background_Reverse {
+            get {
+                return ResourceManager.GetString("ChartInfo_Background_Reverse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Saturn.
+        /// </summary>
+        public static string ChartInfo_Background_Saturn {
+            get {
+                return ResourceManager.GetString("ChartInfo_Background_Saturn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stage Up.
+        /// </summary>
+        public static string ChartInfo_Background_StageUp {
+            get {
+                return ResourceManager.GetString("ChartInfo_Background_StageUp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Video.
         /// </summary>
         public static string ChartInfo_Bga {
@@ -2554,7 +2635,7 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Cover.
+        ///   Looks up a localized string similar to Titelbild.
         /// </summary>
         public static string SaturnExport_Jacket {
             get {

@@ -1407,4 +1407,31 @@ Continue?</value>
   <data name="Editor_QuickEditIncreaseSizeIterative" xml:space="preserve">
     <value>Size++ [Iterative]</value>
   </data>
+  <data name="ChartInfo_Background" xml:space="preserve">
+    <value>Chart Background</value>
+  </data>
+  <data name="ChartInfo_Background_Reverse" xml:space="preserve">
+    <value>Reverse</value>
+  </data>
+  <data name="ChartInfo_Background_Boss" xml:space="preserve">
+    <value>Boss</value>
+  </data>
+  <data name="ChartInfo_Background_Auto" xml:space="preserve">
+    <value>Auto</value>
+  </data>
+  <data name="ChartInfo_Background_Jacket" xml:space="preserve">
+    <value>Jacket</value>
+  </data>
+  <data name="ChartInfo_Background_Lily" xml:space="preserve">
+    <value>Lily</value>
+  </data>
+  <data name="ChartInfo_Background_Origin" xml:space="preserve">
+    <value>Origin</value>
+  </data>
+  <data name="ChartInfo_Background_StageUp" xml:space="preserve">
+    <value>Stage Up</value>
+  </data>
+  <data name="ChartInfo_Background_Saturn" xml:space="preserve">
+    <value>Saturn</value>
+  </data>
 </root>

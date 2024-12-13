@@ -56,6 +56,7 @@ public class ConnectionManager(MainView main)
         PreviewTimeChange = 110,
         BgmOffsetChange = 111,
         BgaOffsetChange = 112,
+        BackgroundChange = 113,
 
         // 200 - Realtime Events
         InsertNote = 200,
@@ -311,7 +312,7 @@ public class ConnectionManager(MainView main)
         webSocketClient?.Send(JsonSerializer.Serialize(messageObject));
     }
 
-    public void SendOperationMessage(IOperation operation, OperationDirection operationDirection)
+     public void SendOperationMessage(IOperation operation, OperationDirection operationDirection)
     {
         switch (operation)
         {
@@ -640,7 +641,16 @@ public class ConnectionManager(MainView main)
                 });
                 break;
             }
-                
+
+            case MessageTypes.BackgroundChange:
+            {
+                Dispatcher.UIThread.Post(() => {
+                    mainView.ChartEditor.Chart.Background = messageData.IntData[0];
+                    mainView.SetChartInfo();
+                });
+                break;
+            }
+            
             case MessageTypes.PreviewStartChange:
             {
                 Dispatcher.UIThread.Post(() => {

@@ -550,6 +550,25 @@
                             
                             <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.ChartInfo_Author}" Margin="0,2,0,2"/>
                             <TextBox Text="" Name="ChartInfoAuthor" TextChanged="ChartInfoAuthor_OnTextChanged" LostFocus="ChartInfoAuthor_LostFocus" HorizontalAlignment="Right" Margin="0,2,0,2" Width="130"/>
+                            
+                            <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.ChartInfo_BpmText}" Margin="0,2,0,2"/>
+                            <TextBox Text="" Name="ChartInfoBpmText" TextChanged="ChartInfoBpmText_OnTextChanged" LostFocus="ChartInfoBpmText_LostFocus" HorizontalAlignment="Right" Margin="0,2,0,2" Width="130"/>
+                        </UniformGrid>
+                        
+                        <Separator/>
+                        
+                        <UniformGrid Columns="2">
+                            <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.ChartInfo_Background}" Margin="0,2,0,2"/>
+                            <ComboBox Name="ChartInfoBackground" SelectedIndex="0" SelectionChanged="ChartInfoBackground_OnSelectionChanged" LostFocus="ChartInfoBackground_LostFocus" HorizontalAlignment="Right" Margin="0,2,0,2" Width="130" >
+                                <ComboBoxItem Content="{x:Static lang:Resources.ChartInfo_Background_Auto}"/>
+                                <ComboBoxItem Content="{x:Static lang:Resources.ChartInfo_Background_Saturn}"/>
+                                <ComboBoxItem Content="{x:Static lang:Resources.ChartInfo_Background_Reverse}"/>
+                                <ComboBoxItem Content="{x:Static lang:Resources.ChartInfo_Background_Lily}"/>
+                                <ComboBoxItem Content="{x:Static lang:Resources.ChartInfo_Background_Origin}"/>
+                                <ComboBoxItem Content="{x:Static lang:Resources.ChartInfo_Background_Boss}"/>
+                                <ComboBoxItem Content="{x:Static lang:Resources.ChartInfo_Background_StageUp}"/>
+                                <ComboBoxItem Content="{x:Static lang:Resources.ChartInfo_Background_Jacket}"/>
+                            </ComboBox>
                         </UniformGrid>
                         
                         <Separator/>
@@ -569,9 +588,6 @@
                             
                             <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.ChartInfo_Clear}" Margin="0,2,0,2"/>
                             <fluent:NumberBox Value="0" Name="ChartInfoClearThreshold" ValueChanged="ChartInfoClearThreshold_OnValueChanged" LostFocus="ChartInfoClearThreshold_LostFocus" HorizontalAlignment="Right" Margin="0,2,0,2" Width="130"/>
-                            
-                            <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.ChartInfo_BpmText}" Margin="0,2,0,2"/>
-                            <TextBox Text="" Name="ChartInfoBpmText" TextChanged="ChartInfoBpmText_OnTextChanged" LostFocus="ChartInfoBpmText_LostFocus" HorizontalAlignment="Right" Margin="0,2,0,2" Width="130"/>
                         </UniformGrid>
                         
                         <Separator/>

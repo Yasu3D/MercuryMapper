@@ -712,7 +712,7 @@ Fortfahren?</value>
     <value>Titel</value>
   </data>
   <data name="SaturnExport_Jacket" xml:space="preserve">
-    <value>Cover</value>
+    <value>Titelbild</value>
   </data>
   <data name="SaturnExport_Music" xml:space="preserve">
     <value>Musik</value>
@@ -1406,5 +1406,32 @@ Fortfahren?</value>
   </data>
   <data name="Editor_QuickEditIncreaseSizeIterative" xml:space="preserve">
     <value>Größe++ [Iterativ]</value>
+  </data>
+  <data name="ChartInfo_Background" xml:space="preserve">
+    <value>Chart Hintergrund</value>
+  </data>
+  <data name="ChartInfo_Background_Auto" xml:space="preserve">
+    <value>Automatisch</value>
+  </data>
+  <data name="ChartInfo_Background_Boss" xml:space="preserve">
+    <value>Boss</value>
+  </data>
+  <data name="ChartInfo_Background_Jacket" xml:space="preserve">
+    <value>Titelbild</value>
+  </data>
+  <data name="ChartInfo_Background_Reverse" xml:space="preserve">
+    <value>Reverse</value>
+  </data>
+  <data name="ChartInfo_Background_Lily" xml:space="preserve">
+    <value>Lily</value>
+  </data>
+  <data name="ChartInfo_Background_Origin" xml:space="preserve">
+    <value>Origin</value>
+  </data>
+  <data name="ChartInfo_Background_StageUp" xml:space="preserve">
+    <value>Stage Up</value>
+  </data>
+  <data name="ChartInfo_Background_Saturn" xml:space="preserve">
+    <value>Saturn</value>
   </data>
 </root>

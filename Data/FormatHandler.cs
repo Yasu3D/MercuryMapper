@@ -453,11 +453,13 @@ internal static class SatHandler
             if (FormatHandler.ContainsTag(line, "@RUBI ", out result)) chart.Rubi = result;
             if (FormatHandler.ContainsTag(line, "@ARTIST ", out result)) chart.Artist = result;
             if (FormatHandler.ContainsTag(line, "@AUTHOR ", out result)) chart.Author = result;
+            if (FormatHandler.ContainsTag(line, "@BPM_TEXT ", out result)) chart.BpmText = result;
+            
+            if (FormatHandler.ContainsTag(line, "@BACKGROUND ", out result)) chart.Background = Convert.ToInt32(result, CultureInfo.InvariantCulture);
 
             if (FormatHandler.ContainsTag(line, "@DIFF ", out result)) chart.Diff = Convert.ToInt32(result, CultureInfo.InvariantCulture);
             if (FormatHandler.ContainsTag(line, "@LEVEL ", out result)) chart.Level = Convert.ToDecimal(result, CultureInfo.InvariantCulture);
             if (FormatHandler.ContainsTag(line, "@CLEAR ", out result)) chart.ClearThreshold = Convert.ToDecimal(result, CultureInfo.InvariantCulture);
-            if (FormatHandler.ContainsTag(line, "@BPM_TEXT ", out result)) chart.BpmText = result;
 
             if (FormatHandler.ContainsTag(line, "@PREVIEW_START ", out result)) chart.PreviewStart = Convert.ToDecimal(result, CultureInfo.InvariantCulture);
             if (FormatHandler.ContainsTag(line, "@PREVIEW_TIME ", out result)) chart.PreviewTime = Convert.ToDecimal(result, CultureInfo.InvariantCulture);
@@ -674,11 +676,13 @@ internal static class SatHandler
                  $"{"@RUBI",-16}{chart.Rubi}\n" + 
                  $"{"@ARTIST",-16}{chart.Artist}\n" + 
                  $"{"@AUTHOR",-16}{chart.Author}\n" + 
+                 $"{"@BPM_TEXT",-16}{chart.BpmText}\n" + 
+                 $"\n" +
+                 $"{"@BACKGROUND",-16}{chart.Background}\n" + 
                  $"\n" + 
                  $"{"@DIFF",-16}{chart.Diff}\n" + 
                  $"{"@LEVEL",-16}{chart.Level.ToString("F6", CultureInfo.InvariantCulture)}\n" + 
                  $"{"@CLEAR",-16}{chart.ClearThreshold.ToString("F6", CultureInfo.InvariantCulture)}\n" + 
-                 $"{"@BPM_TEXT",-16}{chart.BpmText}\n" + 
                  $"\n" + 
                  $"{"@PREVIEW_START",-16}{chart.PreviewStart}\n" + 
                  $"{"@PREVIEW_TIME",-16}{chart.PreviewTime}\n" + 
