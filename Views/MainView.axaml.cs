@@ -1258,7 +1258,7 @@ public partial class MainView : UserControl
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorJumpMeasureDown"]))
         {
             if (AudioManager.CurrentSong == null || AudioManager.CurrentSong.IsPlaying) return;
-            NumericMeasure.Value++;
+            NumericMeasure.Value--;
             
             e.Handled = true;
             return;
