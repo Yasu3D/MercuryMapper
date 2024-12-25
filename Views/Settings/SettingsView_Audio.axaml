@@ -71,13 +71,13 @@
             
             <Separator/>
             
-            <UniformGrid Columns="2">
-                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_Audio_HitsoundOffset}"/>
-                <NumericUpDown Value="0" Name="HitsoundOffsetNumeric" Increment="0.1" ValueChanged="HitsoundOffsetNumeric_OnValueChanged"/>
+            <Grid ColumnDefinitions="*,Auto" RowDefinitions="*,*">
+                <TextBlock Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_Audio_HitsoundOffset}"/>
+                <NumericUpDown Grid.Column="1" Grid.Row="0" Value="0" Name="HitsoundOffsetNumeric" Increment="0.1" ValueChanged="HitsoundOffsetNumeric_OnValueChanged"/>
                 
-                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_MuteHitsoundsOnPreview}"/>
-                <CheckBox Name="CheckBoxMuteHitsoundsOnPreview" HorizontalAlignment="Right" IsCheckedChanged="MuteHitsoundsOnPreview_IsCheckedChanged"/>
-            </UniformGrid>
+                <TextBlock Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_MuteHitsoundsOnPreview}"/>
+                <CheckBox Grid.Column="1" Grid.Row="1" Name="CheckBoxMuteHitsoundsOnPreview" HorizontalAlignment="Right" IsCheckedChanged="MuteHitsoundsOnPreview_IsCheckedChanged"/>
+            </Grid>
         </StackPanel>
-    </ScrollViewer>
-</UserControl>
+    </ScrollViewer> 
+</UserControl> 

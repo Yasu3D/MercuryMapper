@@ -63,42 +63,42 @@
             
             <Separator/>
             
-            <UniformGrid Columns="2">
-                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_ShowSpeedChanges}"/>
-                <CheckBox Name="CheckBoxShowHiSpeed" HorizontalAlignment="Right" IsCheckedChanged="ShowHiSpeed_OnIsCheckedChanged"/>
+            <Grid ColumnDefinitions="*,Auto" RowDefinitions="*,*,*,*">
+                <TextBlock Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_ShowSpeedChanges}"/>
+                <CheckBox Grid.Column="1" Grid.Row="0" Name="CheckBoxShowHiSpeed" HorizontalAlignment="Right" IsCheckedChanged="ShowHiSpeed_OnIsCheckedChanged"/>
                 
-                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_ShowMaskDuringPlayback}"/>
-                <CheckBox Name="CheckBoxShowMaskDuringPlayback" HorizontalAlignment="Right" IsCheckedChanged="CheckBoxShowMaskDuringPlayback_OnIsCheckedChanged"/>
+                <TextBlock Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_ShowMaskDuringPlayback}"/>
+                <CheckBox Grid.Column="1" Grid.Row="1" Name="CheckBoxShowMaskDuringPlayback" HorizontalAlignment="Right" IsCheckedChanged="CheckBoxShowMaskDuringPlayback_OnIsCheckedChanged"/>
                 
-                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_ShowGimmickNotesDuringPlayback}"/>
-                <CheckBox Name="CheckBoxShowGimmickNotesDuringPlayback" HorizontalAlignment="Right" IsCheckedChanged="CheckBoxShowGimmickNotesDuringPlayback_OnIsCheckedChanged"/>
+                <TextBlock Grid.Column="0" Grid.Row="2" VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_ShowGimmickNotesDuringPlayback}"/>
+                <CheckBox Grid.Column="1" Grid.Row="2" Name="CheckBoxShowGimmickNotesDuringPlayback" HorizontalAlignment="Right" IsCheckedChanged="CheckBoxShowGimmickNotesDuringPlayback_OnIsCheckedChanged"/>
                 
-                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_ShowOtherUsersDuringPlayback}"/>
-                <CheckBox Name="CheckBoxShowOtherUsersDuringPlayback" HorizontalAlignment="Right" IsCheckedChanged="CheckBoxShowOtherUsersDuringPlayback_OnIsCheckedChanged"/>
-            </UniformGrid>
+                <TextBlock Grid.Column="0" Grid.Row="3" VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_ShowOtherUsersDuringPlayback}"/>
+                <CheckBox Grid.Column="1" Grid.Row="3" Name="CheckBoxShowOtherUsersDuringPlayback" HorizontalAlignment="Right" IsCheckedChanged="CheckBoxShowOtherUsersDuringPlayback_OnIsCheckedChanged"/>
+            </Grid>
             
             <Separator/>
             
-            <UniformGrid Columns="2">
-                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_ShowJudgementWindowMarvelous}"/>
-                <CheckBox Name="CheckBoxShowJudgementWindowMarvelous" HorizontalAlignment="Right" IsCheckedChanged="CheckBoxShowJudgementWindowMarvelous_OnIsCheckedChanged"/>
+            <Grid ColumnDefinitions="*,Auto" RowDefinitions="*,*,*">
+                <TextBlock Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_ShowJudgementWindowMarvelous}"/>
+                <CheckBox Grid.Column="1" Grid.Row="0" Name="CheckBoxShowJudgementWindowMarvelous" HorizontalAlignment="Right" IsCheckedChanged="CheckBoxShowJudgementWindowMarvelous_OnIsCheckedChanged"/>
                 
-                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_ShowJudgementWindowGreat}"/>
-                <CheckBox Name="CheckBoxShowJudgementWindowGreat" HorizontalAlignment="Right" IsCheckedChanged="CheckBoxShowJudgementWindowGreat_OnIsCheckedChanged"/>
+                <TextBlock Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_ShowJudgementWindowGreat}"/>
+                <CheckBox Grid.Column="1" Grid.Row="1" Name="CheckBoxShowJudgementWindowGreat" HorizontalAlignment="Right" IsCheckedChanged="CheckBoxShowJudgementWindowGreat_OnIsCheckedChanged"/>
                 
-                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_ShowJudgementWindowGood}"/>
-                <CheckBox Name="CheckBoxShowJudgementWindowGood" HorizontalAlignment="Right" IsCheckedChanged="CheckBoxShowJudgementWindowGood_OnIsCheckedChanged"/>
-            </UniformGrid>
+                <TextBlock Grid.Column="0" Grid.Row="2" VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_ShowJudgementWindowGood}"/>
+                <CheckBox Grid.Column="1" Grid.Row="2" Name="CheckBoxShowJudgementWindowGood" HorizontalAlignment="Right" IsCheckedChanged="CheckBoxShowJudgementWindowGood_OnIsCheckedChanged"/>
+            </Grid>
             
             <Separator/>
             
-            <UniformGrid Columns="2">
-                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_CutEarlyJudgementWindowOnHolds}"/>
-                <CheckBox Name="CheckBoxCutEarlyJudgementWindowOnHolds" HorizontalAlignment="Right" IsCheckedChanged="CheckBoxCutEarlyJudgementWindowOnHolds_OnIsCheckedChanged"/>
+            <Grid ColumnDefinitions="*,Auto" RowDefinitions="*,*">
+                <TextBlock Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_CutEarlyJudgementWindowOnHolds}"/>
+                <CheckBox Grid.Column="1" Grid.Row="0" Name="CheckBoxCutEarlyJudgementWindowOnHolds" HorizontalAlignment="Right" IsCheckedChanged="CheckBoxCutEarlyJudgementWindowOnHolds_OnIsCheckedChanged"/>
                 
-                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_CutOverlappingJudgementWindows}"/>
-                <CheckBox Name="CheckBoxCutOverlappingJudgementWindows" HorizontalAlignment="Right" IsCheckedChanged="CheckBoxCutOverlappingJudgementWindows_OnIsCheckedChanged"/>
-            </UniformGrid>
+                <TextBlock Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_CutOverlappingJudgementWindows}"/>
+                <CheckBox Grid.Column="1" Grid.Row="1" Name="CheckBoxCutOverlappingJudgementWindows" HorizontalAlignment="Right" IsCheckedChanged="CheckBoxCutOverlappingJudgementWindows_OnIsCheckedChanged"/>
+            </Grid>
         </StackPanel>
     </ScrollViewer>
 </UserControl>

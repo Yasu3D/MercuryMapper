@@ -721,16 +721,16 @@
                         
                         <Separator/>
                         
-                        <UniformGrid Columns="2">
-                            <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.QuickSettings_ShowMarvelousWindow}"/>
-                            <CheckBox Name="QuickSettingsCheckBoxShowJudgementWindowMarvelous" HorizontalAlignment="Right" IsCheckedChanged="QuickSettingsShowJudgementWindowMarvelous_OnIsCheckedChanged"/>
+                        <Grid ColumnDefinitions="*,Auto" RowDefinitions="*,*,*">
+                            <TextBlock Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" Text="{x:Static lang:Resources.QuickSettings_ShowMarvelousWindow}"/>
+                            <CheckBox Grid.Column="1" Grid.Row="0" Name="QuickSettingsCheckBoxShowJudgementWindowMarvelous" HorizontalAlignment="Right" IsCheckedChanged="QuickSettingsShowJudgementWindowMarvelous_OnIsCheckedChanged"/>
                             
-                            <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.QuickSettings_ShowGreatWindow}"/>
-                            <CheckBox Name="QuickSettingsCheckBoxShowJudgementWindowGreat" HorizontalAlignment="Right" IsCheckedChanged="QuickSettingsShowJudgementWindowGreat_OnIsCheckedChanged"/>
+                            <TextBlock Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" Text="{x:Static lang:Resources.QuickSettings_ShowGreatWindow}"/>
+                            <CheckBox Grid.Column="1" Grid.Row="1" Name="QuickSettingsCheckBoxShowJudgementWindowGreat" HorizontalAlignment="Right" IsCheckedChanged="QuickSettingsShowJudgementWindowGreat_OnIsCheckedChanged"/>
                             
-                            <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.QuickSettings_ShowGoodWindow}"/>
-                            <CheckBox Name="QuickSettingsCheckBoxShowJudgementWindowGood" HorizontalAlignment="Right" IsCheckedChanged="QuickSettingsShowJudgementWindowGood_OnIsCheckedChanged"/>
-                        </UniformGrid>
+                            <TextBlock Grid.Column="0" Grid.Row="2" VerticalAlignment="Center" Text="{x:Static lang:Resources.QuickSettings_ShowGoodWindow}"/>
+                            <CheckBox Grid.Column="1" Grid.Row="2" Name="QuickSettingsCheckBoxShowJudgementWindowGood" HorizontalAlignment="Right" IsCheckedChanged="QuickSettingsShowJudgementWindowGood_OnIsCheckedChanged"/>
+                        </Grid>
                         
                         <Separator/>
                         

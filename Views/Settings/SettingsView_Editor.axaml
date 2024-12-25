@@ -7,16 +7,16 @@
              x:Class="MercuryMapper.Views.Settings.SettingsView_Editor">
     <ScrollViewer>
         <StackPanel Margin="20">
-            <UniformGrid Columns="2">
-                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_Editor_QuantizeOnPause}" ToolTip.Tip="{x:Static lang:Resources.ToolTip_QuantizeOnPause}"/>
-                <CheckBox Name="CheckBoxQuantizeOnPause" HorizontalAlignment="Right" IsCheckedChanged="QuantizeOnPause_OnIsCheckedChanged" ToolTip.Tip="{x:Static lang:Resources.ToolTip_QuantizeOnPause}"/>
+            <Grid ColumnDefinitions="*,Auto" RowDefinitions="*,*,*">
+                <TextBlock Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_Editor_QuantizeOnPause}" ToolTip.Tip="{x:Static lang:Resources.ToolTip_QuantizeOnPause}"/>
+                <CheckBox Grid.Column="1" Grid.Row="0" Name="CheckBoxQuantizeOnPause" HorizontalAlignment="Right" IsCheckedChanged="QuantizeOnPause_OnIsCheckedChanged" ToolTip.Tip="{x:Static lang:Resources.ToolTip_QuantizeOnPause}"/>
                 
-                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_Editor_HighlightPlacedNote}" ToolTip.Tip="{x:Static lang:Resources.ToolTip_HighlightPlacedNote}"/>
-                <CheckBox Name="CheckBoxHighlightPlacedNote" HorizontalAlignment="Right" IsCheckedChanged="CheckBoxHighlightPlacedNote_OnIsCheckedChanged" ToolTip.Tip="{x:Static lang:Resources.ToolTip_HighlightPlacedNote}"/>
+                <TextBlock Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_Editor_HighlightPlacedNote}" ToolTip.Tip="{x:Static lang:Resources.ToolTip_HighlightPlacedNote}"/>
+                <CheckBox Grid.Column="1" Grid.Row="1" Name="CheckBoxHighlightPlacedNote" HorizontalAlignment="Right" IsCheckedChanged="CheckBoxHighlightPlacedNote_OnIsCheckedChanged" ToolTip.Tip="{x:Static lang:Resources.ToolTip_HighlightPlacedNote}"/>
                 
-                <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_Editor_LimitToMercuryBonusTypes}" ToolTip.Tip="{x:Static lang:Resources.ToolTip_LimitToMercuryBonusTypes}"/>
-                <CheckBox Name="CheckBoxLimitToMercuryBonusTypes" HorizontalAlignment="Right" IsCheckedChanged="CheckBoxLimitToMercuryBonusTypes_OnIsCheckedChanged" ToolTip.Tip="{x:Static lang:Resources.ToolTip_LimitToMercuryBonusTypes}"/>
-            </UniformGrid>
+                <TextBlock Grid.Column="0" Grid.Row="2" VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_Editor_LimitToMercuryBonusTypes}" ToolTip.Tip="{x:Static lang:Resources.ToolTip_LimitToMercuryBonusTypes}"/>
+                <CheckBox Grid.Column="1" Grid.Row="2" Name="CheckBoxLimitToMercuryBonusTypes" HorizontalAlignment="Right" IsCheckedChanged="CheckBoxLimitToMercuryBonusTypes_OnIsCheckedChanged" ToolTip.Tip="{x:Static lang:Resources.ToolTip_LimitToMercuryBonusTypes}"/>
+            </Grid>
         </StackPanel>
     </ScrollViewer>
 </UserControl>
