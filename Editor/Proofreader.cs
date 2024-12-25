@@ -293,8 +293,6 @@ public static class Proofreader
                     Note current = notesOnTick[i];
                     Note next = notesOnTick[j];
                     
-                    Console.WriteLine($"{current.Position} {current.Size} | {next.Position} {next.Size}");
-                
                     if (current.IsMask || current.NoteType is NoteType.Hold or NoteType.Trace) continue;
                     if (next.IsMask || next.NoteType is NoteType.Hold or NoteType.Trace) continue;
                     if (current.BeatData.FullTick != next.BeatData.FullTick) continue;

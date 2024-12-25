@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using FluentAvalonia.Core;
 using MercuryMapper.Enums;
@@ -106,10 +107,13 @@ public static class FormatHandler
     /// </summary>
     public static string WriteClipboard(IEnumerable<Note> notes)
     {
-        string result = "```\n";
-        SatHandler.WriteObjects(notes, ref result);
-        result += "```";
-        return result;
+        StringBuilder sb = new();
+        
+        sb.Append("```\n");
+        SatHandler.WriteObjects(notes, sb);
+        sb.Append("```");
+        
+        return sb.ToString();
     }
     
     internal static bool ContainsTag(string input, string tag, out string result)
@@ -300,62 +304,64 @@ internal static class MerHandler
     {
         if (filepath == "") return;
 
-        string result = $"#MUSIC_SCORE_ID 0\n" +
-                        $"#MUSIC_SCORE_VERSION 0\n" +
-                        $"#GAME_VERSION\n" +
-                        $"#MUSIC_FILE_PATH\n" +
-                        $"#OFFSET {chart.BgmOffset.ToString("F6", CultureInfo.InvariantCulture)}\n" +
-                        $"#MOVIEOFFSET {chart.BgaOffset.ToString("F6", CultureInfo.InvariantCulture)}\n" +
-                        $"#BODY\n";
+        StringBuilder sb = new();
+
+        sb.Append("#MUSIC_SCORE_ID 0\n")
+          .Append("#MUSIC_SCORE_VERSION 0\n")
+          .Append("#GAME_VERSION\n")
+          .Append("#MUSIC_FILE_PATH\n")
+          .Append($"#OFFSET {chart.BgmOffset.ToString("F6", CultureInfo.InvariantCulture)}\n")
+          .Append($"#MOVIEOFFSET {chart.BgaOffset.ToString("F6", CultureInfo.InvariantCulture)}\n")
+          .Append("#BODY\n");
 
         foreach (Gimmick gimmick in chart.Gimmicks)
         {
             if (gimmick.GimmickType is GimmickType.EndOfChart) continue;
             
-            result += $"{gimmick.BeatData.Measure,4:F0} {gimmick.BeatData.Tick,4:F0} {(int)gimmick.GimmickType,4:F0}";
-            result += gimmick.GimmickType switch
+            sb.Append($"{gimmick.BeatData.Measure,4:F0} {gimmick.BeatData.Tick,4:F0} {(int)gimmick.GimmickType,4:F0}");
+            sb.Append(gimmick.GimmickType switch
             {
                 GimmickType.BpmChange => $" {gimmick.Bpm.ToString("F6", CultureInfo.InvariantCulture)}\n",
                 GimmickType.HiSpeedChange => $" {gimmick.HiSpeed.ToString("F6", CultureInfo.InvariantCulture)}\n",
                 GimmickType.TimeSigChange => $" {gimmick.TimeSig.Upper,5:F0} {gimmick.TimeSig.Lower,5:F0}\n",
                 _ => "\n",
-            };
+            });
         }
         
         foreach (Note note in chart.Notes)
         {
             if (note.NoteType is NoteType.Trace or NoteType.Damage) continue;
             
-            result += $"{note.BeatData.Measure,4:F0} " +
-                      $"{note.BeatData.Tick,4:F0} " +
-                      $"   1 " +
-                      $"{note.NoteToMerId(),4:F0} " +
-                      $"{chart.Notes.IndexOf(note),4:F0} " +
-                      $"{note.Position,4:F0} " +
-                      $"{note.Size,4:F0} " +
-                      $"{Convert.ToInt32(note.RenderSegment, CultureInfo.InvariantCulture),4:F0}";
+            sb.Append($"{note.BeatData.Measure,4:F0} ")
+              .Append($"{note.BeatData.Tick,4:F0} ")
+              .Append($"   1 ")
+              .Append($"{note.NoteToMerId(),4:F0} ")
+              .Append($"{chart.Notes.IndexOf(note),4:F0} ")
+              .Append($"{note.Position,4:F0} ")
+              .Append($"{note.Size,4:F0} ")
+              .Append($"{Convert.ToInt32(note.RenderSegment, CultureInfo.InvariantCulture),4:F0}");
 
-            if (note.IsMask) result += $" {(int)note.MaskDirection,4:F0}";
-            if (note.NextReferencedNote != null) result += $" {chart.Notes.IndexOf(note.NextReferencedNote),4:F0}";
+            if (note.IsMask) sb.Append($" {(int)note.MaskDirection,4:F0}");
+            if (note.NextReferencedNote != null) sb.Append($" {chart.Notes.IndexOf(note.NextReferencedNote),4:F0}");
 
-            result += "\n";
+            sb.Append('\n');
         }
 
         if (chart.EndOfChart != null)
         {
-            result += $"{chart.EndOfChart.BeatData.Measure,4:F0} " +
-                      $"{chart.EndOfChart.BeatData.Tick,4:F0} " +
-                      $"   1 " +
-                      $"  14 " +
-                      $"{chart.Notes.Count} " +
-                      $"   0 " +
-                      $"  60 " +
-                      $"   1";
+            sb.Append($"{chart.EndOfChart.BeatData.Measure,4:F0} ")
+              .Append($"{chart.EndOfChart.BeatData.Tick,4:F0} ")
+              .Append("   1 ")
+              .Append("  14 ")
+              .Append($"{chart.Notes.Count} ")
+              .Append("   0 ")
+              .Append("  60 ")
+              .Append("   1");
             
-            result += "\n";
+            sb.Append('\n');
         }
         
-        File.WriteAllTextAsync(filepath, result);
+        File.WriteAllTextAsync(filepath, sb.ToString());
     }
 }
 
@@ -422,19 +428,20 @@ internal static class SatHandler
     {
         if (filepath == "" && includeGuid == false) return "";
 
-        string result = "";
+        StringBuilder sb = new();
         
-        WriteMetadata(chart, ref result);
+        WriteMetadata(chart, sb);
         
-        if (includeGuid) WriteCommentsWithGuid(chart, ref result);
-        else WriteComments(chart, ref result);
+        if (includeGuid) WriteCommentsWithGuid(chart, sb);
+        else WriteComments(chart, sb);
         
-        if (includeGuid) WriteGimmicksWithGuid(chart, ref result);
-        else WriteGimmicks(chart, ref result);
+        if (includeGuid) WriteGimmicksWithGuid(chart, sb);
+        else WriteGimmicks(chart, sb);
         
-        if (includeGuid) WriteObjectsWithGuid(chart.Notes, ref result);
-        else WriteObjects(chart.Notes, ref result);
-
+        if (includeGuid) WriteObjectsWithGuid(chart.Notes, sb);
+        else WriteObjects(chart.Notes, sb);
+        
+        string result = sb.ToString();
         if (filepath != "") File.WriteAllTextAsync(filepath, result);
         return result;
     }
@@ -666,76 +673,76 @@ internal static class SatHandler
     }
     
     // Writing
-    private static void WriteMetadata(Chart chart, ref string input)
+    private static void WriteMetadata(Chart chart, StringBuilder sb)
     {
-        input += $"# Created with MercuryMapper {MainView.AppVersion}\n" +
-                 $"{"@SAT_VERSION",-16}{SatFormatVersion}\n" + 
-                 $"\n" + $"{"@VERSION",-16}{chart.Version}\n" + 
-                 $"{"@GUID", -16}MM{Guid.NewGuid()}\n" +
-                 $"{"@TITLE",-16}{chart.Title}\n" + 
-                 $"{"@RUBI",-16}{chart.Rubi}\n" + 
-                 $"{"@ARTIST",-16}{chart.Artist}\n" + 
-                 $"{"@AUTHOR",-16}{chart.Author}\n" + 
-                 $"{"@BPM_TEXT",-16}{chart.BpmText}\n" + 
-                 $"\n" +
-                 $"{"@BACKGROUND",-16}{chart.Background}\n" + 
-                 $"\n" + 
-                 $"{"@DIFF",-16}{chart.Diff}\n" + 
-                 $"{"@LEVEL",-16}{chart.Level.ToString("F6", CultureInfo.InvariantCulture)}\n" + 
-                 $"{"@CLEAR",-16}{chart.ClearThreshold.ToString("F6", CultureInfo.InvariantCulture)}\n" + 
-                 $"\n" + 
-                 $"{"@PREVIEW_START",-16}{chart.PreviewStart}\n" + 
-                 $"{"@PREVIEW_TIME",-16}{chart.PreviewTime}\n" + 
-                 $"\n" + 
-                 $"{"@BGM",-16}{Path.GetFileName(chart.BgmFilepath)}\n" +
-                 $"{"@BGM_OFFSET",-16}{chart.BgmOffset.ToString("F6", CultureInfo.InvariantCulture)}\n" + 
-                 $"{"@BGA",-16}{Path.GetFileName(chart.BgaFilepath)}\n" + 
-                 $"{"@BGA_OFFSET",-16}{chart.BgaOffset.ToString("F6", CultureInfo.InvariantCulture)}\n" + 
-                 $"{"@JACKET",-16}{Path.GetFileName(chart.JacketFilepath)}\n" + 
-                 $"\n";
+        sb.Append($"# Created with MercuryMapper {MainView.AppVersion}\n")
+          .Append($"{"@SAT_VERSION",-16}{SatFormatVersion}\n")
+          .Append($"\n" + $"{"@VERSION",-16}{chart.Version}\n")
+          .Append($"{"@GUID", -16}MM{Guid.NewGuid()}\n")
+          .Append($"{"@TITLE",-16}{chart.Title}\n")
+          .Append($"{"@RUBI",-16}{chart.Rubi}\n")
+          .Append($"{"@ARTIST",-16}{chart.Artist}\n")
+          .Append($"{"@AUTHOR",-16}{chart.Author}\n")
+          .Append($"{"@BPM_TEXT",-16}{chart.BpmText}\n")
+          .Append('\n')
+          .Append($"{"@BACKGROUND",-16}{chart.Background}\n")
+          .Append('\n')
+          .Append($"{"@DIFF",-16}{chart.Diff}\n")
+          .Append($"{"@LEVEL",-16}{chart.Level.ToString("F6", CultureInfo.InvariantCulture)}\n")
+          .Append($"{"@CLEAR",-16}{chart.ClearThreshold.ToString("F6", CultureInfo.InvariantCulture)}\n")
+          .Append('\n')
+          .Append($"{"@PREVIEW_START",-16}{chart.PreviewStart}\n")
+          .Append($"{"@PREVIEW_TIME",-16}{chart.PreviewTime}\n")
+          .Append('\n')
+          .Append($"{"@BGM",-16}{Path.GetFileName(chart.BgmFilepath)}\n")
+          .Append($"{"@BGM_OFFSET",-16}{chart.BgmOffset.ToString("F6", CultureInfo.InvariantCulture)}\n")
+          .Append($"{"@BGA",-16}{Path.GetFileName(chart.BgaFilepath)}\n")
+          .Append($"{"@BGA_OFFSET",-16}{chart.BgaOffset.ToString("F6", CultureInfo.InvariantCulture)}\n")
+          .Append($"{"@JACKET",-16}{Path.GetFileName(chart.JacketFilepath)}\n")
+          .Append('\n');
     }
 
-    private static void WriteComments(Chart chart, ref string input)
+    private static void WriteComments(Chart chart, StringBuilder sb)
     {
         int index = 0;
-        input += "@COMMENTS\n";
+        sb.Append("@COMMENTS\n");
         
         foreach (KeyValuePair<string, Comment> comment in chart.Comments)
         {
-            input += $"{comment.Value.BeatData.Measure,4:F0} {comment.Value.BeatData.Tick,4:F0} {index,4:F0} {comment.Value.Text}";
+            sb.Append($"{comment.Value.BeatData.Measure,4:F0} {comment.Value.BeatData.Tick,4:F0} {index,4:F0} {comment.Value.Text}");
             
-            input += "\n";
+            sb.Append('\n');
             index++;
         }
         
-        input += "\n";
+        sb.Append('\n');
     }
 
-    private static void WriteGimmicks(Chart chart, ref string input)
+    private static void WriteGimmicks(Chart chart, StringBuilder sb)
     {
         int index = 0;
-        input += "@GIMMICKS\n";
+        sb.Append("@GIMMICKS\n");
         foreach (Gimmick gimmick in chart.Gimmicks)
         {
-            input += $"{gimmick.BeatData.Measure,4:F0} {gimmick.BeatData.Tick,4:F0} {index,4:F0} {GimmickType2String(gimmick.GimmickType),-13}";
+            sb.Append($"{gimmick.BeatData.Measure,4:F0} {gimmick.BeatData.Tick,4:F0} {index,4:F0} {GimmickType2String(gimmick.GimmickType),-13}");
 
-            if (gimmick.GimmickType is GimmickType.BpmChange) input += $" {gimmick.Bpm.ToString("F6", CultureInfo.InvariantCulture)}";
-            if (gimmick.GimmickType is GimmickType.HiSpeedChange) input += $" {gimmick.HiSpeed.ToString("F6", CultureInfo.InvariantCulture)}";
-            if (gimmick.GimmickType is GimmickType.TimeSigChange) input += $" {gimmick.TimeSig.Upper,4:F0} {gimmick.TimeSig.Lower,4:F0}";
+            if (gimmick.GimmickType is GimmickType.BpmChange) sb.Append($" {gimmick.Bpm.ToString("F6", CultureInfo.InvariantCulture)}");
+            if (gimmick.GimmickType is GimmickType.HiSpeedChange) sb.Append($" {gimmick.HiSpeed.ToString("F6", CultureInfo.InvariantCulture)}");
+            if (gimmick.GimmickType is GimmickType.TimeSigChange) sb.Append($" {gimmick.TimeSig.Upper,4:F0} {gimmick.TimeSig.Lower,4:F0}");
 
-            input += "\n";
+            sb.Append('\n');
             index++;
         }
         
-        input += "\n";
+        sb.Append('\n');
     }
 
-    internal static void WriteObjects(IEnumerable<Note> notes, ref string input)
+    internal static void WriteObjects(IEnumerable<Note> notes, StringBuilder sb)
     {
         int index = 0;
 
         // Objects
-        input += "@OBJECTS\n";
+        sb.Append("@OBJECTS\n");
         foreach (Note note in notes)
         {
             if (note.LinkType is NoteLinkType.Point or NoteLinkType.End) continue;
@@ -745,49 +752,49 @@ internal static class SatHandler
                 IEnumerable<Note> references = note.References();
                 foreach (Note reference in references)
                 {
-                    input += $"{reference.BeatData.Measure,4:F0} {reference.BeatData.Tick,4:F0} {index,4:F0} {reference.Position,4:F0} {reference.Size,4:F0} {NoteType2String(reference.NoteType, reference.LinkType)}{Modifiers2String(reference)}\n";
+                    sb.Append($"{reference.BeatData.Measure,4:F0} {reference.BeatData.Tick,4:F0} {index,4:F0} {reference.Position,4:F0} {reference.Size,4:F0} {NoteType2String(reference.NoteType, reference.LinkType)}{Attributes2String(reference)}\n");
                     index++;
                 }
             }
             else
             {
-                input += $"{note.BeatData.Measure,4:F0} {note.BeatData.Tick,4:F0} {index,4:F0} {note.Position,4:F0} {note.Size,4:F0} {NoteType2String(note.NoteType, note.LinkType)}{Modifiers2String(note)}\n";
+                sb.Append($"{note.BeatData.Measure,4:F0} {note.BeatData.Tick,4:F0} {index,4:F0} {note.Position,4:F0} {note.Size,4:F0} {NoteType2String(note.NoteType, note.LinkType)}{Attributes2String(note)}\n");
                 index++;
             }
         }
     }
 
-    private static void WriteCommentsWithGuid(Chart chart, ref string input)
+    private static void WriteCommentsWithGuid(Chart chart, StringBuilder sb)
     {
         // Skipped - Comments are not shared over network.
-        input += "@COMMENTS\n\n";
+        sb.Append("@COMMENTS\n\n");
     }
     
-    private static void WriteGimmicksWithGuid(Chart chart, ref string input)
+    private static void WriteGimmicksWithGuid(Chart chart, StringBuilder sb)
     {
         int index = 0;
-        input += "@GIMMICKS\n";
+        sb.Append("@GIMMICKS\n");
         foreach (Gimmick gimmick in chart.Gimmicks)
         {
-            input += $"{gimmick.Guid} {gimmick.BeatData.Measure,4:F0} {gimmick.BeatData.Tick,4:F0} {index,4:F0} {GimmickType2String(gimmick.GimmickType),-13}";
+            sb.Append($"{gimmick.Guid} {gimmick.BeatData.Measure,4:F0} {gimmick.BeatData.Tick,4:F0} {index,4:F0} {GimmickType2String(gimmick.GimmickType),-13}");
 
-            if (gimmick.GimmickType is GimmickType.BpmChange) input += $" {gimmick.Bpm.ToString("F6", CultureInfo.InvariantCulture)}";
-            if (gimmick.GimmickType is GimmickType.HiSpeedChange) input += $" {gimmick.HiSpeed.ToString("F6", CultureInfo.InvariantCulture)}";
-            if (gimmick.GimmickType is GimmickType.TimeSigChange) input += $" {gimmick.TimeSig.Upper,4:F0} {gimmick.TimeSig.Lower,4:F0}";
+            if (gimmick.GimmickType is GimmickType.BpmChange) sb.Append($" {gimmick.Bpm.ToString("F6", CultureInfo.InvariantCulture)}");
+            if (gimmick.GimmickType is GimmickType.HiSpeedChange) sb.Append($" {gimmick.HiSpeed.ToString("F6", CultureInfo.InvariantCulture)}");
+            if (gimmick.GimmickType is GimmickType.TimeSigChange) sb.Append($" {gimmick.TimeSig.Upper,4:F0} {gimmick.TimeSig.Lower,4:F0}");
 
-            input += "\n";
+            sb.Append('\n');
             index++;
         }
         
-        input += "\n";
+        sb.Append('\n');
     }
     
-    private static void WriteObjectsWithGuid(IEnumerable<Note> notes, ref string input)
+    private static void WriteObjectsWithGuid(IEnumerable<Note> notes, StringBuilder sb)
     {
         int index = 0;
 
         // Objects
-        input += "@OBJECTS\n";
+        sb.Append("@OBJECTS\n");
         foreach (Note note in notes)
         {
             if (note.LinkType is NoteLinkType.Point or NoteLinkType.End) continue;
@@ -797,13 +804,13 @@ internal static class SatHandler
                 IEnumerable<Note> references = note.References();
                 foreach (Note reference in references)
                 {
-                    input += $"{reference.Guid} {reference.BeatData.Measure,4:F0} {reference.BeatData.Tick,4:F0} {index,4:F0} {reference.Position,4:F0} {reference.Size,4:F0} {NoteType2String(reference.NoteType, reference.LinkType)}{Modifiers2String(reference)}\n";
+                    sb.Append($"{reference.Guid} {reference.BeatData.Measure,4:F0} {reference.BeatData.Tick,4:F0} {index,4:F0} {reference.Position,4:F0} {reference.Size,4:F0} {NoteType2String(reference.NoteType, reference.LinkType)}{Attributes2String(reference)}\n");
                     index++;
                 }
             }
             else
             {
-                input += $"{note.Guid} {note.BeatData.Measure,4:F0} {note.BeatData.Tick,4:F0} {index,4:F0} {note.Position,4:F0} {note.Size,4:F0} {NoteType2String(note.NoteType, note.LinkType)}{Modifiers2String(note)}\n";
+                sb.Append($"{note.Guid} {note.BeatData.Measure,4:F0} {note.BeatData.Tick,4:F0} {index,4:F0} {note.Position,4:F0} {note.Size,4:F0} {NoteType2String(note.NoteType, note.LinkType)}{Attributes2String(note)}\n");
                 index++;
             }
         }
@@ -960,7 +967,7 @@ internal static class SatHandler
         };
     }
 
-    private static string Modifiers2String(Note note)
+    private static string Attributes2String(Note note)
     {
         string modifiers = "";
 
