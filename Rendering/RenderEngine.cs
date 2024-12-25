@@ -367,7 +367,7 @@ public class RenderEngine(MainView mainView)
         if (mainView.AudioManager.CurrentSong is null) return;
         
         bool[] maskState = new bool[60];
-        foreach (Note note in Chart.Notes.Where(x => x.IsMask))
+        foreach (Note note in Chart.Notes.Where(x => x.IsMask && x.MaskDirection != MaskDirection.None))
         {
             if (note.BeatData.MeasureDecimal > CurrentMeasureDecimal) break;
 

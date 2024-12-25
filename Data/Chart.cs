@@ -93,6 +93,11 @@ public class Chart(ChartEditor editor)
                 note.Position = MathExtensions.Modulo(note.Position, 60);
 
             note.Size = int.Clamp(note.Size, 1, 60);
+
+            if (note.IsMask && note.MaskDirection == MaskDirection.None)
+            {
+                note.MaskDirection = MaskDirection.Center;
+            }
         }
     }
     

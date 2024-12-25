@@ -225,6 +225,15 @@ public static class Proofreader
                     error = true;
                 }
             }
+
+            foreach (Note note in chart.Notes)
+            {
+                if (note.NoteType is NoteType.MaskAdd or NoteType.MaskRemove && note.MaskDirection is MaskDirection.None)
+                {
+                    AddMessage(textBlock, MessageType.Error, $"{note.NoteType} @ {note.BeatData.Measure} {note.BeatData.Tick} has no set direction.\n");
+                    error = true;
+                }
+            }
             
             if (error)
             {
