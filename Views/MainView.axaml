@@ -118,10 +118,10 @@
                     <MenuItem Header="{x:Static lang:Resources.Menu_FixOffByOneErrors}" Name="MenuItemFixOffByOne"
                               Click="MenuItemFixOffByOne_OnClick"/>
                     <Separator/>
-                    <MenuItem Header="{x:Static lang:Resources.Menu_JaggedNoteCollections}" Name="MenuItemGenerateJaggedHolds"
-                              Click="MenuItemGenerateJaggedHolds_OnClick"/>
                     <MenuItem Header="{x:Static lang:Resources.Menu_ReconstructNoteCollections}" Name="MenuItemReconstructHolds"
                               Click="MenuItemReconstructHolds_OnClick"/>
+                    <MenuItem Header="{x:Static lang:Resources.Menu_JaggedNoteCollections}" Name="MenuItemGenerateJaggedHolds"
+                              Click="MenuItemGenerateJaggedHolds_OnClick"/>
                     <Separator/>
                     <MenuItem Header="{x:Static lang:Resources.Menu_Proofread}" Name="MenuItemProofread"
                               Click="MenuItemProofread_OnClick"/>

@@ -2059,7 +2059,7 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Reconstruct Note Groups.
+        ///   Looks up a localized string similar to Reconstruct Note Collections.
         /// </summary>
         public static string Menu_ReconstructNoteCollections {
             get {

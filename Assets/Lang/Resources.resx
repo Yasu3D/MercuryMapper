@@ -745,7 +745,7 @@ Continue?</value>
     <value>Generate Jagged Note Collections</value>
   </data>
   <data name="Menu_ReconstructNoteCollections" xml:space="preserve">
-    <value>Reconstruct Note Groups</value>
+    <value>Reconstruct Note Collections</value>
   </data>
   <data name="Generic_Generate" xml:space="preserve">
     <value>Generate</value>
