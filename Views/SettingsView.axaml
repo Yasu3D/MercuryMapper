@@ -12,7 +12,7 @@
                 <TreeViewItem Header="{x:Static lang:Resources.Settings_Header_Colors}" Name="TreeViewColors" IsSelected="True"/>
                 <TreeViewItem Header="{x:Static lang:Resources.Settings_Header_Rendering}" Name="TreeViewRendering"/>
             </TreeViewItem>
-            <TreeViewItem Header="{x:Static lang:Resources.Settings_Header_Editor}" Name="TreeViewEditor">
+            <TreeViewItem Header="{x:Static lang:Resources.Settings_Header_Editor}" Name="TreeViewEditor" IsExpanded="True">
                 <TreeViewItem Header="{x:Static lang:Resources.Settings_Header_Keymap}" Name="TreeViewKeymap"/>
                 <TreeViewItem Header="{x:Static lang:Resources.Settings_Header_Audio}" Name="TreeViewAudio"/>
             </TreeViewItem>
