@@ -111,7 +111,7 @@ public static class Proofreader
         {
             if (chart.EndOfChart == null) return;
 
-            Note? lastNote = chart.Notes.LastOrDefault(x => x.BeatData.FullTick < chart.EndOfChart.BeatData.FullTick);
+            Note? lastNote = chart.Notes.LastOrDefault(x => x.IsNote && x.BeatData.FullTick < chart.EndOfChart.BeatData.FullTick);
             
             if (lastNote != null && int.Abs(lastNote.BeatData.FullTick - chart.EndOfChart.BeatData.FullTick) < 1920)
             {
