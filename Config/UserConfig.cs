@@ -226,10 +226,14 @@ public class AudioConfig
     public string BonusHitsoundPath { get; set; } = "";
     public string RNoteHitsoundPath { get; set; } = "";
     public string MetronomePath { get; set; } = "";
+    public string MetronomeDownbeatPath { get; set; } = "";
+    public string MetronomeUpbeatPath { get; set; } = "";
 
     public float HitsoundOffset { get; set; } = 25;
 
     public bool MuteHitsoundsOnPreview { get; set; } = false;
+    public bool StartMetronome { get; set; } = true;
+    public bool ConstantMetronome { get; set; } = false;
 }
 
 public class EditorConfig

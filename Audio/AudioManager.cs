@@ -20,6 +20,8 @@ public class AudioManager(MainView mainView)
     private BassSampleChannel? bonusHitsoundChannel;
     private BassSampleChannel? rNoteHitsoundChannel;
     private BassSampleChannel? metronomeChannel;
+    private BassSampleChannel? metronomeDownbeatChannel;
+    private BassSampleChannel? metronomeUpbeatChannel;
 
     private BassSample? touchHitsoundSample;
     private BassSample? guideHitsoundSample;
@@ -27,9 +29,11 @@ public class AudioManager(MainView mainView)
     private BassSample? bonusHitsoundSample;
     private BassSample? rNoteHitsoundSample;
     private BassSample? metronomeSample;
+    private BassSample? metronomeDownbeatSample;
+    private BassSample? metronomeUpbeatSample;
 
     public int HitsoundNoteIndex { get; set; }
-    public int MetronomeIndex { get; set; }
+    public float MetronomeTime { get; set; }
 
     public uint LoopStart { get; set; }
     public uint LoopEnd { get; set; }
@@ -64,6 +68,8 @@ public class AudioManager(MainView mainView)
         bonusHitsoundChannel?.SetVolume((float)(mainView.UserConfig.AudioConfig.HitsoundVolume * mainView.UserConfig.AudioConfig.BonusVolume * 0.0001));
         rNoteHitsoundChannel?.SetVolume((float)(mainView.UserConfig.AudioConfig.HitsoundVolume * mainView.UserConfig.AudioConfig.RNoteVolume * 0.0001));
         metronomeChannel?.SetVolume((float)(mainView.UserConfig.AudioConfig.HitsoundVolume * mainView.UserConfig.AudioConfig.MetronomeVolume * 0.0001));
+        metronomeDownbeatChannel?.SetVolume((float)(mainView.UserConfig.AudioConfig.HitsoundVolume * mainView.UserConfig.AudioConfig.MetronomeVolume * 0.0001));
+        metronomeUpbeatChannel?.SetVolume((float)(mainView.UserConfig.AudioConfig.HitsoundVolume * mainView.UserConfig.AudioConfig.MetronomeVolume * 0.0001));
     }
 
     public void LoadHitsoundSamples()
@@ -74,6 +80,8 @@ public class AudioManager(MainView mainView)
         bonusHitsoundSample = new(mainView.UserConfig.AudioConfig.BonusHitsoundPath);
         rNoteHitsoundSample = new(mainView.UserConfig.AudioConfig.RNoteHitsoundPath);
         metronomeSample = new(mainView.UserConfig.AudioConfig.MetronomePath);
+        metronomeDownbeatSample = new(mainView.UserConfig.AudioConfig.MetronomeDownbeatPath);
+        metronomeUpbeatSample = new(mainView.UserConfig.AudioConfig.MetronomeUpbeatPath);
         
         touchHitsoundChannel = touchHitsoundSample.Loaded ? touchHitsoundSample.GetChannel() : null;
         guideHitsoundChannel = guideHitsoundSample.Loaded ? guideHitsoundSample.GetChannel() : null;
@@ -81,6 +89,8 @@ public class AudioManager(MainView mainView)
         bonusHitsoundChannel = bonusHitsoundSample.Loaded ? bonusHitsoundSample.GetChannel() : null;
         rNoteHitsoundChannel = rNoteHitsoundSample.Loaded ? rNoteHitsoundSample.GetChannel() : null;
         metronomeChannel = metronomeSample.Loaded ? metronomeSample.GetChannel() : null;
+        metronomeDownbeatChannel = metronomeDownbeatSample.Loaded ? metronomeDownbeatSample.GetChannel() : null;
+        metronomeUpbeatChannel = metronomeUpbeatSample.Loaded ? metronomeUpbeatSample.GetChannel() : null;
     }
     
     public void PlayHitsound(Note note)
@@ -100,9 +110,19 @@ public class AudioManager(MainView mainView)
         if (note.IsRNote) rNoteHitsoundChannel?.Play(true);
     }
 
-    public void PlayMetronome()
+    public void PlayMetronome(bool start, bool downbeat)
     {
-        MetronomeIndex++;
-        metronomeChannel?.Play(true);
+        if (start)
+        {
+            metronomeChannel?.Play(true);
+        }
+        else if (downbeat)
+        {
+            metronomeDownbeatChannel?.Play(true);
+        }
+        else
+        {
+            metronomeUpbeatChannel?.Play(true);
+        }
     }
 }

@@ -30,6 +30,8 @@ public partial class SettingsView_Audio : UserControl
     private void SetCheckboxes()
     {
         CheckBoxMuteHitsoundsOnPreview.IsChecked = AudioConfig.MuteHitsoundsOnPreview;
+        CheckBoxStartMetronome.IsChecked = AudioConfig.StartMetronome;
+        CheckBoxConstantMetronome.IsChecked = AudioConfig.ConstantMetronome;
     }
     
     private void SetPaths()
@@ -40,6 +42,8 @@ public partial class SettingsView_Audio : UserControl
         TextBoxBonus.Text = AudioConfig.BonusHitsoundPath;
         TextBoxRNote.Text = AudioConfig.RNoteHitsoundPath;
         TextBoxMetronome.Text = AudioConfig.MetronomePath;
+        TextBoxMetronomeDownbeat.Text = AudioConfig.MetronomeDownbeatPath;
+        TextBoxMetronomeUpbeat.Text = AudioConfig.MetronomeUpbeatPath;
     }
 
     private void SetSliders()
@@ -138,6 +142,34 @@ public partial class SettingsView_Audio : UserControl
         AudioConfig.MetronomePath = TextBoxMetronome.Text ?? "";
     }
     
+    private async void MetronomeDownbeat_OnClick(object? sender, RoutedEventArgs e)
+    {
+        IStorageFile? file = await mainView.OpenAudioFilePicker();
+        if (file == null) return;
+
+        AudioConfig.MetronomeDownbeatPath = file.Path.LocalPath;
+        TextBoxMetronomeDownbeat.Text = file.Path.LocalPath;
+    }
+    
+    private void MetronomeDownbeat_TextChanged(object? sender, TextChangedEventArgs e)
+    {
+        AudioConfig.MetronomeDownbeatPath = TextBoxMetronomeDownbeat.Text ?? "";
+    }
+    
+    private async void MetronomeUpbeat_OnClick(object? sender, RoutedEventArgs e)
+    {
+        IStorageFile? file = await mainView.OpenAudioFilePicker();
+        if (file == null) return;
+
+        AudioConfig.MetronomeUpbeatPath = file.Path.LocalPath;
+        TextBoxMetronomeUpbeat.Text = file.Path.LocalPath;
+    }
+    
+    private void MetronomeUpbeat_TextChanged(object? sender, TextChangedEventArgs e)
+    {
+        AudioConfig.MetronomeUpbeatPath = TextBoxMetronomeUpbeat.Text ?? "";
+    }
+    
     private void SliderMusic_OnValueChanged(object? sender, RangeBaseValueChangedEventArgs e)
     {
         AudioConfig.MusicVolume = SliderMusic.Value;
@@ -194,5 +226,15 @@ public partial class SettingsView_Audio : UserControl
     private void MuteHitsoundsOnPreview_IsCheckedChanged(object? sender, RoutedEventArgs e)
     {
         AudioConfig.MuteHitsoundsOnPreview = CheckBoxMuteHitsoundsOnPreview.IsChecked ?? false;
+    }
+    
+    private void StartMetronome_IsCheckedChanged(object? sender, RoutedEventArgs e)
+    {
+        AudioConfig.StartMetronome = CheckBoxStartMetronome.IsChecked ?? false;
+    }
+    
+    private void ConstantMetronome_IsCheckedChanged(object? sender, RoutedEventArgs e)
+    {
+        AudioConfig.ConstantMetronome = CheckBoxConstantMetronome.IsChecked ?? false;
     }
 }

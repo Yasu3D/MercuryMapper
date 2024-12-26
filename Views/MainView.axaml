@@ -751,6 +751,13 @@
                         <TextBlock VerticalAlignment="Center" Margin="0,0,0,-7" Text="{x:Static lang:Resources.Settings_Audio_HitsoundVolume}"/>
                         <Slider Classes="Compact" Margin="0,0,0,20" TickFrequency="5" TickPlacement="TopLeft"
                                 Minimum="0" Maximum="100" Value="50" Name="QuickSettingsSliderHitsound" ValueChanged="QuickSettingsSliderHitsound_OnValueChanged"/>
+                        
+                        <Grid ColumnDefinitions="*,Auto" RowDefinitions="*,*">
+                            <TextBlock Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_Audio_StartMetronome}"/>
+                            <CheckBox Grid.Column="1" Grid.Row="0" Name="QuickSettingsCheckBoxStartMetronome" HorizontalAlignment="Right" IsCheckedChanged="QuickSettingsStartMetronome_IsCheckedChanged"/>
+                
+                            <TextBlock Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_Audio_ConstantMetronome}"/>
+                            <CheckBox Grid.Column="1" Grid.Row="1" Name="QuickSettingsCheckBoxConstantMetronome" HorizontalAlignment="Right" IsCheckedChanged="QuickSettingsConstantMetronome_IsCheckedChanged"/></Grid>
                     </StackPanel>
                 </Expander>
             

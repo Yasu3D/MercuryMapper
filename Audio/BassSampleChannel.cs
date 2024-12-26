@@ -10,10 +10,12 @@ public class BassSampleChannel
     private int bassChannel;
 
     public bool Loaded => bassChannel != 0;
+    private readonly double frequency = 0;
 
     internal BassSampleChannel(int channel)
     {
         bassChannel = channel;
+        frequency = Bass.ChannelGetAttribute(bassChannel, ChannelAttribute.Frequency);
     }
 
     public void SetVolume(float volume)

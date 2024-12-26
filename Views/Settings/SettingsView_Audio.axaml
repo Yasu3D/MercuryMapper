@@ -43,7 +43,7 @@
             
             <Separator/>
             
-            <Grid ColumnDefinitions="*,Auto" RowDefinitions="*,*,*,*,*,*,*,*,*,*,*,*" VerticalAlignment="Top">
+            <Grid ColumnDefinitions="*,Auto" RowDefinitions="*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*" VerticalAlignment="Top">
                 <TextBlock Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_Hitsound_Touch}"/>
                 <TextBox Grid.Column="0" Grid.Row="1" Margin="0,0,0,10" Name="TextBoxTouch" TextChanged="Touch_TextChanged"/>
                 <Button Grid.Column="1" Grid.Row="1" Content="{x:Static lang:Resources.Generic_PickFile}" HorizontalAlignment="Right" Margin="5,0,0,10" Click="Touch_OnClick"/>
@@ -67,16 +67,30 @@
                 <TextBlock Grid.Column="0" Grid.Row="10" VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_Hitsound_Metronome}"/>
                 <TextBox Grid.Column="0" Grid.Row="11" Margin="0,0,0,10" Name="TextBoxMetronome" TextChanged="Metronome_TextChanged"/>
                 <Button Grid.Column="1" Grid.Row="11" Content="{x:Static lang:Resources.Generic_PickFile}" HorizontalAlignment="Right" Margin="5,0,0,10" Click="Metronome_OnClick"/>
+                
+                <TextBlock Grid.Column="0" Grid.Row="12" VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_Hitsound_MetronomeDownbeat}"/>
+                <TextBox Grid.Column="0" Grid.Row="13" Margin="0,0,0,10" Name="TextBoxMetronomeDownbeat" TextChanged="MetronomeDownbeat_TextChanged"/>
+                <Button Grid.Column="1" Grid.Row="13" Content="{x:Static lang:Resources.Generic_PickFile}" HorizontalAlignment="Right" Margin="5,0,0,10" Click="MetronomeDownbeat_OnClick"/>
+                
+                <TextBlock Grid.Column="0" Grid.Row="14" VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_Hitsound_MetronomeUpbeat}"/>
+                <TextBox Grid.Column="0" Grid.Row="15" Margin="0,0,0,10" Name="TextBoxMetronomeUpbeat" TextChanged="MetronomeUpbeat_TextChanged"/>
+                <Button Grid.Column="1" Grid.Row="15" Content="{x:Static lang:Resources.Generic_PickFile}" HorizontalAlignment="Right" Margin="5,0,0,10" Click="MetronomeUpbeat_OnClick"/>
             </Grid>
             
             <Separator/>
             
-            <Grid ColumnDefinitions="*,Auto" RowDefinitions="*,*">
+            <Grid ColumnDefinitions="*,Auto" RowDefinitions="*,*,*,*">
                 <TextBlock Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_Audio_HitsoundOffset}"/>
                 <NumericUpDown Grid.Column="1" Grid.Row="0" Value="0" Name="HitsoundOffsetNumeric" Increment="0.1" ValueChanged="HitsoundOffsetNumeric_OnValueChanged"/>
                 
                 <TextBlock Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_MuteHitsoundsOnPreview}"/>
                 <CheckBox Grid.Column="1" Grid.Row="1" Name="CheckBoxMuteHitsoundsOnPreview" HorizontalAlignment="Right" IsCheckedChanged="MuteHitsoundsOnPreview_IsCheckedChanged"/>
+                
+                <TextBlock Grid.Column="0" Grid.Row="2" VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_Audio_StartMetronome}"/>
+                <CheckBox Grid.Column="1" Grid.Row="2" Name="CheckBoxStartMetronome" HorizontalAlignment="Right" IsCheckedChanged="StartMetronome_IsCheckedChanged"/>
+                
+                <TextBlock Grid.Column="0" Grid.Row="3" VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_Audio_ConstantMetronome}"/>
+                <CheckBox Grid.Column="1" Grid.Row="3" Name="CheckBoxConstantMetronome" HorizontalAlignment="Right" IsCheckedChanged="ConstantMetronome_IsCheckedChanged"/>
             </Grid>
         </StackPanel>
     </ScrollViewer> 

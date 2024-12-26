@@ -1434,4 +1434,16 @@ Continue?</value>
   <data name="ChartInfo_Background_Saturn" xml:space="preserve">
     <value>Saturn</value>
   </data>
+  <data name="Settings_Audio_StartMetronome" xml:space="preserve">
+    <value>Start Metronome</value>
+  </data>
+  <data name="Settings_Audio_ConstantMetronome" xml:space="preserve">
+    <value>Constant Metronome</value>
+  </data>
+  <data name="Settings_Hitsound_MetronomeDownbeat" xml:space="preserve">
+    <value>Metronome (Downbeat)</value>
+  </data>
+  <data name="Settings_Hitsound_MetronomeUpbeat" xml:space="preserve">
+    <value>Metronome (Upbeat)</value>
+  </data>
 </root>

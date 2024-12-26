@@ -2698,6 +2698,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Constant Metronome.
+        /// </summary>
+        public static string Settings_Audio_ConstantMetronome {
+            get {
+                return ResourceManager.GetString("Settings_Audio_ConstantMetronome", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Hitsound Offset.
         /// </summary>
         public static string Settings_Audio_HitsoundOffset {
@@ -2721,6 +2730,15 @@ namespace MercuryMapper.Assets.Lang {
         public static string Settings_Audio_MusicVolume {
             get {
                 return ResourceManager.GetString("Settings_Audio_MusicVolume", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Start Metronome.
+        /// </summary>
+        public static string Settings_Audio_StartMetronome {
+            get {
+                return ResourceManager.GetString("Settings_Audio_StartMetronome", resourceCulture);
             }
         }
         
@@ -3144,6 +3162,24 @@ namespace MercuryMapper.Assets.Lang {
         public static string Settings_Hitsound_Metronome {
             get {
                 return ResourceManager.GetString("Settings_Hitsound_Metronome", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Metronome (Downbeat).
+        /// </summary>
+        public static string Settings_Hitsound_MetronomeDownbeat {
+            get {
+                return ResourceManager.GetString("Settings_Hitsound_MetronomeDownbeat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Metronome (Upbeat).
+        /// </summary>
+        public static string Settings_Hitsound_MetronomeUpbeat {
+            get {
+                return ResourceManager.GetString("Settings_Hitsound_MetronomeUpbeat", resourceCulture);
             }
         }
         
