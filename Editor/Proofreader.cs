@@ -352,7 +352,7 @@ public static class Proofreader
             
             foreach (Gimmick gimmick in chart.Gimmicks)
             {
-                if (gimmick.GimmickType is GimmickType.BpmChange or GimmickType.TimeSigChange) continue;
+                if (gimmick.GimmickType is GimmickType.BpmChange or GimmickType.TimeSigChange or GimmickType.EndOfChart) continue;
 
                 AddMessage(textBlock, MessageType.Warning, $"{gimmick.GimmickType} @ {gimmick.BeatData.Measure} {gimmick.BeatData.Tick} is likely inappropriate for lowers.\n");
                 error = true;
