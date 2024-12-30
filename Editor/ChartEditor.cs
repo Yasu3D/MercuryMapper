@@ -35,12 +35,12 @@ public class ChartEditor
             Chart.Gimmicks = Chart.Gimmicks.OrderBy(x => x.BeatData.FullTick).ToList();
             Chart.IsSaved = false;
             
-            mainView.ToggleInsertButton();
             mainView.SetSelectionInfo();
             mainView.UpdateCurrentTimeScaleInfo();
             mainView.SetChartNoteInfo();
             
             UpdateLastPlacedHold();
+            mainView.ToggleInsertButton();
             
             // Repair collections after every operation to make sure forward references don't get mangled.
             if (mainView.ConnectionManager.NetworkState != ConnectionManager.NetworkConnectionState.Local) RepairHoldsForward();
@@ -230,6 +230,8 @@ public class ChartEditor
                 return;
             }
         }
+        
+        mainView.ToggleInsertButton();
     }
 
     public void Redo()
@@ -270,6 +272,8 @@ public class ChartEditor
                 return;
             }
         }
+        
+        mainView.ToggleInsertButton();
     }
     
     public async void Cut()
