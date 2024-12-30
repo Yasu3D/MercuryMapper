@@ -1365,6 +1365,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Scroll Layer.
+        /// </summary>
+        public static string Editor_ScrollLayer {
+            get {
+                return ResourceManager.GetString("Editor_ScrollLayer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Select All.
         /// </summary>
         public static string Editor_SelectAll {
@@ -1469,6 +1478,15 @@ namespace MercuryMapper.Assets.Lang {
         public static string Editor_SetRenderTrue {
             get {
                 return ResourceManager.GetString("Editor_SetRenderTrue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Set Scroll Layer.
+        /// </summary>
+        public static string Editor_SetScrollLayer {
+            get {
+                return ResourceManager.GetString("Editor_SetScrollLayer", resourceCulture);
             }
         }
         
@@ -3974,6 +3992,15 @@ namespace MercuryMapper.Assets.Lang {
         public static string ToolTip_SetRenderTrue {
             get {
                 return ResourceManager.GetString("ToolTip_SetRenderTrue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sets the scroll layer on selected Notes, or highlighted Gimmicks..
+        /// </summary>
+        public static string ToolTip_SetScrollLayer {
+            get {
+                return ResourceManager.GetString("ToolTip_SetScrollLayer", resourceCulture);
             }
         }
         

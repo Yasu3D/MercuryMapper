@@ -2413,6 +2413,11 @@ public class ChartEditor
             operationList.Add(new EditNote(note, newNote));
         }
     }
+
+    public void SetScrollLayer(ScrollLayer scrollLayer)
+    {
+        
+    }
     
     // ________________ Comments
     private readonly Color[] commentColors =

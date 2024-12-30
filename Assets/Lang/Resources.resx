@@ -1446,4 +1446,13 @@ Continue?</value>
   <data name="Settings_Hitsound_MetronomeUpbeat" xml:space="preserve">
     <value>Metronome (Upbeat)</value>
   </data>
+  <data name="Editor_ScrollLayer" xml:space="preserve">
+    <value>Scroll Layer</value>
+  </data>
+  <data name="Editor_SetScrollLayer" xml:space="preserve">
+    <value>Set Scroll Layer</value>
+  </data>
+  <data name="ToolTip_SetScrollLayer" xml:space="preserve">
+    <value>Sets the scroll layer on selected Notes, or highlighted Gimmicks.</value>
+  </data>
 </root>

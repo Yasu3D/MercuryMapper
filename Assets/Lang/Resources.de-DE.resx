@@ -1446,4 +1446,13 @@ Fortfahren?</value>
   <data name="Settings_Hitsound_MetronomeUpbeat" xml:space="preserve">
     <value>Metronom (Upbeat)</value>
   </data>
+  <data name="Editor_ScrollLayer" xml:space="preserve">
+    <value>Scroll Layer</value>
+  </data>
+  <data name="Editor_SetScrollLayer" xml:space="preserve">
+    <value>Scroll Layer festlegen</value>
+  </data>
+  <data name="ToolTip_SetScrollLayer" xml:space="preserve">
+    <value>Ändert den Scroll-Layer von ausgewählten Noten, oder hervorgehobenen Gimmicks.</value>
+  </data>
 </root>

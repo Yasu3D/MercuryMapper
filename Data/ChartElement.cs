@@ -87,19 +87,25 @@ public class Gimmick : ChartElement
     public float HiSpeed { get; set; }
     public float TimeStamp { get; set; }
     public GimmickType GimmickType { get; set; } = GimmickType.None;
+    public ScrollLayer ScrollLayer { get; set; } = ScrollLayer.L1;
 
     public Gimmick() { }
     
-    public Gimmick(BeatData beatData, GimmickType gimmickType, Guid? guid = null)
+    public Gimmick(BeatData beatData, GimmickType gimmickType, ScrollLayer scrollLayer, Guid? guid = null)
     {
         Guid = guid ?? Guid;
         BeatData = beatData;
         GimmickType = gimmickType;
+        ScrollLayer = scrollLayer;
     }
 
-    public Gimmick(Gimmick gimmick, Guid? guid = null) : this(gimmick.BeatData, gimmick.GimmickType)
+    public Gimmick(Gimmick gimmick, Guid? guid = null)
     {
         Guid = guid ?? Guid;
+        BeatData = gimmick.BeatData;
+        GimmickType = gimmick.GimmickType;
+        ScrollLayer = gimmick.ScrollLayer;
+        
         switch (GimmickType)
         {
             case GimmickType.BpmChange: Bpm = gimmick.Bpm; break;
@@ -108,11 +114,12 @@ public class Gimmick : ChartElement
         }
     }
 
-    public Gimmick(int measure, int tick, GimmickType gimmickType, string value1, string value2, Guid? guid = null)
+    public Gimmick(int measure, int tick, GimmickType gimmickType, ScrollLayer scrollLayer, string value1, string value2, Guid? guid = null)
     {
         Guid = guid ?? Guid;
         BeatData = new(measure, tick);
         GimmickType = gimmickType;
+        ScrollLayer = scrollLayer;
 
         switch (GimmickType)
         {
@@ -133,7 +140,7 @@ public class Gimmick : ChartElement
 
     public string ToNetworkString()
     {
-        string result = $"{Guid} {BeatData.Measure:F0} {BeatData.Tick:F0} {(int)GimmickType:F0}";
+        string result = $"{Guid} {BeatData.Measure:F0} {BeatData.Tick:F0} {(int)GimmickType:F0} {(int)ScrollLayer}";
         
         result += GimmickType switch
         {
@@ -153,11 +160,12 @@ public class Gimmick : ChartElement
             Guid = Guid.Parse(data[0]),
             BeatData = new(Convert.ToInt32(data[1]), Convert.ToInt32(data[2])),
             GimmickType = (GimmickType)Convert.ToInt32(data[3]),
+            ScrollLayer = (ScrollLayer)Convert.ToInt32(data[4]),
         };
 
-        if (gimmick.GimmickType == GimmickType.BpmChange && data.Length == 5) gimmick.Bpm = Convert.ToSingle(data[4]);
-        if (gimmick.GimmickType == GimmickType.HiSpeedChange && data.Length == 5) gimmick.HiSpeed = Convert.ToSingle(data[4]);
-        if (gimmick.GimmickType == GimmickType.TimeSigChange && data.Length == 6) gimmick.TimeSig = new(Convert.ToInt32(data[4]), Convert.ToInt32(data[5]));
+        if (gimmick.GimmickType == GimmickType.BpmChange && data.Length == 6) gimmick.Bpm = Convert.ToSingle(data[5]);
+        if (gimmick.GimmickType == GimmickType.HiSpeedChange && data.Length == 6) gimmick.HiSpeed = Convert.ToSingle(data[5]);
+        if (gimmick.GimmickType == GimmickType.TimeSigChange && data.Length == 7) gimmick.TimeSig = new(Convert.ToInt32(data[5]), Convert.ToInt32(data[6]));
 
         return gimmick;
     }
@@ -175,6 +183,7 @@ public class Note : ChartElement
     public Note? NextReferencedNote { get; set; }
     public Note? PrevReferencedNote { get; set; }
     public TraceColor Color { get; set; } = TraceColor.White;
+    public ScrollLayer ScrollLayer { get; set; } = ScrollLayer.L1;
 
     public int ParsedIndex { get; set; }
 
@@ -196,12 +205,13 @@ public class Note : ChartElement
         RenderSegment = note.RenderSegment;
         MaskDirection = note.MaskDirection;
         Color = note.Color;
+        ScrollLayer = note.ScrollLayer;
 
         NextReferencedNote = note.NextReferencedNote;
         PrevReferencedNote = note.PrevReferencedNote;
     }
 
-    public Note(int measure, int tick, NoteType noteType, BonusType bonusType, int noteIndex, int position, int size, bool renderSegment, TraceColor color, Guid? guid = null)
+    public Note(int measure, int tick, NoteType noteType, BonusType bonusType, int noteIndex, int position, int size, bool renderSegment, TraceColor color, ScrollLayer scrollLayer, Guid? guid = null)
     {
         Guid = guid ?? Guid;
         BeatData = new(measure, tick);
@@ -211,6 +221,7 @@ public class Note : ChartElement
         Size = size;
         RenderSegment = renderSegment;
         Color = color;
+        ScrollLayer = scrollLayer;
 
         ParsedIndex = noteIndex;
     }
@@ -386,7 +397,8 @@ public class Note : ChartElement
     
     public string ToNetworkString()
     {
-        string result = $"{Guid} {BeatData.Measure:F0} {BeatData.Tick:F0} {(int)NoteType:F0} {(int)BonusType:F0} {Position:F0} {Size:F0} {(RenderSegment ? 1 : 0)}";
+        string result = $"{Guid} {BeatData.Measure:F0} {BeatData.Tick:F0} {(int)NoteType:F0} {(int)BonusType:F0} {Position:F0} {Size:F0} {(RenderSegment ? 1 : 0)} {(int)ScrollLayer:F0}";
+        
         if (IsMask)
         {
             result += $" {(int)MaskDirection:F0}";
@@ -417,19 +429,20 @@ public class Note : ChartElement
             Position = Convert.ToInt32(data[5]),
             Size = Convert.ToInt32(data[6]),
             RenderSegment = data[7] != "0",
+            ScrollLayer = (ScrollLayer)Convert.ToInt32(data[8]),
         };
 
-        if (note.IsMask && data.Length == 9) note.MaskDirection = (MaskDirection)Convert.ToInt32(data[8]);
-
-        if (data.Length >= 10)
-        {
-            if (data[8] != "null") note.NextReferencedNote = chart.FindNoteByGuid(data[8]);
-            if (data[9] != "null") note.PrevReferencedNote = chart.FindNoteByGuid(data[9]);
-        }
+        if (note.IsMask && data.Length == 10) note.MaskDirection = (MaskDirection)Convert.ToInt32(data[9]);
 
         if (data.Length >= 11)
         {
-            note.Color = (TraceColor)Convert.ToInt32(data[10]);
+            if (data[8] != "null") note.NextReferencedNote = chart.FindNoteByGuid(data[9]);
+            if (data[9] != "null") note.PrevReferencedNote = chart.FindNoteByGuid(data[10]);
+        }
+
+        if (data.Length >= 12)
+        {
+            note.Color = (TraceColor)Convert.ToInt32(data[11]);
         }
 
         return note;

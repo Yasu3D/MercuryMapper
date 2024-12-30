@@ -862,6 +862,24 @@
                         <Separator/>
                         
                         <UniformGrid Columns="2" Margin="0,4,0,4">
+                            <TextBlock Text="{x:Static lang:Resources.Editor_ScrollLayer}" VerticalAlignment="Center" Margin="4,0,0,0"/>
+                            <ComboBox Name="ScrollLayerComboBox" HorizontalAlignment="Stretch" Margin="0,0,2,0" SelectedIndex="0">
+                                <ComboBoxItem Content="Layer 1"/>
+                                <ComboBoxItem Content="Layer 2"/>
+                                <ComboBoxItem Content="Layer 3"/>
+                                <ComboBoxItem Content="Layer 4"/>
+                                <ComboBoxItem Content="Layer 5"/>
+                                <ComboBoxItem Content="Layer 6"/>
+                                <ComboBoxItem Content="Layer 7"/>
+                                <ComboBoxItem Content="Layer 8"/>
+                            </ComboBox>
+                        </UniformGrid>
+                        
+                        <Button Margin="0,0,0,4" HorizontalAlignment="Stretch" Click="ButtonSetScrollLayer_OnClick" Content="{x:Static lang:Resources.Editor_SetScrollLayer}" ToolTip.Tip="{x:Static lang:Resources.ToolTip_SetScrollLayer}"/>
+                        
+                        <Separator/>
+                        
+                        <UniformGrid Columns="2" Margin="0,4,0,4">
                             <TextBlock Text="{x:Static lang:Resources.Editor_EaseHeader}" VerticalAlignment="Center" Margin="4,0,0,0"/>
                             <ComboBox Name="HoldEaseComboBox" HorizontalAlignment="Stretch" Margin="0,0,2,0" SelectedIndex="0">
                                 <ComboBoxItem Content="{x:Static lang:Resources.Editor_Ease_Linear}"/>

@@ -225,7 +225,7 @@ internal static class MerHandler
                     // End Of Chart
                     if (noteTypeId == 14)
                     {
-                        Gimmick newGimmick = new(measure, tick, GimmickType.EndOfChart, "", "");
+                        Gimmick newGimmick = new(measure, tick, GimmickType.EndOfChart, ScrollLayer.L1, "", "");
                         chart.Gimmicks.Add(newGimmick);
                         continue;
                     }
@@ -233,7 +233,7 @@ internal static class MerHandler
                     NoteType noteType = Note.NoteTypeFromMerId(noteTypeId);
                     BonusType bonusType = Note.BonusTypeFromMerId(noteTypeId);
                     
-                    Note newNote = new(measure, tick, noteType, bonusType, noteIndex, position, size, renderSegment, TraceColor.White);
+                    Note newNote = new(measure, tick, noteType, bonusType, noteIndex, position, size, renderSegment, TraceColor.White, ScrollLayer.L1);
 
                     // hold start & segments
                     if (noteTypeId is 9 or 10 or 25 && split.Length >= 9)
@@ -276,7 +276,7 @@ internal static class MerHandler
                         value1 = split[3];
                     }
 
-                    Gimmick newGimmick = new(measure, tick, (GimmickType)objectId, value1, value2);
+                    Gimmick newGimmick = new(measure, tick, (GimmickType)objectId, ScrollLayer.L1, value1, value2);
                     chart.Gimmicks.Add(newGimmick);
                 }
             }
@@ -514,8 +514,11 @@ internal static class SatHandler
 
             int measure = Convert.ToInt32(split[0], CultureInfo.InvariantCulture);
             int tick = Convert.ToInt32(split[1], CultureInfo.InvariantCulture);
+            
+            string[] attributes = split[3].Split('.', StringSplitOptions.RemoveEmptyEntries);
 
             GimmickType gimmickType = String2GimmickType(split[3]);
+            ScrollLayer scrollLayer = String2ScrollLayer(attributes);
 
             string value1 = "";
             string value2 = "";
@@ -531,7 +534,7 @@ internal static class SatHandler
                 value2 = split[5];
             }
 
-            Gimmick gimmick = new(measure, tick, gimmickType, value1, value2);
+            Gimmick gimmick = new(measure, tick, gimmickType, scrollLayer, value1, value2);
             chart.Gimmicks.Add(gimmick);
         }
     }
@@ -558,9 +561,10 @@ internal static class SatHandler
             BonusType bonusType = String2BonusType(attributes);
             MaskDirection maskDirection = String2MaskDirection(attributes);
             TraceColor color = String2TraceColor(attributes);
+            ScrollLayer scrollLayer = String2ScrollLayer(attributes);
             bool renderSegment = !attributes.Contains("NR");
             
-            Note note = new(measure, tick, noteType, bonusType, index, position, size, renderSegment, color);
+            Note note = new(measure, tick, noteType, bonusType, index, position, size, renderSegment, color, scrollLayer);
 
             if (note.IsMask)
             {
@@ -599,7 +603,10 @@ internal static class SatHandler
             int measure = Convert.ToInt32(split[1], CultureInfo.InvariantCulture);
             int tick = Convert.ToInt32(split[2], CultureInfo.InvariantCulture);
 
-            GimmickType gimmickType = String2GimmickType(split[4]);
+            string[] attributes = split[3].Split('.', StringSplitOptions.RemoveEmptyEntries);
+
+            GimmickType gimmickType = String2GimmickType(split[3]);
+            ScrollLayer scrollLayer = String2ScrollLayer(attributes);
 
             string value1 = "";
             string value2 = "";
@@ -615,7 +622,7 @@ internal static class SatHandler
                 value2 = split[6];
             }
 
-            Gimmick gimmick = new(measure, tick, gimmickType, value1, value2, guid);
+            Gimmick gimmick = new(measure, tick, gimmickType, scrollLayer, value1, value2, guid);
             chart.Gimmicks.Add(gimmick);
         }
     }
@@ -644,9 +651,10 @@ internal static class SatHandler
             BonusType bonusType = String2BonusType(attributes);
             MaskDirection maskDirection = String2MaskDirection(attributes);
             TraceColor color = String2TraceColor(attributes);
+            ScrollLayer scrollLayer = String2ScrollLayer(attributes);
             bool renderSegment = !attributes.Contains("NR");
-
-            Note note = new(measure, tick, noteType, bonusType, index, position, size, renderSegment, color, guid);
+            
+            Note note = new(measure, tick, noteType, bonusType, index, position, size, renderSegment, color, scrollLayer, guid);
 
             if (note.IsMask)
             {
@@ -877,34 +885,55 @@ internal static class SatHandler
     {
         if (attributes.Length < 2) return MaskDirection.None;
 
-        return attributes[1] switch
+        foreach (string a in attributes)
         {
-            "CW" => MaskDirection.Clockwise,
-            "CCW" => MaskDirection.Counterclockwise,
-            "CENTER" => MaskDirection.Center,
-            _ => MaskDirection.None,
-        };
+            if (a == "CW") return MaskDirection.Clockwise;
+            if (a == "CCW") return MaskDirection.Counterclockwise;
+            if (a == "CENTER") return MaskDirection.Center;
+        }
+
+        return MaskDirection.None;
     }
 
     private static TraceColor String2TraceColor(string[] attributes)
     {
         if (attributes.Length < 2) return TraceColor.White;
 
-        return attributes[1] switch
+        foreach (string a in attributes)
         {
-            "RED" => TraceColor.Red,
-            "ORANGE" => TraceColor.Orange,
-            "YELLOW" => TraceColor.Yellow,
-            "LIME" => TraceColor.Lime,
-            "GREEN" => TraceColor.Green,
-            "SKY" => TraceColor.Sky,
-            "BLUE" => TraceColor.Blue,
-            "VIOLET" => TraceColor.Violet,
-            "PINK" => TraceColor.Pink,
-            "BLACK" => TraceColor.Black,
-            "WHITE" => TraceColor.White,
-            _ => TraceColor.White,
-        };
+            if (a == "RED") return TraceColor.Red;
+            if (a == "ORANGE") return TraceColor.Orange;
+            if (a == "YELLOW") return TraceColor.Yellow;
+            if (a == "LIME") return TraceColor.Lime;
+            if (a == "GREEN") return TraceColor.Green;
+            if (a == "SKY") return TraceColor.Sky;
+            if (a == "BLUE") return TraceColor.Blue;
+            if (a == "VIOLET") return TraceColor.Violet;
+            if (a == "PINK") return TraceColor.Pink;
+            if (a == "BLACK") return TraceColor.Black;
+            if (a == "WHITE") return TraceColor.White;
+        }
+
+        return TraceColor.White;
+    }
+
+    private static ScrollLayer String2ScrollLayer(string[] attributes)
+    {
+        if (attributes.Length < 2) return ScrollLayer.L1;
+
+        foreach (string a in attributes)
+        {
+            if (a == "L1") return ScrollLayer.L1;
+            if (a == "L2") return ScrollLayer.L2;
+            if (a == "L3") return ScrollLayer.L3;
+            if (a == "L4") return ScrollLayer.L4;
+            if (a == "L5") return ScrollLayer.L5;
+            if (a == "L6") return ScrollLayer.L6;
+            if (a == "L7") return ScrollLayer.L7;
+            if (a == "L8") return ScrollLayer.L8;
+        }
+
+        return ScrollLayer.L1;
     }
     
     private static GimmickType String2GimmickType(string name)
@@ -969,22 +998,22 @@ internal static class SatHandler
 
     private static string Attributes2String(Note note)
     {
-        string modifiers = "";
+        StringBuilder sb = new();
 
         if (!note.IsSegment && !note.IsMask && note.NoteType is not (NoteType.Trace or NoteType.Damage))
         {
-            modifiers += note.BonusType switch
+            sb.Append(note.BonusType switch
             {
                 BonusType.None => "",
                 BonusType.Bonus => ".BONUS",
                 BonusType.RNote => ".RNOTE",
                 _ => "",
-            };
+            });
         }
 
         if (note.NoteType == NoteType.Trace && note.LinkType == NoteLinkType.Start)
         {
-            modifiers += note.Color switch
+            sb.Append(note.Color switch
             {
                 TraceColor.Red => ".RED",
                 TraceColor.Orange => ".ORANGE",
@@ -998,21 +1027,42 @@ internal static class SatHandler
                 TraceColor.Black => ".BLACK",
                 TraceColor.White => ".WHITE",
                 _ => ".WHITE",
-            };
+            });
         }
-        
+
         if (note.IsMask)
-            modifiers += note.MaskDirection switch
+        {
+            sb.Append(note.MaskDirection switch
             {
                 MaskDirection.Center => ".CENTER",
                 MaskDirection.Clockwise => ".CW",
                 MaskDirection.Counterclockwise => ".CCW",
                 MaskDirection.None => "",
                 _ => "",
-            };
-        
-        if (note.IsNoteCollection && note.LinkType == NoteLinkType.Point && !note.RenderSegment) modifiers += ".NR";
+            });
+        }
 
-        return modifiers;
+        if (note.IsNoteCollection && note.LinkType == NoteLinkType.Point && !note.RenderSegment)
+        {
+            sb.Append(".NR");
+        }
+
+        if (note.ScrollLayer != ScrollLayer.L1 && !note.IsMask)
+        {
+            sb.Append(note.ScrollLayer switch
+            {
+                ScrollLayer.L1 => ".L1", // just for completeness.
+                ScrollLayer.L2 => ".L2", 
+                ScrollLayer.L3 => ".L3", 
+                ScrollLayer.L4 => ".L4", 
+                ScrollLayer.L5 => ".L5", 
+                ScrollLayer.L6 => ".L6", 
+                ScrollLayer.L7 => ".L7", 
+                ScrollLayer.L8 => ".L8",
+                _ => "",
+            });
+        }
+
+        return sb.ToString();
     }
 }

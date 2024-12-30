@@ -2694,6 +2694,8 @@ public partial class MainView : UserControl
     private void ButtonConvertToInstantMask_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.ConvertToInstantMask();
 
     private void ButtonPaintTraces_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.PaintTraces((TraceColor)TraceColorComboBox.SelectedIndex);
+
+    private void ButtonSetScrollLayer_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.SetScrollLayer((ScrollLayer)ScrollLayerComboBox.SelectedIndex + 1); // +1 because index is zero-based and layers start at 1.
     
     private void ButtonEditGimmick_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.EditGimmick();
 
