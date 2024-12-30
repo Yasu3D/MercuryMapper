@@ -37,6 +37,7 @@ public partial class SettingsView_Rendering : UserControl
         CheckBoxCutEarlyJudgementWindowOnHolds.IsChecked = RenderConfig.CutEarlyJudgementWindowOnHolds;
         CheckBoxCutOverlappingJudgementWindows.IsChecked = RenderConfig.CutOverlappingJudgementWindows;
         CheckBoxDrawNoRenderHoldSegments.IsChecked = RenderConfig.DrawNoRenderSegments;
+        CheckBoxHideNotesOnDifferentLayers.IsChecked = RenderConfig.HideNotesOnDifferentLayers;
     }
     
     private void RefreshRate_OnValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
@@ -125,5 +126,10 @@ public partial class SettingsView_Rendering : UserControl
     private void CheckBoxDrawNoRenderHoldSegments_OnIsCheckedChanged(object? sender, RoutedEventArgs e)
     {
         RenderConfig.DrawNoRenderSegments = CheckBoxDrawNoRenderHoldSegments.IsChecked ?? true;
+    }
+    
+    private void CheckBoxHideNotesOnDifferentLayers_OnIsCheckedChanged(object? sender, RoutedEventArgs e)
+    {
+        RenderConfig.HideNotesOnDifferentLayers = CheckBoxHideNotesOnDifferentLayers.IsChecked ?? true;
     }
 }

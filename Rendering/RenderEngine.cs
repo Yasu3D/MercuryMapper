@@ -278,6 +278,8 @@ public class RenderEngine(MainView mainView)
         data.StartAngle += data.SweepAngle;
         data.SweepAngle *= -1;
     }
+
+    private bool ElementOnSameLayer(ChartElement element) => !RenderConfig.HideNotesOnDifferentLayers || element.ScrollLayer == (ScrollLayer)(mainView.ScrollLayerComboBox.SelectedIndex + 1);
     
     // ____ UI
     private void DrawBackground(SKCanvas canvas)
@@ -561,6 +563,7 @@ public class RenderEngine(MainView mainView)
     {
         IEnumerable<Gimmick> visibleGimmicks = chart.Gimmicks.Where(x =>
             MathExtensions.GreaterAlmostEqual(x.BeatData.MeasureDecimal, CurrentMeasureDecimal)
+            && ElementOnSameLayer(x)
             && chart.GetScaledMeasureDecimal(x.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) <= ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal).Reverse();
 
         foreach (Gimmick gimmick in visibleGimmicks)
@@ -610,7 +613,7 @@ public class RenderEngine(MainView mainView)
             bool inVisionRange = inFrontOfCamera && inVisibleDistance;
             bool aroundVisionRange = !inFrontOfCamera && nextOutsideVisibleDistance;
 
-            return x.NoteType == NoteType.Trace && (inVisionRange || aroundVisionRange);
+            return x.NoteType == NoteType.Trace && (inVisionRange || aroundVisionRange) && ElementOnSameLayer(x);
         }).ToList();
 
         HashSet<Note> checkedNotes = [];
@@ -699,7 +702,7 @@ public class RenderEngine(MainView mainView)
             bool inVisionRange = inFrontOfCamera && inVisibleDistance;
             bool aroundVisionRange = !inFrontOfCamera && nextOutsideVisibleDistance;
 
-            return x.NoteType == NoteType.Hold && (inVisionRange || aroundVisionRange);
+            return x.NoteType == NoteType.Hold && (inVisionRange || aroundVisionRange) && ElementOnSameLayer(x);
         }).ToList();
 
         HashSet<Note> checkedNotes = [];
@@ -739,7 +742,7 @@ public class RenderEngine(MainView mainView)
             bool inVision = MathExtensions.GreaterAlmostEqual(x.BeatData.MeasureDecimal, CurrentMeasureDecimal) && chart.GetScaledMeasureDecimal(x.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) <= ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal;
             bool nextOutsideVision = x.NextReferencedNote != null && x.BeatData.MeasureDecimal < CurrentMeasureDecimal && chart.GetScaledMeasureDecimal(x.NextReferencedNote.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) > ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal;
 
-            return x.NoteType == NoteType.Hold && (inVision || nextOutsideVision);
+            return x.NoteType == NoteType.Hold && (inVision || nextOutsideVision) && ElementOnSameLayer(x);
         }).ToList();
 
         foreach (Note note in visibleNotes)
@@ -829,8 +832,8 @@ public class RenderEngine(MainView mainView)
         {
             bool behindCamera = !MathExtensions.GreaterAlmostEqual(x.BeatData.MeasureDecimal, CurrentMeasureDecimal);
             bool pastVisionLimit = chart.GetScaledMeasureDecimal(x.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) > ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal;
-            
-            return x.IsNote && !behindCamera && !pastVisionLimit;
+
+            return x.IsNote && !behindCamera && !pastVisionLimit && ElementOnSameLayer(x);
         }).ToArray();
         
         Note[] syncNotes = visibleNotes.Where(x => !x.IsSegment).Reverse().ToArray();

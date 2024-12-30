@@ -1455,4 +1455,7 @@ Continue?</value>
   <data name="ToolTip_SetScrollLayer" xml:space="preserve">
     <value>Sets the scroll layer on selected Notes, or highlighted Gimmicks.</value>
   </data>
+  <data name="Settings_HideNotesOnDifferentLayers" xml:space="preserve">
+    <value>Hide Notes on different Layers</value>
+  </data>
 </root>

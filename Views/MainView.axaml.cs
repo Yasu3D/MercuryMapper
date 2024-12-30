@@ -680,6 +680,7 @@ public partial class MainView : UserControl
         QuickSettingsCheckBoxShowJudgementWindowGood.IsChecked = UserConfig.RenderConfig.ShowJudgementWindowGood;
         QuickSettingsCheckBoxCutEarlyJudgementWindowOnHolds.IsChecked = UserConfig.RenderConfig.CutEarlyJudgementWindowOnHolds;
         QuickSettingsCheckBoxCutOverlappingJudgementWindows.IsChecked = UserConfig.RenderConfig.CutOverlappingJudgementWindows;
+        QuickSettingsHideNotesOnDifferentLayers.IsChecked = UserConfig.RenderConfig.HideNotesOnDifferentLayers;
     }
 
     public void SetNoteSizeBounds(NoteType noteType, BonusType bonusType, NoteLinkType linkType)
@@ -2651,6 +2652,11 @@ public partial class MainView : UserControl
         ApplySettings();
     }
 
+    private void QuickSettingsHideNotesOnDifferentLayers_OnIsCheckedChanged(object? sender, RoutedEventArgs e)
+    {
+        UserConfig.RenderConfig.HideNotesOnDifferentLayers = QuickSettingsHideNotesOnDifferentLayers.IsChecked ?? true;
+        ApplySettings();
+    }
     
     private void ButtonEditSelectionShape_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.EditSelection(true, false);
     

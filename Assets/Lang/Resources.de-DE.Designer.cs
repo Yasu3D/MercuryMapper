@@ -3157,6 +3157,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Verstecke Noten auf anderen Layern.
+        /// </summary>
+        public static string Settings_HideNotesOnDifferentLayers {
+            get {
+                return ResourceManager.GetString("Settings_HideNotesOnDifferentLayers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Bonus Hitsound.
         /// </summary>
         public static string Settings_Hitsound_Bonus {

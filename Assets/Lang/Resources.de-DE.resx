@@ -1455,4 +1455,7 @@ Fortfahren?</value>
   <data name="ToolTip_SetScrollLayer" xml:space="preserve">
     <value>Ändert den Scroll-Layer von ausgewählten Noten, oder hervorgehobenen Gimmicks.</value>
   </data>
+  <data name="Settings_HideNotesOnDifferentLayers" xml:space="preserve">
+    <value>Verstecke Noten auf anderen Layern</value>
+  </data>
 </root>

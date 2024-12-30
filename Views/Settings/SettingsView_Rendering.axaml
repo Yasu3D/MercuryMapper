@@ -92,12 +92,15 @@
             
             <Separator/>
             
-            <Grid ColumnDefinitions="*,Auto" RowDefinitions="*,*">
+            <Grid ColumnDefinitions="*,Auto" RowDefinitions="*,*,*">
                 <TextBlock Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_CutEarlyJudgementWindowOnHolds}"/>
                 <CheckBox Grid.Column="1" Grid.Row="0" Name="CheckBoxCutEarlyJudgementWindowOnHolds" HorizontalAlignment="Right" IsCheckedChanged="CheckBoxCutEarlyJudgementWindowOnHolds_OnIsCheckedChanged"/>
                 
                 <TextBlock Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_CutOverlappingJudgementWindows}"/>
                 <CheckBox Grid.Column="1" Grid.Row="1" Name="CheckBoxCutOverlappingJudgementWindows" HorizontalAlignment="Right" IsCheckedChanged="CheckBoxCutOverlappingJudgementWindows_OnIsCheckedChanged"/>
+                
+                <TextBlock Grid.Column="0" Grid.Row="2" VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_HideNotesOnDifferentLayers}"/>
+                <CheckBox Grid.Column="1" Grid.Row="2" Name="CheckBoxHideNotesOnDifferentLayers" HorizontalAlignment="Right" IsCheckedChanged="CheckBoxHideNotesOnDifferentLayers_OnIsCheckedChanged"/>
             </Grid>
         </StackPanel>
     </ScrollViewer>

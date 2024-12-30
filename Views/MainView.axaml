@@ -701,23 +701,28 @@
                 <!-- Quick Settings -->
                 <Expander Header="{x:Static lang:Resources.Editor_ExpanderHeader_QuickSettings}">
                     <StackPanel>
-                        <UniformGrid Columns="2">
-                            <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_NoteSpeed}"/>
-                            <NumericUpDown Name="QuickSettingsNumericNoteSpeed" FormatString="N1" ParsingNumberStyle="Number"
+                        <Grid ColumnDefinitions="Auto,*" RowDefinitions="*,*,*,*,*">
+                            <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_NoteSpeed}"/>
+                            <NumericUpDown Grid.Row="0" Grid.Column="1"
+                                           Name="QuickSettingsNumericNoteSpeed" FormatString="N1" ParsingNumberStyle="Number"
                                            Minimum="1" Maximum="6" Value="4.5" Increment="0.1" ValueChanged="QuickSettingsNoteSpeed_OnValueChanged"
                                            HorizontalAlignment="Right" Width="80" Margin="5"/>
                         
-                            <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_BeatDivision}"/>
-                            <NumericUpDown Name="QuickSettingsNumericBeatDivision" FormatString="N0" ParsingNumberStyle="Integer" 
+                            <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_BeatDivision}"/>
+                            <NumericUpDown Grid.Row="1" Grid.Column="1"
+                                           Name="QuickSettingsNumericBeatDivision" FormatString="N0" ParsingNumberStyle="Integer" 
                                            Minimum="1" Maximum="128" Value="4" Increment="1" ValueChanged="QuickSettingsBeatDivision_OnValueChanged"
                                            HorizontalAlignment="Right" Width="80" Margin="5"/>
                             
-                            <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_ShowSpeedChanges}"/>
-                            <CheckBox Name="QuickSettingsCheckBoxShowHiSpeed" HorizontalAlignment="Right" IsCheckedChanged="QuickSettingsShowHiSpeed_OnIsCheckedChanged"/>
+                            <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_ShowSpeedChanges}"/>
+                            <CheckBox Grid.Row="2" Grid.Column="1" Name="QuickSettingsCheckBoxShowHiSpeed" HorizontalAlignment="Right" IsCheckedChanged="QuickSettingsShowHiSpeed_OnIsCheckedChanged"/>
                             
-                            <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_DrawNoRenderSegments}"/>
-                            <CheckBox Name="QuickSettingsCheckBoxDrawNoRenderHoldSegments" HorizontalAlignment="Right" IsCheckedChanged="QuickSettingsDrawNoRenderHoldSegments_OnIsCheckedChanged"/>
-                        </UniformGrid>
+                            <TextBlock Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_DrawNoRenderSegments}"/>
+                            <CheckBox Grid.Row="3" Grid.Column="1" Name="QuickSettingsCheckBoxDrawNoRenderHoldSegments" HorizontalAlignment="Right" IsCheckedChanged="QuickSettingsDrawNoRenderHoldSegments_OnIsCheckedChanged"/>
+                            
+                            <TextBlock Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" Text="{x:Static lang:Resources.Settings_HideNotesOnDifferentLayers}"/>
+                            <CheckBox Grid.Row="4" Grid.Column="1" Name="QuickSettingsHideNotesOnDifferentLayers" HorizontalAlignment="Right" IsCheckedChanged="QuickSettingsHideNotesOnDifferentLayers_OnIsCheckedChanged"/>
+                        </Grid>
                         
                         <Separator/>
                         

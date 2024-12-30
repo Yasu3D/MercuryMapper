@@ -78,6 +78,7 @@ public class ChartElement
 {
     public BeatData BeatData { get; set; } = new(-1, 0);
     public Guid Guid { get; set; } = Guid.NewGuid();
+    public ScrollLayer ScrollLayer { get; set; } = ScrollLayer.L1;
 }
 
 public class Gimmick : ChartElement
@@ -87,7 +88,6 @@ public class Gimmick : ChartElement
     public float HiSpeed { get; set; }
     public float TimeStamp { get; set; }
     public GimmickType GimmickType { get; set; } = GimmickType.None;
-    public ScrollLayer ScrollLayer { get; set; } = ScrollLayer.L1;
 
     public Gimmick() { }
     
@@ -183,7 +183,6 @@ public class Note : ChartElement
     public Note? NextReferencedNote { get; set; }
     public Note? PrevReferencedNote { get; set; }
     public TraceColor Color { get; set; } = TraceColor.White;
-    public ScrollLayer ScrollLayer { get; set; } = ScrollLayer.L1;
 
     public int ParsedIndex { get; set; }
 
