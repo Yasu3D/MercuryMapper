@@ -2416,7 +2416,86 @@ public class ChartEditor
 
     public void SetScrollLayer(ScrollLayer scrollLayer)
     {
+        List<IOperation> operationList = [];
+        HashSet<Note> editedNotes = [];
         
+        foreach (Note selected in SelectedNotes)
+        {
+            addOperationNote(selected);
+        }
+
+        if (SelectedNotes.Count == 0 && HighlightedElement is Note highlightedNote)
+        {
+            addOperationNote(highlightedNote);
+        }
+
+        if (SelectedNotes.Count == 0 && HighlightedElement is Gimmick highlightedGimmick)
+        {
+            addOperationGimmick(highlightedGimmick);
+        }
+        
+        if (operationList.Count == 0) return;
+        UndoRedoManager.InvokeAndPush(new CompositeOperation(operationList));
+        Chart.IsSaved = false;
+        return;
+
+        void addOperationNote(Note note)
+        {
+            if (note.IsMask) return;
+            
+            foreach (Note reference in note.References())
+            {
+                if (!editedNotes.Add(reference)) continue;
+
+                Note newNote = new(reference)
+                {
+                    ScrollLayer = scrollLayer,
+                };
+
+                operationList.Add(new EditNote(reference, newNote));
+            }
+        }
+
+        void addOperationGimmick(Gimmick gimmick)
+        {
+            if (gimmick.GimmickType == GimmickType.HiSpeedChange || gimmick.IsStop)
+            {
+                Gimmick newGimmick = new(gimmick)
+                {
+                    ScrollLayer = scrollLayer,
+                };
+
+                operationList.Add(new EditGimmick(Chart, gimmick, newGimmick));
+            }
+
+            // Trying to change the layer of a Stop. Look forwards until accompanying StopEnd is found, then change that one's Layer too.
+            if (gimmick.GimmickType == GimmickType.StopStart)
+            {
+                Gimmick? stopEnd = Chart.Gimmicks.FirstOrDefault(x => gimmick.GimmickType == GimmickType.StopEnd && x.BeatData.FullTick > gimmick.BeatData.FullTick);
+                if (stopEnd == null) return;
+
+                Gimmick newStopEnd = new(stopEnd)
+                {
+                    ScrollLayer = scrollLayer,
+                };
+                
+                operationList.Add(new EditGimmick(Chart, stopEnd, newStopEnd));
+            }
+            
+            // Trying to change the layer of a Stop. Look backwards until accompanying StopStart is found, then change that one's Layer too.
+            if (gimmick.GimmickType == GimmickType.StopEnd)
+            {
+                Gimmick? stopStart = Chart.Gimmicks.LastOrDefault(x => gimmick.GimmickType == GimmickType.StopStart && x.BeatData.FullTick < gimmick.BeatData.FullTick);
+                if (stopStart == null) return;
+
+                Gimmick newStopStart = new(stopStart)
+                {
+                    ScrollLayer = scrollLayer,
+                };
+                
+                operationList.Add(new EditGimmick(Chart, stopStart, newStopStart));
+            }
+        }
     }
     
     // ________________ Comments

@@ -18,6 +18,7 @@ public class EditNote(Note note, Note newNote) : IOperation
         BaseNote.BeatData = OldNote.BeatData;
         BaseNote.RenderSegment = OldNote.RenderSegment;
         BaseNote.Color = OldNote.Color;
+        BaseNote.ScrollLayer = OldNote.ScrollLayer;
     }
     
     public void Redo()
@@ -30,5 +31,6 @@ public class EditNote(Note note, Note newNote) : IOperation
         BaseNote.BeatData = NewNote.BeatData;
         BaseNote.RenderSegment = NewNote.RenderSegment;
         BaseNote.Color = NewNote.Color;
+        BaseNote.ScrollLayer = NewNote.ScrollLayer;
     }
 }

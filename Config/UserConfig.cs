@@ -100,6 +100,7 @@ public class KeymapConfig
         ["EditorConvertToInstantMask"] = new(Key.N, true, false, false),
         ["EditorFlipNoteDirection"] = new(Key.M, true, false, false),
         ["EditorPaintTraces"] = new(Key.P, false, true, false),
+        ["EditorSetScrollLayer"] = new(Key.L, false, true, false),
         ["EditorIncreasePlaybackSpeed"] = new(Key.Add),
         ["EditorDecreasePlaybackSpeed"] = new(Key.Subtract),
         ["EditorAddComment"] = new(Key.K, true, false, false),

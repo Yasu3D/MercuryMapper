@@ -582,6 +582,7 @@ internal static class SatHandler
                 {
                     previousNote.NextReferencedNote = note;
                     note.Color = previousNote.Color;
+                    note.ScrollLayer = previousNote.ScrollLayer;
                 }
             }
 
@@ -1049,6 +1050,8 @@ internal static class SatHandler
 
         if (note.ScrollLayer != ScrollLayer.L1 && !note.IsMask)
         {
+            Console.WriteLine("Waa");
+            
             sb.Append(note.ScrollLayer switch
             {
                 ScrollLayer.L1 => ".L1", // just for completeness.

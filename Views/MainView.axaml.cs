@@ -1040,6 +1040,12 @@ public partial class MainView : UserControl
             e.Handled = true;
             return;
         }
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorSetScrollLayer"]))
+        {
+            ChartEditor.SetScrollLayer((ScrollLayer)ScrollLayerComboBox.SelectedIndex);
+            e.Handled = true;
+            return;
+        }
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorIncreasePlaybackSpeed"]))
         {
             SliderPlaybackSpeed.Value += 10;

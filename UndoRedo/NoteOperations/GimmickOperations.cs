@@ -45,6 +45,7 @@ public class EditGimmick(Chart chart, Gimmick gimmick, Gimmick newGimmick) : IOp
             BaseGimmick.Bpm = OldGimmick.Bpm;
             BaseGimmick.TimeSig = OldGimmick.TimeSig;
             BaseGimmick.HiSpeed = OldGimmick.HiSpeed;
+            BaseGimmick.ScrollLayer = OldGimmick.ScrollLayer;
             
             Chart.GenerateTimeEvents();
             Chart.GenerateTimeScales();
@@ -60,6 +61,7 @@ public class EditGimmick(Chart chart, Gimmick gimmick, Gimmick newGimmick) : IOp
             BaseGimmick.Bpm = NewGimmick.Bpm;
             BaseGimmick.TimeSig = NewGimmick.TimeSig;
             BaseGimmick.HiSpeed = NewGimmick.HiSpeed;
+            BaseGimmick.ScrollLayer = NewGimmick.ScrollLayer;
             
             Chart.GenerateTimeEvents();
             Chart.GenerateTimeScales();
