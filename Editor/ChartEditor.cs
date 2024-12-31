@@ -62,6 +62,7 @@ public class ChartEditor
     public BonusType CurrentBonusType { get; set; } = BonusType.None;
     public MaskDirection CurrentMaskDirection { get; set; } = MaskDirection.Clockwise;
     public TraceColor CurrentTraceColor => (TraceColor)mainView.TraceColorComboBox.SelectedIndex;
+    public ScrollLayer CurrentScrollLayer => (ScrollLayer)(mainView.ScrollLayerComboBox.SelectedIndex + 1);
 
     public bool LayerNoteActive = true;
     public bool LayerMaskActive = true;
@@ -682,6 +683,7 @@ public class ChartEditor
                     Position = Cursor.Position,
                     Size = Cursor.Size,
                     Color = CurrentTraceColor,
+                    ScrollLayer = CurrentScrollLayer,
                 };
                 
                 // Force bonusType to none for masks
@@ -720,6 +722,7 @@ public class ChartEditor
                     Size = Cursor.Size,
                     PrevReferencedNote = LastPlacedNote,
                     Color = LastPlacedNote.Color,
+                    ScrollLayer = LastPlacedNote.ScrollLayer,
                 };
 
                 LastPlacedNote.NextReferencedNote = note;
@@ -779,6 +782,7 @@ public class ChartEditor
             BeatData = CurrentBeatData,
             HiSpeed = hiSpeed,
             GimmickType = GimmickType.HiSpeedChange,
+            ScrollLayer = CurrentScrollLayer,
         };
         
         UndoRedoManager.InvokeAndPush(new InsertGimmick(Chart, gimmick));
@@ -796,12 +800,14 @@ public class ChartEditor
         {
             BeatData = new(start),
             GimmickType = GimmickType.StopStart,
+            ScrollLayer = CurrentScrollLayer,
         };
 
         Gimmick endGimmick = new()
         {
             BeatData = new(end),
             GimmickType = GimmickType.StopEnd,
+            ScrollLayer = CurrentScrollLayer,
         };
         
         UndoRedoManager.InvokeAndPush(new CompositeOperation([new InsertGimmick(Chart, startGimmick), new InsertGimmick(Chart, endGimmick)]));
