@@ -120,7 +120,7 @@ public class RenderEngine(MainView mainView)
     public float GetMeasureDecimalAtPointer(SKPoint point)
     {
         float clickRadius = (1 - MathExtensions.InversePerspective(point.Length)) * visibleDistanceMeasureDecimal;
-        return clickRadius + ScaledCurrentMeasureDecimal(ScrollLayer.L0);
+        return clickRadius + CurrentMeasureDecimal;
     }
     
     public ChartElement? GetChartElementAtPointer(Chart chart, SKPoint point, bool includeGimmicks, bool layerNote, bool layerMask, bool layerGimmick)

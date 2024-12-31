@@ -52,7 +52,7 @@ public static class MathExtensions
     {
         // Huge thanks to CG505 for figuring out the perspective math:
         // https://www.desmos.com/calculator/9a0srmgktj
-        return 3.325f * x / (13.825f - 10.5f * x);
+        return float.Clamp(3.325f * x / (13.825f - 10.5f * x), 0, 1);
     }
 
     public static float InversePerspective(float x)

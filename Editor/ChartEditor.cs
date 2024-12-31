@@ -513,15 +513,15 @@ public class ChartEditor
         void selectForward()
         {
             if (BoxSelect.SelectionStart is null) return;
-
+            
             IEnumerable<Note> selectable = Chart.Notes.Where(x =>
             {
-                bool afterStart = x.BeatData.FullTick >= BoxSelect.SelectionStart.FullTick;
-                bool beforeCursor = mainView.RenderEngine.GetNoteScale(Chart, x.BeatData.MeasureDecimal, x.ScrollLayer) > clickRadius;
-
                 bool isLayerActive = x.IsMask && LayerMaskActive || x.IsNote && LayerNoteActive || x.NoteType == NoteType.Trace && LayerTraceActive;
+                bool afterStart = x.BeatData.FullTick >= BoxSelect.SelectionStart.FullTick;
+                bool beforeCurrent = x.BeatData.FullTick <= CurrentBeatData.FullTick;
+                bool noteScale = mainView.RenderEngine.GetNoteScale(Chart, x.BeatData.MeasureDecimal, x.ScrollLayer) >= clickRadius;
 
-                return afterStart && beforeCursor && isLayerActive && MathExtensions.IsPartiallyOverlapping(x.Position, x.Position + x.Size, BoxSelect.Position, BoxSelect.Position + BoxSelect.Size);
+                return isLayerActive && afterStart && (beforeCurrent || noteScale) && MathExtensions.IsPartiallyOverlapping(x.Position, x.Position + x.Size, BoxSelect.Position, BoxSelect.Position + BoxSelect.Size);
             });
             
             foreach (Note note in selectable)
@@ -533,15 +533,15 @@ public class ChartEditor
         void selectBackward()
         {
             if (BoxSelect.SelectionStart is null) return;
-
+            
             IEnumerable<Note> selectable = Chart.Notes.Where(x =>
             {
-                bool beforeStart = x.BeatData.FullTick < BoxSelect.SelectionStart.FullTick;
-                bool afterCursor = mainView.RenderEngine.GetNoteScale(Chart, x.BeatData.MeasureDecimal, x.ScrollLayer) < clickRadius;
-
                 bool isLayerActive = x.IsMask && LayerMaskActive || x.IsNote && LayerNoteActive || x.NoteType == NoteType.Trace && LayerTraceActive;
-
-                return beforeStart && afterCursor && isLayerActive && MathExtensions.IsPartiallyOverlapping(x.Position, x.Position + x.Size, BoxSelect.Position, BoxSelect.Position + BoxSelect.Size);
+                bool beforeStart = x.BeatData.FullTick <= BoxSelect.SelectionStart.FullTick;
+                bool afterCurrent = x.BeatData.FullTick >= CurrentBeatData.FullTick;
+                bool noteScale = mainView.RenderEngine.GetNoteScale(Chart, x.BeatData.MeasureDecimal, x.ScrollLayer) <= clickRadius;
+                
+                return beforeStart && afterCurrent && noteScale && isLayerActive && MathExtensions.IsPartiallyOverlapping(x.Position, x.Position + x.Size, BoxSelect.Position, BoxSelect.Position + BoxSelect.Size);
             });
             
             foreach (Note note in selectable)

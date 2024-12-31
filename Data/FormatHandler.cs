@@ -96,10 +96,19 @@ public static class FormatHandler
     /// </summary>
     public static IEnumerable<Note> ParseClipboard(string clipboard)
     {
-        string[] objects = clipboard.Split(["\r\n", "\r", "\n"], StringSplitOptions.RemoveEmptyEntries);
-        List<Note> notes = [];
-        SatHandler.ParseObjects(objects, notes);
-        return notes;
+        try
+        {
+            string[] objects = clipboard.Split(["\r\n", "\r", "\n"], StringSplitOptions.RemoveEmptyEntries);
+            List<Note> notes = [];
+            SatHandler.ParseObjects(objects, notes);
+            return notes;
+        }
+        catch
+        {
+            // ignored
+        }
+
+        return new List<Note>();
     }
 
     /// <summary>
