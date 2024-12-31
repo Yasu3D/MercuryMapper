@@ -53,6 +53,7 @@ public static class Proofreader
         checkEndOfChart();
         checkNotesAfterEndOfChart();
         checkNotesBeforeEndOfChart();
+        checkDelayedEndOfChart();
         checkSmallNotes();
         checkSmallerThanLegalNotes();
         checkLargerThanLegalNotes();
@@ -107,6 +108,20 @@ public static class Proofreader
             }
         }
 
+        void checkDelayedEndOfChart()
+        {
+            if (chart.EndOfChart == null) return;
+
+            int lastNote = chart.Notes.LastOrDefault(x => x.IsNote)?.BeatData.FullTick ?? 0;
+            int endOfChart = chart.EndOfChart.BeatData.FullTick;
+            
+            if (int.Abs(endOfChart - lastNote) > 7680)
+            {
+                AddMessage(textBlock, MessageType.Warning, $"End of Chart @ {chart.EndOfChart.BeatData.Measure} {chart.EndOfChart.BeatData.Tick} comes > 4 Measures after the last Note.\n");
+                AddMessage(textBlock, MessageType.None, "The End of Chart Note should come ~1-4 measures after the last Note. Enough time to allow the Navigator to say ALL MARVELOUS!, but not so long that the player has to wait.\n\n");
+            }
+        }
+        
         void checkNotesBeforeEndOfChart()
         {
             if (chart.EndOfChart == null) return;
