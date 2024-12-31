@@ -161,7 +161,7 @@ internal static class MerHandler
             chart.StartBpm = chart.Gimmicks.LastOrDefault(x => x.BeatData.FullTick == 0 && x.GimmickType is GimmickType.BpmChange);
             chart.StartTimeSig = chart.Gimmicks.LastOrDefault(x => x.BeatData.FullTick == 0 && x.GimmickType is GimmickType.TimeSigChange);
 
-            chart.GenerateTimeEvents();
+            chart.GenerateMetreEvents();
             chart.GenerateTimeScales();
 
             chart.IsSaved = false;
@@ -225,7 +225,7 @@ internal static class MerHandler
                     // End Of Chart
                     if (noteTypeId == 14)
                     {
-                        Gimmick newGimmick = new(measure, tick, GimmickType.EndOfChart, ScrollLayer.L1, "", "");
+                        Gimmick newGimmick = new(measure, tick, GimmickType.EndOfChart, ScrollLayer.L0, "", "");
                         chart.Gimmicks.Add(newGimmick);
                         continue;
                     }
@@ -233,7 +233,7 @@ internal static class MerHandler
                     NoteType noteType = Note.NoteTypeFromMerId(noteTypeId);
                     BonusType bonusType = Note.BonusTypeFromMerId(noteTypeId);
                     
-                    Note newNote = new(measure, tick, noteType, bonusType, noteIndex, position, size, renderSegment, TraceColor.White, ScrollLayer.L1);
+                    Note newNote = new(measure, tick, noteType, bonusType, noteIndex, position, size, renderSegment, TraceColor.White, ScrollLayer.L0);
 
                     // hold start & segments
                     if (noteTypeId is 9 or 10 or 25 && split.Length >= 9)
@@ -276,7 +276,7 @@ internal static class MerHandler
                         value1 = split[3];
                     }
 
-                    Gimmick newGimmick = new(measure, tick, (GimmickType)objectId, ScrollLayer.L1, value1, value2);
+                    Gimmick newGimmick = new(measure, tick, (GimmickType)objectId, ScrollLayer.L0, value1, value2);
                     chart.Gimmicks.Add(newGimmick);
                 }
             }
@@ -410,7 +410,7 @@ internal static class SatHandler
             chart.StartBpm = chart.Gimmicks.LastOrDefault(x => x.BeatData.FullTick == 0 && x.GimmickType is GimmickType.BpmChange);
             chart.StartTimeSig = chart.Gimmicks.LastOrDefault(x => x.BeatData.FullTick == 0 && x.GimmickType is GimmickType.TimeSigChange);
 
-            chart.GenerateTimeEvents();
+            chart.GenerateMetreEvents();
             chart.GenerateTimeScales();
 
             chart.IsSaved = true;
@@ -920,10 +920,11 @@ internal static class SatHandler
 
     private static ScrollLayer String2ScrollLayer(string[] attributes)
     {
-        if (attributes.Length < 2) return ScrollLayer.L1;
+        if (attributes.Length < 2) return ScrollLayer.L0;
 
         foreach (string a in attributes)
         {
+            if (a == "L0") return ScrollLayer.L0;
             if (a == "L1") return ScrollLayer.L1;
             if (a == "L2") return ScrollLayer.L2;
             if (a == "L3") return ScrollLayer.L3;
@@ -932,9 +933,10 @@ internal static class SatHandler
             if (a == "L6") return ScrollLayer.L6;
             if (a == "L7") return ScrollLayer.L7;
             if (a == "L8") return ScrollLayer.L8;
+            if (a == "L9") return ScrollLayer.L9;
         }
 
-        return ScrollLayer.L1;
+        return ScrollLayer.L0;
     }
     
     private static GimmickType String2GimmickType(string name)
@@ -1048,13 +1050,14 @@ internal static class SatHandler
             sb.Append(".NR");
         }
 
-        if (note.ScrollLayer != ScrollLayer.L1 && !note.IsMask)
+        if (note.ScrollLayer != ScrollLayer.L0 && !note.IsMask)
         {
             Console.WriteLine("Waa");
             
             sb.Append(note.ScrollLayer switch
             {
-                ScrollLayer.L1 => ".L1", // just for completeness.
+                ScrollLayer.L0 => ".L0", // just for completeness.
+                ScrollLayer.L1 => ".L1",
                 ScrollLayer.L2 => ".L2", 
                 ScrollLayer.L3 => ".L3", 
                 ScrollLayer.L4 => ".L4", 
@@ -1062,6 +1065,7 @@ internal static class SatHandler
                 ScrollLayer.L6 => ".L6", 
                 ScrollLayer.L7 => ".L7", 
                 ScrollLayer.L8 => ".L8",
+                ScrollLayer.L9 => ".L9",
                 _ => "",
             });
         }

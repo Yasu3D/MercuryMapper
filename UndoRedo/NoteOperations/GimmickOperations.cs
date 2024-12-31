@@ -12,7 +12,7 @@ public class InsertGimmick(Chart chart, Gimmick gimmick) : IOperation
         lock (Chart)
         {
             Chart.Gimmicks.Remove(Gimmick);
-            Chart.GenerateTimeEvents();
+            Chart.GenerateMetreEvents();
             Chart.GenerateTimeScales();
             Chart.ChartEditor.UpdateVisibleTimeInRenderEngine();
         }
@@ -23,7 +23,7 @@ public class InsertGimmick(Chart chart, Gimmick gimmick) : IOperation
         lock (Chart)
         {
             Chart.Gimmicks.Add(Gimmick);
-            Chart.GenerateTimeEvents();
+            Chart.GenerateMetreEvents();
             Chart.GenerateTimeScales();
             Chart.ChartEditor.UpdateVisibleTimeInRenderEngine();
         }
@@ -47,7 +47,7 @@ public class EditGimmick(Chart chart, Gimmick gimmick, Gimmick newGimmick) : IOp
             BaseGimmick.HiSpeed = OldGimmick.HiSpeed;
             BaseGimmick.ScrollLayer = OldGimmick.ScrollLayer;
             
-            Chart.GenerateTimeEvents();
+            Chart.GenerateMetreEvents();
             Chart.GenerateTimeScales();
             Chart.ChartEditor.UpdateVisibleTimeInRenderEngine();
         }
@@ -63,7 +63,7 @@ public class EditGimmick(Chart chart, Gimmick gimmick, Gimmick newGimmick) : IOp
             BaseGimmick.HiSpeed = NewGimmick.HiSpeed;
             BaseGimmick.ScrollLayer = NewGimmick.ScrollLayer;
             
-            Chart.GenerateTimeEvents();
+            Chart.GenerateMetreEvents();
             Chart.GenerateTimeScales();
             Chart.ChartEditor.UpdateVisibleTimeInRenderEngine();
         }
@@ -80,7 +80,7 @@ public class DeleteGimmick(Chart chart, Gimmick gimmick) : IOperation
         lock (Chart)
         {
             Chart.Gimmicks.Add(Gimmick);
-            Chart.GenerateTimeEvents();
+            Chart.GenerateMetreEvents();
             Chart.GenerateTimeScales();
             Chart.ChartEditor.UpdateVisibleTimeInRenderEngine();
         }
@@ -91,7 +91,7 @@ public class DeleteGimmick(Chart chart, Gimmick gimmick) : IOperation
         lock (Chart)
         {
             Chart.Gimmicks.Remove(Gimmick);
-            Chart.GenerateTimeEvents();
+            Chart.GenerateMetreEvents();
             Chart.GenerateTimeScales();
             Chart.ChartEditor.UpdateVisibleTimeInRenderEngine();
         }

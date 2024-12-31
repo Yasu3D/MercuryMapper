@@ -1467,7 +1467,7 @@ public partial class MainView : UserControl
             point.X /= 0.9f;
             point.Y /= 0.9f;
 
-            ChartEditor.RunBoxSelect(RenderEngine.GetMeasureDecimalAtPointer(ChartEditor.Chart, point));
+            ChartEditor.RunBoxSelect(RenderEngine.GetMeasureDecimalAtPointer(ChartEditor.Chart, point, ScrollLayer.L0)); // TODO: FIX
         }
     }
 
@@ -2707,7 +2707,7 @@ public partial class MainView : UserControl
 
     private void ButtonPaintTraces_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.PaintTraces((TraceColor)TraceColorComboBox.SelectedIndex);
 
-    private void ButtonSetScrollLayer_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.SetScrollLayer((ScrollLayer)ScrollLayerComboBox.SelectedIndex + 1); // +1 because index is zero-based and layers start at 1.
+    private void ButtonSetScrollLayer_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.SetScrollLayer((ScrollLayer)ScrollLayerComboBox.SelectedIndex);
     
     private void ButtonEditGimmick_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.EditGimmick();
 

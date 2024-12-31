@@ -54,15 +54,13 @@ public class BeatData
 
 public class TimeScaleData
 {
-    public float MeasureDecimal { get; set; }
-    public float ScaledMeasureDecimal { get; set; }
-    public float ScaledMeasureDecimalHiSpeed { get; set; }
+    public BeatData RawBeatData;
+    public BeatData UnscaledBeatData;
+    public BeatData ScaledBeatData;
 
-    public float HiSpeed { get; set; }
-    public float TimeSigRatio { get; set; }
-    public float BpmRatio { get; set; }
-
-    public bool IsLast { get; set; }
+    public float MetreMultiplier;
+    public float SpeedMultiplier;
+    public bool IsLast;
 }
 
 public class TimeSig(int upper, int lower)
@@ -78,7 +76,7 @@ public class ChartElement
 {
     public BeatData BeatData { get; set; } = new(-1, 0);
     public Guid Guid { get; set; } = Guid.NewGuid();
-    public ScrollLayer ScrollLayer { get; set; } = ScrollLayer.L1;
+    public ScrollLayer ScrollLayer { get; set; } = ScrollLayer.L0;
 }
 
 public class Gimmick : ChartElement
@@ -137,6 +135,7 @@ public class Gimmick : ChartElement
 
     public bool IsReverse => GimmickType is GimmickType.ReverseEffectStart or GimmickType.ReverseEffectEnd or GimmickType.ReverseNoteEnd;
     public bool IsStop => GimmickType is GimmickType.StopStart or GimmickType.StopEnd;
+    public bool IsTimeScale => GimmickType is GimmickType.BpmChange or GimmickType.TimeSigChange or GimmickType.HiSpeedChange or GimmickType.StopStart or GimmickType.StopEnd;
 
     public string ToNetworkString()
     {

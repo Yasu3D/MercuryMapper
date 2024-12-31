@@ -62,7 +62,7 @@ public class ChartEditor
     public BonusType CurrentBonusType { get; set; } = BonusType.None;
     public MaskDirection CurrentMaskDirection { get; set; } = MaskDirection.Clockwise;
     public TraceColor CurrentTraceColor => (TraceColor)mainView.TraceColorComboBox.SelectedIndex;
-    public ScrollLayer CurrentScrollLayer => (ScrollLayer)(mainView.ScrollLayerComboBox.SelectedIndex + 1);
+    public ScrollLayer CurrentScrollLayer => (ScrollLayer)mainView.ScrollLayerComboBox.SelectedIndex;
 
     public bool LayerNoteActive = true;
     public bool LayerMaskActive = true;
@@ -143,7 +143,7 @@ public class ChartEditor
             Chart.StartTimeSig = startTimeSig;
             Chart.BpmText = startBpm.Bpm.ToString(CultureInfo.InvariantCulture);
 
-            Chart.GenerateTimeEvents();
+            Chart.GenerateMetreEvents();
             Chart.GenerateTimeScales();
             
             Chart.Notes.Add(startMask);

@@ -33,7 +33,6 @@ public class RenderEngine(MainView mainView)
     private bool IsPlaying => mainView.AudioManager.CurrentSong is { IsPlaying: true };
     private float visibleDistanceMeasureDecimal;
     private float CurrentMeasureDecimal => mainView.ChartEditor.CurrentMeasureDecimal;
-    private float ScaledCurrentMeasureDecimal => Chart.GetScaledMeasureDecimal(CurrentMeasureDecimal, RenderConfig.ShowHiSpeed);
     private RenderConfig RenderConfig => mainView.UserConfig.RenderConfig;
     private readonly Random random = new();
 
@@ -118,16 +117,16 @@ public class RenderEngine(MainView mainView)
     
     // ________________
 
-    public float GetMeasureDecimalAtPointer(Chart chart, SKPoint point)
+    public float GetMeasureDecimalAtPointer(Chart chart, SKPoint point, ScrollLayer scrollLayer)
     {
         float clickRadius = (1 - MathExtensions.InversePerspective(point.Length)) * visibleDistanceMeasureDecimal;
-        return chart.GetUnscaledMeasureDecimal(clickRadius + ScaledCurrentMeasureDecimal, RenderConfig.ShowHiSpeed);
+        return chart.GetUnscaledMeasureDecimal(clickRadius + ScaledCurrentMeasureDecimal(scrollLayer), RenderConfig.ShowHiSpeed, scrollLayer);
     }
     
     public ChartElement? GetChartElementAtPointer(Chart chart, SKPoint point, bool includeGimmicks, bool layerNote, bool layerMask, bool layerGimmick)
     {
         int clickPosition = MathExtensions.GetThetaNotePosition(point.X, point.Y);
-        float measureDecimal = GetMeasureDecimalAtPointer(chart, point);
+        float measureDecimal = GetMeasureDecimalAtPointer(chart, point, ScrollLayer.L0); // TODO: REWORK
         
         // Holy mother of LINQ
         List<Note> clickedNotes = chart.Notes
@@ -154,10 +153,10 @@ public class RenderEngine(MainView mainView)
     }
     
     // ________________
-    private float GetNoteScale(Chart chart, float measureDecimal)
+    private float GetNoteScale(Chart chart, float measureDecimal, ScrollLayer scrollLayer)
     {
-        float scaledMeasureDecimal = chart.GetScaledMeasureDecimal(measureDecimal, RenderConfig.ShowHiSpeed);
-        float scale = 1 - (scaledMeasureDecimal - ScaledCurrentMeasureDecimal) / visibleDistanceMeasureDecimal;
+        float scaledMeasureDecimal = chart.GetScaledMeasureDecimal(measureDecimal, RenderConfig.ShowHiSpeed, scrollLayer);
+        float scale = 1 - (scaledMeasureDecimal - ScaledCurrentMeasureDecimal(scrollLayer)) / visibleDistanceMeasureDecimal;
         return MathExtensions.Perspective(scale);
     }
 
@@ -171,7 +170,7 @@ public class RenderEngine(MainView mainView)
     {
         float startAngle = note.Position * -6;
         float sweepAngle = note.Size * -6;
-        float scale = GetNoteScale(chart, note.BeatData.MeasureDecimal);
+        float scale = GetNoteScale(chart, note.BeatData.MeasureDecimal, note.ScrollLayer);
         SKRect rect = GetRect(scale);
 
         return new(rect, scale, startAngle, sweepAngle);
@@ -179,7 +178,7 @@ public class RenderEngine(MainView mainView)
 
     private ArcData GetArc(Chart chart, Gimmick gimmick)
     {
-        float scale = GetNoteScale(chart, gimmick.BeatData.MeasureDecimal);
+        float scale = GetNoteScale(chart, gimmick.BeatData.MeasureDecimal, gimmick.ScrollLayer);
         SKRect rect = GetRect(scale);
 
         return new(rect, scale, 0, 360);
@@ -279,8 +278,10 @@ public class RenderEngine(MainView mainView)
         data.SweepAngle *= -1;
     }
 
-    private bool ElementOnSameLayer(ChartElement element) => !RenderConfig.HideNotesOnDifferentLayers || element.ScrollLayer == (ScrollLayer)(mainView.ScrollLayerComboBox.SelectedIndex + 1);
-    
+    private bool ElementOnSameLayer(ChartElement element) => !RenderConfig.HideNotesOnDifferentLayers || element.ScrollLayer == mainView.ChartEditor.CurrentScrollLayer;
+
+    private float ScaledCurrentMeasureDecimal(ScrollLayer scrollLayer) => Chart.GetScaledMeasureDecimal(CurrentMeasureDecimal, RenderConfig.ShowHiSpeed, scrollLayer);
+
     // ____ UI
     private void DrawBackground(SKCanvas canvas)
     {
@@ -480,10 +481,10 @@ public class RenderEngine(MainView mainView)
     {
         if (BoxSelect.SelectionStart is null) return;
 
-        float selectionStartScale = BoxSelect.SelectionStart.MeasureDecimal <= CurrentMeasureDecimal ? 1 : GetNoteScale(chart, BoxSelect.SelectionStart.MeasureDecimal);
+        float selectionStartScale = BoxSelect.SelectionStart.MeasureDecimal <= CurrentMeasureDecimal ? 1 : GetNoteScale(chart, BoxSelect.SelectionStart.MeasureDecimal, ScrollLayer.L0);
         SKRect selectionStartRect = GetRect(selectionStartScale);
         
-        float selectionEndScale = float.Min(1, GetNoteScale(chart, GetMeasureDecimalAtPointer(chart, PointerPosition)));
+        float selectionEndScale = float.Min(1, GetNoteScale(chart, GetMeasureDecimalAtPointer(chart, PointerPosition, ScrollLayer.L0), ScrollLayer.L0));
         SKRect selectionEndRect = GetRect(selectionEndScale);
 
         float startAngle = BoxSelect.Position * -6;
@@ -528,9 +529,9 @@ public class RenderEngine(MainView mainView)
         foreach (KeyValuePair<int, Peer> peer in mainView.PeerManager.Peers)
         {
             float measureDecimal = chart.Timestamp2MeasureDecimal(peer.Value.Timestamp);
-            if (!MathExtensions.GreaterAlmostEqual(measureDecimal, CurrentMeasureDecimal) || chart.GetScaledMeasureDecimal(measureDecimal, RenderConfig.ShowHiSpeed) > ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal) return;
+            if (!MathExtensions.GreaterAlmostEqual(measureDecimal, CurrentMeasureDecimal) || chart.GetScaledMeasureDecimal(measureDecimal, RenderConfig.ShowHiSpeed, ScrollLayer.L0) > ScaledCurrentMeasureDecimal(ScrollLayer.L0) + visibleDistanceMeasureDecimal) return;
             
-            float scale = GetNoteScale(chart, measureDecimal);
+            float scale = GetNoteScale(chart, measureDecimal, ScrollLayer.L0);
             SKRect rect = GetRect(scale);
             
             canvas.DrawOval(rect, brushes.GetPeerPen(peer.Value.SkiaColor, scale));
@@ -542,15 +543,15 @@ public class RenderEngine(MainView mainView)
     {
         float interval = 1.0f / RenderConfig.BeatDivision;
         float start = MathF.Ceiling(CurrentMeasureDecimal * RenderConfig.BeatDivision) * interval;
-        float end = ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal;
+        float end = ScaledCurrentMeasureDecimal(ScrollLayer.L0) + visibleDistanceMeasureDecimal;
         
-        for (float i = start; chart.GetScaledMeasureDecimal(i, RenderConfig.ShowHiSpeed) < end; i += interval)
+        for (float i = start; chart.GetScaledMeasureDecimal(i, RenderConfig.ShowHiSpeed, ScrollLayer.L0) < end; i += interval)
         {
-            TimeScaleData? timeScaleData = chart.BinarySearchTimeScales(i);
+            TimeScaleData? timeScaleData = chart.BinarySearchTimeScales(i, ScrollLayer.L0);
             if (timeScaleData == null) break;
-            if (timeScaleData is { HiSpeed: <= 0.001f, IsLast: true }) break;
+            if (timeScaleData.SpeedMultiplier < 0.001f && timeScaleData.IsLast) break;
                 
-            float scale = GetNoteScale(chart, i);
+            float scale = GetNoteScale(chart, i, ScrollLayer.L0);
             SKRect rect = GetRect(scale);
             if (!InRange(scale)) continue;
 
@@ -564,7 +565,7 @@ public class RenderEngine(MainView mainView)
         IEnumerable<Gimmick> visibleGimmicks = chart.Gimmicks.Where(x =>
             MathExtensions.GreaterAlmostEqual(x.BeatData.MeasureDecimal, CurrentMeasureDecimal)
             && ElementOnSameLayer(x)
-            && chart.GetScaledMeasureDecimal(x.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) <= ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal).Reverse();
+            && chart.GetScaledMeasureDecimal(x.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed, x.ScrollLayer) <= ScaledCurrentMeasureDecimal(x.ScrollLayer) + visibleDistanceMeasureDecimal).Reverse();
 
         foreach (Gimmick gimmick in visibleGimmicks)
         {
@@ -582,7 +583,7 @@ public class RenderEngine(MainView mainView)
         IEnumerable<Note> visibleNotes = chart.Notes.Where(x =>
             x.IsMask
             && MathExtensions.GreaterAlmostEqual(x.BeatData.MeasureDecimal, CurrentMeasureDecimal)
-            && chart.GetScaledMeasureDecimal(x.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) <= ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal).Reverse();
+            && chart.GetScaledMeasureDecimal(x.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed, x.ScrollLayer) <= ScaledCurrentMeasureDecimal(x.ScrollLayer) + visibleDistanceMeasureDecimal).Reverse();
         
         foreach (Note note in visibleNotes)
         {
@@ -603,12 +604,12 @@ public class RenderEngine(MainView mainView)
         {
             Note? next = x.NextVisibleReference(RenderConfig.DrawNoRenderSegments);
             
-            float scaledMeasureDecimal = chart.GetScaledMeasureDecimal(x.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed);
-            float visibleDistance = ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal;
+            float scaledMeasureDecimal = chart.GetScaledMeasureDecimal(x.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed, x.ScrollLayer);
+            float visibleDistance = ScaledCurrentMeasureDecimal(x.ScrollLayer) + visibleDistanceMeasureDecimal;
 
-            bool inFrontOfCamera = MathExtensions.GreaterAlmostEqual(scaledMeasureDecimal, ScaledCurrentMeasureDecimal);
+            bool inFrontOfCamera = MathExtensions.GreaterAlmostEqual(scaledMeasureDecimal, ScaledCurrentMeasureDecimal(x.ScrollLayer));
             bool inVisibleDistance = MathExtensions.GreaterAlmostEqual(x.BeatData.MeasureDecimal, CurrentMeasureDecimal) && scaledMeasureDecimal <= visibleDistance;
-            bool nextOutsideVisibleDistance = next != null && chart.GetScaledMeasureDecimal(next.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) > visibleDistance;
+            bool nextOutsideVisibleDistance = next != null && chart.GetScaledMeasureDecimal(next.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed, x.ScrollLayer) > visibleDistance;
 
             bool inVisionRange = inFrontOfCamera && inVisibleDistance;
             bool aroundVisionRange = !inFrontOfCamera && nextOutsideVisibleDistance;
@@ -692,12 +693,12 @@ public class RenderEngine(MainView mainView)
         {
             Note? next = x.NextVisibleReference(RenderConfig.DrawNoRenderSegments);
             
-            float scaledMeasureDecimal = chart.GetScaledMeasureDecimal(x.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed);
-            float visibleDistance = ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal;
+            float scaledMeasureDecimal = chart.GetScaledMeasureDecimal(x.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed, x.ScrollLayer);
+            float visibleDistance = ScaledCurrentMeasureDecimal(x.ScrollLayer) + visibleDistanceMeasureDecimal;
 
-            bool inFrontOfCamera = MathExtensions.GreaterAlmostEqual(scaledMeasureDecimal, ScaledCurrentMeasureDecimal);
+            bool inFrontOfCamera = MathExtensions.GreaterAlmostEqual(scaledMeasureDecimal, ScaledCurrentMeasureDecimal(x.ScrollLayer));
             bool inVisibleDistance = MathExtensions.GreaterAlmostEqual(x.BeatData.MeasureDecimal, CurrentMeasureDecimal) && scaledMeasureDecimal <= visibleDistance;
-            bool nextOutsideVisibleDistance = next != null && chart.GetScaledMeasureDecimal(next.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) > visibleDistance;
+            bool nextOutsideVisibleDistance = next != null && chart.GetScaledMeasureDecimal(next.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed, x.ScrollLayer) > visibleDistance;
 
             bool inVisionRange = inFrontOfCamera && inVisibleDistance;
             bool aroundVisionRange = !inFrontOfCamera && nextOutsideVisibleDistance;
@@ -739,8 +740,8 @@ public class RenderEngine(MainView mainView)
     {
         List<Note> visibleNotes = chart.Notes.Where(x =>
         {
-            bool inVision = MathExtensions.GreaterAlmostEqual(x.BeatData.MeasureDecimal, CurrentMeasureDecimal) && chart.GetScaledMeasureDecimal(x.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) <= ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal;
-            bool nextOutsideVision = x.NextReferencedNote != null && x.BeatData.MeasureDecimal < CurrentMeasureDecimal && chart.GetScaledMeasureDecimal(x.NextReferencedNote.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) > ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal;
+            bool inVision = MathExtensions.GreaterAlmostEqual(x.BeatData.MeasureDecimal, CurrentMeasureDecimal) && chart.GetScaledMeasureDecimal(x.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed, x.ScrollLayer) <= ScaledCurrentMeasureDecimal(x.ScrollLayer) + visibleDistanceMeasureDecimal;
+            bool nextOutsideVision = x.NextReferencedNote != null && x.BeatData.MeasureDecimal < CurrentMeasureDecimal && chart.GetScaledMeasureDecimal(x.NextReferencedNote.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed, x.ScrollLayer) > ScaledCurrentMeasureDecimal(x.ScrollLayer) + visibleDistanceMeasureDecimal;
 
             return x.NoteType == NoteType.Hold && (inVision || nextOutsideVision) && ElementOnSameLayer(x);
         }).ToList();
@@ -752,7 +753,7 @@ public class RenderEngine(MainView mainView)
             else TrimCircleArc(ref currentData);
 
             bool currentVisible = note.BeatData.MeasureDecimal >= CurrentMeasureDecimal;
-            bool nextVisible = note.NextReferencedNote != null && chart.GetScaledMeasureDecimal(note.NextReferencedNote.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) <= ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal;
+            bool nextVisible = note.NextReferencedNote != null && chart.GetScaledMeasureDecimal(note.NextReferencedNote.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed, note.ScrollLayer) <= ScaledCurrentMeasureDecimal(note.ScrollLayer) + visibleDistanceMeasureDecimal;
             bool prevVisible = note.PrevReferencedNote != null && note.PrevReferencedNote.BeatData.MeasureDecimal >= CurrentMeasureDecimal;
 
             if (currentVisible && nextVisible)
@@ -831,7 +832,7 @@ public class RenderEngine(MainView mainView)
         Note[] visibleNotes = chart.Notes.Where(x =>
         {
             bool behindCamera = !MathExtensions.GreaterAlmostEqual(x.BeatData.MeasureDecimal, CurrentMeasureDecimal);
-            bool pastVisionLimit = chart.GetScaledMeasureDecimal(x.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) > ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal;
+            bool pastVisionLimit = chart.GetScaledMeasureDecimal(x.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed, x.ScrollLayer) > ScaledCurrentMeasureDecimal(x.ScrollLayer) + visibleDistanceMeasureDecimal;
 
             return x.IsNote && !behindCamera && !pastVisionLimit && ElementOnSameLayer(x);
         }).ToArray();
@@ -1093,8 +1094,8 @@ public class RenderEngine(MainView mainView)
         
         void drawSlide()
         {
-            float scaledMeasureDecimal = chart.GetScaledMeasureDecimal(note.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed);
-            float spin = 1 - (scaledMeasureDecimal - ScaledCurrentMeasureDecimal) / visibleDistanceMeasureDecimal;
+            float scaledMeasureDecimal = chart.GetScaledMeasureDecimal(note.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed, note.ScrollLayer);
+            float spin = 1 - (scaledMeasureDecimal - ScaledCurrentMeasureDecimal(note.ScrollLayer)) / visibleDistanceMeasureDecimal;
 
             float radiusCenter = rect.Width * 0.42f;
             float arrowCount = note.Size * 0.5f + 1;
@@ -1234,6 +1235,7 @@ public class RenderEngine(MainView mainView)
     {
         if (invalidType(current)) return;
         if (invalidType(previous)) return;
+        if (current.ScrollLayer != previous.ScrollLayer) return;
         
         bool currentIsHoldStart = current.NoteType == NoteType.Hold && current.LinkType == NoteLinkType.Start;
         bool previousIsHoldStart = previous.NoteType == NoteType.Hold && previous.LinkType == NoteLinkType.Start;
@@ -1433,7 +1435,7 @@ public class RenderEngine(MainView mainView)
 
         // This must be one of them darn damn dangit hold notes where the first segment is behind the camera
         // and the second is outside of vision range. Aw shucks, we have to do some extra special work.
-        if (chart.GetScaledMeasureDecimal(collection.Notes[0].BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) < ScaledCurrentMeasureDecimal && collection.Notes.Count == 1)
+        if (chart.GetScaledMeasureDecimal(collection.Notes[0].BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed, collection.Notes[0].ScrollLayer) < ScaledCurrentMeasureDecimal(collection.Notes[0].ScrollLayer) && collection.Notes.Count == 1)
         {
             Note prev = collection.Notes[0];
             Note? next = prev.NextVisibleReference(RenderConfig.DrawNoRenderSegments);
@@ -1441,7 +1443,7 @@ public class RenderEngine(MainView mainView)
             if (next == null) return;
 
             // Aw, nevermind. It ain't one of them darn damn dangit hold notes where the first segment is behind the camera and the second is outside of vision range.
-            if (chart.GetScaledMeasureDecimal(next.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed) <= ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal) return;
+            if (chart.GetScaledMeasureDecimal(next.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed, next.ScrollLayer) <= ScaledCurrentMeasureDecimal(next.ScrollLayer) + visibleDistanceMeasureDecimal) return;
 
             ArcData prevData = GetTruncatedArc(chart, prev, truncateMode);
             ArcData nextData = GetTruncatedArc(chart, next, truncateMode);
@@ -1504,7 +1506,7 @@ public class RenderEngine(MainView mainView)
                     Note prevNote = note.PrevVisibleReference(RenderConfig.DrawNoRenderSegments)!;
                     ArcData prevData = GetTruncatedArc(chart, prevNote, truncateMode);
 
-                    float ratio = MathExtensions.InverseLerp(ScaledCurrentMeasureDecimal, chart.GetScaledMeasureDecimal(note.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed), chart.GetScaledMeasureDecimal(prevNote.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed));
+                    float ratio = MathExtensions.InverseLerp(ScaledCurrentMeasureDecimal(note.ScrollLayer), chart.GetScaledMeasureDecimal(note.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed, note.ScrollLayer), chart.GetScaledMeasureDecimal(prevNote.BeatData.MeasureDecimal, RenderConfig.ShowHiSpeed, note.ScrollLayer));
 
                     if (float.Abs(currentData.StartAngle - prevData.StartAngle) > 180)
                     {
@@ -1680,7 +1682,7 @@ public class RenderEngine(MainView mainView)
             float maxLate = float.Max(float.Max(window.MarvelousLate, window.GreatLate), window.GoodLate);
             
             if (maxLate < CurrentMeasureDecimal) continue;
-            if (chart.GetScaledMeasureDecimal(minEarly, RenderConfig.ShowHiSpeed) > ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal) continue;
+            if (chart.GetScaledMeasureDecimal(minEarly, RenderConfig.ShowHiSpeed, note.ScrollLayer) > ScaledCurrentMeasureDecimal(note.ScrollLayer) + visibleDistanceMeasureDecimal) continue;
             
             // Cut overlapping windows
             if (RenderConfig.CutOverlappingJudgementWindows)
@@ -1754,7 +1756,7 @@ public class RenderEngine(MainView mainView)
                 maxLate = float.Max(float.Max(window.MarvelousLate, window.GreatLate), window.GoodLate);
                 
                 if (maxLate < CurrentMeasureDecimal) continue;
-                if (chart.GetScaledMeasureDecimal(minEarly, RenderConfig.ShowHiSpeed) > ScaledCurrentMeasureDecimal + visibleDistanceMeasureDecimal) continue;
+                if (chart.GetScaledMeasureDecimal(minEarly, RenderConfig.ShowHiSpeed, note.ScrollLayer) > ScaledCurrentMeasureDecimal(note.ScrollLayer) + visibleDistanceMeasureDecimal) continue;
             }
             
             bool drawGreatEarly = window.GreatEarly < window.MarvelousEarly;
@@ -1765,12 +1767,12 @@ public class RenderEngine(MainView mainView)
             float startAngle = note.Position * -6;
             float sweepAngle = note.Size * -6 + 0.1f;
             
-            float marvelousEarlyScale = float.Clamp(GetNoteScale(chart, window.MarvelousEarly), 0, 1);
-            float marvelousLateScale = float.Clamp(GetNoteScale(chart, window.MarvelousLate), 0, 1);
-            float greatEarlyScale = float.Clamp(GetNoteScale(chart, window.GreatEarly), 0, 1);
-            float greatLateScale = float.Clamp(GetNoteScale(chart, window.GreatLate), 0, 1);
-            float goodEarlyScale = float.Clamp(GetNoteScale(chart, window.GoodEarly), 0, 1);
-            float goodLateScale = float.Clamp(GetNoteScale(chart, window.GoodLate), 0, 1);
+            float marvelousEarlyScale = float.Clamp(GetNoteScale(chart, window.MarvelousEarly, note.ScrollLayer), 0, 1);
+            float marvelousLateScale = float.Clamp(GetNoteScale(chart, window.MarvelousLate, note.ScrollLayer), 0, 1);
+            float greatEarlyScale = float.Clamp(GetNoteScale(chart, window.GreatEarly, note.ScrollLayer), 0, 1);
+            float greatLateScale = float.Clamp(GetNoteScale(chart, window.GreatLate, note.ScrollLayer), 0, 1);
+            float goodEarlyScale = float.Clamp(GetNoteScale(chart, window.GoodEarly, note.ScrollLayer), 0, 1);
+            float goodLateScale = float.Clamp(GetNoteScale(chart, window.GoodLate, note.ScrollLayer), 0, 1);
             
             // hacky but prevents a graphical glitch caused by scale jank.
             if (marvelousEarlyScale < marvelousLateScale) marvelousEarlyScale = 1; 

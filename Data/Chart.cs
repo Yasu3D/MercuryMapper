@@ -25,9 +25,9 @@ public class Chart(ChartEditor editor)
     public Gimmick? StartTimeSig { get; set; }
     
     public Gimmick? EndOfChart => Gimmicks.LastOrDefault(x => x.GimmickType is GimmickType.EndOfChart);
-    
-    private List<Gimmick>? TimeEvents { get; set; }
-    public List<TimeScaleData> TimeScales { get; } = [];
+
+    private List<Gimmick> MetreEvents { get; set; } = [];
+    private List<TimeScaleData>[] TimeScales { get; } = [[], [], [], [], [], [], [], [], [], []]; // 10 Lists
 
     public string Filepath { get; set; } = "";
     
@@ -59,8 +59,12 @@ public class Chart(ChartEditor editor)
         
         Notes.Clear();
         Gimmicks.Clear();
-        TimeEvents?.Clear();
-        TimeScales.Clear();
+        MetreEvents.Clear();
+
+        foreach (List<TimeScaleData> t in TimeScales)
+        {
+            t.Clear();
+        }
 
         Filepath = "";
         
@@ -102,11 +106,11 @@ public class Chart(ChartEditor editor)
     }
     
     /// <summary>
-    /// Generates "Time Events" [= Bpm/TimeSig changes merged into one list]
+    /// Generates "Metre Events" [= Bpm/TimeSig changes merged into one list]
     /// </summary>
-    public void GenerateTimeEvents()
+    public void GenerateMetreEvents()
     {
-        Gimmicks = Gimmicks.OrderBy(x => x.BeatData.MeasureDecimal).ToList();
+        Gimmicks = Gimmicks.OrderBy(x => x.BeatData.FullTick).ToList();
         Gimmick? timeSigChange = Gimmicks.FirstOrDefault(x => x is { GimmickType: GimmickType.TimeSigChange, BeatData.FullTick: 0 });
         Gimmick? bpmChange = Gimmicks.FirstOrDefault(x => x is { GimmickType: GimmickType.BpmChange, BeatData.FullTick: 0 });
         if (timeSigChange == null || bpmChange == null) return;
@@ -114,7 +118,7 @@ public class Chart(ChartEditor editor)
         float lastBpm = bpmChange.Bpm;
         TimeSig lastTimeSig = timeSigChange.TimeSig;
 
-        TimeEvents = [];
+        MetreEvents.Clear();
         
         foreach (Gimmick gimmick in Gimmicks)
         {
@@ -132,25 +136,88 @@ public class Chart(ChartEditor editor)
                 lastTimeSig = gimmick.TimeSig;
             }
             
-            TimeEvents.Add(gimmick);
+            MetreEvents.Add(gimmick);
         }
 
-        TimeEvents[0].TimeStamp = 0;
-        for (int i = 1; i < TimeEvents.Count; i++)
+        MetreEvents[0].TimeStamp = 0;
+        for (int i = 1; i < MetreEvents.Count; i++)
         {
-            Gimmick current = TimeEvents[i];
-            Gimmick previous = TimeEvents[i - 1];
+            Gimmick current = MetreEvents[i];
+            Gimmick previous = MetreEvents[i - 1];
 
             float timeDifference = current.BeatData.MeasureDecimal - previous.BeatData.MeasureDecimal;
-            TimeEvents[i].TimeStamp = timeDifference * (4 * previous.TimeSig.Ratio) * (60000.0f / previous.Bpm) + previous.TimeStamp;
+            MetreEvents[i].TimeStamp = timeDifference * (4 * previous.TimeSig.Ratio) * (60000.0f / previous.Bpm) + previous.TimeStamp;
         }
     }
 
     /// <summary>
-    /// Generates MeasureDecimals scaled by Time Events and HiSpeed.
+    /// Generates TimeScaleData objects for each Scroll Layer scaled by MetreEvents and HiSpeedChanges.
     /// </summary>
     public void GenerateTimeScales()
     {
+        // Always look for the last Gimmick at Time 0 in case there's multiple stacked on top of each other.
+        float startBpm = Gimmicks.Last(x => x.GimmickType is GimmickType.BpmChange && x.BeatData.FullTick == 0).Bpm;
+        float startTimeSigRatio = Gimmicks.Last(x => x.GimmickType is GimmickType.TimeSigChange && x.BeatData.FullTick == 0).TimeSig.Ratio;
+        
+        for (int i = 0; i < 10; i++)
+        {
+            TimeScales[i].Clear();
+
+            TimeScaleData last = new()
+            {
+                RawBeatData = new(0, 0),
+                UnscaledBeatData = new(0, 0),
+                ScaledBeatData = new(0, 0),
+                MetreMultiplier = 1,
+                SpeedMultiplier = 1,
+                IsLast = true,
+            };
+
+            TimeScales[i].Add(last);
+
+            foreach (Gimmick gimmick in Gimmicks)
+            {
+                if ((int)gimmick.ScrollLayer != i) continue;
+                if (!gimmick.IsTimeScale) continue;
+
+                BeatData rawBeatData = new(gimmick.BeatData);
+                
+                float delta = rawBeatData.MeasureDecimal - last.RawBeatData.MeasureDecimal;
+                float unscaledMeasureDecimal = last.UnscaledBeatData.MeasureDecimal + delta * last.MetreMultiplier;
+                float scaledMeasureDecimal = last.ScaledBeatData.MeasureDecimal + delta * last.MetreMultiplier * last.SpeedMultiplier;
+
+                BeatData unscaledBeatData = new(unscaledMeasureDecimal);
+                BeatData scaledBeatData = new(scaledMeasureDecimal);
+
+                Gimmick metreEvent = MetreEvents.Last(x => x.BeatData.FullTick <= rawBeatData.FullTick);
+                float metreMultiplier = (startBpm / metreEvent.Bpm) * (metreEvent.TimeSig.Ratio / startTimeSigRatio);
+                float speedMultiplier = gimmick.GimmickType switch
+                {
+                    GimmickType.HiSpeedChange => gimmick.HiSpeed,
+                    GimmickType.StopStart => 0,
+                    GimmickType.StopEnd => Gimmicks.LastOrDefault(x => x.BeatData.FullTick < gimmick.BeatData.FullTick && x.GimmickType is GimmickType.HiSpeedChange)?.HiSpeed ?? 1,
+                    _ => last.SpeedMultiplier,
+                };
+                
+                TimeScaleData data = new()
+                {
+                    RawBeatData = rawBeatData,
+                    UnscaledBeatData = unscaledBeatData,
+                    ScaledBeatData = scaledBeatData,
+                    MetreMultiplier = metreMultiplier,
+                    SpeedMultiplier = speedMultiplier,
+                };
+
+                TimeScales[i].Add(data);
+
+                last.IsLast = false;
+                data.IsLast = true;
+                
+                last = data;
+            }
+        }
+        
+        /*
         // Take Last at 0 instead of First because apparently there's
         // charts with multiple Bpm/TimeSig changes at Measure 0.
         float startBpm = Gimmicks.Last(x => x.GimmickType is GimmickType.BpmChange && x.BeatData.FullTick == 0).Bpm;
@@ -226,55 +293,70 @@ public class Chart(ChartEditor editor)
                 TimeSigRatio = newTimeSig ?? lastData.TimeSigRatio,
                 HiSpeed = newHiSpeed ?? lastData.HiSpeed,
             };
-        }
+        }*/
     }
     
     /// <summary>
     /// Finds nearest previous TimeScaleData via binary search and calculates ScaledMeasureDecimal off of it.
     /// </summary>
-    public float GetScaledMeasureDecimal(float measureDecimal, bool showHiSpeed)
+    public float GetScaledMeasureDecimal(float measureDecimal, bool showHiSpeed, ScrollLayer scrollLayer)
     {
-        TimeScaleData? timeScaleData = BinarySearchTimeScales(measureDecimal);
+        TimeScaleData? timeScaleData = BinarySearchTimeScales(measureDecimal, scrollLayer);
         if (timeScaleData == null) return measureDecimal;
-        
+
+        float delta = measureDecimal - timeScaleData.RawBeatData.MeasureDecimal;
+
         return showHiSpeed
-            ? timeScaleData.ScaledMeasureDecimalHiSpeed + (measureDecimal - timeScaleData.MeasureDecimal) * timeScaleData.HiSpeed * timeScaleData.TimeSigRatio * timeScaleData.BpmRatio
-            : timeScaleData.ScaledMeasureDecimal + (measureDecimal - timeScaleData.MeasureDecimal) * timeScaleData.TimeSigRatio * timeScaleData.BpmRatio;
+            ? timeScaleData.ScaledBeatData.MeasureDecimal + delta * timeScaleData.MetreMultiplier * timeScaleData.SpeedMultiplier
+            : timeScaleData.UnscaledBeatData.MeasureDecimal + delta * timeScaleData.MetreMultiplier;
     }
 
     /// <summary>
     /// Finds nearest previous TimeScaleData via binary search and calculates the unscaled MeasureDecimal off of it.
     /// This is the inverse of GetScaledMeasureDecimal.
     /// </summary>
-    public float GetUnscaledMeasureDecimal(float scaledMeasureDecimal, bool showHiSpeed)
+    public float GetUnscaledMeasureDecimal(float scaledMeasureDecimal, bool showHiSpeed, ScrollLayer scrollLayer)
     {
-        TimeScaleData? timeScaleData = BinarySearchTimeScalesScaled(scaledMeasureDecimal, showHiSpeed);
+        TimeScaleData? timeScaleData = BinarySearchTimeScalesScaled(scaledMeasureDecimal, showHiSpeed, scrollLayer);
         if (timeScaleData == null) return scaledMeasureDecimal;
-        
-        return showHiSpeed
-            ? (scaledMeasureDecimal - timeScaleData.ScaledMeasureDecimalHiSpeed + timeScaleData.MeasureDecimal * timeScaleData.HiSpeed * timeScaleData.TimeSigRatio * timeScaleData.BpmRatio) / (timeScaleData.HiSpeed * timeScaleData.TimeSigRatio * timeScaleData.BpmRatio)
-            : (scaledMeasureDecimal - timeScaleData.ScaledMeasureDecimal + timeScaleData.MeasureDecimal * timeScaleData.TimeSigRatio * timeScaleData.BpmRatio) / (timeScaleData.TimeSigRatio * timeScaleData.BpmRatio);
+
+        if (showHiSpeed)
+        {
+            float scaledDelta = scaledMeasureDecimal - timeScaleData.ScaledBeatData.MeasureDecimal;
+            float delta = scaledDelta / (timeScaleData.MetreMultiplier * timeScaleData.SpeedMultiplier);
+
+            return timeScaleData.UnscaledBeatData.MeasureDecimal + delta;
+        }
+        else
+        {
+            float unscaledDelta = scaledMeasureDecimal - timeScaleData.UnscaledBeatData.MeasureDecimal;
+            float delta = unscaledDelta / timeScaleData.MetreMultiplier;
+
+            return timeScaleData.UnscaledBeatData.MeasureDecimal + delta;
+        }
     }
     
     /// <summary>
     /// Finds nearest TimeScaleData via Binary Search.
     /// </summary>
-    public TimeScaleData? BinarySearchTimeScales(float measureDecimal)
+    public TimeScaleData? BinarySearchTimeScales(float measureDecimal, ScrollLayer scrollLayer)
     {
+        int l = (int)scrollLayer;
+        
         int min = 0;
-        int max = TimeScales.Count - 1;
+        int max = TimeScales[l].Count - 1;
         TimeScaleData? result = null;
 
         while (min <= max)
         {
             int mid = (min + max) / 2;
-            if (TimeScales[mid].MeasureDecimal > measureDecimal)
+            if (TimeScales[l][mid].RawBeatData.MeasureDecimal > measureDecimal)
             {
                 max = mid - 1;
             }
             else
             {
-                result = TimeScales[mid];
+                result = TimeScales[l][mid];
                 min = mid + 1;
             }
         }
@@ -285,22 +367,26 @@ public class Chart(ChartEditor editor)
     /// <summary>
     /// Same as unscaled binary search, but searches with ScaledMeasureDecimal instead.
     /// </summary>
-    public TimeScaleData? BinarySearchTimeScalesScaled(float scaledMeasureDecimal, bool showHiSpeed)
+    public TimeScaleData? BinarySearchTimeScalesScaled(float scaledMeasureDecimal, bool showHiSpeed, ScrollLayer scrollLayer)
     {
+        int l = (int)scrollLayer;
+        
         int min = 0;
-        int max = TimeScales.Count - 1;
+        int max = TimeScales[l].Count - 1;
         TimeScaleData? result = null;
 
         while (min <= max)
         {
             int mid = (min + max) / 2;
-            if ((showHiSpeed ? TimeScales[mid].ScaledMeasureDecimalHiSpeed : TimeScales[mid].ScaledMeasureDecimal) > scaledMeasureDecimal)
+            float sampleMeasureDecimal = showHiSpeed ? TimeScales[l][mid].ScaledBeatData.MeasureDecimal : TimeScales[l][mid].UnscaledBeatData.MeasureDecimal;
+            
+            if (sampleMeasureDecimal > scaledMeasureDecimal)
             {
                 max = mid - 1;
             }
             else
             {
-                result = TimeScales[mid];
+                result = TimeScales[l][mid];
                 min = mid + 1;
             }
         }
@@ -313,10 +399,10 @@ public class Chart(ChartEditor editor)
     /// </summary>
     public float Timestamp2MeasureDecimal(float time)
     {
-        if (TimeEvents == null || TimeEvents.Count == 0) return -1;
+        if (MetreEvents.Count == 0) return -1;
 
-        Gimmick timeEvent = TimeEvents.LastOrDefault(x => time >= x.TimeStamp) ?? TimeEvents[0];
-        return (time - timeEvent.TimeStamp) / (60000.0f / timeEvent.Bpm * 4.0f * timeEvent.TimeSig.Ratio) + timeEvent.BeatData.MeasureDecimal;
+        Gimmick metreEvent = MetreEvents.LastOrDefault(x => time >= x.TimeStamp) ?? MetreEvents[0];
+        return (time - metreEvent.TimeStamp) / (60000.0f / metreEvent.Bpm * 4.0f * metreEvent.TimeSig.Ratio) + metreEvent.BeatData.MeasureDecimal;
     }
 
     /// <summary>
@@ -333,9 +419,9 @@ public class Chart(ChartEditor editor)
     /// </summary>
     public float MeasureDecimal2Timestamp(float measureDecimal)
     {
-        if (TimeEvents == null || TimeEvents.Count == 0) return 0;
+        if (MetreEvents == null || MetreEvents.Count == 0) return 0;
         
-        Gimmick gimmick = TimeEvents.LastOrDefault(x => measureDecimal >= x.BeatData.MeasureDecimal) ?? TimeEvents[0];
+        Gimmick gimmick = MetreEvents.LastOrDefault(x => measureDecimal >= x.BeatData.MeasureDecimal) ?? MetreEvents[0];
         return (60000.0f / gimmick.Bpm * 4 * gimmick.TimeSig.Ratio * (measureDecimal - gimmick.BeatData.MeasureDecimal) + gimmick.TimeStamp);
     }
 
