@@ -117,20 +117,19 @@ public class RenderEngine(MainView mainView)
     
     // ________________
 
-    public float GetMeasureDecimalAtPointer(Chart chart, SKPoint point, ScrollLayer scrollLayer)
+    public float GetMeasureDecimalAtPointer(SKPoint point)
     {
         float clickRadius = (1 - MathExtensions.InversePerspective(point.Length)) * visibleDistanceMeasureDecimal;
-        return chart.GetUnscaledMeasureDecimal(clickRadius + ScaledCurrentMeasureDecimal(scrollLayer), RenderConfig.ShowHiSpeed, scrollLayer);
+        return clickRadius + ScaledCurrentMeasureDecimal(ScrollLayer.L0);
     }
     
     public ChartElement? GetChartElementAtPointer(Chart chart, SKPoint point, bool includeGimmicks, bool layerNote, bool layerMask, bool layerGimmick)
     {
         int clickPosition = MathExtensions.GetThetaNotePosition(point.X, point.Y);
-        float measureDecimal = GetMeasureDecimalAtPointer(chart, point, ScrollLayer.L0); // TODO: REWORK
         
         // Holy mother of LINQ
         List<Note> clickedNotes = chart.Notes
-            .Where(x => Math.Abs(x.BeatData.MeasureDecimal - measureDecimal) < 0.008f)
+            .Where(x => float.Abs(GetNoteScale(chart, x.BeatData.MeasureDecimal, x.ScrollLayer) - point.Length) < 0.008f)
             .Select(note =>
             {
                 float center = MathExtensions.Modulo(note.Position + note.Size * 0.5f, 60);
@@ -143,7 +142,7 @@ public class RenderEngine(MainView mainView)
             .Select(item => item.Note)
             .ToList();
 
-        List<Gimmick> clickedGimmicks = chart.Gimmicks.Where(x => Math.Abs(x.BeatData.MeasureDecimal - measureDecimal) < 0.005f).ToList();
+        List<Gimmick> clickedGimmicks = chart.Gimmicks.Where(x => float.Abs(GetNoteScale(chart, x.BeatData.MeasureDecimal, x.ScrollLayer) - point.Length) < 0.005f).ToList();
 
         if (layerGimmick && includeGimmicks && clickedGimmicks.Count > 0) return clickedGimmicks[0];
         if (layerMask && !layerNote) return clickedNotes.FirstOrDefault(x => x.IsMask);
@@ -153,7 +152,7 @@ public class RenderEngine(MainView mainView)
     }
     
     // ________________
-    private float GetNoteScale(Chart chart, float measureDecimal, ScrollLayer scrollLayer)
+    public float GetNoteScale(Chart chart, float measureDecimal, ScrollLayer scrollLayer)
     {
         float scaledMeasureDecimal = chart.GetScaledMeasureDecimal(measureDecimal, RenderConfig.ShowHiSpeed, scrollLayer);
         float scale = 1 - (scaledMeasureDecimal - ScaledCurrentMeasureDecimal(scrollLayer)) / visibleDistanceMeasureDecimal;
@@ -484,7 +483,7 @@ public class RenderEngine(MainView mainView)
         float selectionStartScale = BoxSelect.SelectionStart.MeasureDecimal <= CurrentMeasureDecimal ? 1 : GetNoteScale(chart, BoxSelect.SelectionStart.MeasureDecimal, ScrollLayer.L0);
         SKRect selectionStartRect = GetRect(selectionStartScale);
         
-        float selectionEndScale = float.Min(1, GetNoteScale(chart, GetMeasureDecimalAtPointer(chart, PointerPosition, ScrollLayer.L0), ScrollLayer.L0));
+        float selectionEndScale = float.Min(1, PointerPosition.Length);
         SKRect selectionEndRect = GetRect(selectionEndScale);
 
         float startAngle = BoxSelect.Position * -6;

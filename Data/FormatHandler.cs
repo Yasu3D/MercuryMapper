@@ -1052,8 +1052,6 @@ internal static class SatHandler
 
         if (note.ScrollLayer != ScrollLayer.L0 && !note.IsMask)
         {
-            Console.WriteLine("Waa");
-            
             sb.Append(note.ScrollLayer switch
             {
                 ScrollLayer.L0 => ".L0", // just for completeness.

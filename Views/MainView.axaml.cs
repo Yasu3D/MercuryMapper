@@ -1019,7 +1019,7 @@ public partial class MainView : UserControl
         }
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorBoxSelect"]))
         {
-            ChartEditor.RunBoxSelect();
+            ChartEditor.RunBoxSelect(0, 0);
             e.Handled = true;
             return;
         }
@@ -1447,7 +1447,7 @@ public partial class MainView : UserControl
             OnLeftClick(p, e.KeyModifiers, false);
         }
     }
-
+    
     private void Canvas_OnPointerReleased(object? sender, PointerReleasedEventArgs e)
     {
         pointerState = PointerState.Released;
@@ -1467,7 +1467,7 @@ public partial class MainView : UserControl
             point.X /= 0.9f;
             point.Y /= 0.9f;
 
-            ChartEditor.RunBoxSelect(RenderEngine.GetMeasureDecimalAtPointer(ChartEditor.Chart, point, ScrollLayer.L0)); // TODO: FIX
+            ChartEditor.RunBoxSelect(point.Length, RenderEngine.GetMeasureDecimalAtPointer(point));
         }
     }
 
@@ -1912,7 +1912,7 @@ public partial class MainView : UserControl
     private void MenuItemBoxSelect_OnClick(object? sender, RoutedEventArgs e)
     {
         if (ChartEditor.EditorState is not ChartEditorState.InsertNote) return;
-        ChartEditor.RunBoxSelect();
+        ChartEditor.RunBoxSelect(0, 0);
     }
 
     private void MenuItemMirrorChart_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.MirrorChart((int?)NumericMirrorAxis.Value ?? 30);

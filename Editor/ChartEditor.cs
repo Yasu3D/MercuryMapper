@@ -461,7 +461,7 @@ public class ChartEditor
         mainView.SetSelectionInfo();
     }
 
-    public void RunBoxSelect(float measureDecimal = 0)
+    public void RunBoxSelect(float clickRadius, float measureDecimal)
     {
         switch (EditorState)
         {
@@ -492,17 +492,15 @@ public class ChartEditor
             case ChartEditorState.BoxSelectEnd:
             {
                 // Handle case where user scrolls backwards
-                if (measureDecimal <= BoxSelect.SelectionStart?.MeasureDecimal)
+                if (measureDecimal > BoxSelect.SelectionStart?.MeasureDecimal)
                 {
-                    BoxSelect.SelectionEnd = BoxSelect.SelectionStart;
-                    BoxSelect.SelectionStart = new(measureDecimal);
+                    selectForward();
                 }
                 else
                 {
-                    BoxSelect.SelectionEnd = new(measureDecimal);
+                    selectBackward();
                 }
                 
-                select();
                 mainView.SetSelectionInfo();
                 mainView.SetNoteSizeBounds(CurrentNoteType, CurrentBonusType, NoteLinkType.Unlinked);
                 EditorState = ChartEditorState.InsertNote;
@@ -512,18 +510,38 @@ public class ChartEditor
 
         return;
 
-        void select()
+        void selectForward()
         {
-            if (BoxSelect.SelectionStart is null || BoxSelect.SelectionEnd is null) return;
+            if (BoxSelect.SelectionStart is null) return;
 
             IEnumerable<Note> selectable = Chart.Notes.Where(x =>
             {
-                bool inTimeRange = x.BeatData.FullTick >= BoxSelect.SelectionStart.FullTick &&
-                                   x.BeatData.FullTick <= BoxSelect.SelectionEnd.FullTick;
+                bool afterStart = x.BeatData.FullTick >= BoxSelect.SelectionStart.FullTick;
+                bool beforeCursor = mainView.RenderEngine.GetNoteScale(Chart, x.BeatData.MeasureDecimal, x.ScrollLayer) > clickRadius;
 
                 bool isLayerActive = x.IsMask && LayerMaskActive || x.IsNote && LayerNoteActive || x.NoteType == NoteType.Trace && LayerTraceActive;
 
-                return inTimeRange && isLayerActive && MathExtensions.IsPartiallyOverlapping(x.Position, x.Position + x.Size, BoxSelect.Position, BoxSelect.Position + BoxSelect.Size);
+                return afterStart && beforeCursor && isLayerActive && MathExtensions.IsPartiallyOverlapping(x.Position, x.Position + x.Size, BoxSelect.Position, BoxSelect.Position + BoxSelect.Size);
+            });
+            
+            foreach (Note note in selectable)
+            {
+                if (!SelectedNotes.Contains(note)) SelectedNotes.Add(note);
+            }
+        }
+
+        void selectBackward()
+        {
+            if (BoxSelect.SelectionStart is null) return;
+
+            IEnumerable<Note> selectable = Chart.Notes.Where(x =>
+            {
+                bool beforeStart = x.BeatData.FullTick < BoxSelect.SelectionStart.FullTick;
+                bool afterCursor = mainView.RenderEngine.GetNoteScale(Chart, x.BeatData.MeasureDecimal, x.ScrollLayer) < clickRadius;
+
+                bool isLayerActive = x.IsMask && LayerMaskActive || x.IsNote && LayerNoteActive || x.NoteType == NoteType.Trace && LayerTraceActive;
+
+                return beforeStart && afterCursor && isLayerActive && MathExtensions.IsPartiallyOverlapping(x.Position, x.Position + x.Size, BoxSelect.Position, BoxSelect.Position + BoxSelect.Size);
             });
             
             foreach (Note note in selectable)
