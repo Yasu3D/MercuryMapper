@@ -19,6 +19,8 @@ public class EditNote(Note note, Note newNote) : IOperation
         BaseNote.RenderSegment = OldNote.RenderSegment;
         BaseNote.Color = OldNote.Color;
         BaseNote.ScrollLayer = OldNote.ScrollLayer;
+        BaseNote.NextReferencedNote = OldNote.NextReferencedNote;
+        BaseNote.PrevReferencedNote = OldNote.PrevReferencedNote;
     }
     
     public void Redo()
@@ -32,5 +34,7 @@ public class EditNote(Note note, Note newNote) : IOperation
         BaseNote.RenderSegment = NewNote.RenderSegment;
         BaseNote.Color = NewNote.Color;
         BaseNote.ScrollLayer = NewNote.ScrollLayer;
+        BaseNote.NextReferencedNote = NewNote.NextReferencedNote;
+        BaseNote.PrevReferencedNote = NewNote.PrevReferencedNote;
     }
 }

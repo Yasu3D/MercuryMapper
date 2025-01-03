@@ -123,6 +123,7 @@ public class KeymapConfig
         ["EditorEditNoteProperties"] = new(Key.E, true, false, false),
         ["EditorEditNoteShapeProperties"] = new(Key.E, true, true, false),
         ["EditorMirrorNote"] = new(Key.M, false, true, false),
+        ["EditorReverseNote"] = new(Key.R, false, true, false),
         ["EditorDelete"] = new(Key.Delete),
         ["EditorSetRenderTrue"] = new(Key.V),
         ["EditorSetRenderFalse"] = new(Key.V, false, false, true),

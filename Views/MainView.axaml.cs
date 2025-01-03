@@ -1179,6 +1179,12 @@ public partial class MainView : UserControl
             e.Handled = true;
             return;
         }
+        if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorReverseNote"]))
+        {
+            ChartEditor.ReverseSelection();
+            e.Handled = true;
+            return;
+        }
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorDelete"]))
         {
             ChartEditor.DeleteGimmick();
@@ -2665,6 +2671,8 @@ public partial class MainView : UserControl
     private void ButtonEditSelectionFull_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.EditSelection(true, true);
 
     private void ButtonMirrorSelection_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.MirrorSelection((int?)NumericMirrorAxis.Value ?? 30);
+
+    private void ButtonReverseSelection_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.ReverseSelection();
     
     private void ButtonDeleteSelection_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.DeleteSelection();
 

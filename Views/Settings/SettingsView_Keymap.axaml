@@ -69,6 +69,7 @@
                     <TreeViewItem Name="EditorEditNoteProperties" Header="{x:Static lang:Resources.Editor_EditNoteProperties}" />
                     <TreeViewItem Name="EditorEditNoteShapeProperties" Header="{x:Static lang:Resources.Editor_EditNoteShapeProperties}" />
                     <TreeViewItem Name="EditorMirrorNote" Header="{x:Static lang:Resources.Editor_MirrorNote}" />
+                    <TreeViewItem Name="EditorReverseNote" Header="{x:Static lang:Resources.Editor_ReverseNote}" />
                     <TreeViewItem Name="EditorDelete" Header="{x:Static lang:Resources.Editor_Delete}" />
                     <TreeViewItem Name="EditorQuickEditIncreaseSize" Header="{x:Static lang:Resources.Editor_QuickEditIncreaseSize}" />
                     <TreeViewItem Name="EditorQuickEditDecreaseSize" Header="{x:Static lang:Resources.Editor_QuickEditDecreaseSize}" />

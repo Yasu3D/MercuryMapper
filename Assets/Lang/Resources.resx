@@ -1458,4 +1458,10 @@ Continue?</value>
   <data name="Settings_HideNotesOnDifferentLayers" xml:space="preserve">
     <value>Hide Notes on different Layers</value>
   </data>
+  <data name="Editor_ReverseNote" xml:space="preserve">
+    <value>Reverse</value>
+  </data>
+  <data name="ToolTip_ReverseNote" xml:space="preserve">
+    <value>Reverses the order of selected Notes.</value>
+  </data>
 </root>

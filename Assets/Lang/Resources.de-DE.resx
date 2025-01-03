@@ -1458,4 +1458,10 @@ Fortfahren?</value>
   <data name="Settings_HideNotesOnDifferentLayers" xml:space="preserve">
     <value>Verstecke Noten auf anderen Layern</value>
   </data>
+  <data name="Editor_ReverseNote" xml:space="preserve">
+    <value>Umkehren</value>
+  </data>
+  <data name="ToolTip_ReverseNote" xml:space="preserve">
+    <value>Kehrt die Reihenfolge der ausgewählten Noten um.</value>
+  </data>
 </root>

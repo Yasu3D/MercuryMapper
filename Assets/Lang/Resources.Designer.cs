@@ -1365,6 +1365,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Reverse.
+        /// </summary>
+        public static string Editor_ReverseNote {
+            get {
+                return ResourceManager.GetString("Editor_ReverseNote", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Scroll Layer.
         /// </summary>
         public static string Editor_ScrollLayer {
@@ -3974,6 +3983,15 @@ namespace MercuryMapper.Assets.Lang {
         public static string ToolTip_Reverse_NoteZoneEnd {
             get {
                 return ResourceManager.GetString("ToolTip_Reverse_NoteZoneEnd", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reverses the order of selected Notes..
+        /// </summary>
+        public static string ToolTip_ReverseNote {
+            get {
+                return ResourceManager.GetString("ToolTip_ReverseNote", resourceCulture);
             }
         }
         

@@ -1567,6 +1567,76 @@ public class ChartEditor
         }
     }
 
+    public void ReverseSelection()
+    {
+        int startTick = SelectedNotes.Min(x => x.BeatData.FullTick);
+        int endTick = SelectedNotes.Max(x => x.BeatData.FullTick);
+        
+        List<IOperation> operationList = [];
+        HashSet<Note> checkedNotes = [];
+        
+        foreach (Note selected in SelectedNotes)
+        {
+            addOperation(selected);
+        }
+        
+        UndoRedoManager.InvokeAndPush(new CompositeOperation(operationList), false);
+        
+        foreach (Note selected in SelectedNotes)
+        {
+            if (!selected.IsNoteCollection) continue;
+            if (checkedNotes.Contains(selected)) continue;
+            repairHolds(selected);
+        }
+        
+        UndoRedoManager.Undo(false);
+        
+        if (operationList.Count == 0) return;
+        UndoRedoManager.InvokeAndPush(new CompositeOperation(operationList));
+        Chart.IsSaved = false;
+        return;
+        
+        void addOperation(Note note)
+        {
+            int tick = startTick + endTick - note.BeatData.FullTick;
+            
+            Note newNote = new(note, note.Guid)
+            {
+                BeatData = new(tick),
+            };
+            
+            operationList.Add(new EditNote(note, newNote));
+        }
+
+        void repairHolds(Note hold)
+        {
+            List<Note> references = hold.References().OrderBy(x => x.BeatData.FullTick).ToList();
+
+            for (int i = 0; i < references.Count; i++)
+            {
+                Note note = references[i];
+                Note newNote = new(note, note.Guid)
+                {
+                    PrevReferencedNote = null,
+                    NextReferencedNote = null,
+                };
+
+                if (i != 0)
+                {
+                    newNote.PrevReferencedNote = references[i - 1];
+                }
+
+                if (i != references.Count - 1)
+                {
+                    newNote.NextReferencedNote = references[i + 1];
+                }
+
+                checkedNotes.Add(note);
+                operationList.Add(new EditNote(note, newNote));
+            }
+        }
+    }
+    
     private enum HoldDirection
     {
         Clockwise,

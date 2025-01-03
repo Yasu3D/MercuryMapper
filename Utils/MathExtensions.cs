@@ -48,11 +48,11 @@ public static class MathExtensions
         return float.Round(x / interval) * interval;
     }
     
-    public static float Perspective(float x)
+    public static float Perspective(float x, bool clamp = false)
     {
         // Huge thanks to CG505 for figuring out the perspective math:
         // https://www.desmos.com/calculator/9a0srmgktj
-        return float.Clamp(3.325f * x / (13.825f - 10.5f * x), 0, 1);
+        return 3.325f * x / (13.825f - 10.5f * x);
     }
 
     public static float InversePerspective(float x)

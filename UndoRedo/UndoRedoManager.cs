@@ -32,9 +32,9 @@ public class UndoRedoManager(MainView main)
         OperationHistoryChanged?.Invoke(this, EventArgs.Empty);
     }
 
-    public void InvokeAndPush(IOperation operation)
+    public void InvokeAndPush(IOperation operation, bool notifyNetwork = true)
     {
-        mainView.ConnectionManager.SendOperationMessage(operation, ConnectionManager.OperationDirection.Redo);
+        if (notifyNetwork) mainView.ConnectionManager.SendOperationMessage(operation, ConnectionManager.OperationDirection.Redo);
         operation.Redo();
         Push(operation);
     }
