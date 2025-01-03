@@ -876,15 +876,11 @@ public class ChartEditor
         Chart.IsSaved = false;
     }
     
-    public void EditGimmick()
+    public void EditGimmick(Gimmick gimmick)
     {
-        if (HighlightedElement is null or Note) return;
-
-        Gimmick highlightedGimmick = (Gimmick)HighlightedElement;
-        
-        if (highlightedGimmick.GimmickType is GimmickType.BpmChange)
+        if (gimmick.GimmickType is GimmickType.BpmChange)
         {
-            GimmickView_Bpm gimmickView = new(highlightedGimmick.Bpm);
+            GimmickView_Bpm gimmickView = new(gimmick.Bpm);
             
             ContentDialog dialog = new()
             {
@@ -905,18 +901,18 @@ public class ChartEditor
                     return;
                 }
 
-                Gimmick newGimmick = new(highlightedGimmick)
+                Gimmick newGimmick = new(gimmick)
                 {
                     Bpm = (float)gimmickView.BpmNumberBox.Value,
                 };
                 
-                UndoRedoManager.InvokeAndPush(new EditGimmick(Chart, highlightedGimmick, newGimmick));
+                UndoRedoManager.InvokeAndPush(new EditGimmick(Chart, gimmick, newGimmick));
             });
         }
         
-        if (highlightedGimmick.GimmickType is GimmickType.TimeSigChange)
+        if (gimmick.GimmickType is GimmickType.TimeSigChange)
         {
-            GimmickView_TimeSig gimmickView = new(highlightedGimmick.TimeSig.Upper, highlightedGimmick.TimeSig.Lower);
+            GimmickView_TimeSig gimmickView = new(gimmick.TimeSig.Upper, gimmick.TimeSig.Lower);
             ContentDialog dialog = new()
             {
                 Content = gimmickView,
@@ -936,18 +932,18 @@ public class ChartEditor
                     return;
                 }
 
-                Gimmick newGimmick = new(highlightedGimmick)
+                Gimmick newGimmick = new(gimmick)
                 {
                     TimeSig = new((int)gimmickView.TimeSigUpperNumberBox.Value, (int)gimmickView.TimeSigLowerNumberBox.Value),
                 };
                 
-                UndoRedoManager.InvokeAndPush(new EditGimmick(Chart, highlightedGimmick, newGimmick));
+                UndoRedoManager.InvokeAndPush(new EditGimmick(Chart, gimmick, newGimmick));
             });
         }
         
-        if (highlightedGimmick.GimmickType is GimmickType.HiSpeedChange)
+        if (gimmick.GimmickType is GimmickType.HiSpeedChange)
         {
-            GimmickView_HiSpeed gimmickView = new(highlightedGimmick.HiSpeed);
+            GimmickView_HiSpeed gimmickView = new(gimmick.HiSpeed);
             ContentDialog dialog = new()
             {
                 Content = gimmickView,
@@ -961,26 +957,23 @@ public class ChartEditor
                 ContentDialogResult result = await dialog.ShowAsync();
                 if (result is not ContentDialogResult.Primary) return;
 
-                Gimmick newGimmick = new(highlightedGimmick)
+                Gimmick newGimmick = new(gimmick)
                 {
                     HiSpeed = (float)gimmickView.HiSpeedNumberBox.Value,
                 };
                 
-                UndoRedoManager.InvokeAndPush(new EditGimmick(Chart, highlightedGimmick, newGimmick));
+                UndoRedoManager.InvokeAndPush(new EditGimmick(Chart, gimmick, newGimmick));
             });
         }
 
         Chart.IsSaved = false;
     }
 
-    public void DeleteGimmick()
+    public void DeleteGimmick(Gimmick gimmick)
     {
-        if (HighlightedElement is null or Note) return;
-        if (!Chart.Gimmicks.Contains(HighlightedElement)) return;
-        if (HighlightedElement == Chart.StartBpm || HighlightedElement == Chart.StartTimeSig) return;
-        if (SelectedNotes.Count != 0) return;
+        if (!Chart.Gimmicks.Contains(gimmick)) return;
+        if (gimmick == Chart.StartBpm || HighlightedElement == Chart.StartTimeSig) return;
         
-        Gimmick gimmick = (Gimmick)HighlightedElement;
         List<IOperation> operationList = [new DeleteGimmick(Chart, gimmick)];
 
         switch (gimmick.GimmickType)
@@ -1057,6 +1050,11 @@ public class ChartEditor
                 addOperation(highlighted);
             }
             HighlightedElement = Chart.Notes.LastOrDefault(x => x.BeatData.FullTick <= highlighted.BeatData.FullTick && x != highlighted);
+        }
+
+        if (SelectedNotes.Count == 0 && HighlightedElement is Gimmick gimmick)
+        {
+            DeleteGimmick(gimmick);
         }
         
         foreach (Note selected in SelectedNotes.OrderByDescending(x => x.BeatData.FullTick))
@@ -1145,6 +1143,11 @@ public class ChartEditor
         if (SelectedNotes.Count == 0 && HighlightedElement is Note highlighted)
         {
             addOperation(highlighted);
+        }
+
+        if (SelectedNotes.Count == 0 && HighlightedElement is Gimmick gimmick)
+        {
+            EditGimmick(gimmick);
         }
         
         if (operationList.Count == 0) return;

@@ -926,14 +926,6 @@
                     </StackPanel>
                 </Expander>
                 
-                <!-- Modify Gimmicks -->
-                <Expander Header="{x:Static lang:Resources.Editor_ExpanderHeader_ModifyGimmicks}">
-                    <StackPanel>
-                        <Button HorizontalAlignment="Stretch" Margin="0,0,0,4" Click="ButtonEditGimmick_OnClick" Content="{x:Static lang:Resources.Editor_EditGimmick}"/>
-                        <Button HorizontalAlignment="Stretch" Margin="0,0,0,0" Click="ButtonDeleteGimmick_OnClick" Content="{x:Static lang:Resources.Editor_DeleteGimmick}" Foreground="Red"/>
-                    </StackPanel>
-                </Expander>
-                
                 <!-- Miscellaneous -->
                 <Expander Header="{x:Static lang:Resources.Editor_ExpanderHeader_Miscellaneous}">
                     <StackPanel>

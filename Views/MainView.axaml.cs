@@ -1187,7 +1187,6 @@ public partial class MainView : UserControl
         }
         if (Keybind.Compare(keybind, UserConfig.KeymapConfig.Keybinds["EditorDelete"]))
         {
-            ChartEditor.DeleteGimmick();
             ChartEditor.DeleteSelection();
             e.Handled = true;
             return;
@@ -2732,10 +2731,6 @@ public partial class MainView : UserControl
     private void ButtonPaintTraces_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.PaintTraces((TraceColor)TraceColorComboBox.SelectedIndex);
 
     private void ButtonSetScrollLayer_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.SetScrollLayer((ScrollLayer)ScrollLayerComboBox.SelectedIndex);
-    
-    private void ButtonEditGimmick_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.EditGimmick();
-
-    private void ButtonDeleteGimmick_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.DeleteGimmick();
     
     private void ButtonSetLoopStart_OnClick(object? sender, RoutedEventArgs e) => SetLoopMarkerStart();
 
