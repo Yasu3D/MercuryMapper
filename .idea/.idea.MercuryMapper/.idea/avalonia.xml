@@ -43,6 +43,7 @@
         <entry key="Views/Tools/ToolsView_GenerateJaggedHolds.axaml" value="MercuryMapper.csproj" />
         <entry key="Views/Tools/ToolsView_MirrorChart.axaml" value="MercuryMapper.csproj" />
         <entry key="Views/Tools/ToolsView_ReconstructHolds.axaml" value="MercuryMapper.csproj" />
+        <entry key="Views/Tools/ToolsView_ScaleSelection.axaml" value="MercuryMapper.csproj" />
         <entry key="Views/Tools/ToolsView_ShiftChart.axaml" value="MercuryMapper.csproj" />
       </map>
     </option>

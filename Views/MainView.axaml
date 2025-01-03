@@ -118,6 +118,9 @@
                     <MenuItem Header="{x:Static lang:Resources.Menu_FixOffByOneErrors}" Name="MenuItemFixOffByOne"
                               Click="MenuItemFixOffByOne_OnClick"/>
                     <Separator/>
+                    <MenuItem Header="{x:Static lang:Resources.Menu_ScaleSelection}" Name="MenuItemScaleSelection"
+                              Click="MenuItemScaleSelection_OnClick"/>
+                    <Separator/>
                     <MenuItem Header="{x:Static lang:Resources.Menu_ReconstructNoteCollections}" Name="MenuItemReconstructHolds"
                               Click="MenuItemReconstructHolds_OnClick"/>
                     <MenuItem Header="{x:Static lang:Resources.Menu_JaggedNoteCollections}" Name="MenuItemGenerateJaggedHolds"

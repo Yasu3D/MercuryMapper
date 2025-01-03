@@ -1964,6 +1964,22 @@ public partial class MainView : UserControl
         }
     }
 
+    private async void MenuItemScaleSelection_OnClick(object? sender, RoutedEventArgs e)
+    {
+        ToolsView_ScaleSelection scaleView = new();
+        ContentDialog dialog = new()
+        {
+            Content = scaleView,
+            Title = Assets.Lang.Resources.Menu_ScaleSelection,
+            CloseButtonText = Assets.Lang.Resources.Generic_Cancel,
+            PrimaryButtonText = Assets.Lang.Resources.Generic_Ok,
+        };
+        
+        ContentDialogResult result = await dialog.ShowAsync();
+        if (result != ContentDialogResult.Primary) return;
+        ChartEditor.ScaleSelection((float)(scaleView.ScalarNumbericUpDown.Value ?? 1));
+    }
+    
     private void MenuItemGenerateJaggedHolds_OnClick(object? sender, RoutedEventArgs e)
     {
         if (!ChartEditor.SelectedNotes.Exists(x => x.IsNoteCollection))

@@ -1,0 +1,20 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:lang="clr-namespace:MercuryMapper.Assets.Lang"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="MercuryMapper.Views.Tools.ToolsView_ScaleSelection">
+    <UserControl.Styles>
+        <Style Selector="TextBlock">
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="10"/>
+        </Style>
+    </UserControl.Styles>
+    
+    <Grid RowDefinitions="Auto" ColumnDefinitions="Auto,*,*">
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="{x:Static lang:Resources.Tools_Scalar}"/>
+        <NumericUpDown Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" HorizontalAlignment="Right" VerticalContentAlignment="Center" Name="ScalarNumbericUpDown" Value="1" Minimum="0" Increment="0.1"/>
+    </Grid>
+</UserControl>

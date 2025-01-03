@@ -1464,4 +1464,10 @@ Continue?</value>
   <data name="ToolTip_ReverseNote" xml:space="preserve">
     <value>Reverses the order of selected Notes.</value>
   </data>
+  <data name="Menu_ScaleSelection" xml:space="preserve">
+    <value>Scale Selection</value>
+  </data>
+  <data name="Tools_Scalar" xml:space="preserve">
+    <value>Scalar</value>
+  </data>
 </root>

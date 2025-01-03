@@ -2591,6 +2591,34 @@ public class ChartEditor
             }
         }
     }
+
+    public void ScaleSelection(float scale)
+    {
+        int startTick = SelectedNotes.Min(x => x.BeatData.FullTick);
+        
+        List<IOperation> operationList = [];
+        foreach (Note selected in SelectedNotes)
+        {
+            addOperation(selected);
+        }
+
+        if (operationList.Count == 0) return;
+        UndoRedoManager.InvokeAndPush(new CompositeOperation(operationList));
+        Chart.IsSaved = false;
+        return;
+
+        void addOperation(Note note)
+        {
+            int tick = startTick + (int)((note.BeatData.FullTick - startTick) * scale);
+            
+            Note newNote = new(note, note.Guid)
+            {
+                BeatData = new(tick),
+            };
+
+            operationList.Add(new EditNote(note, newNote));
+        }
+    }
     
     // ________________ Comments
     private readonly Color[] commentColors =

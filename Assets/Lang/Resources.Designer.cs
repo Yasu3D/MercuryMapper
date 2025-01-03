@@ -2122,6 +2122,15 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Scale Selection.
+        /// </summary>
+        public static string Menu_ScaleSelection {
+            get {
+                return ResourceManager.GetString("Menu_ScaleSelection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Session Time:.
         /// </summary>
         public static string Menu_SessionTime {
@@ -3569,6 +3578,15 @@ namespace MercuryMapper.Assets.Lang {
         public static string Tools_Reconstruct_NoteCollectionToNoteCollection {
             get {
                 return ResourceManager.GetString("Tools_Reconstruct_NoteCollectionToNoteCollection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Scalar.
+        /// </summary>
+        public static string Tools_Scalar {
+            get {
+                return ResourceManager.GetString("Tools_Scalar", resourceCulture);
             }
         }
         
