@@ -1493,7 +1493,7 @@ public partial class MainView : UserControl
         if (modifiers.HasFlag(KeyModifiers.Shift))
         {
             // Selecting
-            if ((Note?)RenderEngine.GetChartElementAtPointer(ChartEditor.Chart, point, false, ChartEditor.LayerNoteActive, ChartEditor.LayerMaskActive, ChartEditor.LayerGimmickActive) is not { } note) return;
+            if ((Note?)RenderEngine.GetChartElementAtPointer(ChartEditor.Chart, point, false, ChartEditor.LayerNoteActive, ChartEditor.LayerMaskActive, ChartEditor.LayerGimmickActive, ChartEditor.LayerTraceActive) is not { } note) return;
 
             if (pointerMoved && note == ChartEditor.LastSelectedNote) return;
 
@@ -1503,7 +1503,7 @@ public partial class MainView : UserControl
         else if (modifiers.HasFlag(KeyModifiers.Control))
         {
             // Highlighting
-            if (RenderEngine.GetChartElementAtPointer(ChartEditor.Chart, point, true, ChartEditor.LayerNoteActive, ChartEditor.LayerMaskActive, ChartEditor.LayerGimmickActive) is not { } note) return;
+            if (RenderEngine.GetChartElementAtPointer(ChartEditor.Chart, point, true, ChartEditor.LayerNoteActive, ChartEditor.LayerMaskActive, ChartEditor.LayerGimmickActive, ChartEditor.LayerTraceActive) is not { } note) return;
 
             if (pointerMoved && note == ChartEditor.HighlightedElement) return;
 

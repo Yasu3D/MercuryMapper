@@ -123,7 +123,7 @@ public class RenderEngine(MainView mainView)
         return clickRadius + CurrentMeasureDecimal;
     }
     
-    public ChartElement? GetChartElementAtPointer(Chart chart, SKPoint point, bool includeGimmicks, bool layerNote, bool layerMask, bool layerGimmick)
+    public ChartElement? GetChartElementAtPointer(Chart chart, SKPoint point, bool includeGimmicks, bool layerNote, bool layerMask, bool layerGimmick, bool layerTrace)
     {
         int clickPosition = MathExtensions.GetThetaNotePosition(point.X, point.Y);
         
@@ -145,10 +145,15 @@ public class RenderEngine(MainView mainView)
         List<Gimmick> clickedGimmicks = chart.Gimmicks.Where(x => float.Abs(GetNoteScale(chart, x.BeatData.MeasureDecimal, x.ScrollLayer) - point.Length) < 0.005f).ToList();
 
         if (layerGimmick && includeGimmicks && clickedGimmicks.Count > 0) return clickedGimmicks[0];
-        if (layerMask && !layerNote) return clickedNotes.FirstOrDefault(x => x.IsMask);
-        if (!layerMask && layerNote) return clickedNotes.FirstOrDefault(x => !x.IsMask);
         
-        return clickedNotes.FirstOrDefault();
+        return clickedNotes.FirstOrDefault(x =>
+        {
+            bool selectNote = layerNote && x.IsNote;
+            bool selectMask = layerMask && x.IsMask;
+            bool selectTrace = layerTrace && x.NoteType == NoteType.Trace;
+
+            return selectNote || selectMask || selectTrace;
+        });
     }
     
     // ________________
