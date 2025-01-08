@@ -374,13 +374,13 @@ Would you like to manually select a file?</value>
     <value>Background [No Mask]</value>
   </data>
   <data name="Editor_EditNoteShapeProperties" xml:space="preserve">
-    <value>Edit [Both]</value>
+    <value>Edit Selection</value>
   </data>
   <data name="Editor_EditNoteShape" xml:space="preserve">
-    <value>Edit [Shape]</value>
+    <value>Edit Selection [Shape only]</value>
   </data>
   <data name="Editor_EditNoteProperties" xml:space="preserve">
-    <value>Edit [Type]</value>
+    <value>Edit Selection [Type only]</value>
   </data>
   <data name="Editor_Delete" xml:space="preserve">
     <value>Delete</value>

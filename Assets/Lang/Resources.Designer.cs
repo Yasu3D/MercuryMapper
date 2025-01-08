@@ -807,7 +807,7 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Edit [Type].
+        ///   Looks up a localized string similar to Edit Selection [Type only].
         /// </summary>
         public static string Editor_EditNoteProperties {
             get {
@@ -816,7 +816,7 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Edit [Shape].
+        ///   Looks up a localized string similar to Edit Selection [Shape only].
         /// </summary>
         public static string Editor_EditNoteShape {
             get {
@@ -825,7 +825,7 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Edit [Both].
+        ///   Looks up a localized string similar to Edit Selection.
         /// </summary>
         public static string Editor_EditNoteShapeProperties {
             get {

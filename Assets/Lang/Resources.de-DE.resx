@@ -377,13 +377,13 @@ Möchten Sie eine Datei manuell auswählen?</value>
     <value>Löschen</value>
   </data>
   <data name="Editor_EditNoteProperties" xml:space="preserve">
-    <value>Bearbeiten [Typ]</value>
+    <value>Auswahl Bearbeiten [Typ]</value>
   </data>
   <data name="Editor_EditNoteShape" xml:space="preserve">
-    <value>Bearbeiten [Form]</value>
+    <value>Auswahl Bearbeiten [Form]</value>
   </data>
   <data name="Editor_EditNoteShapeProperties" xml:space="preserve">
-    <value>Bearbeiten [Beides]</value>
+    <value>Auswahl Bearbeiten</value>
   </data>
   <data name="Editor_NoteCaps" xml:space="preserve">
     <value>Noten Kappen</value>

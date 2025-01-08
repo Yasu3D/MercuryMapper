@@ -1145,7 +1145,7 @@ public class ChartEditor
             addOperation(highlighted);
         }
 
-        if (SelectedNotes.Count == 0 && HighlightedElement is Gimmick gimmick)
+        if (SelectedNotes.Count == 0 && properties && HighlightedElement is Gimmick gimmick)
         {
             EditGimmick(gimmick);
         }

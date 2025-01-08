@@ -807,7 +807,7 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Bearbeiten [Typ].
+        ///   Looks up a localized string similar to Auswahl Bearbeiten [Typ].
         /// </summary>
         public static string Editor_EditNoteProperties {
             get {
@@ -816,7 +816,7 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Bearbeiten [Form].
+        ///   Looks up a localized string similar to Auswahl Bearbeiten [Form].
         /// </summary>
         public static string Editor_EditNoteShape {
             get {
@@ -825,7 +825,7 @@ namespace MercuryMapper.Assets.Lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Bearbeiten [Beides].
+        ///   Looks up a localized string similar to Auswahl Bearbeiten.
         /// </summary>
         public static string Editor_EditNoteShapeProperties {
             get {
