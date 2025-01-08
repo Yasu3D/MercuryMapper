@@ -74,7 +74,7 @@ public partial class MainView : UserControl
     }
 
     public bool CanShutdown;
-    public const string AppVersion = "v4.0.0";
+    public const string AppVersion = "v4.0.1";
     public const string ServerVersion = "1.0.1";
     private const string ConfigPath = "UserConfig.toml";
     private const string TimeTrackerPath = "TimeTracker";
@@ -146,8 +146,8 @@ public partial class MainView : UserControl
         }
         catch (Exception e)
         {
-            Console.WriteLine(e.Message);
-            // basically ignored for now
+            File.Delete($"{ConfigPath}.bak"); // Clear any old backup.
+            File.Copy(ConfigPath, $"{ConfigPath}.bak"); // Copy original settings to back them up.
         }
     }
 
