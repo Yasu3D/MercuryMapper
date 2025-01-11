@@ -526,7 +526,7 @@ internal static class SatHandler
             
             string[] attributes = split[3].Split('.', StringSplitOptions.RemoveEmptyEntries);
 
-            GimmickType gimmickType = String2GimmickType(split[3]);
+            GimmickType gimmickType = String2GimmickType(attributes);
             ScrollLayer scrollLayer = String2ScrollLayer(attributes);
 
             string value1 = "";
@@ -615,7 +615,7 @@ internal static class SatHandler
 
             string[] attributes = split[3].Split('.', StringSplitOptions.RemoveEmptyEntries);
 
-            GimmickType gimmickType = String2GimmickType(split[3]);
+            GimmickType gimmickType = String2GimmickType(attributes);
             ScrollLayer scrollLayer = String2ScrollLayer(attributes);
 
             string value1 = "";
@@ -742,7 +742,7 @@ internal static class SatHandler
         sb.Append("@GIMMICKS\n");
         foreach (Gimmick gimmick in chart.Gimmicks)
         {
-            sb.Append($"{gimmick.BeatData.Measure,4:F0} {gimmick.BeatData.Tick,4:F0} {index,4:F0} {GimmickType2String(gimmick.GimmickType),-13}");
+            sb.Append($"{gimmick.BeatData.Measure,4:F0} {gimmick.BeatData.Tick,4:F0} {index,4:F0} {GimmickType2String(gimmick.GimmickType) + Attributes2String(gimmick),-16}");
 
             if (gimmick.GimmickType is GimmickType.BpmChange) sb.Append($" {gimmick.Bpm.ToString("F6", CultureInfo.InvariantCulture)}");
             if (gimmick.GimmickType is GimmickType.HiSpeedChange) sb.Append($" {gimmick.HiSpeed.ToString("F6", CultureInfo.InvariantCulture)}");
@@ -794,7 +794,7 @@ internal static class SatHandler
         sb.Append("@GIMMICKS\n");
         foreach (Gimmick gimmick in chart.Gimmicks)
         {
-            sb.Append($"{gimmick.Guid} {gimmick.BeatData.Measure,4:F0} {gimmick.BeatData.Tick,4:F0} {index,4:F0} {GimmickType2String(gimmick.GimmickType),-13}");
+            sb.Append($"{gimmick.Guid} {gimmick.BeatData.Measure,4:F0} {gimmick.BeatData.Tick,4:F0} {index,4:F0} {GimmickType2String(gimmick.GimmickType) + Attributes2String(gimmick),-16}");
 
             if (gimmick.GimmickType is GimmickType.BpmChange) sb.Append($" {gimmick.Bpm.ToString("F6", CultureInfo.InvariantCulture)}");
             if (gimmick.GimmickType is GimmickType.HiSpeedChange) sb.Append($" {gimmick.HiSpeed.ToString("F6", CultureInfo.InvariantCulture)}");
@@ -948,9 +948,11 @@ internal static class SatHandler
         return ScrollLayer.L0;
     }
     
-    private static GimmickType String2GimmickType(string name)
+    private static GimmickType String2GimmickType(string[] attributes)
     {
-        return name switch
+        if (attributes.Length == 0) return GimmickType.None;
+        
+        return attributes[0] switch
         {
             "BPM" => GimmickType.BpmChange,
             "TIMESIG" => GimmickType.TimeSigChange,
@@ -1062,6 +1064,31 @@ internal static class SatHandler
         if (note.ScrollLayer != ScrollLayer.L0 && !note.IsMask)
         {
             sb.Append(note.ScrollLayer switch
+            {
+                ScrollLayer.L0 => ".L0", // just for completeness.
+                ScrollLayer.L1 => ".L1",
+                ScrollLayer.L2 => ".L2", 
+                ScrollLayer.L3 => ".L3", 
+                ScrollLayer.L4 => ".L4", 
+                ScrollLayer.L5 => ".L5", 
+                ScrollLayer.L6 => ".L6", 
+                ScrollLayer.L7 => ".L7", 
+                ScrollLayer.L8 => ".L8",
+                ScrollLayer.L9 => ".L9",
+                _ => "",
+            });
+        }
+
+        return sb.ToString();
+    }
+
+    private static string Attributes2String(Gimmick gimmick)
+    {
+        StringBuilder sb = new();
+
+        if (gimmick.IsStop || gimmick.GimmickType is GimmickType.HiSpeedChange && gimmick.ScrollLayer != ScrollLayer.L0)
+        {
+            sb.Append(gimmick.ScrollLayer switch
             {
                 ScrollLayer.L0 => ".L0", // just for completeness.
                 ScrollLayer.L1 => ".L1",
