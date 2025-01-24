@@ -1220,7 +1220,7 @@ public class ChartEditor
     {
         // This operation only works on note collection segments. All other note types should have a flag of 1 by default.
         List<IOperation> operationList = [];
-        foreach (Note selected in SelectedNotes.Where(x => x.IsNoteCollection))
+        foreach (Note selected in SelectedNotes.Where(x => x.IsNoteCollection && x.LinkType is NoteLinkType.Point))
         {
             addOperation(selected);
         }

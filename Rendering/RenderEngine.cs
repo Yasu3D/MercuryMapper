@@ -417,7 +417,7 @@ public class RenderEngine(MainView mainView)
                     }
                 }
                 
-                else // Counterclockwise
+                else if (note.MaskDirection is MaskDirection.Counterclockwise)
                 {
                     //for (int i = note.Position; i < note.Position + (int)(note.Size * progress); i++)
                     //{

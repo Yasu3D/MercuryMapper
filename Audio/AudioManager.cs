@@ -38,6 +38,7 @@ public class AudioManager(MainView mainView)
     public uint LoopStart { get; set; }
     public uint LoopEnd { get; set; }
     public bool Loop { get; set; }
+    public float Latency { get; set; }
 
     public void ResetSong()
     {
@@ -74,6 +75,8 @@ public class AudioManager(MainView mainView)
 
     public void LoadHitsoundSamples()
     {
+        Latency = BassSoundEngine.GetLatency();
+        
         touchHitsoundSample = new(mainView.UserConfig.AudioConfig.TouchHitsoundPath);
         guideHitsoundSample = new(mainView.UserConfig.AudioConfig.GuideHitsoundPath);
         swipeHitsoundSample = new(mainView.UserConfig.AudioConfig.SwipeHitsoundPath);

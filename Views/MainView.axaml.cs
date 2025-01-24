@@ -74,7 +74,7 @@ public partial class MainView : UserControl
     }
 
     public bool CanShutdown;
-    public const string AppVersion = "v4.0.1";
+    public const string AppVersion = "v4.0.3";
     public const string ServerVersion = "1.0.1";
     private const string ConfigPath = "UserConfig.toml";
     private const string TimeTrackerPath = "TimeTracker";
@@ -320,7 +320,7 @@ public partial class MainView : UserControl
         if (AudioManager.CurrentSong == null) return;
         if (playerState is PlayerState.Preview && UserConfig.AudioConfig.MuteHitsoundsOnPreview) return;
 
-        float measure = ChartEditor.Chart.Timestamp2MeasureDecimal(AudioManager.CurrentSong.Position + BassSoundEngine.GetLatency() + UserConfig.AudioConfig.HitsoundOffset);
+        float measure = ChartEditor.Chart.Timestamp2MeasureDecimal(AudioManager.CurrentSong.Position + AudioManager.Latency + UserConfig.AudioConfig.HitsoundOffset);
 
         playHitsounds();
 
