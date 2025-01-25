@@ -1572,6 +1572,8 @@ public class ChartEditor
 
     public void ReverseSelection()
     {
+        if (SelectedNotes.Count == 0) return;
+        
         int startTick = SelectedNotes.Min(x => x.BeatData.FullTick);
         int endTick = SelectedNotes.Max(x => x.BeatData.FullTick);
         
