@@ -613,7 +613,7 @@ internal static class SatHandler
             int measure = Convert.ToInt32(split[1], CultureInfo.InvariantCulture);
             int tick = Convert.ToInt32(split[2], CultureInfo.InvariantCulture);
 
-            string[] attributes = split[3].Split('.', StringSplitOptions.RemoveEmptyEntries);
+            string[] attributes = split[4].Split('.', StringSplitOptions.RemoveEmptyEntries);
 
             GimmickType gimmickType = String2GimmickType(attributes);
             ScrollLayer scrollLayer = String2ScrollLayer(attributes);
