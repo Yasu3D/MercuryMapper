@@ -273,11 +273,11 @@ internal static class MerHandler
                         value2 = split[4];
                     }
 
-                    // Edge case. some old charts apparently have broken time sigs.
+                    // Edge case. some old charts apparently only define the numerator. Denominator stays 4.
                     if (objectId is 3 && split.Length == 4)
                     {
                         value1 = split[3];
-                        value2 = split[3];
+                        value2 = "4";
                     }
 
                     if (objectId is 2 or 5 && split.Length > 3)
