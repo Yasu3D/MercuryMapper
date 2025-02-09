@@ -2121,76 +2121,11 @@ public partial class MainView : UserControl
         ChartEditor.UpdateCursorNoteType();
     }
 
-    private void ButtonGimmickBpmChange_OnClick(object? sender, RoutedEventArgs e)
-    {
-        GimmickView_Bpm gimmickView = new();
-        ContentDialog dialog = new()
-        {
-            Content = gimmickView,
-            Title = Assets.Lang.Resources.Editor_AddGimmick,
-            CloseButtonText = Assets.Lang.Resources.Generic_Cancel,
-            PrimaryButtonText = Assets.Lang.Resources.Generic_Create,
-        };
+    private void ButtonGimmickBpmChange_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.InsertBpmChange();
 
-        Dispatcher.UIThread.Post(async () =>
-        {
-            ContentDialogResult result = await dialog.ShowAsync();
-            if (result is not ContentDialogResult.Primary) return;
+    private void ButtonGimmickTimeSig_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.InsertTimeSigChange();
 
-            if (gimmickView.BpmNumberBox.Value <= 0)
-            {
-                ShowWarningMessage(Assets.Lang.Resources.Editor_NewChartInvalidBpm);
-                return;
-            }
-
-            ChartEditor.InsertBpmChange((float)gimmickView.BpmNumberBox.Value);
-        });
-    }
-
-    private void ButtonGimmickTimeSig_OnClick(object? sender, RoutedEventArgs e)
-    {
-        GimmickView_TimeSig gimmickView = new();
-        ContentDialog dialog = new()
-        {
-            Content = gimmickView,
-            Title = Assets.Lang.Resources.Editor_AddGimmick,
-            CloseButtonText = Assets.Lang.Resources.Generic_Cancel,
-            PrimaryButtonText = Assets.Lang.Resources.Generic_Create,
-        };
-
-        Dispatcher.UIThread.Post(async () =>
-        {
-            ContentDialogResult result = await dialog.ShowAsync();
-            if (result is not ContentDialogResult.Primary) return;
-
-            if ((int)gimmickView.TimeSigUpperNumberBox.Value <= 0 || (int)gimmickView.TimeSigLowerNumberBox.Value <= 0)
-            {
-                ShowWarningMessage(Assets.Lang.Resources.Editor_NewChartInvalidTimeSig);
-                return;
-            }
-
-            ChartEditor.InsertTimeSigChange((int)gimmickView.TimeSigUpperNumberBox.Value, (int)gimmickView.TimeSigLowerNumberBox.Value);
-        });
-    }
-
-    private void ButtonGimmickHiSpeed_OnClick(object? sender, RoutedEventArgs e)
-    {
-        GimmickView_HiSpeed gimmickView = new();
-        ContentDialog dialog = new()
-        {
-            Content = gimmickView,
-            Title = Assets.Lang.Resources.Editor_AddGimmick,
-            CloseButtonText = Assets.Lang.Resources.Generic_Cancel,
-            PrimaryButtonText = Assets.Lang.Resources.Generic_Create,
-        };
-
-        Dispatcher.UIThread.Post(async () =>
-        {
-            ContentDialogResult result = await dialog.ShowAsync();
-            if (result is not ContentDialogResult.Primary) return;
-            ChartEditor.InsertHiSpeedChange((float)gimmickView.HiSpeedNumberBox.Value);
-        });
-    }
+    private void ButtonGimmickHiSpeed_OnClick(object? sender, RoutedEventArgs e) => ChartEditor.InsertHiSpeedChange();
 
     private void ButtonGimmickStop_OnClick(object? sender, RoutedEventArgs e)
     {

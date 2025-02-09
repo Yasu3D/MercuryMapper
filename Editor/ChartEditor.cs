@@ -761,14 +761,41 @@ public class ChartEditor
         }
     }
 
-    public void InsertBpmChange(float bpm)
+    public void InsertBpmChange()
     {
         if (Chart.StartBpm is null || Chart.StartTimeSig is null) return;
+
+        // Edit existing Gimmick instead if there's already one on this timestamp.
+        Gimmick? bpmChangeOnCursor = Chart.Gimmicks.FirstOrDefault(x => x.GimmickType == GimmickType.BpmChange && x.BeatData.FullTick == CurrentBeatData.FullTick);
+        if (bpmChangeOnCursor != null)
+        {
+            EditGimmick(bpmChangeOnCursor);
+            return;
+        }
+        
+        GimmickView_Bpm gimmickView = new();
+        ContentDialog dialog = new()
+        {
+            Content = gimmickView,
+            Title = Assets.Lang.Resources.Editor_AddGimmick,
+            CloseButtonText = Assets.Lang.Resources.Generic_Cancel,
+            PrimaryButtonText = Assets.Lang.Resources.Generic_Create,
+        };
+
+        ContentDialogResult result = ContentDialogResult.None;
+        Dispatcher.UIThread.Post(async () => result = await dialog.ShowAsync());
+        
+        if (result is not ContentDialogResult.Primary) return;
+        if (gimmickView.BpmNumberBox.Value <= 0)
+        {
+            mainView.ShowWarningMessage(Assets.Lang.Resources.Editor_NewChartInvalidBpm);
+            return;
+        }
         
         Gimmick gimmick = new()
         {
             BeatData = CurrentBeatData,
-            Bpm = bpm,
+            Bpm = (float)gimmickView.BpmNumberBox.Value,
             GimmickType = GimmickType.BpmChange,
         };
         
@@ -776,14 +803,41 @@ public class ChartEditor
         Chart.IsSaved = false;
     }
 
-    public void InsertTimeSigChange(int upper, int lower)
+    public void InsertTimeSigChange()
     {
         if (Chart.StartBpm is null || Chart.StartTimeSig is null) return;
+        
+        // Edit existing Gimmick instead if there's already one on this timestamp.
+        Gimmick? timeSigOnCursor = Chart.Gimmicks.FirstOrDefault(x => x.GimmickType == GimmickType.TimeSigChange && x.BeatData.FullTick == CurrentBeatData.FullTick);
+        if (timeSigOnCursor != null)
+        {
+            EditGimmick(timeSigOnCursor);
+            return;
+        }
+        
+        GimmickView_TimeSig gimmickView = new();
+        ContentDialog dialog = new()
+        {
+            Content = gimmickView,
+            Title = Assets.Lang.Resources.Editor_AddGimmick,
+            CloseButtonText = Assets.Lang.Resources.Generic_Cancel,
+            PrimaryButtonText = Assets.Lang.Resources.Generic_Create,
+        };
+
+        ContentDialogResult result = ContentDialogResult.None;
+        Dispatcher.UIThread.Post(async () => result = await dialog.ShowAsync());
+        
+        if (result is not ContentDialogResult.Primary) return;
+        if ((int)gimmickView.TimeSigUpperNumberBox.Value <= 0 || (int)gimmickView.TimeSigLowerNumberBox.Value <= 0)
+        {
+            mainView.ShowWarningMessage(Assets.Lang.Resources.Editor_NewChartInvalidTimeSig);
+            return;
+        }
         
         Gimmick gimmick = new()
         {
             BeatData = CurrentBeatData,
-            TimeSig = new(upper, lower),
+            TimeSig = new((int)gimmickView.TimeSigUpperNumberBox.Value, (int)gimmickView.TimeSigLowerNumberBox.Value),
             GimmickType = GimmickType.TimeSigChange,
         };
         
@@ -791,14 +845,36 @@ public class ChartEditor
         Chart.IsSaved = false;
     }
 
-    public void InsertHiSpeedChange(float hiSpeed)
+    public void InsertHiSpeedChange()
     {
         if (Chart.StartBpm is null || Chart.StartTimeSig is null) return;
+        
+        // Edit existing Gimmick instead if there's already one on this timestamp.
+        Gimmick? hiSpeedOnCursor = Chart.Gimmicks.FirstOrDefault(x => x.GimmickType == GimmickType.HiSpeedChange && x.BeatData.FullTick == CurrentBeatData.FullTick);
+        if (hiSpeedOnCursor != null)
+        {
+            EditGimmick(hiSpeedOnCursor);
+            return;
+        }
+        
+        GimmickView_HiSpeed gimmickView = new();
+        ContentDialog dialog = new()
+        {
+            Content = gimmickView,
+            Title = Assets.Lang.Resources.Editor_AddGimmick,
+            CloseButtonText = Assets.Lang.Resources.Generic_Cancel,
+            PrimaryButtonText = Assets.Lang.Resources.Generic_Create,
+        };
+
+        ContentDialogResult result = ContentDialogResult.None;
+        Dispatcher.UIThread.Post(async () => result = await dialog.ShowAsync());
+        
+        if (result is not ContentDialogResult.Primary) return;
         
         Gimmick gimmick = new()
         {
             BeatData = CurrentBeatData,
-            HiSpeed = hiSpeed,
+            HiSpeed = (float)gimmickView.HiSpeedNumberBox.Value,
             GimmickType = GimmickType.HiSpeedChange,
             ScrollLayer = CurrentScrollLayer,
         };
