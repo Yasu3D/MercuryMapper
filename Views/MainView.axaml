@@ -9,11 +9,12 @@
              PropertyChanged="MainView_OnPropertyChanged"
              x:Class="MercuryMapper.Views.MainView">
     
-    <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,*,Auto">
+    <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,*,Auto" >
         
         <!-- Title Bar -->
-        <Grid ColumnDefinitions="Auto,*" RowDefinitions="*" Grid.Row="0" Grid.ColumnSpan="3" Grid.Column="0" Name="TitleBar">
-            <Menu Grid.Column="0" Background="{DynamicResource TitleBar}" Height="40">
+        <Grid ColumnDefinitions="Auto,*" RowDefinitions="*" Grid.Row="0" Grid.ColumnSpan="3" Grid.Column="0" Name="TitleBar" Background="{DynamicResource TitleBar}">
+            <!--Hotfix for Mac OS button ui overlap. TODO: Fix WIndow Drag Bug-->
+            <Menu Grid.Column="0" Height="40" Margin="{DynamicResource PlatformMargin}"> 
                 <MenuItem Width="40">
                     <MenuItem.Header>
                         <Image Source="/Assets/AppIcon.ico" Width="20"/>
