@@ -797,9 +797,20 @@ internal static class SatHandler
         {
             sb.Append($"{gimmick.BeatData.Measure,4:F0} {gimmick.BeatData.Tick,4:F0} {index,4:F0} {GimmickType2String(gimmick.GimmickType) + Attributes2String(gimmick),-16}");
 
-            if (gimmick.GimmickType is GimmickType.BpmChange) sb.Append($" {gimmick.Bpm.ToString("F6", CultureInfo.InvariantCulture)}");
-            if (gimmick.GimmickType is GimmickType.HiSpeedChange) sb.Append($" {gimmick.HiSpeed.ToString("F6", CultureInfo.InvariantCulture)}");
-            if (gimmick.GimmickType is GimmickType.TimeSigChange) sb.Append($" {gimmick.TimeSig.Upper,4:F0} {gimmick.TimeSig.Lower,4:F0}");
+            if (gimmick.GimmickType is GimmickType.BpmChange)
+            {
+                sb.Append($" {gimmick.Bpm.ToString("F6", CultureInfo.InvariantCulture).PadLeft(11)}");
+            }
+
+            if (gimmick.GimmickType is GimmickType.HiSpeedChange)
+            {
+                sb.Append($" {gimmick.HiSpeed.ToString("F6", CultureInfo.InvariantCulture).PadLeft(11)}");
+            }
+
+            if (gimmick.GimmickType is GimmickType.TimeSigChange)
+            {
+                sb.Append($" {gimmick.TimeSig.Upper,4:F0}   {gimmick.TimeSig.Lower,4:F0}");
+            }
 
             sb.Append('\n');
             index++;
