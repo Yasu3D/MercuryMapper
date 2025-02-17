@@ -780,7 +780,7 @@ internal static class SatHandler
         
         foreach (KeyValuePair<string, Comment> comment in chart.Comments)
         {
-            sb.Append($"{comment.Value.BeatData.Measure,4:F0} {comment.Value.BeatData.Tick,4:F0} {index,4:F0} {comment.Value.Text}");
+            sb.Append($"{comment.Value.BeatData.Measure,-4:F0} {comment.Value.BeatData.Tick,-4:F0} {index,-4:F0} {comment.Value.Text}");
             
             sb.Append('\n');
             index++;
@@ -795,7 +795,7 @@ internal static class SatHandler
         sb.Append("@GIMMICKS\n");
         foreach (Gimmick gimmick in chart.Gimmicks)
         {
-            sb.Append($"{gimmick.BeatData.Measure,4:F0} {gimmick.BeatData.Tick,4:F0} {index,4:F0} {GimmickType2String(gimmick.GimmickType) + Attributes2String(gimmick),-16}");
+            sb.Append($"{gimmick.BeatData.Measure,-4:F0} {gimmick.BeatData.Tick,-4:F0} {index,-4:F0} {GimmickType2String(gimmick.GimmickType) + Attributes2String(gimmick),-16}");
 
             if (gimmick.GimmickType is GimmickType.BpmChange)
             {
@@ -834,13 +834,13 @@ internal static class SatHandler
                 IEnumerable<Note> references = note.References();
                 foreach (Note reference in references)
                 {
-                    sb.Append($"{reference.BeatData.Measure,4:F0} {reference.BeatData.Tick,4:F0} {index,4:F0} {reference.Position,4:F0} {reference.Size,4:F0} {NoteType2String(reference.NoteType, reference.LinkType)}{Attributes2String(reference)}\n");
+                    sb.Append($"{reference.BeatData.Measure,-4:F0} {reference.BeatData.Tick,-4:F0} {index,-4:F0} {reference.Position,-4:F0} {reference.Size,-4:F0} {NoteType2String(reference.NoteType, reference.LinkType)}{Attributes2String(reference)}\n");
                     index++;
                 }
             }
             else
             {
-                sb.Append($"{note.BeatData.Measure,4:F0} {note.BeatData.Tick,4:F0} {index,4:F0} {note.Position,4:F0} {note.Size,4:F0} {NoteType2String(note.NoteType, note.LinkType)}{Attributes2String(note)}\n");
+                sb.Append($"{note.BeatData.Measure,-4:F0} {note.BeatData.Tick,-4:F0} {index,-4:F0} {note.Position,-4:F0} {note.Size,-4:F0} {NoteType2String(note.NoteType, note.LinkType)}{Attributes2String(note)}\n");
                 index++;
             }
         }
@@ -929,13 +929,14 @@ internal static class SatHandler
     {
         if (attributes.Length < 2) return BonusType.None;
 
-        return attributes[1] switch
+        foreach (string a in attributes)
         {
-            "NORMAL" => BonusType.None,
-            "BONUS" => BonusType.Bonus,
-            "RNOTE" => BonusType.RNote,
-            _ => BonusType.None,
-        };
+            if (a == "NORMAL") return BonusType.None;
+            if (a == "BONUS") return BonusType.Bonus;
+            if (a == "RNOTE") return BonusType.RNote;
+        }
+
+        return BonusType.None;
     }
 
     private static NoteLinkType String2NoteLinkType(string[] attributes)
