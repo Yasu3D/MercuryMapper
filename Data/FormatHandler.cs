@@ -33,15 +33,11 @@ public static class FormatHandler
                 if (!ContainsTag(s, "@SAT_VERSION ", out satVersion)) continue;
                 break;
             }
+            
+            Console.WriteLine(satVersion);
 
             switch (satVersion)
             {
-                case "NONE":
-                {
-                    MerHandler.LoadFile(chart, filepath, data);
-                    break;
-                }
-
                 case "1":
                 case "2":
                 case "3":
@@ -49,8 +45,12 @@ public static class FormatHandler
                     SatHandler.LoadFile(chart, filepath, data);
                     break;
                 }
-                
-                default: return;
+
+                default:
+                {
+                    MerHandler.LoadFile(chart, filepath, data);
+                    break;
+                }
             }
         }
         catch (Exception e)
