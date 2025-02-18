@@ -465,18 +465,10 @@ internal static class SatHandler
     // Parsing
     private static void ParseMetadata(IEnumerable<string> metadata, Chart chart)
     {
-        foreach (string s in metadata)
+        foreach (string line in metadata)
         {
-            string line = s;
-            
-            // Remove comments.
-            int commentIndex = line.IndexOf('#');
-            if (commentIndex != -1)
-            {
-                line = line[..commentIndex];
-            }
-            
             if (string.IsNullOrWhiteSpace(line)) continue;
+            if (line.StartsWith('#')) continue;
 
             if (FormatHandler.ContainsTag(line, "@GUID ", out string result)) chart.Guid = result;
             if (FormatHandler.ContainsTag(line, "@VERSION ", out result)) chart.Version = result;
@@ -508,18 +500,10 @@ internal static class SatHandler
         // regex is scary D:
         const string pattern = @"^\s*(\d+)\s+(\d+)\s+(\d+)\s+(.*)";
         
-        foreach (string s in comments)
+        foreach (string line in comments)
         {
-            string line = s;
-            
-            // Remove comments.
-            int commentIndex = line.IndexOf('#');
-            if (commentIndex != -1)
-            {
-                line = line[..commentIndex];
-            }
-            
             if (string.IsNullOrWhiteSpace(line)) continue;
+            if (line.StartsWith('#')) continue;
             
             Match match = Regex.Match(line, pattern);
 
@@ -539,18 +523,11 @@ internal static class SatHandler
     
     private static void ParseGimmicks(IEnumerable<string> gimmicks, Chart chart)
     {
-        foreach (string s in gimmicks)
+        foreach (string line in gimmicks)
         {
-            string line = s;
-            
-            // Remove comments.
-            int commentIndex = line.IndexOf('#');
-            if (commentIndex != -1)
-            {
-                line = line[..commentIndex];
-            }
-            
             if (string.IsNullOrWhiteSpace(line)) continue;
+            if (line.StartsWith('#')) continue;
+            
             string[] split = line.Split(" ", StringSplitOptions.RemoveEmptyEntries);
             if (split.Length < 4) continue;
 
@@ -585,18 +562,11 @@ internal static class SatHandler
     {
         Note? previousNote = null;
 
-        foreach (string s in objects)
+        foreach (string line in objects)
         {
-            string line = s;
-            
-            // Remove comments.
-            int commentIndex = line.IndexOf('#');
-            if (commentIndex != -1)
-            {
-                line = line[..commentIndex];
-            }
-            
             if (string.IsNullOrWhiteSpace(line)) continue;
+            if (line.StartsWith('#')) continue;
+            
             string[] split = line.Split(" ", StringSplitOptions.RemoveEmptyEntries);
             if (split.Length < 6) continue;
 
@@ -644,18 +614,11 @@ internal static class SatHandler
     
     private static void ParseGimmicksWithGuid(IEnumerable<string> gimmicks, Chart chart)
     {
-        foreach (string s in gimmicks)
+        foreach (string line in gimmicks)
         {
-            string line = s;
-            
-            // Remove comments.
-            int commentIndex = line.IndexOf('#');
-            if (commentIndex != -1)
-            {
-                line = line[..commentIndex];
-            }
-            
             if (string.IsNullOrWhiteSpace(line)) continue;
+            if (line.StartsWith('#')) continue;
+            
             string[] split = line.Split(" ", StringSplitOptions.RemoveEmptyEntries);
             if (split.Length < 4) continue;
 
@@ -692,18 +655,11 @@ internal static class SatHandler
     {
         Note? previousNote = null;
 
-        foreach (string s in objects)
+        foreach (string line in objects)
         {
-            string line = s;
-            
-            // Remove comments.
-            int commentIndex = line.IndexOf('#');
-            if (commentIndex != -1)
-            {
-                line = line[..commentIndex];
-            }
-            
             if (string.IsNullOrWhiteSpace(line)) continue;
+            if (line.StartsWith('#')) continue;
+            
             string[] split = line.Split(" ", StringSplitOptions.RemoveEmptyEntries);
             if (split.Length < 6) continue;
 
