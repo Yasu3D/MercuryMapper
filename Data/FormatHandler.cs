@@ -40,7 +40,6 @@ public static class FormatHandler
             {
                 case "1":
                 case "2":
-                case "3":
                 {
                     SatHandler.LoadFile(chart, filepath, data);
                     break;
@@ -383,7 +382,7 @@ internal static class MerHandler
 
 internal static class SatHandler
 {
-    private const string SatFormatVersion = "3";
+    private const string SatFormatVersion = "2";
 
     /// <summary>
     /// Parses a SAT format file.
