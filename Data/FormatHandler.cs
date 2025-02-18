@@ -26,24 +26,31 @@ public static class FormatHandler
             string[] data = File.ReadLines(filepath).ToArray();
             if (data.Length == 0) return;
 
-            bool isSat = false;
+            string satVersion = "NONE";
 
             foreach (string s in data)
             {
-                if (!ContainsTag(s, "@SAT_VERSION ", out _)) continue;
-
-                isSat = true;
+                if (!ContainsTag(s, "@SAT_VERSION ", out satVersion)) continue;
                 break;
             }
-            
-            // Naively detect .SAT format
-            if (isSat)
+
+            switch (satVersion)
             {
-                SatHandler.LoadFile(chart, filepath, data);
-            }
-            else
-            {
-                MerHandler.LoadFile(chart, filepath, data);
+                case "NONE":
+                {
+                    MerHandler.LoadFile(chart, filepath, data);
+                    break;
+                }
+
+                case "1":
+                case "2":
+                case "3":
+                {
+                    SatHandler.LoadFile(chart, filepath, data);
+                    break;
+                }
+                
+                default: return;
             }
         }
         catch (Exception e)
@@ -376,7 +383,7 @@ internal static class MerHandler
 
 internal static class SatHandler
 {
-    private const string SatFormatVersion = "2";
+    private const string SatFormatVersion = "3";
 
     /// <summary>
     /// Parses a SAT format file.
@@ -765,11 +772,11 @@ internal static class SatHandler
           .Append($"{"@PREVIEW_START",-16}{chart.PreviewStart}\n")
           .Append($"{"@PREVIEW_TIME",-16}{chart.PreviewTime}\n")
           .Append('\n')
-          .Append($"{"@BGM",-16}{Path.GetFileName(chart.BgmFilepath)}\n")
-          .Append($"{"@BGM_OFFSET",-16}{chart.BgmOffset.ToString("F6", CultureInfo.InvariantCulture)}\n")
-          .Append($"{"@BGA",-16}{Path.GetFileName(chart.BgaFilepath)}\n")
-          .Append($"{"@BGA_OFFSET",-16}{chart.BgaOffset.ToString("F6", CultureInfo.InvariantCulture)}\n")
           .Append($"{"@JACKET",-16}{Path.GetFileName(chart.JacketFilepath)}\n")
+          .Append($"{"@BGM",-16}{Path.GetFileName(chart.BgmFilepath)}\n")
+          .Append($"{"@BGA",-16}{Path.GetFileName(chart.BgaFilepath)}\n")
+          .Append($"{"@BGM_OFFSET",-16}{chart.BgmOffset.ToString("F6", CultureInfo.InvariantCulture)}\n")
+          .Append($"{"@BGA_OFFSET",-16}{chart.BgaOffset.ToString("F6", CultureInfo.InvariantCulture)}\n")
           .Append('\n');
     }
 
@@ -858,11 +865,22 @@ internal static class SatHandler
         sb.Append("@GIMMICKS\n");
         foreach (Gimmick gimmick in chart.Gimmicks)
         {
-            sb.Append($"{gimmick.Guid} {gimmick.BeatData.Measure,4:F0} {gimmick.BeatData.Tick,4:F0} {index,4:F0} {GimmickType2String(gimmick.GimmickType) + Attributes2String(gimmick),-16}");
+            sb.Append($"{gimmick.Guid} {gimmick.BeatData.Measure,-4:F0} {gimmick.BeatData.Tick,-4:F0} {index,-4:F0} {GimmickType2String(gimmick.GimmickType) + Attributes2String(gimmick),-16}");
 
-            if (gimmick.GimmickType is GimmickType.BpmChange) sb.Append($" {gimmick.Bpm.ToString("F6", CultureInfo.InvariantCulture)}");
-            if (gimmick.GimmickType is GimmickType.HiSpeedChange) sb.Append($" {gimmick.HiSpeed.ToString("F6", CultureInfo.InvariantCulture)}");
-            if (gimmick.GimmickType is GimmickType.TimeSigChange) sb.Append($" {gimmick.TimeSig.Upper,4:F0} {gimmick.TimeSig.Lower,4:F0}");
+            if (gimmick.GimmickType is GimmickType.BpmChange)
+            {
+                sb.Append($" {gimmick.Bpm.ToString("F6", CultureInfo.InvariantCulture).PadLeft(11)}");
+            }
+
+            if (gimmick.GimmickType is GimmickType.HiSpeedChange)
+            {
+                sb.Append($" {gimmick.HiSpeed.ToString("F6", CultureInfo.InvariantCulture).PadLeft(11)}");
+            }
+
+            if (gimmick.GimmickType is GimmickType.TimeSigChange)
+            {
+                sb.Append($" {gimmick.TimeSig.Upper,4:F0}   {gimmick.TimeSig.Lower,4:F0}");
+            }
 
             sb.Append('\n');
             index++;
@@ -886,13 +904,13 @@ internal static class SatHandler
                 IEnumerable<Note> references = note.References();
                 foreach (Note reference in references)
                 {
-                    sb.Append($"{reference.Guid} {reference.BeatData.Measure,4:F0} {reference.BeatData.Tick,4:F0} {index,4:F0} {reference.Position,4:F0} {reference.Size,4:F0} {NoteType2String(reference.NoteType, reference.LinkType)}{Attributes2String(reference)}\n");
+                    sb.Append($"{reference.Guid} {reference.BeatData.Measure,-4:F0} {reference.BeatData.Tick,-4:F0} {index,-4:F0} {reference.Position,-4:F0} {reference.Size,-4:F0} {NoteType2String(reference.NoteType, reference.LinkType)}{Attributes2String(reference)}\n");
                     index++;
                 }
             }
             else
             {
-                sb.Append($"{note.Guid} {note.BeatData.Measure,4:F0} {note.BeatData.Tick,4:F0} {index,4:F0} {note.Position,4:F0} {note.Size,4:F0} {NoteType2String(note.NoteType, note.LinkType)}{Attributes2String(note)}\n");
+                sb.Append($"{note.Guid} {note.BeatData.Measure,-4:F0} {note.BeatData.Tick,-4:F0} {index,-4:F0} {note.Position,-4:F0} {note.Size,-4:F0} {NoteType2String(note.NoteType, note.LinkType)}{Attributes2String(note)}\n");
                 index++;
             }
         }
