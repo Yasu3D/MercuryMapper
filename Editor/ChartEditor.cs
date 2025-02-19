@@ -781,32 +781,34 @@ public class ChartEditor
             CloseButtonText = Assets.Lang.Resources.Generic_Cancel,
             PrimaryButtonText = Assets.Lang.Resources.Generic_Create,
         };
-
-        ContentDialogResult result = ContentDialogResult.None;
-        Dispatcher.UIThread.Post(async () => result = await dialog.ShowAsync());
         
-        if (result is not ContentDialogResult.Primary) return;
-        if (gimmickView.BpmNumberBox.Value <= 0)
+        Dispatcher.UIThread.Post(async () =>
         {
-            mainView.ShowWarningMessage(Assets.Lang.Resources.Editor_NewChartInvalidBpm);
-            return;
-        }
+            ContentDialogResult result = await dialog.ShowAsync();
+            
+            if (result is not ContentDialogResult.Primary) return;
+            if (gimmickView.BpmNumberBox.Value <= 0)
+            {
+                mainView.ShowWarningMessage(Assets.Lang.Resources.Editor_NewChartInvalidBpm);
+                return;
+            }
         
-        Gimmick gimmick = new()
-        {
-            BeatData = CurrentBeatData,
-            Bpm = (float)gimmickView.BpmNumberBox.Value,
-            GimmickType = GimmickType.BpmChange,
-        };
+            Gimmick gimmick = new()
+            {
+                BeatData = CurrentBeatData,
+                Bpm = (float)gimmickView.BpmNumberBox.Value,
+                GimmickType = GimmickType.BpmChange,
+            };
         
-        UndoRedoManager.InvokeAndPush(new InsertGimmick(Chart, gimmick));
-        Chart.IsSaved = false;
+            UndoRedoManager.InvokeAndPush(new InsertGimmick(Chart, gimmick));
+            Chart.IsSaved = false;
+        });
     }
 
     public void InsertTimeSigChange()
     {
         if (Chart.StartBpm is null || Chart.StartTimeSig is null) return;
-        
+
         // Edit existing Gimmick instead if there's already one on this timestamp.
         Gimmick? timeSigOnCursor = Chart.Gimmicks.FirstOrDefault(x => x.GimmickType == GimmickType.TimeSigChange && x.BeatData.FullTick == CurrentBeatData.FullTick);
         if (timeSigOnCursor != null)
@@ -814,7 +816,7 @@ public class ChartEditor
             EditGimmick(timeSigOnCursor);
             return;
         }
-        
+
         GimmickView_TimeSig gimmickView = new();
         ContentDialog dialog = new()
         {
@@ -823,27 +825,29 @@ public class ChartEditor
             CloseButtonText = Assets.Lang.Resources.Generic_Cancel,
             PrimaryButtonText = Assets.Lang.Resources.Generic_Create,
         };
+        
+        Dispatcher.UIThread.Post(async () =>
+        {
+            ContentDialogResult result = await dialog.ShowAsync();
+            
+            if (result is not ContentDialogResult.Primary) return;
+            if ((int)gimmickView.TimeSigUpperNumberBox.Value <= 0 || (int)gimmickView.TimeSigLowerNumberBox.Value <= 0)
+            {
+                mainView.ShowWarningMessage(Assets.Lang.Resources.Editor_NewChartInvalidTimeSig);
+                return;
+            }
 
-        ContentDialogResult result = ContentDialogResult.None;
-        Dispatcher.UIThread.Post(async () => result = await dialog.ShowAsync());
-        
-        if (result is not ContentDialogResult.Primary) return;
-        if ((int)gimmickView.TimeSigUpperNumberBox.Value <= 0 || (int)gimmickView.TimeSigLowerNumberBox.Value <= 0)
-        {
-            mainView.ShowWarningMessage(Assets.Lang.Resources.Editor_NewChartInvalidTimeSig);
-            return;
-        }
-        
-        Gimmick gimmick = new()
-        {
-            BeatData = CurrentBeatData,
-            TimeSig = new((int)gimmickView.TimeSigUpperNumberBox.Value, (int)gimmickView.TimeSigLowerNumberBox.Value),
-            GimmickType = GimmickType.TimeSigChange,
-        };
-        
-        UndoRedoManager.InvokeAndPush(new InsertGimmick(Chart, gimmick));
-        Chart.IsSaved = false;
-    }
+            Gimmick gimmick = new()
+            {
+                BeatData = CurrentBeatData,
+                TimeSig = new((int)gimmickView.TimeSigUpperNumberBox.Value, (int)gimmickView.TimeSigLowerNumberBox.Value),
+                GimmickType = GimmickType.TimeSigChange,
+            };
+
+            UndoRedoManager.InvokeAndPush(new InsertGimmick(Chart, gimmick));
+            Chart.IsSaved = false;
+        });
+}
 
     public void InsertHiSpeedChange()
     {
@@ -865,22 +869,24 @@ public class ChartEditor
             CloseButtonText = Assets.Lang.Resources.Generic_Cancel,
             PrimaryButtonText = Assets.Lang.Resources.Generic_Create,
         };
-
-        ContentDialogResult result = ContentDialogResult.None;
-        Dispatcher.UIThread.Post(async () => result = await dialog.ShowAsync());
         
-        if (result is not ContentDialogResult.Primary) return;
-        
-        Gimmick gimmick = new()
+        Dispatcher.UIThread.Post(async () =>
         {
-            BeatData = CurrentBeatData,
-            HiSpeed = (float)gimmickView.HiSpeedNumberBox.Value,
-            GimmickType = GimmickType.HiSpeedChange,
-            ScrollLayer = CurrentScrollLayer,
-        };
+            ContentDialogResult result = await dialog.ShowAsync();
+            
+            if (result is not ContentDialogResult.Primary) return;
         
-        UndoRedoManager.InvokeAndPush(new InsertGimmick(Chart, gimmick));
-        Chart.IsSaved = false;
+            Gimmick gimmick = new()
+            {
+                BeatData = CurrentBeatData,
+                HiSpeed = (float)gimmickView.HiSpeedNumberBox.Value,
+                GimmickType = GimmickType.HiSpeedChange,
+                ScrollLayer = CurrentScrollLayer,
+            };
+        
+            UndoRedoManager.InvokeAndPush(new InsertGimmick(Chart, gimmick));
+            Chart.IsSaved = false;
+        });
     }
 
     public void InsertStop(float start, float end)
