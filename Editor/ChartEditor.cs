@@ -2639,7 +2639,7 @@ public class ChartEditor
 
         void addOperationGimmick(Gimmick gimmick)
         {
-            if (gimmick.GimmickType == GimmickType.HiSpeedChange || gimmick.IsStop)
+            if (gimmick.GimmickType == GimmickType.HiSpeedChange || gimmick.IsStop || gimmick.IsReverse)
             {
                 Gimmick newGimmick = new(gimmick)
                 {
@@ -2649,10 +2649,69 @@ public class ChartEditor
                 operationList.Add(new EditGimmick(Chart, gimmick, newGimmick));
             }
 
-            // Trying to change the layer of a Stop. Look forwards until accompanying StopEnd is found, then change that one's Layer too.
+            // Trying to change the layer of a Reverse. Look forwards until EffectEnd and NoteEnd are found, then change their Layers too.
+            if (gimmick.GimmickType == GimmickType.ReverseEffectStart)
+            {
+                Gimmick? effectEnd = Chart.Gimmicks.FirstOrDefault(x => x.GimmickType == GimmickType.ReverseEffectEnd && x.BeatData.FullTick > gimmick.BeatData.FullTick);
+                Gimmick? noteEnd = Chart.Gimmicks.FirstOrDefault(x => x.GimmickType == GimmickType.ReverseNoteEnd && x.BeatData.FullTick > gimmick.BeatData.FullTick);
+
+                Console.WriteLine($"{effectEnd == null} {noteEnd == null}");
+                
+                if (effectEnd != null)
+                {
+                    Gimmick newEffectEnd = new(effectEnd) { ScrollLayer = scrollLayer };
+                    operationList.Add(new EditGimmick(Chart, effectEnd, newEffectEnd));
+                }
+                
+                if (noteEnd != null)
+                {
+                    Gimmick newNoteEnd = new(noteEnd) { ScrollLayer = scrollLayer };
+                    operationList.Add(new EditGimmick(Chart, noteEnd, newNoteEnd));
+                }
+            }
+            
+            // Trying to change the layer of a Reverse. Look both ways until EffectStart and NoteEnd are found, then change their Layers too.
+            if (gimmick.GimmickType == GimmickType.ReverseEffectEnd)
+            {
+                Gimmick? effectStart = Chart.Gimmicks.LastOrDefault(x => x.GimmickType == GimmickType.ReverseEffectStart && x.BeatData.FullTick < gimmick.BeatData.FullTick);
+                Gimmick? noteEnd = Chart.Gimmicks.FirstOrDefault(x => x.GimmickType == GimmickType.ReverseNoteEnd && x.BeatData.FullTick > gimmick.BeatData.FullTick);
+                
+                if (effectStart != null)
+                {
+                    Gimmick newEffectStart = new(effectStart) { ScrollLayer = scrollLayer };
+                    operationList.Add(new EditGimmick(Chart, effectStart, newEffectStart));
+                }
+                
+                if (noteEnd != null)
+                {
+                    Gimmick newNoteEnd = new(noteEnd) { ScrollLayer = scrollLayer };
+                    operationList.Add(new EditGimmick(Chart, noteEnd, newNoteEnd));
+                }
+            }
+            
+            // Trying to change the layer of a Reverse. Look backwards until EffectStart and EffectEnd are found, then change their Layers too.
+            if (gimmick.GimmickType == GimmickType.ReverseNoteEnd)
+            {
+                Gimmick? effectStart = Chart.Gimmicks.LastOrDefault(x => x.GimmickType == GimmickType.ReverseEffectStart && x.BeatData.FullTick < gimmick.BeatData.FullTick);
+                Gimmick? effectEnd = Chart.Gimmicks.LastOrDefault(x => x.GimmickType == GimmickType.ReverseEffectEnd && x.BeatData.FullTick < gimmick.BeatData.FullTick);
+                
+                if (effectStart != null)
+                {
+                    Gimmick newEffectStart = new(effectStart) { ScrollLayer = scrollLayer };
+                    operationList.Add(new EditGimmick(Chart, effectStart, newEffectStart));
+                }
+                
+                if (effectEnd != null)
+                {
+                    Gimmick newEffectEnd = new(effectEnd) { ScrollLayer = scrollLayer };
+                    operationList.Add(new EditGimmick(Chart, effectEnd, newEffectEnd));
+                }
+            }
+            
+            // Trying to change the layer of a Stop Start. Look forwards until accompanying StopEnd is found, then change that one's Layer too.
             if (gimmick.GimmickType == GimmickType.StopStart)
             {
-                Gimmick? stopEnd = Chart.Gimmicks.FirstOrDefault(x => gimmick.GimmickType == GimmickType.StopEnd && x.BeatData.FullTick > gimmick.BeatData.FullTick);
+                Gimmick? stopEnd = Chart.Gimmicks.FirstOrDefault(x => x.GimmickType == GimmickType.StopEnd && x.BeatData.FullTick > gimmick.BeatData.FullTick);
                 if (stopEnd == null) return;
 
                 Gimmick newStopEnd = new(stopEnd)
@@ -2663,10 +2722,10 @@ public class ChartEditor
                 operationList.Add(new EditGimmick(Chart, stopEnd, newStopEnd));
             }
             
-            // Trying to change the layer of a Stop. Look backwards until accompanying StopStart is found, then change that one's Layer too.
+            // Trying to change the layer of a Stop End. Look backwards until accompanying StopStart is found, then change that one's Layer too.
             if (gimmick.GimmickType == GimmickType.StopEnd)
             {
-                Gimmick? stopStart = Chart.Gimmicks.LastOrDefault(x => gimmick.GimmickType == GimmickType.StopStart && x.BeatData.FullTick < gimmick.BeatData.FullTick);
+                Gimmick? stopStart = Chart.Gimmicks.LastOrDefault(x => x.GimmickType == GimmickType.StopStart && x.BeatData.FullTick < gimmick.BeatData.FullTick);
                 if (stopStart == null) return;
 
                 Gimmick newStopStart = new(stopStart)

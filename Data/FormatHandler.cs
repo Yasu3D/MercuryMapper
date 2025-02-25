@@ -1124,7 +1124,7 @@ internal static class SatHandler
     {
         StringBuilder sb = new();
 
-        if (gimmick.IsStop || gimmick.GimmickType is GimmickType.HiSpeedChange && gimmick.ScrollLayer != ScrollLayer.L0)
+        if ((gimmick.IsStop || gimmick.IsReverse || gimmick.GimmickType is GimmickType.HiSpeedChange) && gimmick.ScrollLayer != ScrollLayer.L0)
         {
             sb.Append(gimmick.ScrollLayer switch
             {
