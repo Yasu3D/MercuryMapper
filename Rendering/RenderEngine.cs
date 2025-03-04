@@ -110,8 +110,8 @@ public class RenderEngine(MainView mainView)
     public void UpdateVisibleTime()
     {
         // A Note scrolling from its spawn point to the judgement line at NoteSpeed 1.0 takes
-        // approximately 3266.667 milliseconds.
-        float visibleTime = 3266.667f / (float)RenderConfig.NoteSpeed;
+        // approximately 3333.333 milliseconds.
+        float visibleTime = 3333.333f / (float)RenderConfig.NoteSpeed;
         visibleDistanceMeasureDecimal = Chart.Timestamp2MeasureDecimal(visibleTime);
     }
     
