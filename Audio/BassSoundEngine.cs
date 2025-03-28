@@ -25,11 +25,11 @@ public class BassSoundEngine
     public static BassSound? GetSound(string filepath, bool loop, bool startPaused)
     {
         // attempt loading flac first
-        int decodingChannel = BassFlac.CreateStream(filepath, 0, 0, BassFlags.Decode);
+        int decodingChannel = BassFlac.CreateStream(filepath, 0, 0, BassFlags.Decode | BassFlags.Prescan);
         
         // load normally if that failed
         if (decodingChannel == 0 && Bass.LastError == Errors.FileFormat)
-            decodingChannel = Bass.CreateStream(filepath, 0, 0, BassFlags.Decode);
+            decodingChannel = Bass.CreateStream(filepath, 0, 0, BassFlags.Decode | BassFlags.Prescan);
         
         // explode if that failed too
         if (decodingChannel == 0) throw new($"Couldn't load selected audio file: {Bass.LastError}");
