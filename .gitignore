@@ -4,3 +4,5 @@ obj/
 riderModule.iml
 /_ReSharper.Caches/
 .vs/
+UserConfig.toml
+build-mac.sh

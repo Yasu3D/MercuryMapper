@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
@@ -19,6 +20,11 @@ public class App : Application
             desktop.MainWindow = new MainWindow();
 
         base.OnFrameworkInitializationCompleted();
+
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        {
+            Application.Current.Resources["PlatformMargin"] = new Thickness(70, 0, 0, 0); // macOS margin
+        }
     }
 
     public static void SetCulture(string culture)

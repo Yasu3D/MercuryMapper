@@ -6,7 +6,7 @@
         <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
-        <ApplicationIcon>Assets\AppIcon.ico</ApplicationIcon>
+        <ApplicationIcon>Assets/AppIcon.ico</ApplicationIcon>
         <IsPackable>false</IsPackable>
         <Company>yasu3d</Company>
         <AssemblyVersion>1.0.0</AssemblyVersion>
@@ -32,78 +32,78 @@
     </ItemGroup>
 
     <ItemGroup>
-      <UpToDateCheckInput Remove="Views\MainViewControls\MainView_ButtonPanel.axaml" />
-      <UpToDateCheckInput Remove="Views\MainViewControls\MainView_OperationDrawer.axaml" />
-      <UpToDateCheckInput Remove="Views\MainViewControls\MainView_SongControls.axaml" />
+      <UpToDateCheckInput Remove="Views/MainViewControls/MainView_ButtonPanel.axaml" />
+      <UpToDateCheckInput Remove="Views/MainViewControls/MainView_OperationDrawer.axaml" />
+      <UpToDateCheckInput Remove="Views/MainViewControls/MainView_SongControls.axaml" />
     </ItemGroup>
 
     <ItemGroup>
-      <EmbeddedResource Update="Assets\Lang\Resources.resx">
+      <EmbeddedResource Update="Assets/Lang/Resources.resx">
         <Generator>PublicResXFileCodeGenerator</Generator>
         <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       </EmbeddedResource>
-      <EmbeddedResource Update="Assets\Lang\Resources.de-DE.resx">
+      <EmbeddedResource Update="Assets/Lang/Resources.de-DE.resx">
         <Generator>PublicResXFileCodeGenerator</Generator>
         <LastGenOutput>Resources.de-DE.Designer.cs</LastGenOutput>
       </EmbeddedResource>
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Update="Assets\Locales\Resources.Designer.cs">
+      <Compile Update="Assets/Locales/Resources.Designer.cs">
         <DesignTime>True</DesignTime>
         <AutoGen>True</AutoGen>
         <DependentUpon>Resources.resx</DependentUpon>
       </Compile>
-      <Compile Update="Assets\Lang\Resources.Designer.cs">
+      <Compile Update="Assets/Lang/Resources.Designer.cs">
         <DesignTime>True</DesignTime>
         <AutoGen>True</AutoGen>
         <DependentUpon>Resources.resx</DependentUpon>
       </Compile>
-      <Compile Update="Assets\Lang\Resources.de-DE.Designer.cs">
+      <Compile Update="Assets/Lang/Resources.de-DE.Designer.cs">
         <DesignTime>True</DesignTime>
         <AutoGen>True</AutoGen>
         <DependentUpon>Resources.de-DE.resx</DependentUpon>
       </Compile>
-      <Compile Update="Views\Settings\SettingsView_Audio.axaml.cs">
+      <Compile Update="Views/Settings/SettingsView_Audio.axaml.cs">
         <DependentUpon>SettingsView_Audio.axaml</DependentUpon>
         <SubType>Code</SubType>
       </Compile>
-      <Compile Update="Views\Gimmicks\GimmickView_Stop.axaml.cs">
+      <Compile Update="Views/Gimmicks/GimmickView_Stop.axaml.cs">
         <DependentUpon>GimmickView_Stop.axaml</DependentUpon>
         <SubType>Code</SubType>
       </Compile>
-      <Compile Update="Views\SaturnFolderExportView.axaml.cs">
+      <Compile Update="Views/SaturnFolderExportView.axaml.cs">
         <DependentUpon>SaturnFolderExportView.axaml</DependentUpon>
         <SubType>Code</SubType>
       </Compile>
-      <Compile Update="Views\Online\OnlineView_CreateSession.axaml.cs">
+      <Compile Update="Views/Online/OnlineView_CreateSession.axaml.cs">
         <DependentUpon>OnlineView_CreateSession.axaml</DependentUpon>
         <SubType>Code</SubType>
       </Compile>
-      <Compile Update="Views\Misc\MiscView_AddComment.axaml.cs">
+      <Compile Update="Views/Misc/MiscView_AddComment.axaml.cs">
         <DependentUpon>AddCommentView.axaml</DependentUpon>
         <SubType>Code</SubType>
       </Compile>
     </ItemGroup>
 
     <ItemGroup>
-      <AvaloniaResource Include="Assets\EmptyJacket.png" />
-      <AvaloniaResource Include="Assets\AppIcon.png" />
-      <AvaloniaResource Include="Assets\AppIcon.ico" />
-      <AvaloniaResource Include="Assets\Inter.ttf" />
+      <AvaloniaResource Include="Assets/EmptyJacket.png" />
+      <AvaloniaResource Include="Assets/AppIcon.png" />
+      <AvaloniaResource Include="Assets/AppIcon.ico" />
+      <AvaloniaResource Include="Assets/Inter.ttf" />
     </ItemGroup>
 
     <!-- Windows x86 DLLs -->
     <ItemGroup>
-        <ContentWithTargetPath Include="lib\win-x86\bass.dll" Condition="'$(RuntimeIdentifier)' == 'win-x86'">
+        <ContentWithTargetPath Include="lib/win-x86/bass.dll" Condition="'$(RuntimeIdentifier)' == 'win-x86'">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <TargetPath>bass.dll</TargetPath>
         </ContentWithTargetPath>
-        <ContentWithTargetPath Include="lib\win-x86\bass_fx.dll" Condition="'$(RuntimeIdentifier)' == 'win-x86'">
+        <ContentWithTargetPath Include="lib/win-x86/bass_fx.dll" Condition="'$(RuntimeIdentifier)' == 'win-x86'">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <TargetPath>bass_fx.dll</TargetPath>
         </ContentWithTargetPath>
-        <ContentWithTargetPath Include="lib\win-x86\bassflac.dll" Condition="'$(RuntimeIdentifier)' == 'win-x86'">
+        <ContentWithTargetPath Include="lib/win-x86/bassflac.dll" Condition="'$(RuntimeIdentifier)' == 'win-x86'">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <TargetPath>bassflac.dll</TargetPath>
         </ContentWithTargetPath>
@@ -111,15 +111,15 @@
     
     <!-- Windows x64 DLLs -->
     <ItemGroup>
-      <ContentWithTargetPath Include="lib\win-x64\bass.dll" Condition="'$(RuntimeIdentifier)' == 'win-x64'">
+      <ContentWithTargetPath Include="lib/win-x64/bass.dll" Condition="'$(RuntimeIdentifier)' == 'win-x64'">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         <TargetPath>bass.dll</TargetPath>
       </ContentWithTargetPath>
-      <ContentWithTargetPath Include="lib\win-x64\bass_fx.dll" Condition="'$(RuntimeIdentifier)' == 'win-x64'">
+      <ContentWithTargetPath Include="lib/win-x64/bass_fx.dll" Condition="'$(RuntimeIdentifier)' == 'win-x64'">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         <TargetPath>bass_fx.dll</TargetPath>
       </ContentWithTargetPath>
-      <ContentWithTargetPath Include="lib\win-x64\bassflac.dll" Condition="'$(RuntimeIdentifier)' == 'win-x64'">
+      <ContentWithTargetPath Include="lib/win-x64/bassflac.dll" Condition="'$(RuntimeIdentifier)' == 'win-x64'">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         <TargetPath>bassflac.dll</TargetPath>
       </ContentWithTargetPath>
@@ -127,15 +127,15 @@
 
     <!-- macOS Dynamic Libraries -->
     <ItemGroup>
-        <ContentWithTargetPath Include="lib\darwin\libbass.dylib" Condition="'$(RuntimeIdentifier)' == 'osx-x64' Or '$(RuntimeIdentifier)' == 'osx-arm64'">
+        <ContentWithTargetPath Include="lib/darwin/libbass.dylib" Condition="'$(RuntimeIdentifier)' == 'osx-x64' Or '$(RuntimeIdentifier)' == 'osx-arm64'">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <TargetPath>libbass.dylib</TargetPath>
         </ContentWithTargetPath>
-        <ContentWithTargetPath Include="lib\darwin\libbass_fx.dylib" Condition="'$(RuntimeIdentifier)' == 'osx-x64' Or '$(RuntimeIdentifier)' == 'osx-arm64'">
+        <ContentWithTargetPath Include="lib/darwin/libbass_fx.dylib" Condition="'$(RuntimeIdentifier)' == 'osx-x64' Or '$(RuntimeIdentifier)' == 'osx-arm64'">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <TargetPath>libbass_fx.dylib</TargetPath>
         </ContentWithTargetPath>
-        <ContentWithTargetPath Include="lib\darwin\libbassflac.dylib" Condition="'$(RuntimeIdentifier)' == 'osx-x64' Or '$(RuntimeIdentifier)' == 'osx-arm64'">
+        <ContentWithTargetPath Include="lib/darwin/libbassflac.dylib" Condition="'$(RuntimeIdentifier)' == 'osx-x64' Or '$(RuntimeIdentifier)' == 'osx-arm64'">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <TargetPath>libbassflac.dylib</TargetPath>
         </ContentWithTargetPath>
@@ -143,15 +143,15 @@
 
     <!-- Linux Shared Objects -->
     <ItemGroup>
-        <ContentWithTargetPath Include="lib\linux-x64\libbass.so" Condition="'$(RuntimeIdentifier)' == 'linux-x64'">
+        <ContentWithTargetPath Include="lib/linux-x64/libbass.so" Condition="'$(RuntimeIdentifier)' == 'linux-x64'">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <TargetPath>libbass.so</TargetPath>
         </ContentWithTargetPath>
-        <ContentWithTargetPath Include="lib\linux-x64\libbass_fx.so" Condition="'$(RuntimeIdentifier)' == 'linux-x64'">
+        <ContentWithTargetPath Include="lib/linux-x64/libbass_fx.so" Condition="'$(RuntimeIdentifier)' == 'linux-x64'">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <TargetPath>libbass_fx.so</TargetPath>
         </ContentWithTargetPath>
-        <ContentWithTargetPath Include="lib\linux-x64\libbassflac.so" Condition="'$(RuntimeIdentifier)' == 'linux-x64'">
+        <ContentWithTargetPath Include="lib/linux-x64/libbassflac.so" Condition="'$(RuntimeIdentifier)' == 'linux-x64'">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <TargetPath>libbassflac.so</TargetPath>
         </ContentWithTargetPath>
@@ -159,20 +159,20 @@
 
     <!-- Linux ARM Shared Objects -->
     <ItemGroup>
-        <ContentWithTargetPath Include="lib\linux-arm64\libbass.so" Condition="'$(RuntimeIdentifier)' == 'linux-arm64'">
+        <ContentWithTargetPath Include="lib/linux-arm64/libbass.so" Condition="'$(RuntimeIdentifier)' == 'linux-arm64'">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <TargetPath>libbass.so</TargetPath>
         </ContentWithTargetPath>
-        <ContentWithTargetPath Include="lib\linux-arm64\libbass_fx.so" Condition="'$(RuntimeIdentifier)' == 'linux-arm64'">
+        <ContentWithTargetPath Include="lib/linux-arm64/libbass_fx.so" Condition="'$(RuntimeIdentifier)' == 'linux-arm64'">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <TargetPath>libbass_fx.so</TargetPath>
         </ContentWithTargetPath>
-        <ContentWithTargetPath Include="lib\linux-arm64\libbassflac.so" Condition="'$(RuntimeIdentifier)' == 'linux-arm64'">
+        <ContentWithTargetPath Include="lib/linux-arm64/libbassflac.so" Condition="'$(RuntimeIdentifier)' == 'linux-arm64'">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <TargetPath>libbassflac.so</TargetPath>
         </ContentWithTargetPath>
     </ItemGroup>
     <ItemGroup>
-      <None Remove="Views\Online\OnlineView_CreateSession.axaml.cs~" />
+      <None Remove="Views/Online/OnlineView_CreateSession.axaml.cs~" />
     </ItemGroup>
 </Project>

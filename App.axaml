@@ -13,6 +13,7 @@
             <Color x:Key='InputGestureBrush'>#808080</Color>
             <Color x:Key='ButtonBorderBrush'>#000000</Color>
             <Color x:Key='TitleBar'>#3C3F41</Color>
+            <Thickness x:Key="PlatformMargin">0</Thickness>
             <Color x:Key='TextBrush'>#DFDFDF</Color>
             <Color x:Key='TreeViewSelectedBrush'>#80315BB2</Color>
             
