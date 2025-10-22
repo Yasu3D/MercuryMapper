@@ -942,6 +942,12 @@ Continue?</value>
   <data name="Editor_SetLoopEnd" xml:space="preserve">
     <value>Set Loop End</value>
   </data>
+  <data name="SoundEngine_Error" xml:space="preserve">
+    <value>Sound Engine Error</value>
+  </data>
+  <data name="SoundEngine_DriverNotInitialized" xml:space="preserve">
+    <value>Unable to find a sound driver to initialize Sound Engine with! No audio will be available during this session.</value>
+  </data>
   <data name="Editor_ExpanderHeader_Miscellaneous" xml:space="preserve">
     <value>Miscellaneous</value>
   </data>

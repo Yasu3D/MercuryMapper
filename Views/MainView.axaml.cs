@@ -1,11 +1,3 @@
- using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
@@ -31,6 +23,15 @@ using MercuryMapper.Views.Online;
 using MercuryMapper.Views.Select;
 using MercuryMapper.Views.Tools;
 using SkiaSharp;
+ using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using Tmds.DBus.Protocol;
 using Tomlyn;
 
 namespace MercuryMapper.Views;
@@ -70,7 +71,23 @@ public partial class MainView : UserControl
         SetSelectionInfo();
         SetQuickSettings();
 
-        Dispatcher.UIThread.Post(async () => await CheckAutosaves(), DispatcherPriority.Background);
+        Dispatcher.UIThread.Post(async () =>
+        {
+            await CheckAutosaves();
+
+            if(!AudioManager.SoundEngine.BassInitialized)
+            {
+                var dialog = new ContentDialog
+                {
+                    Title = Assets.Lang.Resources.SoundEngine_Error,
+                    Content = Assets.Lang.Resources.SoundEngine_DriverNotInitialized,
+                    PrimaryButtonText = Assets.Lang.Resources.Generic_Ok,
+                    DefaultButton = ContentDialogButton.Primary
+                };
+                await dialog.ShowAsync();
+            }
+
+        }, DispatcherPriority.Background);
     }
 
     public bool CanShutdown;
