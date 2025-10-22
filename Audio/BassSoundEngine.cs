@@ -10,16 +10,16 @@ namespace MercuryMapper.Audio;
 /// </summary>
 public class BassSoundEngine
 {
-    private static bool bassInitialized;
+    public bool BassInitialized { get; private set; }
 
     public BassSoundEngine()
     {
-        if (bassInitialized) return;
+        if (BassInitialized) return;
         
-        if (!Bass.Init(Flags: DeviceInitFlags.Latency)) throw new("Couldn't initialize ManagedBass");
+        if (!Bass.Init(Flags: DeviceInitFlags.Latency)) return;
         Bass.UpdatePeriod = 100;
         Bass.PlaybackBufferLength = 150;
-        bassInitialized = true;
+        BassInitialized = true;
     }
 
     public static BassSound? GetSound(string filepath, bool loop, bool startPaused)
